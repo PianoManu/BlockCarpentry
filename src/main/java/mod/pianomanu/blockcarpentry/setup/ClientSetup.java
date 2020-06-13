@@ -1,10 +1,7 @@
 package mod.pianomanu.blockcarpentry.setup;
 
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
-import mod.pianomanu.blockcarpentry.model.ButtonFrameModelLoader;
-import mod.pianomanu.blockcarpentry.model.FrameModelLoader;
-import mod.pianomanu.blockcarpentry.model.SlabFrameBottomModelLoader;
-import mod.pianomanu.blockcarpentry.model.SlabFrameTopModelLoader;
+import mod.pianomanu.blockcarpentry.model.*;
 import mod.pianomanu.blockcarpentry.renderer.ButtonFrameTileEntityRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,6 +20,8 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_slab_bottom_loader"), new SlabFrameBottomModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_slab_top_loader"), new SlabFrameTopModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_button_loader"), new ButtonFrameModelLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_pressure_plate_loader"), new PressurePlateFrameModelLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_pressure_plate_pressed_loader"), new PressurePlatePressedFrameModelLoader());
 
         //SlabFrameBottomRenderer.register();
         ClientRegistry.bindTileEntityRenderer(Registration.BUTTON_FRAME_TILE.get(), ButtonFrameTileEntityRenderer::new);
