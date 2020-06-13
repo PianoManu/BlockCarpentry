@@ -1,0 +1,6 @@
+{
+	"block.blockcarpentry.frameblock":"Frame",
+	"block.blockcarpentry.frame_slab":"Frame Slab",
+	"block.blockcarpentry.falling_frameblock":"Frame (affected by Gravity)",
+	"block.blockcarpentry.frame_button":"Frame Button"
+}

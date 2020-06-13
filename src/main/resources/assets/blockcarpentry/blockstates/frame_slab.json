@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "contains_block=true,type=bottom,waterlogged=true": { "model": "blockcarpentry:block/frame_slab_bottom" },
+    "contains_block=true,type=top,waterlogged=true": { "model": "blockcarpentry:block/frame_slab_top" },
+    "contains_block=true,type=double,waterlogged=true": { "model": "blockcarpentry:block/frameblock" },
+	"contains_block=false,type=bottom,waterlogged=true": { "model": "blockcarpentry:block/frame_slab_empty" },
+	"contains_block=false,type=top,waterlogged=true": { "model": "blockcarpentry:block/frame_slab_empty_top" },
+	"contains_block=false,type=double,waterlogged=true": { "model": "blockcarpentry:block/frameblock_empty" },
+    "contains_block=true,type=bottom,waterlogged=false": { "model": "blockcarpentry:block/frame_slab_bottom" },
+    "contains_block=true,type=top,waterlogged=false": { "model": "blockcarpentry:block/frame_slab_top" },
+    "contains_block=true,type=double,waterlogged=false": { "model": "blockcarpentry:block/frameblock" },
+    "contains_block=false,type=bottom,waterlogged=false": { "model": "blockcarpentry:block/frame_slab_empty" },
+    "contains_block=false,type=top,waterlogged=false": { "model": "blockcarpentry:block/frame_slab_empty_top" },
+    "contains_block=false,type=double,waterlogged=false": { "model": "blockcarpentry:block/frameblock_empty" }
+  }
+}
