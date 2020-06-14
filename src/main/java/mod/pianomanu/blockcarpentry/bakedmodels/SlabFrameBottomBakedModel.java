@@ -177,6 +177,7 @@ public class SlabFrameBottomBakedModel implements IDynamicBakedModel {
             //up
             quads.add(createQuad(v(0, 0.5, 0), v(0, 0.5, 1), v(1, 0.5, 1), v(1, 0.5, 0), texture));
             //sides
+            //TODO rotate!!
             quads.add(createHalfQuad(v(0, 0, 1), v(0, 0.5, 1), v(0, 0.5, 0), v(0, 0, 0), texture));
             quads.add(createHalfQuad(v(0, 0, 0), v(0, 0.5, 0), v(1, 0.5, 0), v(1, 0, 0), texture));
             quads.add(createHalfQuad(v(1, 0, 1), v(1, 0.5, 1), v(0, 0.5, 1), v(0, 0, 1), texture));

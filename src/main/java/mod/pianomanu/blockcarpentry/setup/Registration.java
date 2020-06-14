@@ -64,6 +64,11 @@ public class Registration {
     public static final RegistryObject<Item> PRESSURE_PLATE_FRAME_ITEM = ITEMS.register("frame_pressure_plate", () -> new BlockItem(PRESSURE_PLATE_FRAMEBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> PRESSURE_PLATE_FRAME_TILE = TILES.register("frame_pressure_plate", () -> TileEntityType.Builder.create(FrameBlockTile::new, BUTTON_FRAMEBLOCK.get()).build(null));
 
+    public static final RegistryObject<StairsFrameBlock> STAIRS_FRAMEBLOCK = BLOCKS.register("frame_stairs", () -> new StairsFrameBlock(() -> FRAMEBLOCK.get().getDefaultState(), Block.Properties.from(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> STAIRS_FRAME_ITEM = ITEMS.register("frame_stairs", () -> new BlockItem(STAIRS_FRAMEBLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<TileEntityType<FrameBlockTile>> STAIRS_FRAME_TILE = TILES.register("frame_stairs", () -> TileEntityType.Builder.create(FrameBlockTile::new, STAIRS_FRAMEBLOCK.get()).build(null));
+
+
     //public static final RegistryObject<Block> SLAB_FRAMEBLOCK = BLOCKS.register("frame_slab", () -> new SlabFrameBlock(Block.Properties.create(Material.WOOD)));
 
 }
