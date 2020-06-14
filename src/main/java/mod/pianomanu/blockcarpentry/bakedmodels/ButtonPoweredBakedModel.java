@@ -2,6 +2,7 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import com.google.common.collect.ImmutableList;
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
+import mod.pianomanu.blockcarpentry.block.ButtonFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.BlockState;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -69,7 +71,7 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
                             builder.put(j, iu, iv);
                             break;
                         case 2:
-                            builder.put(j, 0f, 1f);
+                            builder.put(j, (short) 0, (short) 0);
                             break;
                         default:
                             builder.put(j);
@@ -87,29 +89,125 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
         builder.setApplyDiffuseLighting(true);
     }
 
-    private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite) {
+    private BakedQuad createUpDownQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, Direction facing, AttachFace face) {
         Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
+        //builder.setQuadOrientation(facing);
         builder.setApplyDiffuseLighting(true);
-        putVertex(builder, normal, v1.x, v1.y, v1.z, 0, 0, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v2.x, v2.y, v2.z, 0, 16, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v3.x, v3.y, v3.z, 16, 16, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v4.x, v4.y, v4.z, 16, 0, sprite, 1.0f, 1.0f, 1.0f);
+        float uShort = 5;
+        float uLong = 11;
+        float vShort = 6;
+        float vLong = 10;
+        if (face==AttachFace.WALL && facing!=Direction.NORTH && facing!=Direction.SOUTH) {
+            float tmp = uShort;
+            uShort = uLong;
+            uLong = tmp;
+            tmp = vShort;
+            vShort = vLong;
+            vLong = tmp;
+        }
+        if (face==AttachFace.WALL && (facing==Direction.NORTH || facing==Direction.SOUTH)) {
+            float tmp = uShort;
+            uShort = vLong;
+            vLong = tmp;
+            tmp = vShort;
+            vShort = uLong;
+            uLong = tmp;
+        }
+        if (face!=AttachFace.WALL && (facing==Direction.NORTH || facing==Direction.SOUTH)) {
+            uShort = 6;
+            uLong = 10;
+            vShort = 5;
+            vLong = 11;
+        }
+        putVertex(builder, normal, v1.x, v1.y, v1.z, uShort, vShort, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v2.x, v2.y, v2.z, uShort, vLong, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v3.x, v3.y, v3.z, uLong, vLong, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v4.x, v4.y, v4.z, uLong, vShort, sprite, 1.0f, 1.0f, 1.0f);
         return builder.build();
     }
 
-    private BakedQuad createHalfQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite) {
+    //North/South
+    private BakedQuad createLongSideQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, Direction facing, AttachFace face) {
         Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
+        //builder.setQuadOrientation(facing);
         builder.setApplyDiffuseLighting(true);
-        putVertex(builder, normal, v1.x, v1.y, v1.z, 0, 0, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v2.x, v2.y, v2.z, 0, 8, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v3.x, v3.y, v3.z, 16, 8, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v4.x, v4.y, v4.z, 16, 0, sprite, 1.0f, 1.0f, 1.0f);
+        float uShort = 5;
+        float uLong = 11;
+        float vShort = 14;
+        float vLong = 16;
+        if (face==AttachFace.WALL && (facing==Direction.SOUTH || facing==Direction.NORTH)) {
+            uShort = 6;
+            uLong = 10;
+            vShort = 6;
+            vLong = 10;
+        }
+        if (face==AttachFace.WALL && (facing==Direction.WEST || facing==Direction.EAST)) {
+            //uShort = 5;
+            //uLong = 11; //already set
+            vShort = 6;
+            vLong = 10;
+        }
+        if (face!=AttachFace.WALL && (facing==Direction.NORTH || facing==Direction.SOUTH)) {
+            uShort = 6;
+            uLong = 10;
+            vShort = 7;
+            vLong = 9;
+        }
+        putVertex(builder, normal, v1.x, v1.y, v1.z, uShort, vShort, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v2.x, v2.y, v2.z, uShort, vLong, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v3.x, v3.y, v3.z, uLong, vLong, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v4.x, v4.y, v4.z, uLong, vShort, sprite, 1.0f, 1.0f, 1.0f);
+        return builder.build();
+    }
+
+    //East/West
+    private BakedQuad createShortSideQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, Direction facing, AttachFace face) {
+        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+
+        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
+        builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
+        //builder.setQuadOrientation(facing);
+        builder.setApplyDiffuseLighting(true);
+        float uShort = 6;
+        float uLong = 10;
+        float vShort = 14;
+        float vLong = 16;
+        if (face==AttachFace.WALL && (facing==Direction.SOUTH || facing==Direction.NORTH)) {
+            uShort = 5;
+            uLong = 11;
+            vShort = 6;
+            vLong = 10;
+        }
+        if (face==AttachFace.WALL && (facing==Direction.WEST || facing==Direction.EAST)) {
+            //uShort = 6;
+            //uLong = 10; //already set
+            vShort = 6;
+            vLong = 10;
+        }
+        if (face!=AttachFace.WALL && (facing==Direction.NORTH || facing==Direction.SOUTH)) {
+            uShort = 5;
+            uLong = 11;
+            vShort = 7;
+            vLong = 9;
+        }
+        /*if (face==AttachFace.WALL) {
+            float tmp = uShort;
+            uShort = vLong;
+            vLong = tmp;
+            tmp = vShort;
+            vShort = uLong;
+            uLong = tmp;
+        }*/
+        putVertex(builder, normal, v1.x, v1.y, v1.z, uShort, vShort, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v2.x, v2.y, v2.z, uShort, vLong, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v3.x, v3.y, v3.z, uLong, vLong, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v4.x, v4.y, v4.z, uLong, vShort, sprite, 1.0f, 1.0f, 1.0f);
         return builder.build();
     }
 
@@ -128,7 +226,7 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 model.getBakedModel().getQuads(mimic, side, rand, extraData);
                 if (model != null) {
-                    return getMimicQuads(mimic, side, rand, extraData);
+                    return getMimicQuads(state, side, rand, extraData);
                 }
             }
         }
@@ -139,23 +237,177 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
         if (side != null) {
             return Collections.emptyList();
         }
+
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic!=null) {
-            TextureAtlasSprite texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(mimic.getBlock().getRegistryName().getNamespace(), "block/"+mimic.getBlock().getRegistryName().getPath()));
+        if (mimic!=null && state != null) {
+            Direction direction = state.get(ButtonFrameBlock.HORIZONTAL_FACING);
+            AttachFace face = state.get(ButtonFrameBlock.FACE);
+            //get texture from block in tile entity and apply it to the quads
+            TextureAtlasSprite texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(mimic.getBlock().getRegistryName().getNamespace(), "block/" + mimic.getBlock().getRegistryName().getPath()));
             List<BakedQuad> quads = new ArrayList<>();
             //down
-            quads.add(createQuad(v(1, 0, 0), v(1, 0, 1), v(0, 0, 1), v(0, 0, 0), texture));
+            quads.add(createUpDownQuad(v(x(direction,face), y(direction,face), z(direction,face)), v(x(direction,face)+xr(direction, face), y(direction,face), z(direction,face)), v(x(direction,face)+xr(direction, face), y(direction,face), z(direction,face)+zr(direction, face)), v(x(direction,face), y(direction,face), z(direction,face)+zr(direction, face)), texture, direction, face));
             //up
-            quads.add(createQuad(v(0, 0.5, 0), v(0, 0.5, 1), v(1, 0.5, 1), v(1, 0.5, 0), texture));
+            quads.add(createUpDownQuad(v(x(direction,face), y2(direction, face), z(direction,face)+zr(direction, face)), v(x(direction,face)+xr(direction, face), y2(direction,face), z(direction,face)+zr(direction, face)), v(x(direction,face)+xr(direction, face), y2(direction,face), z(direction,face)), v(x(direction,face), y2(direction, face), z(direction,face)), texture, direction, face));
             //sides
-            quads.add(createHalfQuad(v(0, 0, 1), v(0, 0.5, 1), v(0, 0.5, 0), v(0, 0, 0), texture));
-            quads.add(createHalfQuad(v(0, 0, 0), v(0, 0.5, 0), v(1, 0.5, 0), v(1, 0, 0), texture));
-            quads.add(createHalfQuad(v(1, 0, 1), v(1, 0.5, 1), v(0, 0.5, 1), v(0, 0, 1), texture));
-            quads.add(createHalfQuad(v(1, 0.5, 1), v(1, 0, 1), v(1, 0, 0), v(1, 0.5, 0), texture));
+            quads.add(createLongSideQuad(v(x(direction,face), y(direction,face), z(direction, face)+zr(direction, face)), v(x(direction,face), y2(direction,face), z(direction, face)+zr(direction, face)), v(x(direction,face), y2(direction,face), z(direction, face)), v(x(direction,face), y(direction,face), z(direction, face)), texture, direction, face));
+            quads.add(createLongSideQuad(v(x(direction,face)+xr(direction,face), y(direction,face), z(direction, face)), v(x(direction,face)+xr(direction,face), y2(direction,face), z(direction, face)), v(x(direction,face)+xr(direction,face), y2(direction,face), z(direction, face)+zr(direction, face)), v(x(direction,face)+xr(direction,face), y(direction,face), z(direction, face)+zr(direction, face)), texture, direction, face));
+            quads.add(createShortSideQuad(v(x(direction,face), y(direction,face), z(direction, face)), v(x(direction,face), y2(direction,face), z(direction, face)), v(x(direction,face)+xr(direction,face), y2(direction,face), z(direction, face)), v(x(direction,face)+xr(direction,face), y(direction,face), z(direction, face)), texture, direction, face));
+            quads.add(createShortSideQuad(v(x(direction,face)+xr(direction,face), y(direction,face), z(direction, face)+zr(direction, face)), v(x(direction,face)+xr(direction,face), y2(direction,face), z(direction, face)+zr(direction, face)), v(x(direction,face), y2(direction,face), z(direction, face)+zr(direction, face)), v(x(direction,face), y(direction,face), z(direction, face)+zr(direction, face)), texture, direction, face));
 
             return quads;
         }
         return Collections.emptyList();
+    }
+
+    //getXPositionForQuad
+    private float x(Direction direction, AttachFace face) {
+        float x;
+        switch (face) {
+            case CEILING:
+            case FLOOR:
+                System.out.println("x  "+direction);
+                switch (direction) {
+                    case NORTH:
+                    case SOUTH:
+                        x = 5/16f;
+                        break;
+                    default:
+                        x = 6/16f;
+                        break;
+                }
+                break;
+            default:
+                System.out.println("x2  "+direction);
+                switch (direction) {
+                    case EAST:
+                        x = -3/16f;
+                        break;
+                    case WEST:
+                        x = 15/16f;
+                        break;
+                    case NORTH:
+                    case SOUTH:
+                        x = 5/16f;
+                        break;
+                    default:
+                        x = 0.5f;
+                        break;
+                }
+        }
+        System.out.println("final x  "+x);
+        return x;
+    }
+
+    //getYPositionForQuad (bottom side)
+    private float y(Direction direction, AttachFace face) {
+        float y;
+        System.out.println("y  "+direction+" "+face);
+        switch (face) {
+            case CEILING:
+                y=15/16f;
+                break;
+            case FLOOR:
+                y=0;
+                break;
+            default:
+                y = 6/16f;
+        }
+        System.out.println("final y  "+y);
+        return y;
+    }
+
+    //getYPositionForQuad (top side)
+    private float y2(Direction direction, AttachFace face) {
+        float y;
+        System.out.println("y  "+direction+" "+face);
+        switch (face) {
+            case CEILING:
+                y=1;
+                break;
+            case FLOOR:
+                y=1/16f;
+                break;
+            default:
+                y = 10/16f;
+        }
+        System.out.println("final y  "+y);
+        return y;
+    }
+
+    //getZPositionForQuad
+    private float z(Direction direction, AttachFace face) {
+        float z;
+        switch (face) {
+            case CEILING:
+            case FLOOR:
+                System.out.println("z  "+direction);
+                switch (direction) {
+                    case NORTH:
+                    case SOUTH:
+                        z = 6/16f;
+                        break;
+                    default:
+                        z = 5/16f;
+                        break;
+                }
+                break;
+            default:
+                System.out.println("z2  "+direction);
+                switch (direction) {
+                    case NORTH:
+                        z = 15/16f;
+                        break;
+                    case SOUTH:
+                        z = -3/16f;
+                        break;
+                    case EAST:
+                    case WEST:
+                        z = 5/16f;
+                        break;
+                    default:
+                        z = 0.5f;
+                        break;
+                }
+        }
+        System.out.println("final z  "+z);
+        return z;
+    }
+
+    //"x-rotation" of quad (by 90degrees)
+    private float xr(Direction direction, AttachFace face) {
+        float r;
+        switch (direction) {
+            case SOUTH:
+            case NORTH:
+                r=6/16f;
+                break;
+            case WEST:
+            case EAST:
+                r=4/16f;
+                break;
+            default:
+                r=0;
+        }
+        return r;
+    }
+
+    //"z-rotation" of quad (by 90degrees)
+    private float zr(Direction direction, AttachFace face) {
+        float r;
+        switch (direction) {
+            case SOUTH:
+            case NORTH:
+                r=4/16f;
+                break;
+            case WEST:
+            case EAST:
+                r=6/16f;
+                break;
+            default:
+                r=0;
+        }
+        return r;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.tileentity.ButtonFrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import net.minecraft.block.Block;
@@ -30,8 +29,8 @@ import javax.annotation.Nullable;
 
 public class ButtonFrameBlock extends WoodButtonBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
-    private static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final EnumProperty<AttachFace> FACE = BlockStateProperties.FACE;
+    public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<AttachFace> FACE = BlockStateProperties.FACE;
 
     public ButtonFrameBlock(Properties properties) {
         super(properties);
@@ -50,7 +49,7 @@ public class ButtonFrameBlock extends WoodButtonBlock {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new ButtonFrameBlockTile(this.getDefaultState().get(FACE), this.getDefaultState().get(HORIZONTAL_FACING));
+        return new FrameBlockTile();
     }
 
     @Override
@@ -73,10 +72,10 @@ public class ButtonFrameBlock extends WoodButtonBlock {
                 if(item.getItem() instanceof BlockItem) {
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
-                    if (tileEntity instanceof ButtonFrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().isSolid(((BlockItem) item.getItem()).getBlock().getDefaultState())) {
-                        ((ButtonFrameBlockTile) tileEntity).clear();
+                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().isSolid(((BlockItem) item.getItem()).getBlock().getDefaultState())) {
+                        ((FrameBlockTile) tileEntity).clear();
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                        ((ButtonFrameBlockTile) tileEntity).setMimic(handBlockState);
+                        ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                         insertBlock(world,pos, state,handBlockState);
                         player.getHeldItem(hand).setCount(count-1);
                         return ActionResultType.CONSUME;
@@ -96,8 +95,8 @@ public class ButtonFrameBlock extends WoodButtonBlock {
     private void dropContainedBlock(World worldIn, BlockPos pos) {
         if (!worldIn.isRemote) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof ButtonFrameBlockTile) {
-                ButtonFrameBlockTile frameTileEntity = (ButtonFrameBlockTile) tileentity;
+            if (tileentity instanceof FrameBlockTile) {
+                FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
                 BlockState blockState = frameTileEntity.getMimic();
                 if (!(blockState==null)) {
                     worldIn.playEvent(1010, pos, 0);
@@ -118,8 +117,8 @@ public class ButtonFrameBlock extends WoodButtonBlock {
 
     public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof ButtonFrameBlockTile) {
-            ButtonFrameBlockTile frameTileEntity = (ButtonFrameBlockTile) tileentity;
+        if (tileentity instanceof FrameBlockTile) {
+            FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
             frameTileEntity.clear();
             frameTileEntity.setMimic(handBlock);
             worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);

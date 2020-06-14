@@ -2,7 +2,6 @@ package mod.pianomanu.blockcarpentry.setup;
 
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.*;
-import mod.pianomanu.blockcarpentry.tileentity.ButtonFrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.PressurePlateBlock;
@@ -59,7 +58,7 @@ public class Registration {
 
     public static final RegistryObject<ButtonFrameBlock> BUTTON_FRAMEBLOCK = BLOCKS.register("frame_button", () -> new ButtonFrameBlock(Block.Properties.from(FRAMEBLOCK.get()).notSolid().doesNotBlockMovement()));
     public static final RegistryObject<Item> BUTTON_FRAME_ITEM = ITEMS.register("frame_button", () -> new BlockItem(BUTTON_FRAMEBLOCK.get(), new Item.Properties()));
-    public static final RegistryObject<TileEntityType<ButtonFrameBlockTile>> BUTTON_FRAME_TILE = TILES.register("frame_button", () -> TileEntityType.Builder.create(ButtonFrameBlockTile::new, BUTTON_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<FrameBlockTile>> BUTTON_FRAME_TILE = TILES.register("frame_button", () -> TileEntityType.Builder.create(FrameBlockTile::new, BUTTON_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<PressurePlateFrameBlock> PRESSURE_PLATE_FRAMEBLOCK = BLOCKS.register("frame_pressure_plate", () -> new PressurePlateFrameBlock(PressurePlateBlock.Sensitivity.EVERYTHING, Block.Properties.from(FRAMEBLOCK.get()).notSolid().doesNotBlockMovement()));
     public static final RegistryObject<Item> PRESSURE_PLATE_FRAME_ITEM = ITEMS.register("frame_pressure_plate", () -> new BlockItem(PRESSURE_PLATE_FRAMEBLOCK.get(), new Item.Properties()));

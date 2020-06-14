@@ -123,4 +123,10 @@ import javax.annotation.Nullable;
             worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
         }
     }
+
+    //TODO add everywhere
+    @Override
+    public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state) {
+        dropContainedBlock(worldIn.getWorld(), pos);
+    }
 }
