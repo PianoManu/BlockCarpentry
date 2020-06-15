@@ -221,25 +221,294 @@ public class StairsBakedModel implements IDynamicBakedModel {
                 quads.add(createSideQuad(v(1,0.5,1),v(1,0,1), v(1,0,0), v(1,0.5,0), texture));
                 quads.add(createSideQuad(v(0,0.5,1),v(0,0,1), v(1,0,1), v(1,0.5,1), texture));
                 if(state.get(StairsBlock.SHAPE)== StairsShape.STRAIGHT) {
-                    System.out.println("straight "+direction+ ", half "+half);
-                    quads.add(createSmallSquareQuad(v(x(direction),y2(half),z(direction)),v(x(direction),y(half),z(direction)),v(x(direction),y(half),z(direction)+0.5),v(x(direction),y2(half),z(direction)+0.5),texture));
-                    quads.add(createSmallSquareQuad(v(x(direction)+0.5,y2(half),z(direction)),v(x(direction)+0.5,y(half),z(direction)),v(x(direction),y(half),z(direction)),v(x(direction),y2(half),z(direction)),texture));
-                    quads.add(createSmallSquareQuad(v(x(direction)+0.5,y2(half),z(direction)+0.5),v(x(direction)+0.5,y(half),z(direction)+0.5),v(x(direction)+0.5,y(half),z(direction)),v(x(direction)+0.5,y2(half),z(direction)),texture));
-                    quads.add(createSmallSquareQuad(v(x(direction),y2(half),z(direction)+0.5),v(x(direction),y(half),z(direction)+0.5),v(x(direction)+0.5,y(half),z(direction)+0.5),v(x(direction)+0.5,y2(half),z(direction)+0.5),texture));
-                    quads.add(createSmallSquareQuad(v(x(direction),y2(half),z(direction)), v(x(direction),y2(half),z(direction)+0.5), v(x(direction)+0.5,y2(half),z(direction)+0.5), v(x(direction)+0.5,y2(half),z(direction)), texture));
+                    //System.out.println("straight "+direction+ ", half "+half);
+                    //quads.add(createSmallSquareQuad(v(x(direction),y2(half),z(direction)),v(x(direction),y(half),z(direction)),v(x(direction),y(half),z(direction)+0.5),v(x(direction),y2(half),z(direction)+0.5),texture));
+                    //quads.add(createSmallSquareQuad(v(x(direction)+0.5,y2(half),z(direction)),v(x(direction)+0.5,y(half),z(direction)),v(x(direction),y(half),z(direction)),v(x(direction),y2(half),z(direction)),texture));
+                    //quads.add(createSmallSquareQuad(v(x(direction)+0.5,y2(half),z(direction)+0.5),v(x(direction)+0.5,y(half),z(direction)+0.5),v(x(direction)+0.5,y(half),z(direction)),v(x(direction)+0.5,y2(half),z(direction)),texture));
+                    //quads.add(createSmallSquareQuad(v(x(direction),y2(half),z(direction)+0.5),v(x(direction),y(half),z(direction)+0.5),v(x(direction)+0.5,y(half),z(direction)+0.5),v(x(direction)+0.5,y2(half),z(direction)+0.5),texture));
+                    //quads.add(createSmallSquareQuad(v(x(direction),y2(half),z(direction)), v(x(direction),y2(half),z(direction)+0.5), v(x(direction)+0.5,y2(half),z(direction)+0.5), v(x(direction)+0.5,y2(half),z(direction)), texture));
+                    //comments are for stairs facing north
+                    /*if(state.get(StairsBlock.FACING)==Direction.EAST || state.get(StairsBlock.FACING)==Direction.SOUTH) {
+                        quads.add(createSmallSquareQuad(v(x(direction),y2(half),z(direction)),v(x(direction),y(half),z(direction)),v(x(direction),y(half),z(direction)+0.5),v(x(direction),y2(half),z(direction)+0.5),texture));
+                        quads.add(createSmallSquareQuad(v(x(direction)+0.5,y2(half),z(direction)),v(x(direction)+0.5,y(half),z(direction)),v(x(direction),y(half),z(direction)),v(x(direction),y2(half),z(direction)),texture));
+                        quads.add(createSmallSquareQuad(v(x(direction)+0.5,y2(half),z(direction)+0.5),v(x(direction)+0.5,y(half),z(direction)+0.5),v(x(direction)+0.5,y(half),z(direction)),v(x(direction)+0.5,y2(half),z(direction)),texture));
+                        quads.add(createSmallSquareQuad(v(x(direction),y2(half),z(direction)+0.5),v(x(direction),y(half),z(direction)+0.5),v(x(direction)+0.5,y(half),z(direction)+0.5),v(x(direction)+0.5,y2(half),z(direction)+0.5),texture));
+                        quads.add(createSmallSquareQuad(v(x(direction),y2(half),z(direction)), v(x(direction),y2(half),z(direction)+0.5), v(x(direction)+0.5,y2(half),z(direction)+0.5), v(x(direction)+0.5,y2(half),z(direction)), texture));
+                    }*/
+                    if(state.get(StairsBlock.FACING)==Direction.WEST || state.get(StairsBlock.FACING)==Direction.NORTH) {
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0), v(0,y2(half),0.5), v(0.5,y2(half),0.5), v(0.5,y2(half),0), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.EAST || state.get(StairsBlock.FACING)==Direction.NORTH) {
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0), v(0.5,y2(half),0.5), v(1,y2(half),0.5), v(1,y2(half),0), texture));
 
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.WEST || state.get(StairsBlock.FACING)==Direction.SOUTH) {
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5), v(0,y2(half),1), v(0.5,y2(half),1), v(0.5,y2(half),0.5), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.EAST || state.get(StairsBlock.FACING)==Direction.SOUTH) {
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5), v(0.5,y2(half),1), v(1,y2(half),1), v(1,y2(half),0.5), texture));
+
+                    }
                 }
                 if (state.get(StairsBlock.SHAPE)== StairsShape.INNER_LEFT) {
+                    //L-Shape
+                    if(state.get(StairsBlock.FACING)==Direction.WEST) {
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0), v(0,y2(half),0.5), v(0.5,y2(half),0.5), v(0.5,y2(half),0), texture));
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5), v(0.5,y2(half),1), v(1,y2(half),1), v(1,y2(half),0.5), texture));
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5), v(0,y2(half),1), v(0.5,y2(half),1), v(0.5,y2(half),0.5), texture));
+
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.EAST) {
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0), v(0.5,y2(half),0.5), v(1,y2(half),0.5), v(1,y2(half),0), texture));
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0), v(0,y2(half),0.5), v(0.5,y2(half),0.5), v(0.5,y2(half),0), texture));
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5), v(0.5,y2(half),1), v(1,y2(half),1), v(1,y2(half),0.5), texture));
+
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.NORTH) {
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5), v(0,y2(half),1), v(0.5,y2(half),1), v(0.5,y2(half),0.5), texture));
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0), v(0.5,y2(half),0.5), v(1,y2(half),0.5), v(1,y2(half),0), texture));
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0), v(0,y2(half),0.5), v(0.5,y2(half),0.5), v(0.5,y2(half),0), texture));
+
+
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.SOUTH) {
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5), v(0.5,y2(half),1), v(1,y2(half),1), v(1,y2(half),0.5), texture));
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5), v(0,y2(half),1), v(0.5,y2(half),1), v(0.5,y2(half),0.5), texture));
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0), v(0.5,y2(half),0.5), v(1,y2(half),0.5), v(1,y2(half),0), texture));
+
+
+                    }
 
                 }
                 if (state.get(StairsBlock.SHAPE)== StairsShape.INNER_RIGHT) {
-
+                    if(state.get(StairsBlock.FACING)==Direction.WEST) {
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0), v(0,y2(half),0.5), v(0.5,y2(half),0.5), v(0.5,y2(half),0), texture));
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0), v(0.5,y2(half),0.5), v(1,y2(half),0.5), v(1,y2(half),0), texture));
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5), v(0,y2(half),1), v(0.5,y2(half),1), v(0.5,y2(half),0.5), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.EAST) {
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0), v(0.5,y2(half),0.5), v(1,y2(half),0.5), v(1,y2(half),0), texture));
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5), v(0.5,y2(half),1), v(1,y2(half),1), v(1,y2(half),0.5), texture));
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5), v(0,y2(half),1), v(0.5,y2(half),1), v(0.5,y2(half),0.5), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.NORTH) {
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0), v(0.5,y2(half),0.5), v(1,y2(half),0.5), v(1,y2(half),0), texture));
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0), v(0,y2(half),0.5), v(0.5,y2(half),0.5), v(0.5,y2(half),0), texture));
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5), v(0.5,y2(half),1), v(1,y2(half),1), v(1,y2(half),0.5), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.SOUTH) {
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5), v(0.5,y2(half),1), v(1,y2(half),1), v(1,y2(half),0.5), texture));
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5), v(0,y2(half),1), v(0.5,y2(half),1), v(0.5,y2(half),0.5), texture));
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0), v(0,y2(half),0.5), v(0.5,y2(half),0.5), v(0.5,y2(half),0), texture));
+                    }
                 }
                 if (state.get(StairsBlock.SHAPE)== StairsShape.OUTER_LEFT) {
-
+                    if(state.get(StairsBlock.FACING)==Direction.NORTH) {
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0), v(0,y2(half),0.5), v(0.5,y2(half),0.5), v(0.5,y2(half),0), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.SOUTH) {
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5), v(0.5,y2(half),1), v(1,y2(half),1), v(1,y2(half),0.5), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.EAST) {
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0), v(0.5,y2(half),0.5), v(1,y2(half),0.5), v(1,y2(half),0), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.WEST) {
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5), v(0,y2(half),1), v(0.5,y2(half),1), v(0.5,y2(half),0.5), texture));
+                    }
                 }
                 if (state.get(StairsBlock.SHAPE)== StairsShape.OUTER_RIGHT) {
-
+                    if(state.get(StairsBlock.FACING)==Direction.WEST) {
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0), v(0,y2(half),0.5), v(0.5,y2(half),0.5), v(0.5,y2(half),0), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.EAST) {
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5), v(0.5,y2(half),1), v(1,y2(half),1), v(1,y2(half),0.5), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.NORTH) {
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0), v(0.5,y2(half),0.5), v(1,y2(half),0.5), v(1,y2(half),0), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.SOUTH) {
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5), v(0,y2(half),1), v(0.5,y2(half),1), v(0.5,y2(half),0.5), texture));
+                    }
                 }
             } else  {
                 //top half bottom side
@@ -252,24 +521,285 @@ public class StairsBakedModel implements IDynamicBakedModel {
                 quads.add(createSideQuad(v(1,1,1),v(1,0.5,1), v(1,0.5,0), v(1,1,0), texture));
                 quads.add(createSideQuad(v(0,1,1),v(0,0.5,1), v(1,0.5,1), v(1,1,1), texture));
                 if(state.get(StairsBlock.SHAPE)== StairsShape.STRAIGHT) {
-                    System.out.println("straight "+direction+ ", half "+half);
-                    quads.add(createSmallSquareQuad(v(x(direction),0,z(direction)),v(x(direction),0.5,z(direction)),v(x(direction),0.5,z(direction)+zo(direction)),v(x(direction),0,z(direction)+zo(direction)),texture));
-                    quads.add(createSmallSquareQuad(v(x(direction)+xo(direction),0,z(direction)),v(x(direction)+xo(direction),0.5,z(direction)),v(x(direction),0.5,z(direction)),v(x(direction),0,z(direction)),texture));
-                    quads.add(createSmallSquareQuad(v(x(direction)+xo(direction),0,z(direction)+zo(direction)),v(x(direction)+xo(direction),0.5,z(direction)+zo(direction)),v(x(direction)+xo(direction),0.5,z(direction)),v(x(direction)+xo(direction),0,z(direction)),texture));
-                    quads.add(createSmallSquareQuad(v(x(direction),0,z(direction)+zo(direction)),v(x(direction),0.5,z(direction)+zo(direction)),v(x(direction)+xo(direction),0.5,z(direction)+zo(direction)),v(x(direction)+xo(direction),0,z(direction)+zo(direction)),texture));
+                    //System.out.println("straight "+direction+ ", half "+half);
+                    //quads.add(createSmallSquareQuad(v(x(direction),0,z(direction)),v(x(direction),0.5,z(direction)),v(x(direction),0.5,z(direction)+zo(direction)),v(x(direction),0,z(direction)+zo(direction)),texture));
+                    //quads.add(createSmallSquareQuad(v(x(direction)+xo(direction),0,z(direction)),v(x(direction)+xo(direction),0.5,z(direction)),v(x(direction),0.5,z(direction)),v(x(direction),0,z(direction)),texture));
+                    //quads.add(createSmallSquareQuad(v(x(direction)+xo(direction),0,z(direction)+zo(direction)),v(x(direction)+xo(direction),0.5,z(direction)+zo(direction)),v(x(direction)+xo(direction),0.5,z(direction)),v(x(direction)+xo(direction),0,z(direction)),texture));
+                    //quads.add(createSmallSquareQuad(v(x(direction),0,z(direction)+zo(direction)),v(x(direction),0.5,z(direction)+zo(direction)),v(x(direction)+xo(direction),0.5,z(direction)+zo(direction)),v(x(direction)+xo(direction),0,z(direction)+zo(direction)),texture));
+                    if(state.get(StairsBlock.FACING)==Direction.WEST || state.get(StairsBlock.FACING)==Direction.NORTH) {
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0), v(0.5,y(half),0), v(0.5,y(half),0.5), v(0,y(half),0.5), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.EAST || state.get(StairsBlock.FACING)==Direction.NORTH) {
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0), v(1,y(half),0), v(1,y(half),0.5), v(0.5,y(half),0.5), texture));
 
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.WEST || state.get(StairsBlock.FACING)==Direction.SOUTH) {
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0.5), v(0.5,y(half),0.5), v(0.5,y(half),1), v(0,y(half),1), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.EAST || state.get(StairsBlock.FACING)==Direction.SOUTH) {
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0.5), v(1,y(half),0.5), v(1,y(half),1), v(0.5,y(half),1), texture));
+
+                    }
                 }
                 if (state.get(StairsBlock.SHAPE)== StairsShape.INNER_LEFT) {
+                    //L-Shape
+                    if(state.get(StairsBlock.FACING)==Direction.WEST) {
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0), v(0.5,y(half),0), v(0.5,y(half),0.5), v(0,y(half),0.5), texture));
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0.5), v(1,y(half),0.5), v(1,y(half),1), v(0.5,y(half),1), texture));
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0.5), v(0.5,y(half),0.5), v(0.5,y(half),1), v(0,y(half),1), texture));
+
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.EAST) {
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0), v(1,y(half),0), v(1,y(half),0.5), v(0.5,y(half),0.5), texture));
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0), v(0.5,y(half),0), v(0.5,y(half),0.5), v(0,y(half),0.5), texture));
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0.5), v(1,y(half),0.5), v(1,y(half),1), v(0.5,y(half),1), texture));
+
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.NORTH) {
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0.5), v(0.5,y(half),0.5), v(0.5,y(half),1), v(0,y(half),1), texture));
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0), v(1,y(half),0), v(1,y(half),0.5), v(0.5,y(half),0.5), texture));
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0), v(0.5,y(half),0), v(0.5,y(half),0.5), v(0,y(half),0.5), texture));
+
+
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.SOUTH) {
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0.5), v(1,y(half),0.5), v(1,y(half),1), v(0.5,y(half),1), texture));
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0.5), v(0.5,y(half),0.5), v(0.5,y(half),1), v(0,y(half),1), texture));
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0), v(1,y(half),0), v(1,y(half),0.5), v(0.5,y(half),0.5), texture));
+
+
+                    }
 
                 }
                 if (state.get(StairsBlock.SHAPE)== StairsShape.INNER_RIGHT) {
-
+                    if(state.get(StairsBlock.FACING)==Direction.WEST) {
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0), v(0.5,y(half),0), v(0.5,y(half),0.5), v(0,y(half),0.5), texture));
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0), v(1,y(half),0), v(1,y(half),0.5), v(0.5,y(half),0.5), texture));
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0.5), v(0.5,y(half),0.5), v(0.5,y(half),1), v(0,y(half),1), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.EAST) {
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0), v(1,y(half),0), v(1,y(half),0.5), v(0.5,y(half),0.5), texture));
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0.5), v(1,y(half),0.5), v(1,y(half),1), v(0.5,y(half),1), texture));
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0.5), v(0.5,y(half),0.5), v(0.5,y(half),1), v(0,y(half),1), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.NORTH) {
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0), v(1,y(half),0), v(1,y(half),0.5), v(0.5,y(half),0.5), texture));
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0), v(0.5,y(half),0), v(0.5,y(half),0.5), v(0,y(half),0.5), texture));
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0.5), v(1,y(half),0.5), v(1,y(half),1), v(0.5,y(half),1), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.SOUTH) {
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0.5), v(1,y(half),0.5), v(1,y(half),1), v(0.5,y(half),1), texture));
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0.5), v(0.5,y(half),0.5), v(0.5,y(half),1), v(0,y(half),1), texture));
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0), v(0.5,y(half),0), v(0.5,y(half),0.5), v(0,y(half),0.5), texture));
+                    }
                 }
                 if (state.get(StairsBlock.SHAPE)== StairsShape.OUTER_LEFT) {
-
+                    if(state.get(StairsBlock.FACING)==Direction.NORTH) {
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0), v(0.5,y(half),0), v(0.5,y(half),0.5), v(0,y(half),0.5), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.SOUTH) {
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0.5), v(1,y(half),0.5), v(1,y(half),1), v(0.5,y(half),1), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.EAST) {
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0), v(1,y(half),0), v(1,y(half),0.5), v(0.5,y(half),0.5), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.WEST) {
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0.5), v(0.5,y(half),0.5), v(0.5,y(half),1), v(0,y(half),1), texture));
+                    }
                 }
                 if (state.get(StairsBlock.SHAPE)== StairsShape.OUTER_RIGHT) {
-
+                    if(state.get(StairsBlock.FACING)==Direction.WEST) {
+                        //NW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0), v(0.5,y(half),0), v(0.5,y(half),0.5), v(0,y(half),0.5), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.EAST) {
+                        //SE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),1),v(1,y(half),1),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(1,y(half),1),v(1,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0.5), v(1,y(half),0.5), v(1,y(half),1), v(0.5,y(half),1), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.NORTH) {
+                        //NE cube
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0),v(1,y(half),0),v(0.5,y(half),0),v(0.5,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(1,y2(half),0.5),v(1,y(half),0.5),v(1,y(half),0),v(1,y2(half),0),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(1,y(half),0.5),v(1,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y(half),0), v(1,y(half),0), v(1,y(half),0.5), v(0.5,y(half),0.5), texture));
+                    }
+                    if(state.get(StairsBlock.FACING)==Direction.SOUTH) {
+                        //SW cube
+                        quads.add(createSmallSquareQuad(v(0,y2(half),0.5),v(0,y(half),0.5),v(0,y(half),1),v(0,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0,y(half),0.5),v(0,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0.5,y2(half),1),v(0.5,y(half),1),v(0.5,y(half),0.5),v(0.5,y2(half),0.5),texture));
+                        quads.add(createSmallSquareQuad(v(0,y2(half),1),v(0,y(half),1),v(0.5,y(half),1),v(0.5,y2(half),1),texture));
+                        quads.add(createSmallSquareQuad(v(0,y(half),0.5), v(0.5,y(half),0.5), v(0.5,y(half),1), v(0,y(half),1), texture));
+                    }
                 }
             }
 
