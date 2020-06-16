@@ -22,7 +22,7 @@ displayName="BlockCarpentry" #mandatory
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="No webpage, but you can look at my code in my github repository at https://github.com/PianoManu/BlockCarpentry" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="examplemod.png" #optional
+logoFile="bc_logo.png" #optional
 # A text field displayed in the mod UI
 credits="Thanks for many help goes to McJty and the Forge Forum Team" #optional
 # A text field displayed in the mod UI
