@@ -1,9 +1,12 @@
 package mod.pianomanu.blockcarpentry;
 
+import mcp.MethodsReturnNonnullByDefault;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.RenderSetup;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,6 +21,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.stream.Collectors;
 
 import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
@@ -29,6 +33,8 @@ public class BlockCarpentryMain
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "blockcarpentry";
+    //TODO main klasse aufräumen
+    //TODO Hauptverzeichnis aufräumen
 
     public BlockCarpentryMain() {
         // Register the setup method for modloading
@@ -87,6 +93,20 @@ public class BlockCarpentryMain
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
+        }
+    }
+
+    public static class BlockCarpentryItemGroup extends ItemGroup {
+
+        public static final BlockCarpentryItemGroup BLOCK_CARPENTRY = new BlockCarpentryItemGroup(ItemGroup.GROUPS.length,"blockcarpentry");
+        private BlockCarpentryItemGroup(int index, String label) {
+            super(index, label);
+        }
+
+        @Override
+        @Nonnull
+        public ItemStack createIcon() {
+            return new ItemStack(Registration.FRAMEBLOCK.get());
         }
     }
 }
