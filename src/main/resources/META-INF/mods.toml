@@ -8,7 +8,7 @@ modLoader="javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
 loaderVersion="[30,)" #mandatory (28 is current forge version)
 # A URL to refer people to when problems occur with this mod
-issueTrackerURL="http://my.issue.tracker/" #optional
+issueTrackerURL="https://github.com/PianoManu/BlockCarpentry/issues" #optional
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
@@ -18,22 +18,26 @@ version="${version}" #mandatory
  # A display name for the mod
 displayName="BlockCarpentry" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="http://myurl.me/" #optional
+#updateJSONURL="" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="http://example.com/" #optional
+displayURL="No webpage, but you can look at my code in my github repository at https://github.com/PianoManu/BlockCarpentry" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
+credits="Thanks for many help goes to McJty and the Forge Forum Team" #optional
 # A text field displayed in the mod UI
-authors="Love, Cheese and small house plants" #optional
+authors="PianoManu" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-This is a long form description of the mod. You can write whatever you want here
+Fork Mod of Carpenter's Blocks Mod created by Mineshopper (owner of the idea) for older versions of Minecraft.
+I created this fork because friends of mine would like to play this mod on 1.15 (and me too).
 
-Have some lorem ipsum.
+Right now there is no guide for this mod, so here is one in small form (ONLY WORKS WITH SOLID BLOCKS BY NOW):
+- Rightclick on a frame block to give it the texture of the block you clicked it with
+- Shift-Rightclick with an empty hand, to get the block back out of the frame
+- (Not yet implemented) for blocks with different textures on each side, you later will be able to select the texture you want
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis lacinia magna. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed sagittis luctus odio eu tempus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque volutpat ligula eget lacus auctor sagittis. In hac habitasse platea dictumst. Nunc gravida elit vitae sem vehicula efficitur. Donec mattis ipsum et arcu lobortis, eleifend sagittis sem rutrum. Cras pharetra quam eget posuere fermentum. Sed id tincidunt justo. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Have fun!
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.examplemod]] #optional
