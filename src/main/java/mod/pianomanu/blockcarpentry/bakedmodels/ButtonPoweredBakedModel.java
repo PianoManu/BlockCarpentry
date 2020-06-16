@@ -266,7 +266,6 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
         switch (face) {
             case CEILING:
             case FLOOR:
-                System.out.println("x  "+direction);
                 switch (direction) {
                     case NORTH:
                     case SOUTH:
@@ -278,7 +277,6 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
                 }
                 break;
             default:
-                System.out.println("x2  "+direction);
                 switch (direction) {
                     case EAST:
                         x = -3/16f;
@@ -295,14 +293,12 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
                         break;
                 }
         }
-        System.out.println("final x  "+x);
         return x;
     }
 
     //getYPositionForQuad (bottom side)
     private float y(Direction direction, AttachFace face) {
         float y;
-        System.out.println("y  "+direction+" "+face);
         switch (face) {
             case CEILING:
                 y=15/16f;
@@ -313,14 +309,12 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
             default:
                 y = 6/16f;
         }
-        System.out.println("final y  "+y);
         return y;
     }
 
     //getYPositionForQuad (top side)
     private float y2(Direction direction, AttachFace face) {
         float y;
-        System.out.println("y  "+direction+" "+face);
         switch (face) {
             case CEILING:
                 y=1;
@@ -331,7 +325,6 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
             default:
                 y = 10/16f;
         }
-        System.out.println("final y  "+y);
         return y;
     }
 
@@ -341,7 +334,6 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
         switch (face) {
             case CEILING:
             case FLOOR:
-                System.out.println("z  "+direction);
                 switch (direction) {
                     case NORTH:
                     case SOUTH:
@@ -353,7 +345,6 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
                 }
                 break;
             default:
-                System.out.println("z2  "+direction);
                 switch (direction) {
                     case NORTH:
                         z = 15/16f;
@@ -370,7 +361,6 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
                         break;
                 }
         }
-        System.out.println("final z  "+z);
         return z;
     }
 

@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 
 public class FallingFrameBlock extends FallingBlock {
 
+    //TODO fix falling block losing tile entity
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
 
     public FallingFrameBlock(Properties properties) {

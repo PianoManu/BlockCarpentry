@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
 
@@ -26,6 +28,7 @@ import javax.annotation.Nullable;
     private final boolean isSolid = false;
     //private static final VoxelShape SHAPE = VoxelShapes.create(.2, .2, .2, .8, .8, .8);
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
+    private Block contained_block;
 
     public FrameBlock(Properties properties) {
         /*super(Properties.create(Material.WOOD)
@@ -76,6 +79,7 @@ import javax.annotation.Nullable;
                             BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                             ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                             insertBlock(world,pos, state,handBlockState);
+                            contained_block=handBlockState.getBlock();
                             player.getHeldItem(hand).setCount(count-1);
                         }
                     }
@@ -91,7 +95,7 @@ import javax.annotation.Nullable;
         //return super.onBlockActivated(state, world, pos, player, hand, trace);
     }
 
-    private void dropContainedBlock(World worldIn, BlockPos pos) {
+    protected void dropContainedBlock(World worldIn, BlockPos pos) {
         if (!worldIn.isRemote) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
             if (tileentity instanceof FrameBlockTile) {
@@ -109,6 +113,7 @@ import javax.annotation.Nullable;
                     itementity.setDefaultPickupDelay();
                     worldIn.addEntity(itementity);
                     frameTileEntity.clear();
+                    contained_block=null;
                 }
             }
         }
@@ -124,9 +129,35 @@ import javax.annotation.Nullable;
         }
     }
 
-    //TODO add everywhere
+    //TODO add everywhere AND FIX!!!
     @Override
     public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state) {
-        dropContainedBlock(worldIn.getWorld(), pos);
+        dropBlock(worldIn.getWorld(), pos);
+        System.out.println("onPlayerDestroy");
+    }
+
+    @Override
+    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
+        dropBlock(worldIn, pos);
+        super.harvestBlock(worldIn, player, pos, state, te, stack);
+        System.out.println("harvestBlock");
+    }
+
+    private void dropBlock(World worldIn, BlockPos pos) {
+        if (!(contained_block==null)) {
+            System.out.println(contained_block.toString());
+            worldIn.playEvent(1010, pos, 0);
+            float f = 0.7F;
+            double d0 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
+            double d1 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.060000002F + 0.6D;
+            double d2 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
+            Item item = contained_block.asItem();
+            ItemStack itemstack1 = item.getDefaultInstance();
+            ItemEntity itementity = new ItemEntity(worldIn, (double)pos.getX() + d0, (double)pos.getY() + d1, (double)pos.getZ() + d2, itemstack1);
+            itementity.setDefaultPickupDelay();
+            worldIn.addEntity(itementity);
+            contained_block=null;
+            System.out.println("dropBlock");
+        }
     }
 }

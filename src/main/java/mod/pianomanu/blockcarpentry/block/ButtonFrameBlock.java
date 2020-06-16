@@ -124,4 +124,10 @@ public class ButtonFrameBlock extends WoodButtonBlock {
             worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
         }
     }
+
+    @Override
+    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
+        dropContainedBlock(worldIn, pos);
+        super.harvestBlock(worldIn, player, pos, state, te, stack);
+    }
 }

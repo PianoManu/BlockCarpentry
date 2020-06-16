@@ -163,4 +163,9 @@ public class SlabFrameBlock extends FrameBlock implements IWaterLoggable {
                 return false;
         }
     }
+
+    @Override
+    public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state) {
+        dropContainedBlock(worldIn.getWorld(), pos);
+    }
 }
