@@ -33,7 +33,8 @@ import java.util.List;
 import java.util.Random;
 
 public class StairsBakedModel implements IDynamicBakedModel {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/frame_slab");
+    public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
+    //TODO necessary?
     public static final VertexFormat SLAB_BLOCK = new VertexFormat(ImmutableList.<VertexFormatElement>builder()
             .add(DefaultVertexFormats.POSITION_3F)
             .add(DefaultVertexFormats.COLOR_4UB)
@@ -255,7 +256,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
                     }*/
                     if(state.get(StairsBlock.FACING)==Direction.WEST || state.get(StairsBlock.FACING)==Direction.NORTH) {
                         //NW cube
-                        //TODO change 2nd and 4th false and true
+                        //TODO change 2nd and 4th false and true - fixed?? -> testing!
                         quads.add(createSmallSquareQuad(v(0,y2(half),0),v(0,y(half),0),v(0,y(half),0.5),v(0,y2(half),0.5),texture, false, false));
                         quads.add(createSmallSquareQuad(v(0.5,y2(half),0),v(0.5,y(half),0),v(0,y(half),0),v(0,y2(half),0),texture, true, false));
                         quads.add(createSmallSquareQuad(v(0.5,y2(half),0.5),v(0.5,y(half),0.5),v(0.5,y(half),0),v(0.5,y2(half),0),texture, true, false));

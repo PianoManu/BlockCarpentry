@@ -105,4 +105,13 @@ public class FallingFrameBlock extends FallingBlock {
             worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
         }
     }
+
+    @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            dropContainedBlock(worldIn, pos);
+
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
+        }
+    }
 }

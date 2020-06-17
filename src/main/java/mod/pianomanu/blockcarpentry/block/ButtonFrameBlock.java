@@ -126,8 +126,11 @@ public class ButtonFrameBlock extends WoodButtonBlock {
     }
 
     @Override
-    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
-        dropContainedBlock(worldIn, pos);
-        super.harvestBlock(worldIn, player, pos, state, te, stack);
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            dropContainedBlock(worldIn, pos);
+
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
+        }
     }
 }

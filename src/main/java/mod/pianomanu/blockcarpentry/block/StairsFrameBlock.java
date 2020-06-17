@@ -109,9 +109,12 @@ public class StairsFrameBlock extends StairsBlock {
         }
     }
 
-    //TODO add everywhere
     @Override
-    public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state) {
-        dropContainedBlock(worldIn.getWorld(), pos);
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            dropContainedBlock(worldIn, pos);
+
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
+        }
     }
 }

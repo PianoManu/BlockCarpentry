@@ -27,7 +27,7 @@ import java.util.Random;
 
 @SuppressWarnings("deprecation")
 public class SlabFrameTopBakedModel implements IDynamicBakedModel {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/frame_slab");
+    public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
     private TextureAtlasSprite getTexture() {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);

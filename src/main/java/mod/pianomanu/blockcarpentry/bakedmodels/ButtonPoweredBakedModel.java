@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Random;
 
 public class ButtonPoweredBakedModel implements IDynamicBakedModel {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/frame_slab");
+    public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
     public static final VertexFormat SLAB_BLOCK = new VertexFormat(ImmutableList.<VertexFormatElement>builder()
             .add(DefaultVertexFormats.POSITION_3F)
             .add(DefaultVertexFormats.COLOR_4UB)

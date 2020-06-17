@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Random;
 
 public class PressurePlateFrameBakedModel implements IDynamicBakedModel {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/frameblock");
+    public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
     private TextureAtlasSprite getTexture() {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
