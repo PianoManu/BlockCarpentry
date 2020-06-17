@@ -1,6 +1,5 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import com.google.common.collect.ImmutableList;
@@ -31,11 +30,6 @@ public class SlabFrameTopBakedModel implements IDynamicBakedModel {
 
     private TextureAtlasSprite getTexture() {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
-    }
-
-    //@Override
-    public boolean func_230044_c_() {
-        return false;
     }
 
     private void putVertex(BakedQuadBuilder builder, Vec3d normal,

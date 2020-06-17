@@ -43,16 +43,10 @@ public class SlabFrameBottomBakedModel implements IDynamicBakedModel {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
     }
 
-    //@Override
-    public boolean func_230044_c_() {
-        return false;
-    }
-
     private void putVertex(BakedQuadBuilder builder, Vec3d normal,
                            double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
 
-        //ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
-        ImmutableList<VertexFormatElement> elements = SLAB_BLOCK.getElements().asList();
+        ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
         for (int j = 0 ; j < elements.size() ; j++) {
             VertexFormatElement e = elements.get(j);
             switch (e.getUsage()) {
@@ -98,7 +92,6 @@ public class SlabFrameBottomBakedModel implements IDynamicBakedModel {
         putVertex(builder, normal, v2.x, v2.y, v2.z, 0, 16, sprite, 1.0f, 1.0f, 1.0f);
         putVertex(builder, normal, v3.x, v3.y, v3.z, 16, 16, sprite, 1.0f, 1.0f, 1.0f);
         putVertex(builder, normal, v4.x, v4.y, v4.z, 16, 0, sprite, 1.0f, 1.0f, 1.0f);
-        //BakedQuad bakedQuad = FaceBakery.bakeQuad()
         return builder.build();
     }
 
@@ -144,24 +137,7 @@ public class SlabFrameBottomBakedModel implements IDynamicBakedModel {
             }
         }
 
-        //if (side != null) {
             return Collections.emptyList();
-        //}
-
-        //TextureAtlasSprite texture = getTexture();
-        /*List<BakedQuad> quads = new ArrayList<>();
-
-        //down
-        quads.add(createQuad(v(1,0,0), v(1,0,1), v(0,0,1), v(0,0,0),texture));
-        //up
-        quads.add(createQuad(v(0,0.5,0), v(0,0.5,1), v(1,0.5,1), v(1,0.5,0),texture));
-        //sides
-        quads.add(createQuad(v(0,0,0), v(0,0,1), v(0,0.5,1), v(0,0.5,0),texture));
-        quads.add(createQuad(v(0,0,0), v(0,0.5,0), v(1,0.5,0), v(1,0,0),texture));
-        quads.add(createQuad(v(0,0,1), v(1,0,1), v(1,0.5,1), v(0,0.5,1),texture));
-        quads.add(createQuad(v(1,0.5,0), v(1,0.5,1), v(1,0,1), v(1,0,0),texture));/
-
-        return quads;*/
     }
 
     public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {

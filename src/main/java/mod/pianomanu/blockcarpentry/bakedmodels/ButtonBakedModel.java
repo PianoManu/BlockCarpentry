@@ -32,14 +32,6 @@ import java.util.Random;
 
 public class ButtonBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
-    public static final VertexFormat SLAB_BLOCK = new VertexFormat(ImmutableList.<VertexFormatElement>builder()
-            .add(DefaultVertexFormats.POSITION_3F)
-            .add(DefaultVertexFormats.COLOR_4UB)
-            .add(DefaultVertexFormats.TEX_2F)
-            .add(DefaultVertexFormats.TEX_2SB)
-            .add(DefaultVertexFormats.NORMAL_3B)
-            .add(DefaultVertexFormats.PADDING_1B)
-            .build());
 
     private TextureAtlasSprite getTexture() {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
@@ -53,8 +45,7 @@ public class ButtonBakedModel implements IDynamicBakedModel {
     private void putVertex(BakedQuadBuilder builder, Vec3d normal,
                            double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
 
-        //ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
-        ImmutableList<VertexFormatElement> elements = SLAB_BLOCK.getElements().asList();
+        ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
         for (int j = 0 ; j < elements.size() ; j++) {
             VertexFormatElement e = elements.get(j);
             switch (e.getUsage()) {

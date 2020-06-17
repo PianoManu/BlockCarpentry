@@ -33,11 +33,6 @@ public class FrameBakedModel implements IDynamicBakedModel {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
     }
 
-    //@Override
-    public boolean func_230044_c_() {
-        return false;
-    }
-
     private void putVertex(BakedQuadBuilder builder, Vec3d normal,
                            double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
 
@@ -103,6 +98,7 @@ public class FrameBakedModel implements IDynamicBakedModel {
             if (location != null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 if (model != null) {
+                    //TODO what about full blocks with different side textures
                     return model.getQuads(mimic, side, rand, extraData);
                 }
             }

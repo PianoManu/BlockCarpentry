@@ -32,11 +32,6 @@ public class PressurePlateFrameBakedModel implements IDynamicBakedModel {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
     }
 
-    //@Override
-    public boolean func_230044_c_() {
-        return false;
-    }
-
     private void putVertex(BakedQuadBuilder builder, Vec3d normal,
                            double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
 
@@ -127,25 +122,7 @@ public class PressurePlateFrameBakedModel implements IDynamicBakedModel {
                 }
             }
         }
-
-        //if (side != null) {
         return Collections.emptyList();
-        //}
-
-        //TextureAtlasSprite texture = getTexture();
-        /*List<BakedQuad> quads = new ArrayList<>();
-
-        //down
-        quads.add(createQuad(v(1,0,0), v(1,0,1), v(0,0,1), v(0,0,0),texture));
-        //up
-        quads.add(createQuad(v(0,0.5,0), v(0,0.5,1), v(1,0.5,1), v(1,0.5,0),texture));
-        //sides
-        quads.add(createQuad(v(0,0,0), v(0,0,1), v(0,0.5,1), v(0,0.5,0),texture));
-        quads.add(createQuad(v(0,0,0), v(0,0.5,0), v(1,0.5,0), v(1,0,0),texture));
-        quads.add(createQuad(v(0,0,1), v(1,0,1), v(1,0.5,1), v(0,0.5,1),texture));
-        quads.add(createQuad(v(1,0.5,0), v(1,0.5,1), v(1,0,1), v(1,0,0),texture));/
-
-        return quads;*/
     }
 
     public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {

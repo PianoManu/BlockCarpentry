@@ -31,14 +31,6 @@ import java.util.Random;
 
 public class ButtonPoweredBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
-    public static final VertexFormat SLAB_BLOCK = new VertexFormat(ImmutableList.<VertexFormatElement>builder()
-            .add(DefaultVertexFormats.POSITION_3F)
-            .add(DefaultVertexFormats.COLOR_4UB)
-            .add(DefaultVertexFormats.TEX_2F)
-            .add(DefaultVertexFormats.TEX_2SB)
-            .add(DefaultVertexFormats.NORMAL_3B)
-            .add(DefaultVertexFormats.PADDING_1B)
-            .build());
 
     private TextureAtlasSprite getTexture() {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
