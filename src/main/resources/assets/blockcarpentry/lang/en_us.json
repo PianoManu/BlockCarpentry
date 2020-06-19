@@ -2,9 +2,10 @@
 	"block.blockcarpentry.frameblock":"Frame",
 	"block.blockcarpentry.frame_slab":"Frame Slab",
 	"block.blockcarpentry.falling_frameblock":"Frame (affected by Gravity)",
-	"block.blockcarpentry.frame_button":"Frame Button",
+	"block.blockcarpentry.frame_button":"Wooden Frame Button",
 	"block.blockcarpentry.frame_stairs":"Frame Stairs",
 	"block.blockcarpentry.frame_pressure_plate":"Wooden Frame Pressure Plate",
+	"block.blockcarpentry.frame_door":"Frame Door",
 	
 	"itemGroup.blockcarpentry":"BlockCarpentry"
 }
