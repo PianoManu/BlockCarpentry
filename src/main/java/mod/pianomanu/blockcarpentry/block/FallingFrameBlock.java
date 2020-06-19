@@ -1,10 +1,14 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.entity.FallingFrameBlockEntity;
+import mod.pianomanu.blockcarpentry.tileentity.FallingFrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
+import mod.pianomanu.blockcarpentry.util.BlockContainerProperty;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FallingBlock;
+import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -19,21 +23,25 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
+import java.sql.Time;
+import java.util.Random;
 
 public class FallingFrameBlock extends FallingBlock {
 
     //TODO fix falling block losing tile entity
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
+    public static final BlockContainerProperty CONTAINS = BCBlockStateProperties.CONTAINS;
 
     public FallingFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false));
+        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(CONTAINS, "empty"));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK);
+        builder.add(CONTAINS_BLOCK, CONTAINS);
     }
 
     @Override
@@ -107,11 +115,41 @@ public class FallingFrameBlock extends FallingBlock {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             dropContainedBlock(worldIn, pos);
 
             super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
+    }
+
+    @Override
+    protected void onStartFalling(FallingBlockEntity fallingEntity) {
+        super.onStartFalling(fallingEntity);
+    }
+
+    @Override
+    public void onEndFalling(World worldIn, BlockPos pos, BlockState fallingState, BlockState hitState) {
+        super.onEndFalling(worldIn, pos, fallingState, hitState);
+
+    }
+
+    @Override
+    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
+        if (worldIn.isAirBlock(pos.down()) || canFallThrough(worldIn.getBlockState(pos.down())) && pos.getY() >= 0) {
+            if (worldIn.getTileEntity(pos) instanceof FrameBlockTile) {
+                FrameBlockTile tileEntity = (FrameBlockTile) worldIn.getTileEntity(pos);
+                if (tileEntity.getMimic()!=null) {
+                    FallingFrameBlockEntity fallingFrameBlockEntity = new FallingFrameBlockEntity(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, worldIn.getBlockState(pos), tileEntity.getMimic());
+                    this.onStartFalling(fallingFrameBlockEntity);
+                    worldIn.addEntity(fallingFrameBlockEntity);
+                }
+            }
+        }
+    }
+
+    private TileEntity createFallingFrameTileEntity(BlockState mimic) {
+        return new FallingFrameBlockTile(mimic);
     }
 }

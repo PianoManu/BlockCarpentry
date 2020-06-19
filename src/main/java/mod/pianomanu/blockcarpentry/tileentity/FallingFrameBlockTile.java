@@ -25,8 +25,9 @@ public class FallingFrameBlockTile extends FrameBlockTile {
 
     private BlockState mimic;
 
-    public FallingFrameBlockTile() {
+    public FallingFrameBlockTile(BlockState mimic) {
         super();
+        this.mimic = mimic;
     }
 
     public void setMimic(BlockState mimic) {
