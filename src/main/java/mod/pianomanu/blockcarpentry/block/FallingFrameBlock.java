@@ -13,6 +13,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -29,6 +30,8 @@ import javax.annotation.Nullable;
 import java.sql.Time;
 import java.util.Random;
 
+import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
+
 public class FallingFrameBlock extends FallingBlock {
 
     //TODO fix falling block losing tile entity
@@ -37,11 +40,11 @@ public class FallingFrameBlock extends FallingBlock {
 
     public FallingFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(CONTAINS, "empty"));
+        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(CONTAINS, "empty").with(LIGHT_LEVEL, 0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK, CONTAINS);
+        builder.add(CONTAINS_BLOCK, CONTAINS, LIGHT_LEVEL);
     }
 
     @Override
@@ -76,6 +79,18 @@ public class FallingFrameBlock extends FallingBlock {
                         player.getHeldItem(hand).setCount(count-1);
                     }
                 }
+            }
+            if (item.getItem()== Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL)<15) {
+                int count = player.getHeldItem(hand).getCount();
+                world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+3));
+                System.out.println("glowstone clicked");
+                player.getHeldItem(hand).setCount(count-1);
+            }
+            if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL)<15) {
+                int count = player.getHeldItem(hand).getCount();
+                world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
+                System.out.println("coal clicked");
+                player.getHeldItem(hand).setCount(count-1);
             }
         }
         return ActionResultType.SUCCESS;
@@ -151,5 +166,15 @@ public class FallingFrameBlock extends FallingBlock {
 
     private TileEntity createFallingFrameTileEntity(BlockState mimic) {
         return new FallingFrameBlockTile(mimic);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public int getLightValue(BlockState state) {
+        System.out.println("getLightValue");
+        if (state.get(LIGHT_LEVEL)>15) {
+            return 15;
+        }
+        return state.get(LIGHT_LEVEL);
     }
 }

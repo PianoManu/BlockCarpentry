@@ -9,6 +9,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -22,17 +23,19 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
+
 public class PressurePlateFrameBlock extends PressurePlateBlock {
 
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
 
     public PressurePlateFrameBlock(Sensitivity sensitivityIn, Properties propertiesIn) {
         super(sensitivityIn, propertiesIn);
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(POWERED, Boolean.FALSE));
+        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(POWERED, Boolean.FALSE).with(LIGHT_LEVEL, 0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK).add(POWERED);
+        builder.add(CONTAINS_BLOCK).add(POWERED).add(LIGHT_LEVEL);
     }
 
     @Override
@@ -67,6 +70,18 @@ public class PressurePlateFrameBlock extends PressurePlateBlock {
                         player.getHeldItem(hand).setCount(count-1);
                     }
                 }
+            }
+            if (item.getItem()== Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL)<15) {
+                int count = player.getHeldItem(hand).getCount();
+                world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+3));
+                System.out.println("glowstone clicked");
+                player.getHeldItem(hand).setCount(count-1);
+            }
+            if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL)<15) {
+                int count = player.getHeldItem(hand).getCount();
+                world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
+                System.out.println("coal clicked");
+                player.getHeldItem(hand).setCount(count-1);
             }
         }
         return ActionResultType.SUCCESS;
@@ -112,5 +127,15 @@ public class PressurePlateFrameBlock extends PressurePlateBlock {
 
             super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public int getLightValue(BlockState state) {
+        System.out.println("getLightValue");
+        if (state.get(LIGHT_LEVEL)>15) {
+            return 15;
+        }
+        return state.get(LIGHT_LEVEL);
     }
 }

@@ -10,7 +10,9 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -28,8 +30,10 @@ import javax.annotation.Nullable;
 
 @SuppressWarnings("deprecation") public class FrameBlock extends Block {
     private final boolean isSolid = false;
+    private int lightLevel = 0;
     //private static final VoxelShape SHAPE = VoxelShapes.create(.2, .2, .2, .8, .8, .8);
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
+    public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
 
     public FrameBlock(Properties properties) {
         /*super(Properties.create(Material.WOOD)
@@ -39,11 +43,11 @@ import javax.annotation.Nullable;
                 .notSolid()
         );*/
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE));
+        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK);
+        builder.add(CONTAINS_BLOCK).add(LIGHT_LEVEL);
     }
 
     /*@Override
@@ -84,6 +88,20 @@ import javax.annotation.Nullable;
                             player.getHeldItem(hand).setCount(count-1);
                         }
                     }
+                }
+                if (item.getItem()== Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL)<15) {
+                    int count = player.getHeldItem(hand).getCount();
+                    lightLevel=lightLevel+3;
+                    world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+3));
+                    System.out.println("glowstone clicked");
+                    player.getHeldItem(hand).setCount(count-1);
+                }
+                if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL)<15) {
+                    int count = player.getHeldItem(hand).getCount();
+                    lightLevel=lightLevel+1;
+                    world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
+                    System.out.println("coal clicked");
+                    player.getHeldItem(hand).setCount(count-1);
                 }
                 /*TileEntity te = world.getTileEntity(pos);
                 if (te instanceof FrameBlockTile) {
@@ -149,5 +167,13 @@ import javax.annotation.Nullable;
 
             super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
+    }
+
+    public int getLightValue(BlockState state) {
+        System.out.println("getLightValue");
+        if (state.get(LIGHT_LEVEL)>15) {
+            return 15;
+        }
+        return state.get(LIGHT_LEVEL);
     }
 }

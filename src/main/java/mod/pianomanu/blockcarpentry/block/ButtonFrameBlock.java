@@ -9,6 +9,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
@@ -27,6 +28,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
+
 public class ButtonFrameBlock extends WoodButtonBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -34,11 +37,11 @@ public class ButtonFrameBlock extends WoodButtonBlock {
 
     public ButtonFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(HORIZONTAL_FACING, Direction.NORTH).with(POWERED,false).with(FACE, AttachFace.WALL));
+        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(HORIZONTAL_FACING, Direction.NORTH).with(POWERED,false).with(FACE, AttachFace.WALL).with(LIGHT_LEVEL, 0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK).add(BlockStateProperties.HORIZONTAL_FACING).add(POWERED).add(FACE);
+        builder.add(CONTAINS_BLOCK).add(BlockStateProperties.HORIZONTAL_FACING).add(POWERED).add(FACE).add(LIGHT_LEVEL);
     }
 
     @Override
@@ -88,6 +91,18 @@ public class ButtonFrameBlock extends WoodButtonBlock {
                     this.playSound(player, world, pos, true);
                 }
             }
+            if (item.getItem()== Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL)<15) {
+                int count = player.getHeldItem(hand).getCount();
+                world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+3));
+                System.out.println("glowstone clicked");
+                player.getHeldItem(hand).setCount(count-1);
+            }
+            if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL)<15) {
+                int count = player.getHeldItem(hand).getCount();
+                world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
+                System.out.println("coal clicked");
+                player.getHeldItem(hand).setCount(count-1);
+            }
         }
         return ActionResultType.SUCCESS;
     }
@@ -132,5 +147,15 @@ public class ButtonFrameBlock extends WoodButtonBlock {
 
             super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public int getLightValue(BlockState state) {
+        System.out.println("getLightValue");
+        if (state.get(LIGHT_LEVEL)>15) {
+            return 15;
+        }
+        return state.get(LIGHT_LEVEL);
     }
 }
