@@ -74,13 +74,11 @@ public class PressurePlateFrameBlock extends PressurePlateBlock {
             if (item.getItem()== Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL)<15) {
                 int count = player.getHeldItem(hand).getCount();
                 world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+3));
-                System.out.println("glowstone clicked");
                 player.getHeldItem(hand).setCount(count-1);
             }
             if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL)<15) {
                 int count = player.getHeldItem(hand).getCount();
                 world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
-                System.out.println("coal clicked");
                 player.getHeldItem(hand).setCount(count-1);
             }
         }
@@ -132,7 +130,6 @@ public class PressurePlateFrameBlock extends PressurePlateBlock {
     @Override
     @SuppressWarnings("deprecation")
     public int getLightValue(BlockState state) {
-        System.out.println("getLightValue");
         if (state.get(LIGHT_LEVEL)>15) {
             return 15;
         }

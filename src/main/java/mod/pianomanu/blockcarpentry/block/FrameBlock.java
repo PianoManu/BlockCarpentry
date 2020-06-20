@@ -93,14 +93,12 @@ import javax.annotation.Nullable;
                     int count = player.getHeldItem(hand).getCount();
                     lightLevel=lightLevel+3;
                     world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+3));
-                    System.out.println("glowstone clicked");
                     player.getHeldItem(hand).setCount(count-1);
                 }
                 if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL)<15) {
                     int count = player.getHeldItem(hand).getCount();
                     lightLevel=lightLevel+1;
                     world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
-                    System.out.println("coal clicked");
                     player.getHeldItem(hand).setCount(count-1);
                 }
                 /*TileEntity te = world.getTileEntity(pos);
@@ -115,21 +113,12 @@ import javax.annotation.Nullable;
     }
 
     protected void dropContainedBlock(World worldIn, BlockPos pos) {
-        System.out.println("drop");
         if (!worldIn.isRemote) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
-            System.out.println("new te");
-            if (tileentity != null) {
-                System.out.println(tileentity.getType());
-            } else {
-                System.out.println("te is null");
-            }
             if (tileentity instanceof FrameBlockTile) {
                 FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
                 BlockState blockState = frameTileEntity.getMimic();
-                System.out.println("get te");
                 if (!(blockState==null)) {
-                    System.out.println("drop??");
                     worldIn.playEvent(1010, pos, 0);
                     frameTileEntity.clear();
                     float f = 0.7F;
@@ -141,8 +130,6 @@ import javax.annotation.Nullable;
                     itementity.setDefaultPickupDelay();
                     worldIn.addEntity(itementity);
                     frameTileEntity.clear();
-                    System.out.println("drop!!");
-                    //this.contained_block=null;
                 }
             }
         }
@@ -170,7 +157,6 @@ import javax.annotation.Nullable;
     }
 
     public int getLightValue(BlockState state) {
-        System.out.println("getLightValue");
         if (state.get(LIGHT_LEVEL)>15) {
             return 15;
         }
