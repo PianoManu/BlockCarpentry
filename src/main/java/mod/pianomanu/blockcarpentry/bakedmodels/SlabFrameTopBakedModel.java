@@ -3,6 +3,7 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import com.google.common.collect.ImmutableList;
+import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -119,7 +120,7 @@ public class SlabFrameTopBakedModel implements IDynamicBakedModel {
                 if (model != null) {
                     //neues quad-model mit den blockdaten aus dem slab
                     //return model.getQuads(mimic, side, rand, extraData);
-                    return getMimicQuads(mimic, side, rand, extraData);
+                    return getMimicQuads(state, side, rand, extraData);
                 }
             }
         }
@@ -149,16 +150,16 @@ public class SlabFrameTopBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic!=null) {
-            System.out.println(mimic.toString());
-            ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
-            IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-            System.out.println(model.toString());
-            System.out.println(location.toString());
-            final ResourceLocation MIMIC_TEXTURE = new ResourceLocation(mimic.getBlock().getRegistryName().getNamespace(), mimic.getBlock().getRegistryName().getPath());
-            System.out.println(MIMIC_TEXTURE.toString());
-            TextureAtlasSprite texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(mimic.getBlock().getRegistryName().getNamespace(), "block/"+mimic.getBlock().getRegistryName().getPath()));
-            System.out.println(texture.toString());
+        if (mimic!=null && state != null) {
+            //TextureAtlasSprite texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(mimic.getBlock().getRegistryName().getNamespace(), "block/"+mimic.getBlock().getRegistryName().getPath()));
+            List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
+            TextureAtlasSprite texture;
+            if(textureList.size()>state.get(FrameBlock.TEXTURE)) {
+                texture = textureList.get(state.get(FrameBlock.TEXTURE));
+            }
+            else {
+                texture = textureList.get(0);
+            }
             List<BakedQuad> quads = new ArrayList<>();
             //down
             quads.add(createQuad(v(1, 0.5, 0), v(1, 0.5, 1), v(0, 0.5, 1), v(0, 0.5, 0), texture));

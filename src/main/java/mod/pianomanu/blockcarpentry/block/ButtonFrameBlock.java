@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import net.minecraft.block.Block;
@@ -29,6 +30,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
+import static mod.pianomanu.blockcarpentry.block.FrameBlock.TEXTURE;
 
 public class ButtonFrameBlock extends WoodButtonBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -37,11 +39,11 @@ public class ButtonFrameBlock extends WoodButtonBlock {
 
     public ButtonFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(HORIZONTAL_FACING, Direction.NORTH).with(POWERED,false).with(FACE, AttachFace.WALL).with(LIGHT_LEVEL, 0));
+        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(HORIZONTAL_FACING, Direction.NORTH).with(POWERED,false).with(FACE, AttachFace.WALL).with(LIGHT_LEVEL, 0).with(TEXTURE,0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK).add(BlockStateProperties.HORIZONTAL_FACING).add(POWERED).add(FACE).add(LIGHT_LEVEL);
+        builder.add(CONTAINS_BLOCK).add(BlockStateProperties.HORIZONTAL_FACING).add(POWERED).add(FACE).add(LIGHT_LEVEL).add(TEXTURE);
     }
 
     @Override
@@ -100,6 +102,13 @@ public class ButtonFrameBlock extends WoodButtonBlock {
                 int count = player.getHeldItem(hand).getCount();
                 world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
                 player.getHeldItem(hand).setCount(count-1);
+            }
+            if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking()) {
+                if (state.get(TEXTURE)<3) {
+                    world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
+                } else {
+                    world.setBlockState(pos, state.with(TEXTURE, 0));
+                }
             }
         }
         return ActionResultType.SUCCESS;

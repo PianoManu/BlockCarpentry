@@ -40,7 +40,7 @@ public class SlabFrameBlock extends FrameBlock implements IWaterLoggable {
 
     public SlabFrameBlock(Block.Properties properties) {
         super(properties);
-        this.setDefaultState(this.getDefaultState().with(TYPE, SlabType.BOTTOM).with(WATERLOGGED, Boolean.valueOf(false)).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0));
+        this.setDefaultState(this.getDefaultState().with(TYPE, SlabType.BOTTOM).with(WATERLOGGED, Boolean.valueOf(false)).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(TEXTURE,0));
     }
 
     @Override
@@ -60,7 +60,7 @@ public class SlabFrameBlock extends FrameBlock implements IWaterLoggable {
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(TYPE, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
+        builder.add(TYPE, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL, TEXTURE);
     }
 
     @SuppressWarnings("deprecation")

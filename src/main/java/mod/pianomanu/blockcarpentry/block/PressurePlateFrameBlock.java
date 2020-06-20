@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import net.minecraft.block.Block;
@@ -24,6 +25,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
+import static mod.pianomanu.blockcarpentry.block.FrameBlock.TEXTURE;
 
 public class PressurePlateFrameBlock extends PressurePlateBlock {
 
@@ -31,11 +33,11 @@ public class PressurePlateFrameBlock extends PressurePlateBlock {
 
     public PressurePlateFrameBlock(Sensitivity sensitivityIn, Properties propertiesIn) {
         super(sensitivityIn, propertiesIn);
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(POWERED, Boolean.FALSE).with(LIGHT_LEVEL, 0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(POWERED, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(TEXTURE,0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK).add(POWERED).add(LIGHT_LEVEL);
+        builder.add(CONTAINS_BLOCK).add(POWERED).add(LIGHT_LEVEL).add(TEXTURE);
     }
 
     @Override
@@ -80,6 +82,13 @@ public class PressurePlateFrameBlock extends PressurePlateBlock {
                 int count = player.getHeldItem(hand).getCount();
                 world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
                 player.getHeldItem(hand).setCount(count-1);
+            }
+            if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking()) {
+                if (state.get(TEXTURE)<3) {
+                    world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
+                } else {
+                    world.setBlockState(pos, state.with(TEXTURE, 0));
+                }
             }
         }
         return ActionResultType.SUCCESS;

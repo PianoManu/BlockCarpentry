@@ -5,6 +5,7 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.ButtonFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.client.Minecraft;
@@ -177,7 +178,15 @@ public class StairsBakedModel implements IDynamicBakedModel {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic!=null && state != null) {
             //get texture from block in tile entity and apply it to the quads
-            TextureAtlasSprite texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(mimic.getBlock().getRegistryName().getNamespace(), "block/" + mimic.getBlock().getRegistryName().getPath()));
+            //TextureAtlasSprite texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(mimic.getBlock().getRegistryName().getNamespace(), "block/" + mimic.getBlock().getRegistryName().getPath()));
+            List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
+            TextureAtlasSprite texture;
+            if(textureList.size()>state.get(FrameBlock.TEXTURE)) {
+                texture = textureList.get(state.get(FrameBlock.TEXTURE));
+            }
+            else {
+                texture = textureList.get(0);
+            }
             List<BakedQuad> quads = new ArrayList<>();
             Half half = state.get(StairsBlock.HALF);
             if (state.get(StairsBlock.HALF)==Half.BOTTOM) {

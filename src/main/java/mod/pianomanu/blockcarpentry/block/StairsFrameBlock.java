@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import net.minecraft.block.Block;
@@ -28,6 +29,7 @@ import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
+import static mod.pianomanu.blockcarpentry.block.FrameBlock.TEXTURE;
 
 public class StairsFrameBlock extends StairsBlock {
 
@@ -35,11 +37,11 @@ public class StairsFrameBlock extends StairsBlock {
 
     public StairsFrameBlock(Supplier<BlockState> state, Properties properties) {
         super(state, properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(FACING, Direction.NORTH).with(HALF, Half.BOTTOM).with(SHAPE, StairsShape.STRAIGHT).with(WATERLOGGED, Boolean.valueOf(false)).with(LIGHT_LEVEL, 0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(FACING, Direction.NORTH).with(HALF, Half.BOTTOM).with(SHAPE, StairsShape.STRAIGHT).with(WATERLOGGED, Boolean.valueOf(false)).with(LIGHT_LEVEL, 0).with(TEXTURE,0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK, FACING, HALF, SHAPE, WATERLOGGED, LIGHT_LEVEL);
+        builder.add(CONTAINS_BLOCK, FACING, HALF, SHAPE, WATERLOGGED, LIGHT_LEVEL, TEXTURE);
     }
 
     @Override
@@ -84,6 +86,13 @@ public class StairsFrameBlock extends StairsBlock {
                 int count = player.getHeldItem(hand).getCount();
                 world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
                 player.getHeldItem(hand).setCount(count-1);
+            }
+            if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking()) {
+                if (state.get(TEXTURE)<3) {
+                    world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
+                } else {
+                    world.setBlockState(pos, state.with(TEXTURE, 0));
+                }
             }
         }
         return ActionResultType.SUCCESS;

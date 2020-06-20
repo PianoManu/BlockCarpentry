@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import net.minecraft.block.Block;
@@ -20,6 +21,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -34,6 +36,7 @@ import javax.annotation.Nullable;
     //private static final VoxelShape SHAPE = VoxelShapes.create(.2, .2, .2, .8, .8, .8);
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
+    public static final IntegerProperty TEXTURE = BCBlockStateProperties.TEXTURE;
 
     public FrameBlock(Properties properties) {
         /*super(Properties.create(Material.WOOD)
@@ -43,11 +46,11 @@ import javax.annotation.Nullable;
                 .notSolid()
         );*/
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(TEXTURE,0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK).add(LIGHT_LEVEL);
+        builder.add(CONTAINS_BLOCK).add(LIGHT_LEVEL).add(TEXTURE);
     }
 
     /*@Override
@@ -79,6 +82,9 @@ import javax.annotation.Nullable;
                     if(item.getItem() instanceof BlockItem) {
                         TileEntity tileEntity = world.getTileEntity(pos);
                         int count = player.getHeldItem(hand).getCount();
+                        Block heldBlock = ((BlockItem) item.getItem()).getBlock();
+                        //TODO fix for non-solid blocks
+                        //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
                         if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().isSolid(((BlockItem) item.getItem()).getBlock().getDefaultState()) && !state.get(CONTAINS_BLOCK)) {
                             ((FrameBlockTile) tileEntity).clear();
                             BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
@@ -106,6 +112,22 @@ import javax.annotation.Nullable;
                     BlockState mimicState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     ((FrameBlockTile) te).setMimic(mimicState);
                 }*/
+                if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking()) {
+                    if (state.get(TEXTURE)<3) {
+                        world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
+                    } else {
+                        world.setBlockState(pos, state.with(TEXTURE, 0));
+                    }
+                }
+                //NOT WORKING CURRENTLY
+                if (item.getItem() == Registration.TEXTURE_WRENCH.get() && player.isSneaking()) {
+                    if (state.get(TEXTURE)>0) {
+                        world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) - 1));
+                    } else {
+                        world.setBlockState(pos, state.with(TEXTURE, 3));
+                    }
+                }
+                System.out.println(item.getItem().toString());
             }
             return ActionResultType.SUCCESS;
         //}
