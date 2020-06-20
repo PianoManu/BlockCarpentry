@@ -58,7 +58,6 @@ public class StairsFrameBlock extends StairsBlock {
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
-        //if (!item.isEmpty() && item.getItem() instanceof BlockItem) {
         if (!world.isRemote) {
             if(state.get(CONTAINS_BLOCK) && player.isSneaking()) {
                 this.dropContainedBlock(world, pos);

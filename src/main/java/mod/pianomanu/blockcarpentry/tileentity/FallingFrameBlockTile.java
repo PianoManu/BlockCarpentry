@@ -1,13 +1,10 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -17,8 +14,6 @@ import net.minecraftforge.common.util.Constants;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
-
-import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
 
 public class FallingFrameBlockTile extends FrameBlockTile {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();

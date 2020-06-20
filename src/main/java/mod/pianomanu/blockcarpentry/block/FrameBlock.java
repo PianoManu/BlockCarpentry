@@ -7,44 +7,31 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
 
 
 @SuppressWarnings("deprecation") public class FrameBlock extends Block {
-    private final boolean isSolid = false;
     private int lightLevel = 0;
-    //private static final VoxelShape SHAPE = VoxelShapes.create(.2, .2, .2, .8, .8, .8);
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
     public static final IntegerProperty TEXTURE = BCBlockStateProperties.TEXTURE;
 
     public FrameBlock(Properties properties) {
-        /*super(Properties.create(Material.WOOD)
-                .sound(SoundType.WOOD)
-                .hardnessAndResistance(0.4f)
-                .harvestTool(ToolType.AXE)
-                .notSolid()
-        );*/
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(TEXTURE,0));
     }
@@ -52,11 +39,6 @@ import javax.annotation.Nullable;
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(CONTAINS_BLOCK).add(LIGHT_LEVEL).add(TEXTURE);
     }
-
-    /*@Override
-    public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
-        return SHAPE;
-    }*/
 
     @Override
     public boolean hasTileEntity(BlockState state) {
@@ -72,7 +54,6 @@ import javax.annotation.Nullable;
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
-        //if (!item.isEmpty() && item.getItem() instanceof BlockItem) {
             if (!world.isRemote) {
                 if(state.get(CONTAINS_BLOCK) && player.isSneaking()) {
                     this.dropContainedBlock(world, pos);
@@ -107,11 +88,6 @@ import javax.annotation.Nullable;
                     world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
                     player.getHeldItem(hand).setCount(count-1);
                 }
-                /*TileEntity te = world.getTileEntity(pos);
-                if (te instanceof FrameBlockTile) {
-                    BlockState mimicState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                    ((FrameBlockTile) te).setMimic(mimicState);
-                }*/
                 if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking()) {
                     if (state.get(TEXTURE)<3) {
                         world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
@@ -130,8 +106,6 @@ import javax.annotation.Nullable;
                 System.out.println(item.getItem().toString());
             }
             return ActionResultType.SUCCESS;
-        //}
-        //return super.onBlockActivated(state, world, pos, player, hand, trace);
     }
 
     protected void dropContainedBlock(World worldIn, BlockPos pos) {

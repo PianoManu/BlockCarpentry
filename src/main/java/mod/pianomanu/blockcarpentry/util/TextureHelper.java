@@ -11,7 +11,7 @@ import java.util.List;
 
 public class TextureHelper {
     public static TextureAtlasSprite getTextureFromBlock(Block blockIn) {
-        ResourceLocation location;// = new ResourceLocation(blockIn.getRegistryName().getNamespace(),"block/block_texture_path");
+        ResourceLocation location;
         List<ResourceLocation> locationList = new ArrayList<>();
         String m = "minecraft";
         String n = blockIn.getRegistryName().getNamespace();
@@ -47,7 +47,6 @@ public class TextureHelper {
      * @return TextureAtlasSprite from Atlas with the texture of the given block (hopefully)
      */
     public static List<TextureAtlasSprite> getTextureListFromBlock(Block blockIn) {
-        //ResourceLocation location;// = new ResourceLocation(blockIn.getRegistryName().getNamespace(),"block/block_texture_path");
         List<ResourceLocation> locationList = new ArrayList<>();
         String m = "minecraft";
         String n = blockIn.getRegistryName().getNamespace();
