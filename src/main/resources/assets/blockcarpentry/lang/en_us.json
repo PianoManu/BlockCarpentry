@@ -7,5 +7,7 @@
 	"block.blockcarpentry.frame_pressure_plate":"Wooden Frame Pressure Plate",
 	"block.blockcarpentry.frame_door":"Frame Door",
 	
+	"item.blockcarpentry.texture_wrench":"Texture Wrench",
+	
 	"itemGroup.blockcarpentry":"BlockCarpentry"
 }
