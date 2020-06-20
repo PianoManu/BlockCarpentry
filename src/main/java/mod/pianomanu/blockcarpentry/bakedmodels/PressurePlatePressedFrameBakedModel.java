@@ -104,21 +104,14 @@ public class PressurePlatePressedFrameBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 
-        //Block im Slab
+        //Block in Slab
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        //Es existiert ein block im slab und dieser ist nicht der slab selbst
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
-            //location des BlockModels im Slab
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
-            //wenn location existiert...
             if (location != null) {
-                //neues Bakedmodel des Models von der gegebenen location
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 model.getBakedModel().getQuads(mimic, side, rand, extraData);
-                //wenn dieses model existiert...
                 if (model != null) {
-                    //neues quad-model mit den blockdaten aus dem slab
-                    //return model.getQuads(mimic, side, rand, extraData);
                     return getMimicQuads(state, side, rand, extraData);
                 }
             }
@@ -132,7 +125,6 @@ public class PressurePlatePressedFrameBakedModel implements IDynamicBakedModel {
         }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic!=null) {
-            //TextureAtlasSprite texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(mimic.getBlock().getRegistryName().getNamespace(), "block/"+mimic.getBlock().getRegistryName().getPath()));
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
             TextureAtlasSprite texture;
             if(textureList.size()>state.get(FrameBlock.TEXTURE)) {

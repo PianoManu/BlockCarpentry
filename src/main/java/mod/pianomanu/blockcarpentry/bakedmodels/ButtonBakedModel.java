@@ -1,7 +1,6 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import com.google.common.collect.ImmutableList;
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.ButtonFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
@@ -12,8 +11,6 @@ import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
@@ -22,7 +19,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
-import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,11 +32,6 @@ public class ButtonBakedModel implements IDynamicBakedModel {
 
     private TextureAtlasSprite getTexture() {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
-    }
-
-    //@Override
-    public boolean func_230044_c_() {
-        return false;
     }
 
     private void putVertex(BakedQuadBuilder builder, Vec3d normal,
@@ -97,7 +88,6 @@ public class ButtonBakedModel implements IDynamicBakedModel {
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
-        //builder.setQuadOrientation(facing);
         builder.setApplyDiffuseLighting(true);
         float uShort = 5;
         float uLong = 11;
@@ -138,7 +128,6 @@ public class ButtonBakedModel implements IDynamicBakedModel {
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
-        //builder.setQuadOrientation(facing);
         builder.setApplyDiffuseLighting(true);
         float uShort = 5;
         float uLong = 11;
@@ -175,7 +164,6 @@ public class ButtonBakedModel implements IDynamicBakedModel {
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
-        //builder.setQuadOrientation(facing);
         builder.setApplyDiffuseLighting(true);
         float uShort = 6;
         float uLong = 10;
@@ -199,14 +187,6 @@ public class ButtonBakedModel implements IDynamicBakedModel {
             vShort = 7;
             vLong = 9;
         }
-        /*if (face==AttachFace.WALL) {
-            float tmp = uShort;
-            uShort = vLong;
-            vLong = tmp;
-            tmp = vShort;
-            vShort = uLong;
-            uLong = tmp;
-        }*/
         putVertex(builder, normal, v1.x, v1.y, v1.z, uShort, vShort, sprite, 1.0f, 1.0f, 1.0f);
         putVertex(builder, normal, v2.x, v2.y, v2.z, uShort, vLong, sprite, 1.0f, 1.0f, 1.0f);
         putVertex(builder, normal, v3.x, v3.y, v3.z, uLong, vLong, sprite, 1.0f, 1.0f, 1.0f);
@@ -224,12 +204,6 @@ public class ButtonBakedModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         //get block saved in frame tile
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        //DEBUG
-        /*if(state!=null) {
-            System.out.println(state.toString());
-            state.get(ButtonFrameBlock.HORIZONTAL_FACING);
-            System.out.println(state.get(ButtonFrameBlock.HORIZONTAL_FACING).toString());
-        } else System.out.println("state is null");*/
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null) {
@@ -254,7 +228,6 @@ public class ButtonBakedModel implements IDynamicBakedModel {
             Direction direction = state.get(ButtonFrameBlock.HORIZONTAL_FACING);
             AttachFace face = state.get(ButtonFrameBlock.FACE);
             //get texture from block in tile entity and apply it to the quads
-            //TextureAtlasSprite texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(mimic.getBlock().getRegistryName().getNamespace(), "block/" + mimic.getBlock().getRegistryName().getPath()));
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
             TextureAtlasSprite texture;
             if(textureList.size()>state.get(FrameBlock.TEXTURE)) {

@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Random;
 
 public class FrameBakedModel implements IDynamicBakedModel {
-    //public static final ResourceLocation TEXTURE = new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/frameblock");
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
     private TextureAtlasSprite getTexture() {
@@ -108,18 +107,6 @@ public class FrameBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
 
-        /*TextureAtlasSprite texture = getTexture();
-        List<BakedQuad> quads = new ArrayList<>();
-        double l = .2;
-        double r = 1-.2;
-        quads.add(createQuad(v(l, r, l), v(l, r, r), v(r, r, r), v(r, r, l), texture));
-        quads.add(createQuad(v(l, l, l), v(r, l, l), v(r, l, r), v(l, l, r), texture));
-        quads.add(createQuad(v(r, r, r), v(r, l, r), v(r, l, l), v(r, r, l), texture));
-        quads.add(createQuad(v(l, r, l), v(l, l, l), v(l, l, r), v(l, r, r), texture));
-        quads.add(createQuad(v(r, r, l), v(r, l, l), v(l, l, l), v(l, r, l), texture));
-        quads.add(createQuad(v(l, r, r), v(l, l, r), v(r, l, r), v(r, r, r), texture));*/
-
-        //return quads;
         return new ArrayList<>(); //collapse with if (side!=null)?
     }
 
