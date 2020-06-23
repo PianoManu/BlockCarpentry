@@ -20,6 +20,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("all") //only warning: datafixer for build()-method is null, but method is annotated as "NotNull"
@@ -27,17 +29,22 @@ public class Registration {
     private static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, BlockCarpentryMain.MOD_ID);
     private static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, BlockCarpentryMain.MOD_ID);
     private static final DeferredRegister<TileEntityType<?>> TILES = new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, BlockCarpentryMain.MOD_ID);
-    private static final DeferredRegister<ContainerType<?>> CONTAINERS = new DeferredRegister<>(ForgeRegistries.CONTAINERS, BlockCarpentryMain.MOD_ID);
-    private static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, BlockCarpentryMain.MOD_ID);
-    private static final DeferredRegister<ModDimension> DIMENSIONS = new DeferredRegister<>(ForgeRegistries.MOD_DIMENSIONS, BlockCarpentryMain.MOD_ID);
+    //private static final DeferredRegister<ContainerType<?>> CONTAINERS = new DeferredRegister<>(ForgeRegistries.CONTAINERS, BlockCarpentryMain.MOD_ID);
+    //private static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, BlockCarpentryMain.MOD_ID);
+    //private static final DeferredRegister<ModDimension> DIMENSIONS = new DeferredRegister<>(ForgeRegistries.MOD_DIMENSIONS, BlockCarpentryMain.MOD_ID);
+    private static final Logger LOGGER = LogManager.getLogger();
 
     public static void init() {
+        LOGGER.info("Registering blocks from BlockCarpentry");
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        LOGGER.info("Registering items from BlockCarpentry");
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        LOGGER.info("Registering tiles from BlockCarpentry");
         TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        DIMENSIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        LOGGER.info("Registering containers from BlockCarpentry");
+        //CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        //ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        //DIMENSIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
 
@@ -49,6 +56,11 @@ public class Registration {
             .notSolid()));
     public static final RegistryObject<Item> FRAMEBLOCK_ITEM = ITEMS.register("frameblock", () -> new BlockItem(FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> FRAMEBLOCK_TILE = TILES.register("frameblock", () -> TileEntityType.Builder.create(FrameBlockTile::new, FRAMEBLOCK.get()).build(null));
+
+    //TODO think about translucent blocks and baked models
+    //public static final RegistryObject<SlabFrameBlock> TRANSPARENT_FRAMEBLOCK = BLOCKS.register("frame_slab", () -> new SlabFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
+    //public static final RegistryObject<Item> TRANSPARENT_FRAMEBLOCK_ITEM = ITEMS.register("frame_slab", () -> new BlockItem(TRANSPARENT_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    //public static final RegistryObject<TileEntityType<FrameBlockTile>> TRANSPARENT_FRAMEBLOCK_TILE = TILES.register("frame_slab", () -> TileEntityType.Builder.create(FrameBlockTile::new, TRANSPARENT_FRAMEBLOCK.get()).build(null));
 
     //fixme or deleteme
     //public static final RegistryObject<FallingFrameBlock> FALLING_FRAMEBLOCK = BLOCKS.register("falling_frameblock", () -> new FallingFrameBlock(Block.Properties.from(FRAMEBLOCK.get()).notSolid()));
@@ -75,8 +87,14 @@ public class Registration {
     public static final RegistryObject<Item> DOOR_FRAME_ITEM = ITEMS.register("frame_door", () -> new BlockItem(DOOR_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> DOOR_FRAME_TILE = TILES.register("frame_door", () -> TileEntityType.Builder.create(FrameBlockTile::new, DOOR_FRAMEBLOCK.get()).build(null));
 
+    public static final RegistryObject<TrapdoorFrameBlock> TRAPDOOR_FRAMEBLOCK = BLOCKS.register("frame_trapdoor", () -> new TrapdoorFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> TRAPDOOR_FRAME_ITEM = ITEMS.register("frame_trapdoor", () -> new BlockItem(TRAPDOOR_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<TileEntityType<FrameBlockTile>> TRAPDOOR_FRAME_TILE = TILES.register("frame_trapdoor", () -> TileEntityType.Builder.create(FrameBlockTile::new, TRAPDOOR_FRAMEBLOCK.get()).build(null));
+
     //public static final RegistryObject<Block> SLAB_FRAMEBLOCK = BLOCKS.register("frame_slab", () -> new SlabFrameBlock(Block.Properties.create(Material.WOOD)));
 
     public static final RegistryObject<Item> TEXTURE_WRENCH = ITEMS.register("texture_wrench", () -> new Item(new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).maxStackSize(1)));
+    public static final RegistryObject<Item> CHISEL = ITEMS.register("chisel", () -> new Item(new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).maxStackSize(1)));
+    public static final RegistryObject<Item> PAINTBRUSH = ITEMS.register("paintbrush", () -> new Item(new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).maxStackSize(1)));
 
 }

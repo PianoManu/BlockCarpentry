@@ -12,6 +12,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.state.properties.DoubleBlockHalf;
@@ -32,14 +33,16 @@ import static mod.pianomanu.blockcarpentry.block.FrameBlock.TEXTURE;
 
 public class DoorFrameBlock extends DoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
+    public static final IntegerProperty DESIGN = BCBlockStateProperties.DESIGN;
+    public static final IntegerProperty DESIGN_TEXTURE = BCBlockStateProperties.DESIGN_TEXTURE;
 
     public DoorFrameBlock(Properties builder) {
         super(builder);
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(FACING, Direction.NORTH).with(OPEN, Boolean.valueOf(false)).with(HINGE, DoorHingeSide.LEFT).with(POWERED, Boolean.valueOf(false)).with(HALF, DoubleBlockHalf.LOWER).with(LIGHT_LEVEL, 0).with(TEXTURE,0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(FACING, Direction.NORTH).with(OPEN, Boolean.valueOf(false)).with(HINGE, DoorHingeSide.LEFT).with(POWERED, Boolean.valueOf(false)).with(HALF, DoubleBlockHalf.LOWER).with(LIGHT_LEVEL, 0).with(TEXTURE,0).with(DESIGN,0).with(DESIGN_TEXTURE,0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK, FACING, OPEN, HINGE, POWERED, HALF, LIGHT_LEVEL, TEXTURE);
+        builder.add(CONTAINS_BLOCK, FACING, OPEN, HINGE, POWERED, HALF, LIGHT_LEVEL, TEXTURE, DESIGN, DESIGN_TEXTURE);
     }
 
     @Override
@@ -73,7 +76,7 @@ public class DoorFrameBlock extends DoorBlock {
                         player.getHeldItem(hand).setCount(count-1);
                     }
                 }
-                else {
+                else if(!(item.getItem()==Items.GLOWSTONE_DUST) && !(item.getItem()==Items.COAL) && !(item.getItem()==Items.CHARCOAL) && !(item.getItem()==Registration.TEXTURE_WRENCH.get()) && !(item.getItem()==Registration.CHISEL.get()) && !(item.getItem()==Registration.PAINTBRUSH.get())){
                     state = state.cycle(OPEN);
                     world.setBlockState(pos, state, 10);
                     world.playEvent(player, state.get(OPEN) ? 1006 : 1012, pos, 0);
@@ -94,6 +97,20 @@ public class DoorFrameBlock extends DoorBlock {
                     world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
                 } else {
                     world.setBlockState(pos, state.with(TEXTURE, 0));
+                }
+            }
+            if (item.getItem() == Registration.CHISEL.get() && !player.isSneaking()) {
+                if (state.get(DESIGN)<3) {
+                    world.setBlockState(pos, state.with(DESIGN, state.get(DESIGN) + 1));
+                } else {
+                    world.setBlockState(pos, state.with(DESIGN, 0));
+                }
+            }
+            if (item.getItem() == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
+                if (state.get(DESIGN_TEXTURE)<3) {
+                    world.setBlockState(pos, state.with(DESIGN_TEXTURE, state.get(DESIGN_TEXTURE) + 1));
+                } else {
+                    world.setBlockState(pos, state.with(DESIGN_TEXTURE, 0));
                 }
             }
         }

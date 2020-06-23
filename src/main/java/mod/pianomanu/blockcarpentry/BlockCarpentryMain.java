@@ -2,6 +2,7 @@ package mod.pianomanu.blockcarpentry;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.RenderSetup;
+import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -48,14 +49,14 @@ public class BlockCarpentryMain
     private void setup(final FMLCommonSetupEvent event)
     {
         // some preinit code
-        //LOGGER.info("HELLO FROM PREINIT");
+        LOGGER.info("Setting up BlockCarpentry");
         //LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         RenderSetup.setup();
-        //LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
+        LOGGER.info("Setting up client things for BlockCarpentry");
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
@@ -70,6 +71,9 @@ public class BlockCarpentryMain
         //LOGGER.info("Got IMC {}", event.getIMCStream().
         //        map(m->m.getMessageSupplier().get()).
         //        collect(Collectors.toList()));
+        LOGGER.info("Processing InterModCommunication");
+        BlockSavingHelper.createValidBlockList();
+        LOGGER.info("Processed InterModCommunication");
     }
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent

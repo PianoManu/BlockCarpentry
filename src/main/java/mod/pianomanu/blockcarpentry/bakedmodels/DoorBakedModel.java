@@ -1,6 +1,8 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import com.google.common.collect.ImmutableList;
+import mod.pianomanu.blockcarpentry.bakedmodels.helper.DoorKnobBakedModel;
+import mod.pianomanu.blockcarpentry.bakedmodels.helper.HandleBakedModel;
 import mod.pianomanu.blockcarpentry.block.DoorFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
@@ -16,6 +18,7 @@ import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.state.properties.DoubleBlockHalf;
+import net.minecraft.state.properties.Half;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -74,6 +77,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
             }
         }
         builder.setApplyDiffuseLighting(true);
+        builder.setQuadTint(1);
     }
 
     //Top part of door
@@ -278,6 +282,11 @@ public class DoorBakedModel implements IDynamicBakedModel {
             Direction south = Direction.SOUTH;
             DoorHingeSide left = DoorHingeSide.LEFT;
             DoorHingeSide right = DoorHingeSide.RIGHT;
+            int design = state.get(DoorFrameBlock.DESIGN);
+            int desTex = state.get(DoorFrameBlock.DESIGN_TEXTURE);
+            DoubleBlockHalf half = state.get(DoorBlock.HALF);
+            DoubleBlockHalf lower = DoubleBlockHalf.LOWER;
+            DoubleBlockHalf upper = DoubleBlockHalf.UPPER;
                 int flag = 0;
                 if ((dir == north && !open && hinge == right) || (dir == east && open && hinge == right) || (dir == west && open && hinge == left) || (dir == north && !open && hinge == left)) {
                     flag = 1;
@@ -313,6 +322,44 @@ public class DoorBakedModel implements IDynamicBakedModel {
                     quads.add(createSquareQuad(v(0, 1, 3/16f), v(0, 0, 3/16f), v(1, 0, 3/16f), v(1, 1, 3/16f), texture));
                     quads.add(create3x16TopQuad(v(0, 0, 3/16f),v(0,0,0),v(1,0,0),v(1,0,3/16f), texture, flag));
                     quads.add(create3x16TopQuad(v(0, 1, 0),v(0,1,3/16f),v(1,1,3/16f),v(1,1,0), texture, flag));
+                }
+                if(design==1) {
+                    if(half == lower) {
+                        if((dir==south && hinge==left && !open) || (dir==west && hinge==right && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,-1/16f,1/16f,flag,desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
+                        } else if((dir==south && hinge==right && !open) || (dir==east && hinge==left && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12/16f,14/16f,15/16f,17/16f,-1/16f,1/16f,flag,desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12/16f,14/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
+                        }
+                    }
+                    if(half == lower) {
+                        if((dir==north && hinge==right && !open) || (dir==west && hinge==left && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,15/16f,17/16f,flag,desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,12/16f,14/16f,flag,desTex));
+                        } else if((dir==north && hinge==left && !open) || (dir==east && hinge==right && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12/16f,14/16f,15/16f,17/16f,15/16f,17/16f,flag,desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12/16f,14/16f,15/16f,17/16f,12/16f,14/16f,flag,desTex));
+                        }
+                    }
+                    if(half == lower) {
+                        if((dir==west && hinge==left && !open) || (dir==north && hinge == right && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(15/16f,17/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12/16f,14/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
+                        } else if((dir==west && hinge==right && !open) || (dir==south && hinge == left && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(15/16f,17/16f,15/16f,17/16f,12/16f,14/16f,flag,desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12/16f,14/16f,15/16f,17/16f,12/16f,14/16f,flag,desTex));
+                        }
+                    }
+                    if(half == lower) {
+                        if((dir==east && hinge==right && !open) || (dir==north && hinge == left && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(-1/16f,1/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
+                        } else if((dir==east && hinge==left && !open) || (dir==south && hinge == right && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(-1/16f,1/16f,15/16f,17/16f,15/16f,17/16f,flag,desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,12/16f,14/16f,flag,desTex));
+                        }
+                    }
                 }
 
             return quads;
