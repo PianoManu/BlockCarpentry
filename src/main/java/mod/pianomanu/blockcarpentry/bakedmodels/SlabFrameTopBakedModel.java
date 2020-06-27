@@ -3,8 +3,10 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import com.google.common.collect.ImmutableList;
+import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.GrassBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
@@ -152,7 +154,11 @@ public class SlabFrameTopBakedModel implements IDynamicBakedModel {
             else {
                 texture = textureList.get(0);
             }
-            List<BakedQuad> quads = new ArrayList<>();
+            int tintIndex = -1;
+            if (mimic.getBlock() instanceof GrassBlock) {
+                tintIndex = 1;
+            }
+            /*
             //down
             quads.add(createQuad(v(1, 0.5, 0), v(1, 0.5, 1), v(0, 0.5, 1), v(0, 0.5, 0), texture));
             //up
@@ -162,8 +168,9 @@ public class SlabFrameTopBakedModel implements IDynamicBakedModel {
             quads.add(createHalfQuad(v(0, 0.5, 0), v(0, 1, 0), v(1, 1, 0), v(1, 0.5, 0), texture));
             quads.add(createHalfQuad(v(1, 0.5, 1), v(1, 1, 1), v(0, 1, 1), v(0, 0.5, 1), texture));
             quads.add(createHalfQuad(v(1, 1, 1), v(1, 0.5, 1), v(1, 0.5, 0), v(1, 1, 0), texture));
+             */
 
-            return quads;
+            return new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0.5f, 1f, 0f, 1f, texture, tintIndex));
         }
         return Collections.emptyList();
     }

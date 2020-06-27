@@ -4,8 +4,12 @@ import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
+import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.GlassBlock;
+import net.minecraft.block.IceBlock;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -24,16 +28,18 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 
 @SuppressWarnings("deprecation") public class FrameBlock extends Block {
     private int lightLevel = 0;
+    private boolean isTransparent = true;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
     public static final IntegerProperty TEXTURE = BCBlockStateProperties.TEXTURE;
 
     public FrameBlock(Properties properties) {
-        super(properties);
+        super(properties.variableOpacity());
         this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(TEXTURE,0));
     }
 
@@ -72,8 +78,14 @@ import javax.annotation.Nullable;
                             BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                             ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                             insertBlock(world,pos, state,handBlockState);
-                            //this.contained_block=handBlockState.getBlock();
                             player.getHeldItem(hand).setCount(count-1);
+                        }
+                        if (heldBlock instanceof GlassBlock || heldBlock instanceof IceBlock) {
+                            System.out.println("is Transparent");
+                            this.isTransparent = true;
+                        } else {
+                            System.out.println("is not Transparent");
+                            //this.isTransparent = false;
                         }
                     }
                 }
@@ -89,22 +101,45 @@ import javax.annotation.Nullable;
                     world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
                     player.getHeldItem(hand).setCount(count-1);
                 }
-                if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking()) {
-                    if (state.get(TEXTURE)<3) {
-                        world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
-                    } else {
-                        world.setBlockState(pos, state.with(TEXTURE, 0));
+                if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK)) {
+                    TileEntity tileEntity = world.getTileEntity(pos);
+                    if (tileEntity instanceof FrameBlockTile) {
+                        FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                        List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(fte.getMimic().getBlock());
+                        if (state.get(TEXTURE) < texture.size() && state.get(TEXTURE) < 3) {
+                            world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
+                        } else {
+                            world.setBlockState(pos, state.with(TEXTURE, 0));
+                        }
                     }
                 }
-                //NOT WORKING CURRENTLY
                 if (item.getItem() == Registration.TEXTURE_WRENCH.get() && player.isSneaking()) {
-                    if (state.get(TEXTURE)>0) {
-                        world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) - 1));
-                    } else {
-                        world.setBlockState(pos, state.with(TEXTURE, 3));
+                    System.out.println("You should rotate now!");
+                }
+                if (item.getItem() == Registration.CHISEL.get() && !player.isSneaking()) {
+                    TileEntity tileEntity = world.getTileEntity(pos);
+                    if (tileEntity instanceof FrameBlockTile) {
+                        FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                        if (fte.getDesign() < fte.maxDesigns) {
+                            fte.setDesign(fte.getDesign()+1);
+                        } else {
+                            fte.setDesign(0);
+                        }
+                        System.out.println("Design: "+fte.getDesign());
                     }
                 }
-                System.out.println(item.getItem().toString());
+                if (item.getItem() == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
+                    TileEntity tileEntity = world.getTileEntity(pos);
+                    if (tileEntity instanceof FrameBlockTile) {
+                        FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                        if (fte.getDesignTexture() < fte.maxTextures) {
+                            fte.setDesignTexture(fte.getDesignTexture()+1);
+                        } else {
+                            fte.setDesignTexture(0);
+                        }
+                        System.out.println("DesTex: "+fte.getDesignTexture());
+                    }
+                }
             }
             return ActionResultType.SUCCESS;
     }
@@ -158,5 +193,10 @@ import javax.annotation.Nullable;
             return 15;
         }
         return state.get(LIGHT_LEVEL);
+    }
+
+    public boolean isTransparent(BlockState state) {
+        //return this.isTransparent;
+        return true;
     }
 }

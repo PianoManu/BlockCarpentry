@@ -4,7 +4,10 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import com.google.common.collect.ImmutableList;
+import mod.pianomanu.blockcarpentry.util.ModelHelper;
+import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.GrassBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
@@ -92,13 +95,26 @@ public class FrameBakedModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
+        Integer design = extraData.getData(FrameBlockTile.DESIGN);
+        Integer desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
-            if (location != null) {
+            if (location != null && state!=null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 if (model != null) {
-                    //TODO what about full blocks with different side textures
-                    return model.getQuads(mimic, side, rand, extraData);
+                    //TODO what about full blocks with different side textures -> IllusionBlock
+                    List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(mimic.getBlock());
+                    int index = state.get(FrameBlock.TEXTURE);
+                    if (index >= texture.size()) {
+                        index = 0;
+                    }
+                    int tintIndex = -1;
+                    if (mimic.getBlock() instanceof GrassBlock) {
+                        tintIndex = 1;
+                    }
+                    System.out.println("Design: "+extraData.getData(FrameBlockTile.DESIGN));
+                    System.out.println("DesTex: "+extraData.getData(FrameBlockTile.DESIGN_TEXTURE));
+                    return ModelHelper.createCuboid(0f,1f,0f,1f,0f,1f, texture.get(index), tintIndex);
                 }
             }
         }

@@ -3,9 +3,11 @@ package mod.pianomanu.blockcarpentry.block;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
+import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TrapDoorBlock;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -27,22 +29,23 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class TrapdoorFrameBlock extends TrapDoorBlock {
     private int lightLevel = 0;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
     public static final IntegerProperty TEXTURE = BCBlockStateProperties.TEXTURE;
-    public static final IntegerProperty DESIGN = BCBlockStateProperties.DESIGN;
-    public static final IntegerProperty DESIGN_TEXTURE = BCBlockStateProperties.DESIGN_TEXTURE;
+    //public static final IntegerProperty DESIGN = BCBlockStateProperties.DESIGN;
+    //public static final IntegerProperty DESIGN_TEXTURE = BCBlockStateProperties.DESIGN_TEXTURE;
 
     public TrapdoorFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(HORIZONTAL_FACING, Direction.NORTH).with(OPEN, Boolean.valueOf(false)).with(HALF, Half.BOTTOM).with(POWERED, Boolean.valueOf(false)).with(WATERLOGGED, Boolean.valueOf(false)).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(TEXTURE,0).with(DESIGN, 0).with(DESIGN_TEXTURE, 0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(HORIZONTAL_FACING, Direction.NORTH).with(OPEN, Boolean.valueOf(false)).with(HALF, Half.BOTTOM).with(POWERED, Boolean.valueOf(false)).with(WATERLOGGED, Boolean.valueOf(false)).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(TEXTURE,0));//.with(DESIGN, 0).with(DESIGN_TEXTURE, 0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING, OPEN, HALF, POWERED, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL, TEXTURE, DESIGN, DESIGN_TEXTURE);
+        builder.add(HORIZONTAL_FACING, OPEN, HALF, POWERED, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL, TEXTURE);//, DESIGN, DESIGN_TEXTURE);
     }
 
     @Override
@@ -101,33 +104,43 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                 world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
                 player.getHeldItem(hand).setCount(count-1);
             }
-            if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking()) {
-                if (state.get(TEXTURE)<3) {
-                    world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
-                } else {
-                    world.setBlockState(pos, state.with(TEXTURE, 0));
+            if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK)) {
+                TileEntity tileEntity = world.getTileEntity(pos);
+                if (tileEntity instanceof FrameBlockTile) {
+                    FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                    List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(fte.getMimic().getBlock());
+                    if (state.get(TEXTURE) < texture.size() && state.get(TEXTURE) < 3) {
+                        world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
+                    } else {
+                        world.setBlockState(pos, state.with(TEXTURE, 0));
+                    }
                 }
             }
-            //NOT WORKING CURRENTLY
             if (item.getItem() == Registration.TEXTURE_WRENCH.get() && player.isSneaking()) {
-                if (state.get(TEXTURE)>0) {
-                    world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) - 1));
-                } else {
-                    world.setBlockState(pos, state.with(TEXTURE, 3));
-                }
+                System.out.println("You should rotate now!");
             }
             if (item.getItem() == Registration.CHISEL.get() && !player.isSneaking()) {
-                if (state.get(DESIGN)<3) {
-                    world.setBlockState(pos, state.with(DESIGN, state.get(DESIGN) + 1));
-                } else {
-                    world.setBlockState(pos, state.with(DESIGN, 0));
+                TileEntity tileEntity = world.getTileEntity(pos);
+                if (tileEntity instanceof FrameBlockTile) {
+                    FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                    if (fte.getDesign() < fte.maxDesigns) {
+                        fte.setDesign(fte.getDesign()+1);
+                    } else {
+                        fte.setDesign(0);
+                    }
+                    System.out.println("Design: "+fte.getDesign());
                 }
             }
-            if (item.getItem() == Registration.PAINTBRUSH.get()) {
-                if (state.get(DESIGN_TEXTURE)<3) {
-                    world.setBlockState(pos, state.with(DESIGN_TEXTURE, state.get(DESIGN_TEXTURE) + 1));
-                } else {
-                    world.setBlockState(pos, state.with(DESIGN_TEXTURE, 0));
+            if (item.getItem() == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
+                TileEntity tileEntity = world.getTileEntity(pos);
+                if (tileEntity instanceof FrameBlockTile) {
+                    FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                    if (fte.getDesignTexture() < fte.maxTextures) {
+                        fte.setDesignTexture(fte.getDesignTexture()+1);
+                    } else {
+                        fte.setDesignTexture(0);
+                    }
+                    System.out.println("DesTex: "+fte.getDesignTexture());
                 }
             }
             System.out.println(item.getItem().toString());

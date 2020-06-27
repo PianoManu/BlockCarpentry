@@ -28,11 +28,12 @@ import java.util.List;
 import java.util.Random;
 
 public class ButtonBakedModel implements IDynamicBakedModel {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
+    public static final ResourceLocation TEXTURES = new ResourceLocation("minecraft", "block/oak_planks");
 
-    private TextureAtlasSprite getTexture() {
-        return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
-    }
+    /*private TextureAtlasSprite getTexture() {
+        return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/oak_planks"));
+        //return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURES);
+    }*/
 
     private void putVertex(BakedQuadBuilder builder, Vec3d normal,
                            double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
@@ -409,7 +410,7 @@ public class ButtonBakedModel implements IDynamicBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleTexture() {
-        return getTexture();
+        return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/oak_planks"));
     }
 
     @Override

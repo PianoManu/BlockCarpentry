@@ -1,13 +1,9 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import com.google.common.collect.ImmutableList;
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.util.ModelHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.GrassBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
@@ -28,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class PressurePlatePressedFrameBakedModel implements IDynamicBakedModel {
+public class IllusionBlockBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
     private TextureAtlasSprite getTexture() {
@@ -56,7 +52,7 @@ public class PressurePlatePressedFrameBakedModel implements IDynamicBakedModel {
                             builder.put(j, iu, iv);
                             break;
                         case 2:
-                            builder.put(j, (short) 0, (short) 0);
+                            builder.put(j, 0f, 1f);
                             break;
                         default:
                             builder.put(j);
@@ -78,22 +74,10 @@ public class PressurePlatePressedFrameBakedModel implements IDynamicBakedModel {
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
-        putVertex(builder, normal, v1.x, v1.y, v1.z, 1, 1, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v2.x, v2.y, v2.z, 1, 15, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v3.x, v3.y, v3.z, 15, 15, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v4.x, v4.y, v4.z, 15, 1, sprite, 1.0f, 1.0f, 1.0f);
-        return builder.build();
-    }
-
-    private BakedQuad createFlatQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
-
-        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
-        builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
-        putVertex(builder, normal, v1.x, v1.y, v1.z, 1, 1, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v2.x, v2.y, v2.z, 1, 2, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v3.x, v3.y, v3.z, 15, 2, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v4.x, v4.y, v4.z, 15, 1, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v1.x, v1.y, v1.z, 0, 0, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v2.x, v2.y, v2.z, 0, 16, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v3.x, v3.y, v3.z, 16, 16, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v4.x, v4.y, v4.z, 16, 0, sprite, 1.0f, 1.0f, 1.0f);
         return builder.build();
     }
 
@@ -106,54 +90,22 @@ public class PressurePlatePressedFrameBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 
-        //Block in Slab
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                model.getBakedModel().getQuads(mimic, side, rand, extraData);
                 if (model != null) {
-                    return getMimicQuads(state, side, rand, extraData);
+                    return model.getQuads(mimic, side, rand, extraData);
                 }
             }
         }
-        return Collections.emptyList();
-    }
 
-    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         if (side != null) {
             return Collections.emptyList();
         }
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic!=null) {
-            List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
-            TextureAtlasSprite texture;
-            if(textureList.size()>state.get(FrameBlock.TEXTURE)) {
-                texture = textureList.get(state.get(FrameBlock.TEXTURE));
-            }
-            else {
-                texture = textureList.get(0);
-            }
-            int tintIndex = -1;
-            if (mimic.getBlock() instanceof GrassBlock) {
-                tintIndex = 1;
-            }
-            /*
-            //down
-            quads.add(createQuad(v(15/16f, 0, 1/16f), v(15/16f, 0, 15/16f), v(1/16f, 0, 15/16f), v(1/16f, 0, 1/16f), texture));
-            //up
-            quads.add(createQuad(v(1/16f, 1/32f, 1/16f), v(1/16f, 1/32f, 15/16f), v(15/16f, 1/32f, 15/16f), v(15/16f, 1/32f, 1/16f), texture));
-            //sides
-            quads.add(createFlatQuad(v(1/16f, 0, 15/16f), v(1/16f, 1/32f, 15/16f), v(1/16f, 1/32f, 1/16f), v(1/16f, 0, 1/16f), texture));
-            quads.add(createFlatQuad(v(1/16f, 0, 1/16f), v(1/16f, 1/32f, 1/16f), v(15/16f, 1/32f, 1/16f), v(15/16f, 0, 1/16f), texture));
-            quads.add(createFlatQuad(v(15/16f, 0, 15/16f), v(15/16f, 1/32f, 15/16f), v(1/16f, 1/32f, 15/16f), v(1/16f, 0, 15/16f), texture));
-            quads.add(createFlatQuad(v(15/16f, 1/32f, 15/16f), v(15/16f, 0, 15/16f), v(15/16f, 0, 1/16f), v(15/16f, 1/32f, 1/16f), texture));
-             */
 
-            return new ArrayList<>(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 0f, 1 / 32f, 1 / 16f, 15 / 16f, texture, tintIndex));
-        }
-        return Collections.emptyList();
+        return new ArrayList<>(); //collapse with if (side!=null)?
     }
 
     @Override

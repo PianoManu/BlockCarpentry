@@ -2,7 +2,9 @@ package mod.pianomanu.blockcarpentry.setup;
 
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.model.*;
+import mod.pianomanu.blockcarpentry.renderer.BedFrameTileEntityRenderer;
 import mod.pianomanu.blockcarpentry.renderer.ButtonFrameTileEntityRenderer;
+import mod.pianomanu.blockcarpentry.renderer.model.BedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -16,6 +18,8 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent event) {
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "illusion_block_loader"), new IllusionBlockModelLoader());
+
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frameloader"), new FrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_slab_bottom_loader"), new SlabFrameBottomModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_slab_top_loader"), new SlabFrameTopModelLoader());
@@ -29,5 +33,6 @@ public class ClientSetup {
 
         //SlabFrameBottomRenderer.register();
         ClientRegistry.bindTileEntityRenderer(Registration.BUTTON_FRAME_TILE.get(), ButtonFrameTileEntityRenderer::new);
+        //ClientRegistry.bindTileEntityRenderer(Registration.BED_FRAME_TILE.get(), BedFrameTileEntityRenderer::new);
     }
 }

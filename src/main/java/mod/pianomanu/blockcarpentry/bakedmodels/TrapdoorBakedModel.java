@@ -198,8 +198,9 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
             Direction east = Direction.EAST;
             Direction north = Direction.NORTH;
             Direction south = Direction.SOUTH;
-            int design = state.get(TrapdoorFrameBlock.DESIGN);
-            int desTex = state.get(TrapdoorFrameBlock.DESIGN_TEXTURE);
+            //int design = 0; //fixme
+            int design = extraData.getData(FrameBlockTile.DESIGN);//int design = state.get(DoorFrameBlock.DESIGN);
+            int desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE); //state.get(DoorFrameBlock.DESIGN_TEXTURE);
             int flag = 0;
 
             if (dir == north && open) {

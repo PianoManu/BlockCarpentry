@@ -262,7 +262,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
         }
 
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic!=null && state != null) {
+        if (mimic!=null && state != null && extraData.getData(FrameBlockTile.DESIGN) != null && extraData.getData(FrameBlockTile.DESIGN_TEXTURE) != null) {
             //get texture from block in tile entity and apply it to the quads
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
             TextureAtlasSprite texture;
@@ -282,8 +282,9 @@ public class DoorBakedModel implements IDynamicBakedModel {
             Direction south = Direction.SOUTH;
             DoorHingeSide left = DoorHingeSide.LEFT;
             DoorHingeSide right = DoorHingeSide.RIGHT;
-            int design = state.get(DoorFrameBlock.DESIGN);
-            int desTex = state.get(DoorFrameBlock.DESIGN_TEXTURE);
+            System.out.println(extraData.getData(FrameBlockTile.DESIGN));
+            int design = extraData.getData(FrameBlockTile.DESIGN);//int design = state.get(DoorFrameBlock.DESIGN);
+            int desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE); //state.get(DoorFrameBlock.DESIGN_TEXTURE);
             DoubleBlockHalf half = state.get(DoorBlock.HALF);
             DoubleBlockHalf lower = DoubleBlockHalf.LOWER;
             DoubleBlockHalf upper = DoubleBlockHalf.UPPER;
@@ -356,7 +357,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
                             quads.addAll(DoorKnobBakedModel.createDoorKnob(-1/16f,1/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
                             quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
                         } else if((dir==east && hinge==left && !open) || (dir==south && hinge == right && open)) {
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(-1/16f,1/16f,15/16f,17/16f,15/16f,17/16f,flag,desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(-1/16f,1/16f,15/16f,17/16f,12/16f,14/16f,flag,desTex));
                             quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,12/16f,14/16f,flag,desTex));
                         }
                     }

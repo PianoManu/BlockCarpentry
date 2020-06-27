@@ -36,7 +36,9 @@ public class BlockCarpentryMain
         // Register the enqueueIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
 
+        LOGGER.info("Registering all blocks and items from BlockCarpentry");
         Registration.init();
+        LOGGER.info("Registered all blocks and items from BlockCarpentry");
         // Register the processIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         // Register the doClientStuff method for modloading

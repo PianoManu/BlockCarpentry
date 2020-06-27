@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableList;
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.GrassBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
@@ -134,7 +136,11 @@ public class PressurePlateFrameBakedModel implements IDynamicBakedModel {
             else {
                 texture = textureList.get(0);
             }
-            List<BakedQuad> quads = new ArrayList<>();
+            int tintIndex = -1;
+            if (mimic.getBlock() instanceof GrassBlock) {
+                tintIndex = 1;
+            }
+            /*
             //down
             quads.add(createQuad(v(15/16f, 0, 1/16f), v(15/16f, 0, 15/16f), v(1/16f, 0, 15/16f), v(1/16f, 0, 1/16f), texture));
             //up
@@ -144,8 +150,9 @@ public class PressurePlateFrameBakedModel implements IDynamicBakedModel {
             quads.add(createFlatQuad(v(1/16f, 0, 1/16f), v(1/16f, 1/16f, 1/16f), v(15/16f, 1/16f, 1/16f), v(15/16f, 0, 1/16f), texture));
             quads.add(createFlatQuad(v(15/16f, 0, 15/16f), v(15/16f, 1/16f, 15/16f), v(1/16f, 1/16f, 15/16f), v(1/16f, 0, 15/16f), texture));
             quads.add(createFlatQuad(v(15/16f, 1/16f, 15/16f), v(15/16f, 0, 15/16f), v(15/16f, 0, 1/16f), v(15/16f, 1/16f, 1/16f), texture));
+             */
 
-            return quads;
+            return new ArrayList<>(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 0f, 1 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
         }
         return Collections.emptyList();
     }

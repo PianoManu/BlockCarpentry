@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 public class FallingFrameBlockEntity extends FallingBlockEntity {
 
-    private BlockContainerProperty contains = BCBlockStateProperties.CONTAINS;
+    //private BlockContainerProperty contains = BCBlockStateProperties.CONTAINS;
     private BlockState containedBlock = null;
 
     public FallingFrameBlockEntity(EntityType<? extends FallingBlockEntity> p_i50218_1_, World p_i50218_2_) {
