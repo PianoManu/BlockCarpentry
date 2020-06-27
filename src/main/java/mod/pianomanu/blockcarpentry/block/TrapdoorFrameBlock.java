@@ -109,7 +109,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                 if (tileEntity instanceof FrameBlockTile) {
                     FrameBlockTile fte = (FrameBlockTile) tileEntity;
                     List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(fte.getMimic().getBlock());
-                    if (state.get(TEXTURE) < texture.size() && state.get(TEXTURE) < 3) {
+                    if (state.get(TEXTURE) < texture.size()-1 && state.get(TEXTURE) < 3) {
                         world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
                     } else {
                         world.setBlockState(pos, state.with(TEXTURE, 0));
@@ -117,7 +117,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                 }
             }
             if (item.getItem() == Registration.TEXTURE_WRENCH.get() && player.isSneaking()) {
-                System.out.println("You should rotate now!");
+                System.out.println("You should rotate now!"); //fixme
             }
             if (item.getItem() == Registration.CHISEL.get() && !player.isSneaking()) {
                 TileEntity tileEntity = world.getTileEntity(pos);

@@ -3,9 +3,11 @@ package mod.pianomanu.blockcarpentry.block;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
+import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PressurePlateBlock;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -23,6 +25,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+
+import java.util.List;
 
 import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
 import static mod.pianomanu.blockcarpentry.block.FrameBlock.TEXTURE;
@@ -83,12 +87,20 @@ public class PressurePlateFrameBlock extends PressurePlateBlock {
                 world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
                 player.getHeldItem(hand).setCount(count-1);
             }
-            if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking()) {
-                if (state.get(TEXTURE)<3) {
-                    world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
-                } else {
-                    world.setBlockState(pos, state.with(TEXTURE, 0));
+            if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK)) {
+                TileEntity tileEntity = world.getTileEntity(pos);
+                if (tileEntity instanceof FrameBlockTile) {
+                    FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                    List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(fte.getMimic().getBlock());
+                    if (state.get(TEXTURE) < texture.size()-1 && state.get(TEXTURE) < 3) {
+                        world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
+                    } else {
+                        world.setBlockState(pos, state.with(TEXTURE, 0));
+                    }
                 }
+            }
+            if (item.getItem() == Registration.TEXTURE_WRENCH.get() && player.isSneaking()) {
+                System.out.println("You should rotate now!");
             }
         }
         return ActionResultType.SUCCESS;
