@@ -13,8 +13,10 @@ import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -26,6 +28,13 @@ import java.util.List;
 import java.util.Random;
 
 public class FenceBakedModel implements IDynamicBakedModel {
+
+    public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
+
+    private TextureAtlasSprite getTexture() {
+        return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
+    }
+
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
@@ -94,11 +103,11 @@ public class FenceBakedModel implements IDynamicBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleTexture() {
-        return null;
+        return getTexture();
     }
 
     @Override
     public ItemOverrideList getOverrides() {
-        return null;
+        return ItemOverrideList.EMPTY;
     }
 }

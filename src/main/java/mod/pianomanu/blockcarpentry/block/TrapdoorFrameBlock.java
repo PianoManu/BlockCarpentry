@@ -3,6 +3,7 @@ package mod.pianomanu.blockcarpentry.block;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
+import mod.pianomanu.blockcarpentry.util.LightLevelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -32,7 +33,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class TrapdoorFrameBlock extends TrapDoorBlock {
-    private int lightLevel = 0;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
     public static final IntegerProperty TEXTURE = BCBlockStateProperties.TEXTURE;
@@ -92,18 +92,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                     }
                 }
             }
-            if (item.getItem()== Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL)<15) {
-                int count = player.getHeldItem(hand).getCount();
-                lightLevel=lightLevel+3;
-                world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+3));
-                player.getHeldItem(hand).setCount(count-1);
-            }
-            if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL)<15) {
-                int count = player.getHeldItem(hand).getCount();
-                lightLevel=lightLevel+1;
-                world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
-                player.getHeldItem(hand).setCount(count-1);
-            }
+            LightLevelHelper.setLightLevel(item,state,world,pos,player,hand);
             if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK)) {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 if (tileEntity instanceof FrameBlockTile) {
@@ -128,7 +117,6 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                     } else {
                         fte.setDesign(0);
                     }
-                    System.out.println("Design: "+fte.getDesign());
                 }
             }
             if (item.getItem() == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
@@ -140,10 +128,8 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                     } else {
                         fte.setDesignTexture(0);
                     }
-                    System.out.println("DesTex: "+fte.getDesignTexture());
                 }
             }
-            System.out.println(item.getItem().toString());
         }
         return ActionResultType.SUCCESS;
     }

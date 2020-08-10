@@ -3,6 +3,7 @@ package mod.pianomanu.blockcarpentry.block;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
+import mod.pianomanu.blockcarpentry.util.LightLevelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -97,7 +98,7 @@ public class ButtonFrameBlock extends WoodButtonBlock {
                     this.playSound(player, world, pos, true);
                 }
             }
-            if (item.getItem()== Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL)<15) {
+            /*if (item.getItem()== Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL)<15) {
                 int count = player.getHeldItem(hand).getCount();
                 world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+3));
                 player.getHeldItem(hand).setCount(count-1);
@@ -106,7 +107,8 @@ public class ButtonFrameBlock extends WoodButtonBlock {
                 int count = player.getHeldItem(hand).getCount();
                 world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
                 player.getHeldItem(hand).setCount(count-1);
-            }
+            }*/
+            LightLevelHelper.setLightLevel(item,state,world,pos,player,hand);
             if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK)) {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 if (tileEntity instanceof FrameBlockTile) {
