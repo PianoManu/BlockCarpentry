@@ -282,7 +282,6 @@ public class DoorBakedModel implements IDynamicBakedModel {
             Direction south = Direction.SOUTH;
             DoorHingeSide left = DoorHingeSide.LEFT;
             DoorHingeSide right = DoorHingeSide.RIGHT;
-            System.out.println(extraData.getData(FrameBlockTile.DESIGN));
             int design = extraData.getData(FrameBlockTile.DESIGN);//int design = state.get(DoorFrameBlock.DESIGN);
             int desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE); //state.get(DoorFrameBlock.DESIGN_TEXTURE);
             DoubleBlockHalf half = state.get(DoorBlock.HALF);

@@ -25,6 +25,7 @@ public class BlockColorHandler implements IBlockColor {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void registerBlockColorHandlers(final ColorHandlerEvent.Block event) {
+        registerBlockColors();
         event.getBlockColors().register((x, reader, pos, u) -> reader != null
                 && pos != null ? BiomeColors.getGrassColor(reader, pos)
                 : GrassColors.get(0.5D, 1.0D), Registration.FRAMEBLOCK.get());

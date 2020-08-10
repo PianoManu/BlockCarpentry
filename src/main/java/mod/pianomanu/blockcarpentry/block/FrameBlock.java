@@ -81,10 +81,10 @@ import java.util.List;
                             player.getHeldItem(hand).setCount(count-1);
                         }
                         if (heldBlock instanceof GlassBlock || heldBlock instanceof IceBlock) {
-                            System.out.println("is Transparent");
+                            //TODO
                             this.isTransparent = true;
                         } else {
-                            System.out.println("is not Transparent");
+                            //TODO
                             //this.isTransparent = false;
                         }
                     }

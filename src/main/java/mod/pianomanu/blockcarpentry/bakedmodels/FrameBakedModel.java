@@ -112,8 +112,6 @@ public class FrameBakedModel implements IDynamicBakedModel {
                     if (mimic.getBlock() instanceof GrassBlock) {
                         tintIndex = 1;
                     }
-                    System.out.println("Design: "+extraData.getData(FrameBlockTile.DESIGN));
-                    System.out.println("DesTex: "+extraData.getData(FrameBlockTile.DESIGN_TEXTURE));
                     return ModelHelper.createCuboid(0f,1f,0f,1f,0f,1f, texture.get(index), tintIndex);
                 }
             }

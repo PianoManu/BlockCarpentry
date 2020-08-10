@@ -30,6 +30,7 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_stairs_loader"), new StairsFrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_door_loader"), new DoorFrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_trapdoor_loader"), new TrapdoorFrameModelLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_fence_loader"), new FenceFrameModelLoader());
 
         //SlabFrameBottomRenderer.register();
         ClientRegistry.bindTileEntityRenderer(Registration.BUTTON_FRAME_TILE.get(), ButtonFrameTileEntityRenderer::new);
