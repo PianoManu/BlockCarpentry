@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "contains_block=true,type=bottom": { "model": "blockcarpentry:block/frame_slab_bottom" },
-    "contains_block=true,type=top": { "model": "blockcarpentry:block/frame_slab_top" },
-    "contains_block=true,type=double": { "model": "blockcarpentry:block/frameblock" },
-	"contains_block=false": { "model": "blockcarpentry:block/frame_slab_empty" }
-  }
-}
