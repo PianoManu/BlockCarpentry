@@ -216,6 +216,7 @@ public class TextureHelper {
             locationList.set(0,loc(m,b+p+"_front"));
             locationList.add(loc(m,b+p+"_top"));
             locationList.add(loc(m,b+p+"_side"));
+            locationList.add(loc(m,b+p+"_back"));
             locationList.add(loc(m,b+p+"_back_on"));
         }
         return getTextureFromLocation(locationList);

@@ -5,7 +5,7 @@ import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
-import mod.pianomanu.blockcarpentry.util.LightLevelHelper;
+import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -14,7 +14,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.state.*;
 import net.minecraft.state.properties.BedPart;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -27,7 +26,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 
@@ -86,7 +84,8 @@ public class BedFrameBlock extends BedBlock {
                     }
                 }
             }
-            LightLevelHelper.setLightLevel(item,state,world,pos,player,hand);
+            BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
+            BlockAppearanceHelper.setTexture(item,state,world,player,pos);
             /*if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking()) {
                 if (state.get(TEXTURE)<3) {
                     world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));

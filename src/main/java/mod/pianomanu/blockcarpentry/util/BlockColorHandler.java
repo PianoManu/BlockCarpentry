@@ -1,9 +1,13 @@
 package mod.pianomanu.blockcarpentry.util;
 
+import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.GrassBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GrassColors;
 import net.minecraft.world.ILightReader;
@@ -32,8 +36,18 @@ public class BlockColorHandler implements IBlockColor {
     }
 
     @Override
-    public int getColor(@Nonnull BlockState p_getColor_1_, @Nullable ILightReader lightReader, @Nullable BlockPos pos, int p_getColor_4_) {
-
+    public int getColor(@Nonnull BlockState state, @Nullable ILightReader lightReader, @Nullable BlockPos pos, int tintIndex) {
+        //TODO does this work?
+        if(state.getBlock() instanceof FrameBlock && lightReader!=null && pos!=null) {
+            TileEntity te = lightReader.getTileEntity(pos);
+            if (te instanceof FrameBlockTile) {
+                BlockState containedBlock = ((FrameBlockTile) te).getMimic();
+                if (containedBlock.getBlock() instanceof GrassBlock) {
+                    return BiomeColors.getGrassColor(lightReader,pos);
+                }
+                return Minecraft.getInstance().getBlockColors().getColor(containedBlock, lightReader, pos, tintIndex);
+            }
+        }
         return BiomeColors.getGrassColor(lightReader,pos);
     }
     public static void registerBlockColors()
