@@ -72,20 +72,21 @@ public class ModelHelper {
 
     public static List<BakedQuad> createCuboid(float xl, float xh, float yl, float yh, float zl, float zh, TextureAtlasSprite texture, int tintIndex) {
         List<BakedQuad> quads = new ArrayList<>();
-        Vec3d NWU = v(xl,yh,zl);
-        Vec3d NEU = v(xl,yh,zh);
+        //Eight corners of the block
+        Vec3d NWU = v(xl,yh,zl); //North-West-Up
+        Vec3d NEU = v(xl,yh,zh); //...
         Vec3d NWD = v(xl,yl,zl);
         Vec3d NED = v(xl,yl,zh);
         Vec3d SWU = v(xh,yh,zl);
         Vec3d SEU = v(xh,yh,zh);
         Vec3d SWD = v(xh,yl,zl);
-        Vec3d SED = v(xh,yl,zh);
+        Vec3d SED = v(xh,yl,zh); //South-East-Down
         quads.add(createQuad(NWU, NEU, SEU, SWU, texture, xl*16, xh*16, zl*16, zh*16, tintIndex));
         quads.add(createQuad(SWD, SED, NED, NWD, texture, xl*16, xh*16, zl*16, zh*16, tintIndex));
-        quads.add(createQuad(SWU, SWD, NWD, NWU, texture, zl*16, zh*16, 16-yh*16, 16-yl*16, tintIndex));
-        quads.add(createQuad(NEU, NED, SED, SEU, texture, zl*16, zh*16, 16-yh*16, 16-yl*16, tintIndex));
-        quads.add(createQuad(NWU, NWD, NED, NEU, texture, xl*16, xh*16, 16-yh*16, 16-yl*16, tintIndex));
-        quads.add(createQuad(SEU, SED, SWD, SWU, texture, xl*16, xh*16, 16-yh*16, 16-yl*16, tintIndex));
+        quads.add(createQuad(SWU, SWD, NWD, NWU, texture, xl*16, xh*16, 16-yh*16, 16-yl*16, tintIndex));
+        quads.add(createQuad(NEU, NED, SED, SEU, texture, xl*16, xh*16, 16-yh*16, 16-yl*16, tintIndex));
+        quads.add(createQuad(NWU, NWD, NED, NEU, texture, zl*16, zh*16, 16-yh*16, 16-yl*16, tintIndex));
+        quads.add(createQuad(SEU, SED, SWD, SWU, texture, zl*16, zh*16, 16-yh*16, 16-yl*16, tintIndex));
         return quads;
     }
 
