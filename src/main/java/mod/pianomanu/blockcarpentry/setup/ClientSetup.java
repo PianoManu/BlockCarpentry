@@ -2,14 +2,10 @@ package mod.pianomanu.blockcarpentry.setup;
 
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.model.*;
-import mod.pianomanu.blockcarpentry.renderer.BedFrameTileEntityRenderer;
-import mod.pianomanu.blockcarpentry.renderer.ButtonFrameTileEntityRenderer;
-import mod.pianomanu.blockcarpentry.renderer.model.BedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -39,7 +35,7 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_fence_loader"), new FenceFrameModelLoader());
 
         //SlabFrameBottomRenderer.register();
-        ClientRegistry.bindTileEntityRenderer(Registration.BUTTON_FRAME_TILE.get(), ButtonFrameTileEntityRenderer::new);
+        //ClientRegistry.bindTileEntityRenderer(Registration.BUTTON_FRAME_TILE.get(), ButtonFrameTileEntityRenderer::new);
         //ClientRegistry.bindTileEntityRenderer(Registration.BED_FRAME_TILE.get(), BedFrameTileEntityRenderer::new);
     }
 }
