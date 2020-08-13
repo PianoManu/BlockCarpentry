@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 
+//UUUUUUUUUUSELESS
 @EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID,bus = Bus.MOD)
 public class BCDataGenerator {
 

@@ -22,6 +22,9 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * does not work right now...
+ */
 public class BlockColorHandler implements IBlockColor {
     public static final IBlockColor INSTANCE =new BlockColorHandler();
     private static final Logger LOGGER = LogManager.getLogger();

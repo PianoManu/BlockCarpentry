@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.function.Function;
 
+//UNUSED
 public class BedModel extends Model {
     private ModelRenderer bedBlanket = (new ModelRenderer(64, 64, 0, 0)).addBox(0.0F, 4.0F, 0.0F, 16.0F, 12.0F, 16.0F);
     public BedModel() {

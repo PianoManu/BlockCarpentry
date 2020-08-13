@@ -9,7 +9,14 @@ import net.minecraft.util.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
+ *
+ * @author PianoManu
+ * @version 1.0
+ */
 public class TextureHelper {
+    //unused... do we need this?
     public static TextureAtlasSprite getTextureFromBlock(Block blockIn) {
         ResourceLocation location;
         List<ResourceLocation> locationList = new ArrayList<>();
@@ -222,6 +229,11 @@ public class TextureHelper {
         return getTextureFromLocation(locationList);
     }
 
+    /**
+     * Method needed to get the correct textures for a given block
+     * @param locationList list of ResourceLocations for the texture of the block
+     * @return list of TextureAtlasSprites
+     */
     private static List<TextureAtlasSprite> getTextureFromLocation(List<ResourceLocation> locationList) {
         List<TextureAtlasSprite> textureList = new ArrayList<>();
         for(ResourceLocation location:locationList) {

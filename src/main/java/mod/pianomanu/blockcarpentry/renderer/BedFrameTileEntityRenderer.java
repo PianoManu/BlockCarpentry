@@ -19,6 +19,7 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+//UNUSED
 @OnlyIn(Dist.CLIENT)
 public class BedFrameTileEntityRenderer extends TileEntityRenderer<BedFrameTile> {
     private final ModelRenderer BED_FOOT;

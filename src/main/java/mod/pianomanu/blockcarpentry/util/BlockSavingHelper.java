@@ -10,6 +10,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
+/**
+ * Currently unused, may be used (or rewritten) for frame beds
+ */
 public class BlockSavingHelper {
     public static List<Block> validBlocks = new ArrayList<>();
     public static void createValidBlockList() {

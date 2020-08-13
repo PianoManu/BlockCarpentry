@@ -7,6 +7,10 @@ import net.minecraftforge.registries.RegistryManager;
 
 import java.util.*;
 
+/**
+ * Currently unused. May be removed later
+ * TODO remove
+ */
 public class BlockContainerProperty extends Property<String> {
     private static final IForgeRegistry<Block> BLOCKS = RegistryManager.ACTIVE.getRegistry(Block.class);
     private static List<String> BLOCKS_TO_STRING;

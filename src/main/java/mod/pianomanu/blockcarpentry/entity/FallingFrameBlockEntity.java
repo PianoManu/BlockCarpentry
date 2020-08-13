@@ -7,6 +7,11 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.world.World;
 
+/**
+ * Currently unused, but I plan to make it useful later...
+ * @author PianoManu
+ * @version 1.0
+ */
 public class FallingFrameBlockEntity extends FallingBlockEntity {
 
     //private BlockContainerProperty contains = BCBlockStateProperties.CONTAINS;

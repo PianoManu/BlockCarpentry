@@ -21,13 +21,18 @@ import javax.annotation.Nonnull;
 
 import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
 
-// The value here should match an entry in the META-INF/mods.toml file
+/**
+ * Main class of the BlockCarpentry mod
+ *
+ * @author PianoManu
+ * @version 1.0
+ */
 @Mod(MOD_ID)
 public class BlockCarpentryMain
 {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "blockcarpentry";
-    //TODO main klasse aufräumen
+    //TODO main klasse aufräumen - check
     //TODO Hauptverzeichnis aufräumen
 
     public BlockCarpentryMain() {
@@ -48,42 +53,50 @@ public class BlockCarpentryMain
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    /**
+     * doing setup stuff (currently unused)
+     */
     private void setup(final FMLCommonSetupEvent event)
     {
-        // some preinit code
-        LOGGER.info("Setting up BlockCarpentry");
-        //LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+        LOGGER.info("Setting up BlockCarpentry mod");
     }
 
+    /**
+     * client stuff, i.e. things that can only be done client-side, like rendering
+     */
     private void doClientStuff(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
         RenderSetup.setup();
         LOGGER.info("Setting up client things for BlockCarpentry");
     }
 
+    /**
+     * Dispatching inter-mod-communication
+     */
     private void enqueueIMC(final InterModEnqueueEvent event)
     {
-        // some example code to dispatch IMC to another mod
-        //InterModComms.sendTo("examplemod", "helloworld", () -> { LOGGER.info("Hello world from the MDK"); return "Hello world";});
+
     }
 
+    /**
+     * Receiving and processing inter-mod-communication from other mods
+     */
     private void processIMC(final InterModProcessEvent event)
     {
-        // some example code to receive and process InterModComms from other mods
-        //LOGGER.info("Got IMC {}", event.getIMCStream().
-        //        map(m->m.getMessageSupplier().get()).
-        //        collect(Collectors.toList()));
         LOGGER.info("Processing InterModCommunication");
         BlockSavingHelper.createValidBlockList();
         LOGGER.info("Processed InterModCommunication");
     }
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
+
+    /**
+     * Server stuff (currently unused)
+     */
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
-        // do something when the server starts
-        //LOGGER.info("HELLO from server starting");
     }
 
+    /**
+     * Registering my ItemGroup for all blocks and items from BlockCarpentry
+     */
     public static class BlockCarpentryItemGroup extends ItemGroup {
 
         public static final BlockCarpentryItemGroup BLOCK_CARPENTRY = new BlockCarpentryItemGroup(ItemGroup.GROUPS.length,"blockcarpentry");

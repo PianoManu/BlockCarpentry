@@ -16,6 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 
+//UNUSED
 @OnlyIn(Dist.CLIENT)
 public class ButtonFrameTileEntityRenderer extends TileEntityRenderer<FrameBlockTile> {
     public ButtonFrameTileEntityRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
