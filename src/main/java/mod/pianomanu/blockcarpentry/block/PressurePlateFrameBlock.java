@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
-import static mod.pianomanu.blockcarpentry.block.FrameBlock.TEXTURE;
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.TEXTURE;
 
 public class PressurePlateFrameBlock extends PressurePlateBlock {
 

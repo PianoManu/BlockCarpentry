@@ -4,6 +4,7 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import com.google.common.collect.ImmutableList;
+import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
@@ -95,6 +96,7 @@ public class FrameBakedModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
+        Integer texIndex = extraData.getData(FrameBlockTile.TEXTURE);
         Integer design = extraData.getData(FrameBlockTile.DESIGN);
         Integer desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
@@ -104,7 +106,7 @@ public class FrameBakedModel implements IDynamicBakedModel {
                 if (model != null) {
                     //TODO what about full blocks with different side textures -> IllusionBlock
                     List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(mimic.getBlock());
-                    int index = state.get(FrameBlock.TEXTURE);
+                    int index = texIndex;
                     if (index >= texture.size()) {
                         index = 0;
                     }

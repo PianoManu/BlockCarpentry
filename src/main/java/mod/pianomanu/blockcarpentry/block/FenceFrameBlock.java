@@ -5,9 +5,7 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.*;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -27,21 +25,20 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class FenceFrameBlock extends FenceBlock {
     //private boolean isTransparent = true;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
-    public static final IntegerProperty TEXTURE = BCBlockStateProperties.TEXTURE;
+    //public static final IntegerProperty TEXTURE = BCBlockStateProperties.TEXTURE;
 
     public FenceFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(NORTH, Boolean.valueOf(false)).with(EAST, Boolean.valueOf(false)).with(SOUTH, Boolean.valueOf(false)).with(WEST, Boolean.valueOf(false)).with(WATERLOGGED, Boolean.valueOf(false)).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(TEXTURE,0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(NORTH, Boolean.valueOf(false)).with(EAST, Boolean.valueOf(false)).with(SOUTH, Boolean.valueOf(false)).with(WEST, Boolean.valueOf(false)).with(WATERLOGGED, Boolean.valueOf(false)).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0));//.with(TEXTURE,0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL, TEXTURE);
+        builder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);//, TEXTURE);
     }
 
     @Override
@@ -62,11 +59,11 @@ public class FenceFrameBlock extends FenceBlock {
             if(item.getItem()==Items.LEAD) {
                 return LeadItem.bindPlayerMobs(player, world, pos);
             }
-            if(state.get(CONTAINS_BLOCK) && player.isSneaking()) {
+            /*if(state.get(CONTAINS_BLOCK) && player.isSneaking()) {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos,state,2);
-            } else {
+            }*/ else {
                 if(item.getItem() instanceof BlockItem) {
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
@@ -91,6 +88,11 @@ public class FenceFrameBlock extends FenceBlock {
                     }
                 }
             }
+            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get()) {
+                this.dropContainedBlock(world, pos);
+                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
+                world.setBlockState(pos,state,2);
+            }
             BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
             BlockAppearanceHelper.setTexture(item,state,world,player,pos);
             if (item.getItem() == Registration.TEXTURE_WRENCH.get() && player.isSneaking()) {
@@ -111,7 +113,7 @@ public class FenceFrameBlock extends FenceBlock {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 if (tileEntity instanceof FrameBlockTile) {
                     FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                    if (fte.getDesignTexture() < fte.maxTextures) {
+                    if (fte.getDesignTexture() < fte.maxDesignTextures) {
                         fte.setDesignTexture(fte.getDesignTexture()+1);
                     } else {
                         fte.setDesignTexture(0);

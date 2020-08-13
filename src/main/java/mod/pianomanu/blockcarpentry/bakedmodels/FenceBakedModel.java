@@ -3,6 +3,7 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.block.FenceFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
@@ -56,7 +57,7 @@ public class FenceBakedModel implements IDynamicBakedModel {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic!=null && state != null) {
             List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(mimic.getBlock());
-            int index = state.get(FrameBlock.TEXTURE);
+            int index = extraData.getData(FrameBlockTile.TEXTURE);
             if (index >= texture.size()) {
                 index = 0;
             }

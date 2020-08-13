@@ -6,6 +6,7 @@ import mod.pianomanu.blockcarpentry.bakedmodels.helper.HandleBakedModel;
 import mod.pianomanu.blockcarpentry.block.DoorFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
@@ -262,12 +263,13 @@ public class DoorBakedModel implements IDynamicBakedModel {
         }
 
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
+        int tex = extraData.getData(FrameBlockTile.TEXTURE);
         if (mimic!=null && state != null && extraData.getData(FrameBlockTile.DESIGN) != null && extraData.getData(FrameBlockTile.DESIGN_TEXTURE) != null) {
             //get texture from block in tile entity and apply it to the quads
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
             TextureAtlasSprite texture;
-            if(textureList.size()>state.get(FrameBlock.TEXTURE)) {
-                texture = textureList.get(state.get(FrameBlock.TEXTURE));
+            if(textureList.size()>tex) {
+                texture = textureList.get(tex);
             }
             else {
                 texture = textureList.get(0);

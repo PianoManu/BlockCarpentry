@@ -34,7 +34,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
-import static mod.pianomanu.blockcarpentry.block.FrameBlock.TEXTURE;
 
 public class ButtonFrameBlock extends WoodButtonBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -43,11 +42,11 @@ public class ButtonFrameBlock extends WoodButtonBlock {
 
     public ButtonFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(HORIZONTAL_FACING, Direction.NORTH).with(POWERED,false).with(FACE, AttachFace.WALL).with(LIGHT_LEVEL, 0).with(TEXTURE,0));
+        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(HORIZONTAL_FACING, Direction.NORTH).with(POWERED,false).with(FACE, AttachFace.WALL).with(LIGHT_LEVEL, 0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK).add(BlockStateProperties.HORIZONTAL_FACING).add(POWERED).add(FACE).add(LIGHT_LEVEL).add(TEXTURE);
+        builder.add(CONTAINS_BLOCK).add(BlockStateProperties.HORIZONTAL_FACING).add(POWERED).add(FACE).add(LIGHT_LEVEL);
     }
 
     @Override

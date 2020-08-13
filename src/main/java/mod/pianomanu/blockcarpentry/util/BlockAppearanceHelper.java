@@ -41,7 +41,7 @@ public class BlockAppearanceHelper {
     }
 
     public static void setTexture(ItemStack item, BlockState state, World world, PlayerEntity player, BlockPos pos) {
-        if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK)) {
+        /*if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK)) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
@@ -50,6 +50,19 @@ public class BlockAppearanceHelper {
                     world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
                 } else {
                     world.setBlockState(pos, state.with(TEXTURE, 0));
+                }
+            }
+        }*/
+
+        if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(fte.getMimic().getBlock());
+                if (fte.getTexture() < texture.size()-1 && fte.getTexture() < texture.size()) {
+                    fte.setTexture(fte.getTexture()+1);
+                } else {
+                    fte.setTexture(0);
                 }
             }
         }

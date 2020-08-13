@@ -1,6 +1,5 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.entity.FallingFrameBlockEntity;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FallingFrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.Random;
 
 import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
-import static mod.pianomanu.blockcarpentry.block.FrameBlock.TEXTURE;
 
 public class FallingFrameBlock extends FallingBlock {
 
@@ -152,9 +150,9 @@ public class FallingFrameBlock extends FallingBlock {
             if (worldIn.getTileEntity(pos) instanceof FrameBlockTile) {
                 FrameBlockTile tileEntity = (FrameBlockTile) worldIn.getTileEntity(pos);
                 if (tileEntity.getMimic()!=null) {
-                    FallingFrameBlockEntity fallingFrameBlockEntity = new FallingFrameBlockEntity(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, worldIn.getBlockState(pos), tileEntity.getMimic());
-                    this.onStartFalling(fallingFrameBlockEntity);
-                    worldIn.addEntity(fallingFrameBlockEntity);
+                    //FallingFrameBlockEntity fallingFrameBlockEntity = new FallingFrameBlockEntity(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, worldIn.getBlockState(pos), tileEntity.getMimic());
+                    //this.onStartFalling(fallingFrameBlockEntity);
+                    //worldIn.addEntity(fallingFrameBlockEntity);
                 }
             }
         }

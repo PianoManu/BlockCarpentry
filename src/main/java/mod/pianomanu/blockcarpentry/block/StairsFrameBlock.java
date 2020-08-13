@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
-import static mod.pianomanu.blockcarpentry.block.FrameBlock.TEXTURE;
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.TEXTURE;
 
 public class StairsFrameBlock extends StairsBlock {
 

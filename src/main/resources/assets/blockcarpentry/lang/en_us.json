@@ -10,6 +10,7 @@
 	"block.blockcarpentry.frame_fence":"Frame Fence",
 	"block.blockcarpentry.illusion_block":"Illusion Block",
 	
+	"item.blockcarpentry.hammer":"Hammer",
 	"item.blockcarpentry.texture_wrench":"Texture Wrench",
 	"item.blockcarpentry.chisel":"Chisel",
 	"item.blockcarpentry.paintbrush":"Paintbrush",

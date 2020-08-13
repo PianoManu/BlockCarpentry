@@ -4,11 +4,9 @@ import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -31,10 +29,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-import java.util.List;
-
 import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
-import static mod.pianomanu.blockcarpentry.block.FrameBlock.TEXTURE;
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.TEXTURE;
 
 public class DoorFrameBlock extends DoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -108,7 +104,7 @@ public class DoorFrameBlock extends DoorBlock {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 if (tileEntity instanceof FrameBlockTile) {
                     FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                    if (fte.getDesignTexture() < fte.maxTextures) {
+                    if (fte.getDesignTexture() < fte.maxDesignTextures) {
                         fte.setDesignTexture(fte.getDesignTexture()+1);
                     } else {
                         fte.setDesignTexture(0);

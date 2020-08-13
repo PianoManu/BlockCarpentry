@@ -29,6 +29,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.TEXTURE;
+
 public class SlabFrameBlock extends FrameBlock implements IWaterLoggable {
 
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;

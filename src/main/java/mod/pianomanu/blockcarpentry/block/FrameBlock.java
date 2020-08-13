@@ -5,12 +5,10 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GlassBlock;
 import net.minecraft.block.IceBlock;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -28,22 +26,21 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 
 @SuppressWarnings("deprecation") public class FrameBlock extends Block {
     private boolean isTransparent = true;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
-    public static final IntegerProperty TEXTURE = BCBlockStateProperties.TEXTURE;
+    //public static final IntegerProperty TEXTURE = BCBlockStateProperties.TEXTURE;
 
     public FrameBlock(Properties properties) {
         super(properties.variableOpacity());
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(TEXTURE,0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0));//.with(TEXTURE,0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK).add(LIGHT_LEVEL).add(TEXTURE);
+        builder.add(CONTAINS_BLOCK).add(LIGHT_LEVEL);//.add(TEXTURE);
     }
 
     @Override
@@ -132,7 +129,7 @@ import java.util.List;
                     TileEntity tileEntity = world.getTileEntity(pos);
                     if (tileEntity instanceof FrameBlockTile) {
                         FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                        if (fte.getDesignTexture() < fte.maxTextures) {
+                        if (fte.getDesignTexture() < fte.maxDesignTextures) {
                             fte.setDesignTexture(fte.getDesignTexture()+1);
                         } else {
                             fte.setDesignTexture(0);

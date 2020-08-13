@@ -115,7 +115,7 @@ public class TextureHelper {
         }
         if(blockIn instanceof HayBlock) {
             locationList.set(0,loc(n,b+p+"_side"));
-            locationList.add(loc(n,b+p+"_top"));
+            //locationList.add(loc(n,b+p+"_top"));
         }
         if(blockIn==Blocks.CRAFTING_TABLE) {
             locationList.set(0,loc(m,b+p+"_top"));

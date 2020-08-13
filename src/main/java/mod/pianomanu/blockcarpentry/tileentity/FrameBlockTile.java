@@ -29,13 +29,16 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  */
 public class FrameBlockTile extends TileEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
+    public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN_TEXTURE = new ModelProperty<>();
 
-    public final int maxTextures = 4;
+    public final int maxTextures = 8;
+    public final int maxDesignTextures = 4;
     public final int maxDesigns = 4;
 
     private BlockState mimic;
+    private Integer texture = 0;
     private Integer design = 0;
     private Integer designTexture = 0;
 
@@ -75,12 +78,25 @@ public class FrameBlockTile extends TileEntity {
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
+    public Integer getTexture() {
+        return this.texture;
+    }
+
+    public void setTexture(Integer texture) {
+        this.texture = texture;
+        markDirty();
+        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    }
+
 
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT tag = super.getUpdateTag();
         if (mimic != null) {
             tag.put("mimic", NBTUtil.writeBlockState(mimic));
+        }
+        if (texture != null) {
+            tag.put("texture", writeInteger(texture));
         }
         if (design != null) {
             tag.put("design", writeInteger(design));
@@ -100,12 +116,20 @@ public class FrameBlockTile extends TileEntity {
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         BlockState oldMimic = mimic;
+        Integer oldTexture = texture;
         Integer oldDesign = design;
         Integer oldDesignTexture = designTexture;
         CompoundNBT tag = pkt.getNbtCompound();
         if (tag.contains("mimic")) {
             mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
             if (!Objects.equals(oldMimic, mimic)) {
+                ModelDataManager.requestModelDataRefresh(this);
+                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+            }
+        }
+        if (tag.contains("texture")) {
+            texture = readInteger(tag.getCompound("texture"));
+            if (!Objects.equals(oldTexture, texture)) {
                 ModelDataManager.requestModelDataRefresh(this);
                 world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
@@ -131,6 +155,7 @@ public class FrameBlockTile extends TileEntity {
     public IModelData getModelData() {
         return new ModelDataMap.Builder()
                 .withInitial(MIMIC, mimic)
+                .withInitial(TEXTURE, texture)
                 .withInitial(DESIGN, design)
                 .withInitial(DESIGN_TEXTURE, designTexture)
                 .build();
@@ -141,6 +166,9 @@ public class FrameBlockTile extends TileEntity {
         super.read(tag);
         if (tag.contains("mimic")) {
             mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
+        }
+        if (tag.contains("texture")) {
+            texture = readInteger(tag.getCompound("texture"));
         }
         if (tag.contains("design")) {
             design = readInteger(tag.getCompound("design"));
@@ -155,6 +183,9 @@ public class FrameBlockTile extends TileEntity {
         if (mimic != null) {
             tag.put("mimic", NBTUtil.writeBlockState(mimic));
         }
+        if (texture != null) {
+            tag.put("texture", writeInteger(texture));
+        }
         if (design != null) {
             tag.put("design", writeInteger(design));
         }
@@ -166,6 +197,9 @@ public class FrameBlockTile extends TileEntity {
 
     public void clear() {
         this.setMimic(null);
+        this.setDesign(0);
+        this.setDesign(0);
+        this.setDesign(0);
     }
 
     private static CompoundNBT writeInteger(Integer tag) {
