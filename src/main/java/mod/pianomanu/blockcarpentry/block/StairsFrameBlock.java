@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.TEXTURE;
 
 public class StairsFrameBlock extends StairsBlock {
 
@@ -40,11 +39,11 @@ public class StairsFrameBlock extends StairsBlock {
 
     public StairsFrameBlock(Supplier<BlockState> state, Properties properties) {
         super(state, properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(FACING, Direction.NORTH).with(HALF, Half.BOTTOM).with(SHAPE, StairsShape.STRAIGHT).with(WATERLOGGED, Boolean.valueOf(false)).with(LIGHT_LEVEL, 0).with(TEXTURE,0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(FACING, Direction.NORTH).with(HALF, Half.BOTTOM).with(SHAPE, StairsShape.STRAIGHT).with(WATERLOGGED, Boolean.valueOf(false)).with(LIGHT_LEVEL, 0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK, FACING, HALF, SHAPE, WATERLOGGED, LIGHT_LEVEL, TEXTURE);
+        builder.add(CONTAINS_BLOCK, FACING, HALF, SHAPE, WATERLOGGED, LIGHT_LEVEL);
     }
 
     @Override

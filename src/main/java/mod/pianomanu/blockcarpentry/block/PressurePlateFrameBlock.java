@@ -29,7 +29,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.TEXTURE;
 
 public class PressurePlateFrameBlock extends PressurePlateBlock {
 
@@ -37,11 +36,11 @@ public class PressurePlateFrameBlock extends PressurePlateBlock {
 
     public PressurePlateFrameBlock(Sensitivity sensitivityIn, Properties propertiesIn) {
         super(sensitivityIn, propertiesIn);
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(POWERED, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(TEXTURE,0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(POWERED, Boolean.FALSE).with(LIGHT_LEVEL, 0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK).add(POWERED).add(LIGHT_LEVEL).add(TEXTURE);
+        builder.add(CONTAINS_BLOCK).add(POWERED).add(LIGHT_LEVEL);
     }
 
     @Override

@@ -31,8 +31,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-import java.util.List;
-
 import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
 
 public class ButtonFrameBlock extends WoodButtonBlock {

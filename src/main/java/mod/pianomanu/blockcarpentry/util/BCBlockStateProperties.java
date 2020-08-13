@@ -23,13 +23,6 @@ public class BCBlockStateProperties {
     public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light_level",0,15);
 
     /**
-     * For blocks with multiple textures: (May be removed in the future and saved in the block-tile-entity)
-     *      0  : first texture of the texture list (see {@link TextureHelper}
-     *      5  : sixth and last texture
-     */
-    public static final IntegerProperty TEXTURE = IntegerProperty.create("texture",0,5);
-
-    /**
      * For blocks with different designs/add-ons: (May be removed in the future and saved in the block-tile-entity)
      *      0  : no addon
      *      3  : addon Nr. 3
