@@ -55,6 +55,7 @@ public class FenceBakedModel implements IDynamicBakedModel {
     @Nonnull
     public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, IModelData extraData) {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
+        Integer design = extraData.getData(FrameBlockTile.DESIGN);
         if (mimic!=null && state != null) {
             List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(mimic.getBlock());
             int index = extraData.getData(FrameBlockTile.TEXTURE);
@@ -66,21 +67,60 @@ public class FenceBakedModel implements IDynamicBakedModel {
                 tintIndex = 1;
             }
             List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(6 / 16f, 10 / 16f, 0f, 1f, 6 / 16f, 10 / 16f, texture.get(index), tintIndex));
-            if (state.get(FenceFrameBlock.NORTH)) {
-                quads.addAll(ModelHelper.createCuboid(7/16f,9/16f,3/16f,6/16f,0f,6/16f, texture.get(index), tintIndex));
-                quads.addAll(ModelHelper.createCuboid(7/16f,9/16f,9/16f,12/16f,0f,6/16f, texture.get(index), tintIndex));
+
+            if (design == 0) {
+                if (state.get(FenceFrameBlock.NORTH)) {
+                    quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 6 / 16f, 9 / 16f, 0f, 6 / 16f, texture.get(index), tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 12 / 16f, 15 / 16f, 0f, 6 / 16f, texture.get(index), tintIndex));
+                }
+                if (state.get(FenceFrameBlock.EAST)) {
+                    quads.addAll(ModelHelper.createCuboid(10 / 16f, 1f, 6 / 16f, 9 / 16f, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(10 / 16f, 1f, 12 / 16f, 15 / 16f, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
+                }
+                if (state.get(FenceFrameBlock.SOUTH)) {
+                    quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 6 / 16f, 9 / 16f, 10 / 16f, 1f, texture.get(index), tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 12 / 16f, 15 / 16f, 10 / 16f, 1f, texture.get(index), tintIndex));
+                }
+                if (state.get(FenceFrameBlock.WEST)) {
+                    quads.addAll(ModelHelper.createCuboid(0f, 6 / 16f, 6 / 16f, 9 / 16f, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 6 / 16f, 12 / 16f, 15 / 16f, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
+                }
             }
-            if (state.get(FenceFrameBlock.EAST)) {
-                quads.addAll(ModelHelper.createCuboid(10/16f,1f,3/16f,6/16f,7/16f,9/16f, texture.get(index), tintIndex));
-                quads.addAll(ModelHelper.createCuboid(10/16f,1f,9/16f,12/16f,7/16f,9/16f, texture.get(index), tintIndex));
+            if (design == 1) {
+                if (state.get(FenceFrameBlock.NORTH)) {
+                    quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 3 / 16f, 6 / 16f, 0f, 6 / 16f, texture.get(index), tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 9 / 16f, 12 / 16f, 0f, 6 / 16f, texture.get(index), tintIndex));
+                }
+                if (state.get(FenceFrameBlock.EAST)) {
+                    quads.addAll(ModelHelper.createCuboid(10 / 16f, 1f, 3 / 16f, 6 / 16f, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(10 / 16f, 1f, 9 / 16f, 12 / 16f, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
+                }
+                if (state.get(FenceFrameBlock.SOUTH)) {
+                    quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 3 / 16f, 6 / 16f, 10 / 16f, 1f, texture.get(index), tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 9 / 16f, 12 / 16f, 10 / 16f, 1f, texture.get(index), tintIndex));
+                }
+                if (state.get(FenceFrameBlock.WEST)) {
+                    quads.addAll(ModelHelper.createCuboid(0f, 6 / 16f, 3 / 16f, 6 / 16f, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 6 / 16f, 9 / 16f, 12 / 16f, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
+                }
             }
-            if (state.get(FenceFrameBlock.SOUTH)) {
-                quads.addAll(ModelHelper.createCuboid(7/16f,9/16f,3/16f,6/16f,10/16f,1f, texture.get(index), tintIndex));
-                quads.addAll(ModelHelper.createCuboid(7/16f,9/16f,9/16f,12/16f,10/16f,1f, texture.get(index), tintIndex));
-            }
-            if (state.get(FenceFrameBlock.WEST)) {
-                quads.addAll(ModelHelper.createCuboid(0f,6/16f,3/16f,6/16f,7/16f,9/16f, texture.get(index), tintIndex));
-                quads.addAll(ModelHelper.createCuboid(0f,6/16f,9/16f,12/16f,7/16f,9/16f, texture.get(index), tintIndex));
+            if (design == 2) {
+                if (state.get(FenceFrameBlock.NORTH)) {
+                    quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 4 / 16f, 11 / 16f, 0f, 6 / 16f, texture.get(index), tintIndex));
+                    //quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 9 / 16f, 12 / 16f, 0f, 6 / 16f, texture.get(index), tintIndex));
+                }
+                if (state.get(FenceFrameBlock.EAST)) {
+                    quads.addAll(ModelHelper.createCuboid(10 / 16f, 1f, 4 / 16f, 11 / 16f, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
+                    //quads.addAll(ModelHelper.createCuboid(10 / 16f, 1f, 9 / 16f, 12 / 16f, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
+                }
+                if (state.get(FenceFrameBlock.SOUTH)) {
+                    quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 4 / 16f, 11 / 16f, 10 / 16f, 1f, texture.get(index), tintIndex));
+                    //quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 9 / 16f, 12 / 16f, 10 / 16f, 1f, texture.get(index), tintIndex));
+                }
+                if (state.get(FenceFrameBlock.WEST)) {
+                    quads.addAll(ModelHelper.createCuboid(0f, 6 / 16f, 4 / 16f, 11 / 16f, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
+                    //quads.addAll(ModelHelper.createCuboid(0f, 6 / 16f, 9 / 16f, 12 / 16f, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
+                }
             }
             return quads;
         }
