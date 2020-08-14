@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
@@ -62,52 +63,36 @@ public class ButtonFrameBlock extends WoodButtonBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            if(state.get(CONTAINS_BLOCK)) {
-                if (state.get(POWERED) &&!player.isSneaking()) {
-                    return ActionResultType.CONSUME;
-                } else if (!player.isSneaking()){
-                    this.func_226910_d_(state, world, pos);
-                    this.playSound(player, world, pos, true);
-                }
-                if(item.isEmpty() &&player.isSneaking() && !(item.getItem()==Registration.TEXTURE_WRENCH.get()) && !(item.getItem()==Registration.CHISEL.get()) && !(item.getItem()==Registration.PAINTBRUSH.get())) {
-                    this.dropContainedBlock(world, pos);
-                    state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                    world.setBlockState(pos, state, 2);
-                }
-            } else {
-                if(item.getItem() instanceof BlockItem) {
+            //TODO clean up
+            if (!state.get(CONTAINS_BLOCK)) {
+                if (item.getItem() instanceof BlockItem) {
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
                     if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().isSolid(((BlockItem) item.getItem()).getBlock().getDefaultState())) {
                         ((FrameBlockTile) tileEntity).clear();
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                         ((FrameBlockTile) tileEntity).setMimic(handBlockState);
-                        insertBlock(world,pos, state,handBlockState);
-                        player.getHeldItem(hand).setCount(count-1);
+                        insertBlock(world, pos, state, handBlockState);
+                        player.getHeldItem(hand).setCount(count - 1);
                         return ActionResultType.CONSUME;
                     }
                 }
-                if (state.get(POWERED) &&!player.isSneaking()) {
-                    return ActionResultType.CONSUME;
-                } else if (!player.isSneaking()){
-                    this.func_226910_d_(state, world, pos);
-                    this.playSound(player, world, pos, true);
-                }
             }
-            /*if (item.getItem()== Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL)<15) {
-                int count = player.getHeldItem(hand).getCount();
-                world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+3));
-                player.getHeldItem(hand).setCount(count-1);
+            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
+                this.dropContainedBlock(world, pos);
+                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
+                world.setBlockState(pos,state,2);
             }
-            if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL)<15) {
-                int count = player.getHeldItem(hand).getCount();
-                world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
-                player.getHeldItem(hand).setCount(count-1);
-            }*/
             BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
             BlockAppearanceHelper.setTexture(item,state,world,player,pos);
             if (item.getItem() == Registration.TEXTURE_WRENCH.get() && player.isSneaking()) {
                 //System.out.println("You should rotate now!");
+            }
+            if (state.get(POWERED)) {
+                return ActionResultType.CONSUME;
+            } else {
+                this.func_226910_d_(state, world, pos);
+                this.playSound(player, world, pos, true);
             }
         }
         return ActionResultType.SUCCESS;

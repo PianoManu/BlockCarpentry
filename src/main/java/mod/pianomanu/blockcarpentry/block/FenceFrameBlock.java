@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
@@ -87,7 +88,7 @@ public class FenceFrameBlock extends FenceBlock {
                     }
                 }
             }
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get()) {
+            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos,state,2);

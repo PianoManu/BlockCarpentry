@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.util;
 
+import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.BlockState;
@@ -41,25 +42,13 @@ public class BlockAppearanceHelper {
     }
 
     public static void setTexture(ItemStack item, BlockState state, World world, PlayerEntity player, BlockPos pos) {
-        /*if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK)) {
-            TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof FrameBlockTile) {
-                FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(fte.getMimic().getBlock());
-                if (state.get(TEXTURE) < texture.size()-1 && state.get(TEXTURE) < 5) {
-                    world.setBlockState(pos, state.with(TEXTURE, state.get(TEXTURE) + 1));
-                } else {
-                    world.setBlockState(pos, state.with(TEXTURE, 0));
-                }
-            }
-        }*/
 
         if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK)) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
                 List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(fte.getMimic().getBlock());
-                if (fte.getTexture() < texture.size()-1 && fte.getTexture() < texture.size()) {
+                if (fte.getTexture() < texture.size()-1 && fte.getTexture() < texture.size()-1) {
                     fte.setTexture(fte.getTexture()+1);
                 } else {
                     fte.setTexture(0);
@@ -68,7 +57,39 @@ public class BlockAppearanceHelper {
         }
     }
 
-    public static void setDesign() {
+    public static void setDesign(World world, BlockPos pos, PlayerEntity player, ItemStack item) {
+        if (item.getItem() == Registration.CHISEL.get() && !player.isSneaking()) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                if (fte.getDesign() < fte.maxDesigns) {
+                    fte.setDesign(fte.getDesign() + 1);
+                } else {
+                    fte.setDesign(0);
+                }
+            }
+        }
+    }
 
+    public static void setDesignTexture(World world, BlockPos pos, PlayerEntity player, ItemStack item) {
+        if (item.getItem() == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                if (fte.getDesignTexture() < fte.maxDesignTextures) {
+                    fte.setDesignTexture(fte.getDesignTexture() + 1);
+                } else {
+                    fte.setDesignTexture(0);
+                }
+            }
+        }
+    }
+
+    public static void clearContent(World world, BlockState state, BlockPos pos, PlayerEntity player, Hand hand) {
+        if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get()) {
+            //this.dropContainedBlock(world, pos);
+            state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
+            world.setBlockState(pos,state,2);
+        }
     }
 }

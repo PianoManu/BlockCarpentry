@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
@@ -58,11 +59,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            if(state.get(CONTAINS_BLOCK) && player.isSneaking()) {
-                this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos,state,2);
-            } else if (!player.isSneaking() && !(item.getItem() instanceof BlockItem) && !(item.getItem()==Registration.TEXTURE_WRENCH.get()) && !(item.getItem()==Registration.CHISEL.get()) && !(item.getItem()==Registration.PAINTBRUSH.get())) {
+            if (!player.isSneaking() && !(item.getItem() instanceof BlockItem) && !(item.getItem()==Registration.TEXTURE_WRENCH.get()) && !(item.getItem()==Registration.CHISEL.get()) && !(item.getItem()==Registration.PAINTBRUSH.get())) {
                 state = state.cycle(OPEN);
                 world.setBlockState(pos, state, 2);
                 if (state.get(WATERLOGGED)) {
@@ -87,33 +84,15 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                     }
                 }
             }
+            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
+                this.dropContainedBlock(world, pos);
+                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
+                world.setBlockState(pos, state, 2);
+            }
             BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
             BlockAppearanceHelper.setTexture(item,state,world,player,pos);
-            if (item.getItem() == Registration.TEXTURE_WRENCH.get() && player.isSneaking()) {
-                System.out.println("You should rotate now!"); //fixme
-            }
-            if (item.getItem() == Registration.CHISEL.get() && !player.isSneaking()) {
-                TileEntity tileEntity = world.getTileEntity(pos);
-                if (tileEntity instanceof FrameBlockTile) {
-                    FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                    if (fte.getDesign() < fte.maxDesigns) {
-                        fte.setDesign(fte.getDesign()+1);
-                    } else {
-                        fte.setDesign(0);
-                    }
-                }
-            }
-            if (item.getItem() == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
-                TileEntity tileEntity = world.getTileEntity(pos);
-                if (tileEntity instanceof FrameBlockTile) {
-                    FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                    if (fte.getDesignTexture() < fte.maxDesignTextures) {
-                        fte.setDesignTexture(fte.getDesignTexture()+1);
-                    } else {
-                        fte.setDesignTexture(0);
-                    }
-                }
-            }
+            BlockAppearanceHelper.setDesign(world,pos,player,item);
+            BlockAppearanceHelper.setDesignTexture(world,pos,player,item);
         }
         return ActionResultType.SUCCESS;
     }

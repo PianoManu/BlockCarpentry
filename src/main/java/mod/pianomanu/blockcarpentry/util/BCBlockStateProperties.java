@@ -23,13 +23,6 @@ public class BCBlockStateProperties {
     public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light_level",0,15);
 
     /**
-     * For blocks with different designs/add-ons: (May be removed in the future and saved in the block-tile-entity)
-     *      0  : no addon
-     *      3  : addon Nr. 3
-     */
-    public static final IntegerProperty DESIGN = IntegerProperty.create("design",0,3);
-
-    /**
      * For beds, currently unused (May be removed in the future and saved in the block-tile-entity)
      */
     public static final IntegerProperty PILLOW_COLOR = IntegerProperty.create("pillow_color",0,15);
