@@ -139,6 +139,24 @@ public class ModelHelper {
         Vec3d SEU = v(xh,yh,zh);
         Vec3d SWD = v(xh,yl,zl);
         Vec3d SED = v(xh,yl,zh); //South-East-Down
+        if(xl < 0) {
+            xl++;
+        }
+        if(xh > 1) {
+            xh--;
+        }
+        if(yl < 0) {
+            yl++;
+        }
+        if(yh > 1) {
+            yh--;
+        }
+        if(zl < 0) {
+            zl++;
+        }
+        if(zh > 1) {
+            zh--;
+        }
         quads.add(createQuad(NWU, NEU, SEU, SWU, texture, xl*16, xh*16, zl*16, zh*16, tintIndex));
         quads.add(createQuad(SWD, SED, NED, NWD, texture, xl*16, xh*16, zl*16, zh*16, tintIndex));
         quads.add(createQuad(SWU, SWD, NWD, NWU, texture, xl*16, xh*16, 16-yh*16, 16-yl*16, tintIndex));
