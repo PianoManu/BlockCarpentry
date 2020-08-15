@@ -4,6 +4,7 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -11,6 +12,9 @@ import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TextComponentUtils;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -31,12 +35,20 @@ public class BlockAppearanceHelper {
             lightLevel=lightLevel+3;
             world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+3));
             player.getHeldItem(hand).setCount(count-1);
+            Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Light Level: "+(state.get(LIGHT_LEVEL)+3)), true);
         }
         if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL)<15) {
             int count = player.getHeldItem(hand).getCount();
             lightLevel=lightLevel+1;
             world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
             player.getHeldItem(hand).setCount(count-1);
+            Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Light Level: " + (state.get(LIGHT_LEVEL)+1)), true);
+        }
+        if (item.getItem()== Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL) >= 13) {
+            Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Light Level: " + state.get(LIGHT_LEVEL)), true);
+        }
+        if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL) == 15) {
+            Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Light Level: " + state.get(LIGHT_LEVEL)), true);
         }
         return lightLevel;
     }
@@ -53,6 +65,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setTexture(0);
                 }
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Texture: "+fte.getTexture()), true);
             }
         }
     }
@@ -67,6 +80,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setDesign(0);
                 }
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Design: "+fte.getDesign()), true);
             }
         }
     }
@@ -81,6 +95,8 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setDesignTexture(0);
                 }
+                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Design Texture: "+fte.getDesignTexture()), true);
             }
         }
     }
