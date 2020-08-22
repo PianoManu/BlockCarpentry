@@ -29,7 +29,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
 public class DoorFrameBlock extends DoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -61,7 +61,7 @@ public class DoorFrameBlock extends DoorBlock {
             if (item.getItem() instanceof BlockItem) {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().isSolid(((BlockItem) item.getItem()).getBlock().getDefaultState()) && !state.get(CONTAINS_BLOCK)) {
+                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().getDefaultState().isSolid() && !state.get(CONTAINS_BLOCK)) {
                     ((FrameBlockTile) tileEntity).clear();
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     ((FrameBlockTile) tileEntity).setMimic(handBlockState);
@@ -69,7 +69,11 @@ public class DoorFrameBlock extends DoorBlock {
                     player.getHeldItem(hand).setCount(count - 1);
                 }
             } else if (!(item.getItem() == Items.GLOWSTONE_DUST) && !(item.getItem() == Items.COAL) && !(item.getItem() == Items.CHARCOAL) && !(item.getItem() == Registration.TEXTURE_WRENCH.get()) && !(item.getItem() == Registration.CHISEL.get()) && !(item.getItem() == Registration.PAINTBRUSH.get())) {
-                state = state.cycle(OPEN);
+                if (state.get(DoorBlock.OPEN)) {
+                    state = state.with(OPEN, false);
+                } else {
+                    state = state.with(OPEN, true);
+                }
                 world.setBlockState(pos, state, 10);
                 world.playEvent(player, state.get(OPEN) ? 1006 : 1012, pos, 0);
             }
@@ -130,12 +134,12 @@ public class DoorFrameBlock extends DoorBlock {
         }
     }
 
-    @Override
+    /*@Override
     @SuppressWarnings("deprecation")
     public int getLightValue(BlockState state) {
         if (state.get(LIGHT_LEVEL) > 15) {
             return 15;
         }
         return state.get(LIGHT_LEVEL);
-    }
+    }*/
 }

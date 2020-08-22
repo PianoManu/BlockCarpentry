@@ -31,8 +31,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
-
 public class FallingFrameBlock extends FallingBlock {
 
     //TODO fix falling block losing tile entity
@@ -72,7 +70,7 @@ public class FallingFrameBlock extends FallingBlock {
                 if(item.getItem() instanceof BlockItem) {
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
-                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().isSolid(((BlockItem) item.getItem()).getBlock().getDefaultState())) {
+                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().getDefaultState().isSolid()) {
                         ((FrameBlockTile) tileEntity).clear();
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                         ((FrameBlockTile) tileEntity).setMimic(handBlockState);
@@ -139,8 +137,8 @@ public class FallingFrameBlock extends FallingBlock {
     }
 
     @Override
-    public void onEndFalling(World worldIn, BlockPos pos, BlockState fallingState, BlockState hitState) {
-        super.onEndFalling(worldIn, pos, fallingState, hitState);
+    public void onEndFalling(World worldIn, BlockPos pos, BlockState fallingState, BlockState hitState, FallingBlockEntity entity) {
+        super.onEndFalling(worldIn, pos, fallingState, hitState, entity);
 
     }
 
@@ -162,12 +160,12 @@ public class FallingFrameBlock extends FallingBlock {
         return new FallingFrameBlockTile(mimic);
     }
 
-    @Override
+    /*@Override
     @SuppressWarnings("deprecation")
     public int getLightValue(BlockState state) {
         if (state.get(LIGHT_LEVEL)>15) {
             return 15;
         }
         return state.get(LIGHT_LEVEL);
-    }
+    }*/
 }

@@ -57,7 +57,7 @@ public class FenceFrameBlock extends FenceBlock {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
             if(item.getItem()==Items.LEAD) {
-                return LeadItem.bindPlayerMobs(player, world, pos);
+                return LeadItem.func_226641_a_(player, world, pos);
             }
             /*if(state.get(CONTAINS_BLOCK) && player.isSneaking()) {
                 this.dropContainedBlock(world, pos);

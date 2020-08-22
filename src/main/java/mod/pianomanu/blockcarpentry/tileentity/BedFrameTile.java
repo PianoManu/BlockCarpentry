@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -176,7 +176,7 @@ public class BedFrameTile extends TileEntity {
                 .build();
     }
 
-    @Override
+    /*@Override
     public void read(CompoundNBT tag) {
         super.read(tag);
         if (tag.contains("mimic")) {
@@ -194,7 +194,7 @@ public class BedFrameTile extends TileEntity {
         if (tag.contains("design_texture")) {
             designTexture = readInteger(tag.getCompound("design_texture"));
         }
-    }
+    }*/
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {

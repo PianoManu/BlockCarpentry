@@ -8,13 +8,14 @@
 	"block.blockcarpentry.frame_door":"Frame Door",
 	"block.blockcarpentry.frame_trapdoor":"Frame Trapdoor",
 	"block.blockcarpentry.frame_fence":"Frame Fence",
-	"block.blockcarpentry.frame_slope":"Frame Slope",
 	"block.blockcarpentry.illusion_block":"Illusion Block",
 	
 	"item.blockcarpentry.hammer":"Hammer",
 	"item.blockcarpentry.texture_wrench":"Texture Wrench",
 	"item.blockcarpentry.chisel":"Chisel",
 	"item.blockcarpentry.paintbrush":"Paintbrush",
+	
+	"message.frame.design_texture":"Texture: ",
 	
 	"itemGroup.blockcarpentry":"BlockCarpentry"
 }

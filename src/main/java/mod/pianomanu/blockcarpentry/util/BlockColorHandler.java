@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GrassColors;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,7 +39,7 @@ public class BlockColorHandler implements IBlockColor {
     }
 
     @Override
-    public int getColor(@Nonnull BlockState state, @Nullable ILightReader lightReader, @Nullable BlockPos pos, int tintIndex) {
+    public int getColor(@Nonnull BlockState state, @Nullable IBlockDisplayReader lightReader, @Nullable BlockPos pos, int tintIndex) {
         //TODO does this work?
         if(state.getBlock() instanceof FrameBlock && lightReader!=null && pos!=null) {
             TileEntity te = lightReader.getTileEntity(pos);

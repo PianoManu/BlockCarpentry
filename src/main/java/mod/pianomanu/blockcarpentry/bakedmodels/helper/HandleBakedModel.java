@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class HandleBakedModel {
 
-    private static void putVertex(BakedQuadBuilder builder, Vec3d normal,
+    private static void putVertex(BakedQuadBuilder builder, Vector3d normal,
                            double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
 
         ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
@@ -55,8 +55,8 @@ public class HandleBakedModel {
         builder.setApplyDiffuseLighting(true);
     }
 
-    private static BakedQuad create5x4Quad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, int flag) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+    private static BakedQuad create5x4Quad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite, int flag) {
+        Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
@@ -81,8 +81,8 @@ public class HandleBakedModel {
         return builder.build();
     }
 
-    private static BakedQuad create1x4Quad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, int flag) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+    private static BakedQuad create1x4Quad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite, int flag) {
+        Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
@@ -111,8 +111,8 @@ public class HandleBakedModel {
         return builder.build();
     }
 
-    private static BakedQuad create1x5Quad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, int flag) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+    private static BakedQuad create1x5Quad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite, int flag) {
+        Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
@@ -149,14 +149,14 @@ public class HandleBakedModel {
             texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/gold_block"));
         }
         List<BakedQuad> quads = new ArrayList<>();
-        Vec3d NWU = v(xl,yh,zl);
-        Vec3d NEU = v(xl,yh,zh);
-        Vec3d NWD = v(xl,yl,zl);
-        Vec3d NED = v(xl,yl,zh);
-        Vec3d SWU = v(xh,yh,zl);
-        Vec3d SEU = v(xh,yh,zh);
-        Vec3d SWD = v(xh,yl,zl);
-        Vec3d SED = v(xh,yl,zh);
+        Vector3d NWU = v(xl,yh,zl);
+        Vector3d NEU = v(xl,yh,zh);
+        Vector3d NWD = v(xl,yl,zl);
+        Vector3d NED = v(xl,yl,zh);
+        Vector3d SWU = v(xh,yh,zl);
+        Vector3d SEU = v(xh,yh,zh);
+        Vector3d SWD = v(xh,yl,zl);
+        Vector3d SED = v(xh,yl,zh);
         quads.add(create5x4Quad(NWU, NEU, SEU, SWU, texture, flag));
         quads.add(create5x4Quad(SWD, SED, NED, NWD, texture, flag));
         quads.add(create1x4Quad(NWD, NWU, SWU, SWD, texture, flag));
@@ -166,7 +166,7 @@ public class HandleBakedModel {
         return quads;
     }
 
-    private static Vec3d v(double x, double y, double z) {
-        return new Vec3d(x, y, z);
+    private static Vector3d v(double x, double y, double z) {
+        return new Vector3d(x, y, z);
     }
 }

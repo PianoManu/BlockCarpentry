@@ -22,7 +22,7 @@ import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.state.properties.Half;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
@@ -41,7 +41,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
     }
 
-    private void putVertex(BakedQuadBuilder builder, Vec3d normal,
+    private void putVertex(BakedQuadBuilder builder, Vector3d normal,
                            double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
 
         ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
@@ -82,8 +82,8 @@ public class DoorBakedModel implements IDynamicBakedModel {
     }
 
     //Top part of door
-    private BakedQuad createTopPartQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, Direction facing, AttachFace face) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+    private BakedQuad createTopPartQuad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite, Direction facing, AttachFace face) {
+        Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
@@ -120,15 +120,15 @@ public class DoorBakedModel implements IDynamicBakedModel {
     //Bottom part of door
     private BakedQuad createBottomPartQuad(TextureAtlasSprite sprite, int flag) {
         //NWD = north west up etc.
-        Vec3d NWD= v(0,0,0);
-        Vec3d NWU= v(0,16,0);
-        Vec3d NED= v(3,0,0);
-        Vec3d NEU= v(3,16,0);
-        Vec3d SWD= v(0,0,16);
-        Vec3d SWU= v(0,16,16);
-        Vec3d SED= v(3,0,16);
-        Vec3d SEU= v(3,16,16);
-        Vec3d v1, v2, v3, v4;
+        Vector3d NWD= v(0,0,0);
+        Vector3d NWU= v(0,16,0);
+        Vector3d NED= v(3,0,0);
+        Vector3d NEU= v(3,16,0);
+        Vector3d SWD= v(0,0,16);
+        Vector3d SWU= v(0,16,16);
+        Vector3d SED= v(3,0,16);
+        Vector3d SEU= v(3,16,16);
+        Vector3d v1, v2, v3, v4;
         if (flag==0) {
             v1=NWD;
             v2=NWU;
@@ -141,10 +141,10 @@ public class DoorBakedModel implements IDynamicBakedModel {
             v3=SWU;
             v4=SWD;
         }
-        Vec3d normal1 = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
-        Vec3d normal2 = v3.subtract(v1).crossProduct(v2.subtract(v1)).normalize();
-        Vec3d normal3 = v2.subtract(v3).crossProduct(v1.subtract(v3)).normalize();
-        Vec3d normal4 = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+        Vector3d normal1 = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+        Vector3d normal2 = v3.subtract(v1).crossProduct(v2.subtract(v1)).normalize();
+        Vector3d normal3 = v2.subtract(v3).crossProduct(v1.subtract(v3)).normalize();
+        Vector3d normal4 = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
         System.out.println(v1.toString()+", "+v2.toString()+", "+v3.toString()+", "+v4.toString());
         System.out.println(normal1.toString()+normal2.toString()+normal3.toString()+normal4.toString());
 
@@ -162,12 +162,12 @@ public class DoorBakedModel implements IDynamicBakedModel {
         return builder.build();
     }
 
-    private static Vec3d v(double x, double y, double z) {
-        return new Vec3d(x, y, z);
+    private static Vector3d v(double x, double y, double z) {
+        return new Vector3d(x, y, z);
     }
 
-    private BakedQuad createSquareQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+    private BakedQuad createSquareQuad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite) {
+        Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
@@ -180,8 +180,8 @@ public class DoorBakedModel implements IDynamicBakedModel {
         return builder.build();
     }
 
-    private BakedQuad create3x16SideQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, int flag) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+    private BakedQuad create3x16SideQuad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite, int flag) {
+        Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
@@ -201,8 +201,8 @@ public class DoorBakedModel implements IDynamicBakedModel {
         return builder.build();
     }
 
-    private BakedQuad create3x16TopQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, int flag) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+    private BakedQuad create3x16TopQuad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite, int flag) {
+        Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
@@ -376,6 +376,11 @@ public class DoorBakedModel implements IDynamicBakedModel {
 
     @Override
     public boolean isGui3d() {
+        return false;
+    }
+
+    @Override
+    public boolean func_230044_c_() {
         return false;
     }
 

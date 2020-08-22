@@ -60,7 +60,11 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
             if (!player.isSneaking() && !(item.getItem() instanceof BlockItem) && !(item.getItem()==Registration.TEXTURE_WRENCH.get()) && !(item.getItem()==Registration.CHISEL.get()) && !(item.getItem()==Registration.PAINTBRUSH.get())) {
-                state = state.cycle(OPEN);
+                if (state.get(OPEN)) {
+                    state = state.with(OPEN, false);
+                } else {
+                    state = state.with(OPEN, true);
+                }
                 world.setBlockState(pos, state, 2);
                 if (state.get(WATERLOGGED)) {
                     world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
@@ -74,7 +78,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                     Block heldBlock = ((BlockItem) item.getItem()).getBlock();
                     //TODO fix for non-solid blocks
                     //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
-                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().isSolid(((BlockItem) item.getItem()).getBlock().getDefaultState()) && !state.get(CONTAINS_BLOCK)) {
+                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().getDefaultState().isSolid() && !state.get(CONTAINS_BLOCK)) {
                         ((FrameBlockTile) tileEntity).clear();
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                         ((FrameBlockTile) tileEntity).setMimic(handBlockState);

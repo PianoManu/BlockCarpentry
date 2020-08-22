@@ -32,7 +32,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
 public class ButtonFrameBlock extends WoodButtonBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -68,7 +68,7 @@ public class ButtonFrameBlock extends WoodButtonBlock {
                 if (item.getItem() instanceof BlockItem) {
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
-                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().isSolid(((BlockItem) item.getItem()).getBlock().getDefaultState())) {
+                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().getDefaultState().isSolid()) {
                         ((FrameBlockTile) tileEntity).clear();
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                         ((FrameBlockTile) tileEntity).setMimic(handBlockState);
@@ -140,12 +140,12 @@ public class ButtonFrameBlock extends WoodButtonBlock {
         }
     }
 
-    @Override
+    /*@Override
     @SuppressWarnings("deprecation")
     public int getLightValue(BlockState state) {
         if (state.get(LIGHT_LEVEL)>15) {
             return 15;
         }
         return state.get(LIGHT_LEVEL);
-    }
+    }*/
 }

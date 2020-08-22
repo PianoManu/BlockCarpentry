@@ -25,15 +25,18 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.extensions.IForgeBlockState;
 
 import javax.annotation.Nullable;
 
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
+
 
 @SuppressWarnings("deprecation")
-public class FrameBlock extends Block {
+public class FrameBlock extends Block implements IForgeBlockState {
     private boolean isTransparent = true;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
-    public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
+    //public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
     //public static final IntegerProperty TEXTURE = BCBlockStateProperties.TEXTURE;
 
     public FrameBlock(Properties properties) {
@@ -139,7 +142,7 @@ public class FrameBlock extends Block {
         }
     }
 
-    public int getLightValue(BlockState state) {
+    public int setLightValue(BlockState state, int amount) {
         if (state.get(LIGHT_LEVEL) > 15) {
             return 15;
         }
@@ -149,5 +152,13 @@ public class FrameBlock extends Block {
     public boolean isTransparent(BlockState state) {
         //return this.isTransparent;
         return true;
+    }
+
+    @Override
+    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+        if (state.get(LIGHT_LEVEL) > 15) {
+            return 15;
+        }
+        return state.get(LIGHT_LEVEL);
     }
 }

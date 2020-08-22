@@ -4,6 +4,7 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,6 +17,7 @@ import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.extensions.IForgeBlockState;
 
 import java.util.List;
 
@@ -29,18 +31,15 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.*;
  */
 public class BlockAppearanceHelper {
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
-        int lightLevel=0;
         if (item.getItem()== Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL)<13) {
             int count = player.getHeldItem(hand).getCount();
-            lightLevel=lightLevel+3;
-            world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+3));
+            world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getBlock().getLightValue(state, world, pos)+3));
             player.getHeldItem(hand).setCount(count-1);
             Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Light Level: "+(state.get(LIGHT_LEVEL)+3)), true);
         }
         if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL)<15) {
             int count = player.getHeldItem(hand).getCount();
-            lightLevel=lightLevel+1;
-            world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getLightValue()+1));
+            world.setBlockState(pos,state.with(LIGHT_LEVEL, state.getBlock().getLightValue(state, world, pos)+1));
             player.getHeldItem(hand).setCount(count-1);
             Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Light Level: " + (state.get(LIGHT_LEVEL)+1)), true);
         }
@@ -50,7 +49,7 @@ public class BlockAppearanceHelper {
         if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL) == 15) {
             Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Light Level: " + state.get(LIGHT_LEVEL)), true);
         }
-        return lightLevel;
+        return state.get(LIGHT_LEVEL);
     }
 
     public static void setTexture(ItemStack item, BlockState state, World world, PlayerEntity player, BlockPos pos) {

@@ -186,6 +186,11 @@ public class FenceBakedModel implements IDynamicBakedModel {
     }
 
     @Override
+    public boolean func_230044_c_() {
+        return false;
+    }
+
+    @Override
     public boolean isBuiltInRenderer() {
         return false;
     }

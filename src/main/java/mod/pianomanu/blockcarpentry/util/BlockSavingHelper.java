@@ -18,13 +18,13 @@ public class BlockSavingHelper {
     public static void createValidBlockList() {
         List<Block> blockList = new ArrayList<>();
         for(Block b : ForgeRegistries.BLOCKS) {
-            if (b.isSolid(b.getDefaultState())) {
+            if (b.getDefaultState().isSolid()) {
                 blockList.add(b);
             }
         }
         blockList.add(Blocks.GLASS);
-        Collection<Block> glass = Tags.Blocks.GLASS.getAllElements();
-        blockList.addAll(glass);
+        //Collection<Block> glass = Tags.Blocks.GLASS.func_230236_b_();
+        //blockList.addAll(glass);
         blockList.add(Blocks.ICE);
         validBlocks = blockList;
     }
@@ -34,7 +34,7 @@ public class BlockSavingHelper {
     }
 
     public static boolean isDyeItem(Item item) {
-        return Tags.Items.DYES.contains(item);
+        return Tags.Items.DYES.func_230235_a_(item);
     }
 
     public static boolean isWoolBlock(Block block) {

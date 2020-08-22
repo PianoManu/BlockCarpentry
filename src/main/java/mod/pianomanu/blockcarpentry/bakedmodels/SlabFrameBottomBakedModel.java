@@ -19,7 +19,7 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
@@ -39,7 +39,7 @@ public class SlabFrameBottomBakedModel implements IDynamicBakedModel {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
     }
 
-    private void putVertex(BakedQuadBuilder builder, Vec3d normal,
+    private void putVertex(BakedQuadBuilder builder, Vector3d normal,
                            double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
 
         ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
@@ -78,8 +78,8 @@ public class SlabFrameBottomBakedModel implements IDynamicBakedModel {
         builder.setApplyDiffuseLighting(true);
     }
 
-    private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+    private BakedQuad createQuad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite) {
+        Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
@@ -91,8 +91,8 @@ public class SlabFrameBottomBakedModel implements IDynamicBakedModel {
         return builder.build();
     }
 
-    private BakedQuad createHalfQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+    private BakedQuad createHalfQuad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite) {
+        Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
@@ -104,8 +104,8 @@ public class SlabFrameBottomBakedModel implements IDynamicBakedModel {
         return builder.build();
     }
 
-    private static Vec3d v(double x, double y, double z) {
-        return new Vec3d(x, y, z);
+    private static Vector3d v(double x, double y, double z) {
+        return new Vector3d(x, y, z);
     }
 
 
@@ -173,6 +173,11 @@ public class SlabFrameBottomBakedModel implements IDynamicBakedModel {
 
     @Override
     public boolean isGui3d() {
+        return false;
+    }
+
+    @Override
+    public boolean func_230044_c_() {
         return false;
     }
 

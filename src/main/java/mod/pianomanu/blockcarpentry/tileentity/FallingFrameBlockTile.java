@@ -72,13 +72,13 @@ public class FallingFrameBlockTile extends FrameBlockTile {
                 .build();
     }
 
-    @Override
+    /*@Override
     public void read(CompoundNBT tag) {
         super.read(tag);
         if (tag.contains("mimic")) {
             mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
         }
-    }
+    }*/
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {
