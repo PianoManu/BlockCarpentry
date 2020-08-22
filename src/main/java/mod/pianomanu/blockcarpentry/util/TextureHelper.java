@@ -1,9 +1,12 @@
 package mod.pianomanu.blockcarpentry.util;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -240,5 +243,9 @@ public class TextureHelper {
             textureList.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(location));
         }
         return textureList;
+    }
+
+    public void testJSON() {
+        //JSONUtils.deserializeClass(new JsonObject(),"texture")
     }
 }
