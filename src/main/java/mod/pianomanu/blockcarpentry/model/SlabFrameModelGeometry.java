@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.model;
 
+import mod.pianomanu.blockcarpentry.bakedmodels.SlabFrameBakedModel;
 import mod.pianomanu.blockcarpentry.bakedmodels.SlabFrameTopBakedModel;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.model.*;
@@ -14,10 +15,10 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;
 
-public class SlabFrameTopModelGeometry implements IModelGeometry<SlabFrameTopModelGeometry> {
+public class SlabFrameModelGeometry implements IModelGeometry<SlabFrameModelGeometry> {
     @Override
     public IBakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform, ItemOverrideList overrides, ResourceLocation modelLocation) {
-        return new SlabFrameTopBakedModel();
+        return new SlabFrameBakedModel();
     }
 
     @Override
