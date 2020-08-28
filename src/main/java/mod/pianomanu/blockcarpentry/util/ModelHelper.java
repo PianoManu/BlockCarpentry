@@ -195,10 +195,8 @@ public class ModelHelper {
         Vec3d SEU = v(xh, yh, zh);
         Vec3d SWD = v(xh, yl, zl);
         Vec3d SED = v(xh, yl, zh); //South-East-Down
-        System.out.println("ModelHelper");
         if (half == Half.BOTTOM) {
             if (direction == Direction.NORTH) {
-                System.out.println("Direction North");
                 quadsSlope.add(createQuad(NWU, NED, SED, SWU, texture, zl * 16, zh * 16, yl * 16, yh * 16, tintIndex));
                 quadsSlope.add(createQuad(SWD, SED, NED, NWD, texture, zl * 16, zh * 16, xl * 16, xh * 16, tintIndex));
                 quadsSlope.add(createQuad(SWD, SWU, SED, SWD, texture, zl * 16, zh * 16, xl * 16, xh * 16, tintIndex));
@@ -219,7 +217,6 @@ public class ModelHelper {
         //is TODO
         if (half == Half.TOP) {
             if (direction == Direction.NORTH) {
-                System.out.println("Direction North");
                 quadsSlope.add(createQuad(NWU, NED, SED, SWU, texture, zl * 16, zh * 16, yl * 16, yh * 16, tintIndex));
 
             }
@@ -235,5 +232,51 @@ public class ModelHelper {
         }
         //in case of DOWN or UP, return empty list - this should never be reached
         return quadsSlope;
+    }
+
+    public static List<BakedQuad> createCutoutCuboid(float xl, float xh, float yl, float yh, float zl, float zh, float cutoutx, float cutouty, float cutoutz, TextureAtlasSprite texture, int tintIndex) {
+        List<BakedQuad> quads = new ArrayList<>();
+        //Eight corners of the block
+        Vec3d NWU = v(xl, yh, zl); //North-West-Up
+        Vec3d NEU = v(xl, yh, zh); //...
+        Vec3d NWD = v(xl, yl, zl);
+        Vec3d NED = v(xl, yl, zh);
+        Vec3d SWU = v(xh, yh, zl);
+        Vec3d SEU = v(xh, yh, zh);
+        Vec3d SWD = v(xh, yl, zl);
+        Vec3d SED = v(xh, yl, zh); //South-East-Down
+        //Cutout corners
+        Vec3d cutout = v(cutoutx, cutouty, cutoutz);
+        if (cutoutx < xl && cutoutx > xh) {
+
+        }
+        //modified corners
+        if (xl < 0) {
+            xl++;
+        }
+        if (xh > 1) {
+            xh--;
+        }
+        if (yl < 0) {
+            yl++;
+        }
+        if (yh > 1) {
+            yh--;
+        }
+        if (zl < 0) {
+            zl++;
+        }
+        if (zh > 1) {
+            zh--;
+        }
+        //quads.add(createQuad(NWU, NEU, SEU, SWU, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+        //quads.add(createQuad(SWD, SED, NED, NWD, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+        //quads.add(createQuad(SWU, SWD, NWD, NWU, texture, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        //quads.add(createQuad(NEU, NED, SED, SEU, texture, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        //quads.add(createQuad(NWU, NWD, NED, NEU, texture, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        //quads.add(createQuad(SEU, SED, SWD, SWU, texture, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        quads.addAll(createCuboid(xl, xh, yl, yl, zl, cutoutz, texture, tintIndex));
+        quads.addAll(createCuboid(xl, cutoutx, yl, yh, cutoutz, zh, texture, tintIndex));
+        return quads;
     }
 }
