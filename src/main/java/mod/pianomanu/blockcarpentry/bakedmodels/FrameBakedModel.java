@@ -8,6 +8,7 @@ import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.GrassBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -103,6 +104,7 @@ public class FrameBakedModel implements IDynamicBakedModel {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null && state!=null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+                IBakedModel wanted = Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(mimic.getBlock().getDefaultState()); //might be useful later
                 if (model != null) {
                     //TODO what about full blocks with different side textures -> IllusionBlock
                     List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(mimic.getBlock());

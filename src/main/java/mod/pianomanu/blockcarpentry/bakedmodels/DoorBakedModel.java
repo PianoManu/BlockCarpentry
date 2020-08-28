@@ -7,9 +7,11 @@ import mod.pianomanu.blockcarpentry.block.DoorFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
+import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
+import net.minecraft.block.GrassBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
@@ -45,7 +47,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
                            double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
 
         ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
-        for (int j = 0 ; j < elements.size() ; j++) {
+        for (int j = 0; j < elements.size(); j++) {
             VertexFormatElement e = elements.get(j);
             switch (e.getUsage()) {
                 case POSITION:
@@ -92,19 +94,19 @@ public class DoorBakedModel implements IDynamicBakedModel {
         float uLong = 11;
         float vShort = 14;
         float vLong = 16;
-        if (face==AttachFace.WALL && (facing==Direction.SOUTH || facing==Direction.NORTH)) {
+        if (face == AttachFace.WALL && (facing == Direction.SOUTH || facing == Direction.NORTH)) {
             uShort = 6;
             uLong = 10;
             vShort = 6;
             vLong = 10;
         }
-        if (face==AttachFace.WALL && (facing==Direction.WEST || facing==Direction.EAST)) {
+        if (face == AttachFace.WALL && (facing == Direction.WEST || facing == Direction.EAST)) {
             //uShort = 5;
             //uLong = 11; //already set
             vShort = 6;
             vLong = 10;
         }
-        if (face!=AttachFace.WALL && (facing==Direction.NORTH || facing==Direction.SOUTH)) {
+        if (face != AttachFace.WALL && (facing == Direction.NORTH || facing == Direction.SOUTH)) {
             uShort = 6;
             uLong = 10;
             vShort = 7;
@@ -120,33 +122,32 @@ public class DoorBakedModel implements IDynamicBakedModel {
     //Bottom part of door
     private BakedQuad createBottomPartQuad(TextureAtlasSprite sprite, int flag) {
         //NWD = north west up etc.
-        Vec3d NWD= v(0,0,0);
-        Vec3d NWU= v(0,16,0);
-        Vec3d NED= v(3,0,0);
-        Vec3d NEU= v(3,16,0);
-        Vec3d SWD= v(0,0,16);
-        Vec3d SWU= v(0,16,16);
-        Vec3d SED= v(3,0,16);
-        Vec3d SEU= v(3,16,16);
+        Vec3d NWD = v(0, 0, 0);
+        Vec3d NWU = v(0, 16, 0);
+        Vec3d NED = v(3, 0, 0);
+        Vec3d NEU = v(3, 16, 0);
+        Vec3d SWD = v(0, 0, 16);
+        Vec3d SWU = v(0, 16, 16);
+        Vec3d SED = v(3, 0, 16);
+        Vec3d SEU = v(3, 16, 16);
         Vec3d v1, v2, v3, v4;
-        if (flag==0) {
-            v1=NWD;
-            v2=NWU;
-            v3=NEU;
-            v4=NED;
-        }
-        else {
-            v1=SED;
-            v2=SEU;
-            v3=SWU;
-            v4=SWD;
+        if (flag == 0) {
+            v1 = NWD;
+            v2 = NWU;
+            v3 = NEU;
+            v4 = NED;
+        } else {
+            v1 = SED;
+            v2 = SEU;
+            v3 = SWU;
+            v4 = SWD;
         }
         Vec3d normal1 = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
         Vec3d normal2 = v3.subtract(v1).crossProduct(v2.subtract(v1)).normalize();
         Vec3d normal3 = v2.subtract(v3).crossProduct(v1.subtract(v3)).normalize();
         Vec3d normal4 = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
-        System.out.println(v1.toString()+", "+v2.toString()+", "+v3.toString()+", "+v4.toString());
-        System.out.println(normal1.toString()+normal2.toString()+normal3.toString()+normal4.toString());
+        System.out.println(v1.toString() + ", " + v2.toString() + ", " + v3.toString() + ", " + v4.toString());
+        System.out.println(normal1.toString() + normal2.toString() + normal3.toString() + normal4.toString());
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal1.x, normal1.y, normal1.z));
@@ -188,9 +189,9 @@ public class DoorBakedModel implements IDynamicBakedModel {
         builder.setApplyDiffuseLighting(true);
         float ul = 0;
         float uh = 3;
-        if(flag == 0 || flag == 2) {
+        if (flag == 0 || flag == 2) {
             ul = 13;
-            uh =16;
+            uh = 16;
         }
 
 
@@ -264,14 +265,14 @@ public class DoorBakedModel implements IDynamicBakedModel {
 
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         int tex = extraData.getData(FrameBlockTile.TEXTURE);
-        if (mimic!=null && state != null && extraData.getData(FrameBlockTile.DESIGN) != null && extraData.getData(FrameBlockTile.DESIGN_TEXTURE) != null) {
+        if (mimic != null && state != null && extraData.getData(FrameBlockTile.DESIGN) != null && extraData.getData(FrameBlockTile.DESIGN_TEXTURE) != null) {
             //get texture from block in tile entity and apply it to the quads
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
+            TextureAtlasSprite glass = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/glass")); //TODO different glass panels
             TextureAtlasSprite texture;
-            if(textureList.size()>tex) {
+            if (textureList.size() > tex) {
                 texture = textureList.get(tex);
-            }
-            else {
+            } else {
                 texture = textureList.get(0);
             }
             List<BakedQuad> quads = new ArrayList<>();
@@ -289,80 +290,237 @@ public class DoorBakedModel implements IDynamicBakedModel {
             DoubleBlockHalf half = state.get(DoorBlock.HALF);
             DoubleBlockHalf lower = DoubleBlockHalf.LOWER;
             DoubleBlockHalf upper = DoubleBlockHalf.UPPER;
+            int tintIndex = -1;
+            if (mimic.getBlock() instanceof GrassBlock) {
+                tintIndex = 1;
+            }
+            if (design == 0) {
+                if ((dir == north && !open && hinge == right) || (dir == east && open && hinge == right) || (dir == west && open && hinge == left) || (dir == north && !open && hinge == left)) {
+                    if (half == lower) {
+                        quads.addAll(ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 1f, 14 / 16f, 15 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                    }
+                    if (half == upper) {
+                        quads.addAll(ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 12 / 16f, 14 / 16f, 15 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex));
+                    }
+                } else if ((dir == west && !open && hinge == right) || (dir == north && open && hinge == right) || (dir == south && open && hinge == left) || (dir == west && !open && hinge == left)) {
+                    if (half == lower) {
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 15 / 16f, 4 / 16f, 1f, 4 / 16f, 12 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                    }
+                    if (half == upper) {
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 15 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                    }
+                } else if ((dir == south && open && hinge == right) || (dir == east && !open && hinge == right) || (dir == east && !open && hinge == left) || (dir == north && open && hinge == left)) {
+                    if (half == lower) {
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 2 / 16f, 4 / 16f, 1f, 4 / 16f, 12 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                    }
+                    if (half == upper) {
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 2 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                    }
+                } else {
+                    if (half == lower) {
+                        quads.addAll(ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 1f, 1 / 16f, 2 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                    }
+                    if (half == upper) {
+                        quads.addAll(ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 12 / 16f, 1 / 16f, 2 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex));
+                    }
+                }
+            }
+            if (design == 3) {
+                if ((dir == north && !open && hinge == right) || (dir == east && open && hinge == right) || (dir == west && open && hinge == left) || (dir == north && !open && hinge == left)) {
+                    if (half == lower) {
+                        quads.addAll(ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 14 / 16f, 15 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex));
+                    }
+                    if (half == upper) {
+                        quads.addAll(ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 14 / 16f, 15 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                    }
+                } else if ((dir == west && !open && hinge == right) || (dir == north && open && hinge == right) || (dir == south && open && hinge == left) || (dir == west && !open && hinge == left)) {
+                    if (half == lower) {
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 15 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                    }
+                    if (half == upper) {
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 15 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                    }
+                } else if ((dir == south && open && hinge == right) || (dir == east && !open && hinge == right) || (dir == east && !open && hinge == left) || (dir == north && open && hinge == left)) {
+                    if (half == lower) {
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 2 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                    }
+                    if (half == upper) {
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 2 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                    }
+                } else {
+                    if (half == lower) {
+                        quads.addAll(ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 1 / 16f, 2 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex));
+                    }
+                    if (half == upper) {
+                        quads.addAll(ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 1 / 16f, 2 / 16f, glass, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                    }
+                }
+            }
+            if (design == 1 || design == 2) {
                 int flag = 0;
                 if ((dir == north && !open && hinge == right) || (dir == east && open && hinge == right) || (dir == west && open && hinge == left) || (dir == north && !open && hinge == left)) {
                     flag = 1;
-                    quads.add(create3x16SideQuad(v(0, 1, 13/16f), v(0, 0, 13/16f), v(0, 0, 1), v(0, 1, 1), texture, flag));
-                    quads.add(create3x16SideQuad(v(1, 1, 1), v(1, 0, 1), v(1, 0, 13/16f), v(1, 1, 13/16f), texture, flag));
-                    quads.add(createSquareQuad(v(1, 1, 13/16f), v(1, 0, 13/16f), v(0, 0, 13/16f), v(0, 1, 13/16f), texture));
+                    quads.add(create3x16SideQuad(v(0, 1, 13 / 16f), v(0, 0, 13 / 16f), v(0, 0, 1), v(0, 1, 1), texture, flag));
+                    quads.add(create3x16SideQuad(v(1, 1, 1), v(1, 0, 1), v(1, 0, 13 / 16f), v(1, 1, 13 / 16f), texture, flag));
+                    quads.add(createSquareQuad(v(1, 1, 13 / 16f), v(1, 0, 13 / 16f), v(0, 0, 13 / 16f), v(0, 1, 13 / 16f), texture));
                     quads.add(createSquareQuad(v(0, 1, 1), v(0, 0, 1), v(1, 0, 1), v(1, 1, 1), texture));
-                    quads.add(create3x16TopQuad(v(0, 0, 1),v(0,0,13/16f),v(1,0,13/16f),v(1,0,1), texture, flag));
-                    quads.add(create3x16TopQuad(v(0, 1, 13/16f),v(0,1,1),v(1,1,1),v(1,1,13/16f), texture, flag));
+                    quads.add(create3x16TopQuad(v(0, 0, 1), v(0, 0, 13 / 16f), v(1, 0, 13 / 16f), v(1, 0, 1), texture, flag));
+                    quads.add(create3x16TopQuad(v(0, 1, 13 / 16f), v(0, 1, 1), v(1, 1, 1), v(1, 1, 13 / 16f), texture, flag));
 
-                }
-                else if ((dir == west && !open && hinge == right) || (dir == north && open && hinge == right) || (dir == south && open && hinge == left) || (dir == west && !open && hinge == left)) {
+                } else if ((dir == west && !open && hinge == right) || (dir == north && open && hinge == right) || (dir == south && open && hinge == left) || (dir == west && !open && hinge == left)) {
                     flag = 2;
                     quads.add(createSquareQuad(v(13 / 16f, 1, 0), v(13 / 16f, 0, 0), v(13 / 16f, 0, 1), v(13 / 16f, 1, 1), texture));
                     quads.add(createSquareQuad(v(1, 1, 1), v(1, 0, 1), v(1, 0, 0), v(1, 1, 0), texture));
-                    quads.add(create3x16SideQuad(v(13 / 16f, 0, 0), v(13/16f, 1, 0), v(1, 1, 0), v(1, 0, 0), texture, flag));
-                    quads.add(create3x16SideQuad(v(13/16f, 1, 1), v(13/16f, 0, 1), v(1, 0, 1), v(1, 1, 1), texture, flag));
-                    quads.add(create3x16TopQuad(v(13/16f, 0, 1),v(13/16f,0,0),v(1,0,0),v(1,0,1), texture, flag));
-                    quads.add(create3x16TopQuad(v(13/16f, 1, 0),v(13/16f,1,1),v(1,1,1),v(1,1,0), texture, flag));
-                }
-                else if ((dir == south && open && hinge == right) || (dir == east && !open && hinge == right) || (dir == east && !open && hinge == left) || (dir == north && open && hinge == left)) {
+                    quads.add(create3x16SideQuad(v(13 / 16f, 0, 0), v(13 / 16f, 1, 0), v(1, 1, 0), v(1, 0, 0), texture, flag));
+                    quads.add(create3x16SideQuad(v(13 / 16f, 1, 1), v(13 / 16f, 0, 1), v(1, 0, 1), v(1, 1, 1), texture, flag));
+                    quads.add(create3x16TopQuad(v(13 / 16f, 0, 1), v(13 / 16f, 0, 0), v(1, 0, 0), v(1, 0, 1), texture, flag));
+                    quads.add(create3x16TopQuad(v(13 / 16f, 1, 0), v(13 / 16f, 1, 1), v(1, 1, 1), v(1, 1, 0), texture, flag));
+                } else if ((dir == south && open && hinge == right) || (dir == east && !open && hinge == right) || (dir == east && !open && hinge == left) || (dir == north && open && hinge == left)) {
                     flag = 3;
                     quads.add(createSquareQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 1), v(0, 1, 1), texture));
                     quads.add(createSquareQuad(v(3 / 16f, 1, 1), v(3 / 16f, 0, 1), v(3 / 16f, 0, 0), v(3 / 16f, 1, 0), texture));
                     quads.add(create3x16SideQuad(v(3 / 16f, 1, 0), v(3 / 16f, 0, 0), v(0, 0, 0), v(0, 1, 0), texture, flag));
-                    quads.add(create3x16SideQuad(v(0, 1, 1), v(0, 0, 1), v(3/16f, 0, 1), v(3/16f, 1, 1), texture, flag));
-                    quads.add(create3x16TopQuad(v(0, 0, 1),v(0,0,0),v(3/16f,0,0),v(3/16f,0,1), texture, flag));
-                    quads.add(create3x16TopQuad(v(0, 1, 0),v(0,1,1),v(3/16f,1,1),v(3/16f,1,0), texture, flag));
+                    quads.add(create3x16SideQuad(v(0, 1, 1), v(0, 0, 1), v(3 / 16f, 0, 1), v(3 / 16f, 1, 1), texture, flag));
+                    quads.add(create3x16TopQuad(v(0, 0, 1), v(0, 0, 0), v(3 / 16f, 0, 0), v(3 / 16f, 0, 1), texture, flag));
+                    quads.add(create3x16TopQuad(v(0, 1, 0), v(0, 1, 1), v(3 / 16f, 1, 1), v(3 / 16f, 1, 0), texture, flag));
                 } else {
-                    quads.add(create3x16SideQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 3/16f), v(0, 1, 3/16f), texture, flag));
-                    quads.add(create3x16SideQuad(v(1, 1, 3/16f), v(1, 0, 3/16f), v(1, 0, 0), v(1, 1, 0), texture, flag));
+                    quads.add(create3x16SideQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 3 / 16f), v(0, 1, 3 / 16f), texture, flag));
+                    quads.add(create3x16SideQuad(v(1, 1, 3 / 16f), v(1, 0, 3 / 16f), v(1, 0, 0), v(1, 1, 0), texture, flag));
                     quads.add(createSquareQuad(v(1, 1, 0), v(1, 0, 0), v(0, 0, 0), v(0, 1, 0), texture));
-                    quads.add(createSquareQuad(v(0, 1, 3/16f), v(0, 0, 3/16f), v(1, 0, 3/16f), v(1, 1, 3/16f), texture));
-                    quads.add(create3x16TopQuad(v(0, 0, 3/16f),v(0,0,0),v(1,0,0),v(1,0,3/16f), texture, flag));
-                    quads.add(create3x16TopQuad(v(0, 1, 0),v(0,1,3/16f),v(1,1,3/16f),v(1,1,0), texture, flag));
+                    quads.add(createSquareQuad(v(0, 1, 3 / 16f), v(0, 0, 3 / 16f), v(1, 0, 3 / 16f), v(1, 1, 3 / 16f), texture));
+                    quads.add(create3x16TopQuad(v(0, 0, 3 / 16f), v(0, 0, 0), v(1, 0, 0), v(1, 0, 3 / 16f), texture, flag));
+                    quads.add(create3x16TopQuad(v(0, 1, 0), v(0, 1, 3 / 16f), v(1, 1, 3 / 16f), v(1, 1, 0), texture, flag));
                 }
-                if(design==1) {
-                    if(half == lower) {
-                        if((dir==south && hinge==left && !open) || (dir==west && hinge==right && open)) {
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,-1/16f,1/16f,flag,desTex));
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
-                        } else if((dir==south && hinge==right && !open) || (dir==east && hinge==left && open)) {
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12/16f,14/16f,15/16f,17/16f,-1/16f,1/16f,flag,desTex));
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12/16f,14/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
+                if (design == 1) {
+                    if (half == lower) {
+                        if ((dir == south && hinge == left && !open) || (dir == west && hinge == right && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2 / 16f, 4 / 16f, 15 / 16f, 17 / 16f, -1 / 16f, 1 / 16f, flag, desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2 / 16f, 4 / 16f, 15 / 16f, 17 / 16f, 2 / 16f, 4 / 16f, flag, desTex));
+                        } else if ((dir == south && hinge == right && !open) || (dir == east && hinge == left && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12 / 16f, 14 / 16f, 15 / 16f, 17 / 16f, -1 / 16f, 1 / 16f, flag, desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12 / 16f, 14 / 16f, 15 / 16f, 17 / 16f, 2 / 16f, 4 / 16f, flag, desTex));
                         }
                     }
-                    if(half == lower) {
-                        if((dir==north && hinge==right && !open) || (dir==west && hinge==left && open)) {
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,15/16f,17/16f,flag,desTex));
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,12/16f,14/16f,flag,desTex));
-                        } else if((dir==north && hinge==left && !open) || (dir==east && hinge==right && open)) {
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12/16f,14/16f,15/16f,17/16f,15/16f,17/16f,flag,desTex));
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12/16f,14/16f,15/16f,17/16f,12/16f,14/16f,flag,desTex));
+                    if (half == lower) {
+                        if ((dir == north && hinge == right && !open) || (dir == west && hinge == left && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2 / 16f, 4 / 16f, 15 / 16f, 17 / 16f, 15 / 16f, 17 / 16f, flag, desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2 / 16f, 4 / 16f, 15 / 16f, 17 / 16f, 12 / 16f, 14 / 16f, flag, desTex));
+                        } else if ((dir == north && hinge == left && !open) || (dir == east && hinge == right && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12 / 16f, 14 / 16f, 15 / 16f, 17 / 16f, 15 / 16f, 17 / 16f, flag, desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12 / 16f, 14 / 16f, 15 / 16f, 17 / 16f, 12 / 16f, 14 / 16f, flag, desTex));
                         }
                     }
-                    if(half == lower) {
-                        if((dir==west && hinge==left && !open) || (dir==north && hinge == right && open)) {
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(15/16f,17/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12/16f,14/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
-                        } else if((dir==west && hinge==right && !open) || (dir==south && hinge == left && open)) {
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(15/16f,17/16f,15/16f,17/16f,12/16f,14/16f,flag,desTex));
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12/16f,14/16f,15/16f,17/16f,12/16f,14/16f,flag,desTex));
+                    if (half == lower) {
+                        if ((dir == west && hinge == left && !open) || (dir == north && hinge == right && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(15 / 16f, 17 / 16f, 15 / 16f, 17 / 16f, 2 / 16f, 4 / 16f, flag, desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12 / 16f, 14 / 16f, 15 / 16f, 17 / 16f, 2 / 16f, 4 / 16f, flag, desTex));
+                        } else if ((dir == west && hinge == right && !open) || (dir == south && hinge == left && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(15 / 16f, 17 / 16f, 15 / 16f, 17 / 16f, 12 / 16f, 14 / 16f, flag, desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(12 / 16f, 14 / 16f, 15 / 16f, 17 / 16f, 12 / 16f, 14 / 16f, flag, desTex));
                         }
                     }
-                    if(half == lower) {
-                        if((dir==east && hinge==right && !open) || (dir==north && hinge == left && open)) {
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(-1/16f,1/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,2/16f,4/16f,flag,desTex));
-                        } else if((dir==east && hinge==left && !open) || (dir==south && hinge == right && open)) {
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(-1/16f,1/16f,15/16f,17/16f,12/16f,14/16f,flag,desTex));
-                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2/16f,4/16f,15/16f,17/16f,12/16f,14/16f,flag,desTex));
+                    if (half == lower) {
+                        if ((dir == east && hinge == right && !open) || (dir == north && hinge == left && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(-1 / 16f, 1 / 16f, 15 / 16f, 17 / 16f, 2 / 16f, 4 / 16f, flag, desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2 / 16f, 4 / 16f, 15 / 16f, 17 / 16f, 2 / 16f, 4 / 16f, flag, desTex));
+                        } else if ((dir == east && hinge == left && !open) || (dir == south && hinge == right && open)) {
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(-1 / 16f, 1 / 16f, 15 / 16f, 17 / 16f, 12 / 16f, 14 / 16f, flag, desTex));
+                            quads.addAll(DoorKnobBakedModel.createDoorKnob(2 / 16f, 4 / 16f, 15 / 16f, 17 / 16f, 12 / 16f, 14 / 16f, flag, desTex));
                         }
                     }
                 }
+            }
+            if (design == 4) {
+                if ((dir == north && !open && hinge == right) || (dir == east && open && hinge == right) || (dir == west && open && hinge == left) || (dir == north && !open && hinge == left)) {
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 14 / 16f, 15 / 16f, glass, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 0f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 13 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                } else if ((dir == west && !open && hinge == right) || (dir == north && open && hinge == right) || (dir == south && open && hinge == left) || (dir == west && !open && hinge == left)) {
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(14 / 16f, 15 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, glass, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 3 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                } else if ((dir == south && open && hinge == right) || (dir == east && !open && hinge == right) || (dir == east && !open && hinge == left) || (dir == north && open && hinge == left)) {
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(1 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, glass, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 3 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                } else {
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 1 / 16f, 2 / 16f, glass, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 0f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 13 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                }
+            }
 
             return quads;
         }

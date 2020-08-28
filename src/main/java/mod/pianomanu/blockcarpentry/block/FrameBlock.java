@@ -10,6 +10,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GlassBlock;
 import net.minecraft.block.IceBlock;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -73,14 +79,11 @@ public class FrameBlock extends Block {
                     insertBlock(world, pos, state, handBlockState);
                     player.getHeldItem(hand).setCount(count - 1);
                 }
-                if (heldBlock instanceof GlassBlock || heldBlock instanceof IceBlock) {
-                    //TODO
-                    this.isTransparent = true;
+                if (BlockSavingHelper.isValidBlock(heldBlock) && !heldBlock.getDefaultState().isSolid()) {
+                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
                 } else {
-                    //TODO
-                    //this.isTransparent = false;
+                    RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
                 }
-
             }
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
                 this.dropContainedBlock(world, pos);
@@ -89,8 +92,13 @@ public class FrameBlock extends Block {
             }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world,pos,player,item);
-            BlockAppearanceHelper.setDesignTexture(world,pos,player,item);
+            BlockAppearanceHelper.setDesign(world, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            /*FrameBlockTile tileEntity = (FrameBlockTile) world.getTileEntity(pos);
+            BlockState mimic = tileEntity.getMimic(); //the block I want my block to mimic
+            ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
+            IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+            model.getBakedModel().;*/
         }
         return ActionResultType.SUCCESS;
     }
