@@ -140,12 +140,11 @@ public class ButtonFrameBlock extends WoodButtonBlock {
         }
     }
 
-    /*@Override
-    @SuppressWarnings("deprecation")
-    public int getLightValue(BlockState state) {
-        if (state.get(LIGHT_LEVEL)>15) {
+    @Override
+    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+        if (state.get(LIGHT_LEVEL) > 15) {
             return 15;
         }
         return state.get(LIGHT_LEVEL);
-    }*/
+    }
 }

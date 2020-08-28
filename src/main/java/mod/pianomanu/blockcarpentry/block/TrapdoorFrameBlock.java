@@ -29,6 +29,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
+
 public class TrapdoorFrameBlock extends TrapDoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
@@ -144,9 +146,9 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
         }
     }
 
-    @SuppressWarnings("deprecation")
-    public int getLightValue(BlockState state) {
-        if (state.get(LIGHT_LEVEL)>15) {
+    @Override
+    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+        if (state.get(LIGHT_LEVEL) > 15) {
             return 15;
         }
         return state.get(LIGHT_LEVEL);

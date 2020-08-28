@@ -31,6 +31,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
+
 public class FallingFrameBlock extends FallingBlock {
 
     //TODO fix falling block losing tile entity
@@ -160,12 +162,11 @@ public class FallingFrameBlock extends FallingBlock {
         return new FallingFrameBlockTile(mimic);
     }
 
-    /*@Override
-    @SuppressWarnings("deprecation")
-    public int getLightValue(BlockState state) {
-        if (state.get(LIGHT_LEVEL)>15) {
+    @Override
+    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+        if (state.get(LIGHT_LEVEL) > 15) {
             return 15;
         }
         return state.get(LIGHT_LEVEL);
-    }*/
+    }
 }

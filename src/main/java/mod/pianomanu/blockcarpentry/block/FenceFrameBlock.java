@@ -27,6 +27,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
+
 public class FenceFrameBlock extends FenceBlock {
     //private boolean isTransparent = true;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -168,8 +170,9 @@ public class FenceFrameBlock extends FenceBlock {
         }
     }
 
-    public int getLightValue(BlockState state) {
-        if (state.get(LIGHT_LEVEL)>15) {
+    @Override
+    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+        if (state.get(LIGHT_LEVEL) > 15) {
             return 15;
         }
         return state.get(LIGHT_LEVEL);

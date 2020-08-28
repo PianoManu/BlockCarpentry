@@ -128,12 +128,11 @@ public class StairsFrameBlock extends StairsBlock {
         }
     }
 
-    /*@Override
-    @SuppressWarnings("deprecation")
-    public int getLightValue(BlockState state) {
+    @Override
+    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
         if (state.get(LIGHT_LEVEL) > 15) {
             return 15;
         }
         return state.get(LIGHT_LEVEL);
-    }*/
+    }
 }
