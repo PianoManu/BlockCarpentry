@@ -5,10 +5,13 @@ import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
+import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WoodButtonBlock;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -68,7 +71,7 @@ public class ButtonFrameBlock extends WoodButtonBlock {
                 if (item.getItem() instanceof BlockItem) {
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
-                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().getDefaultState().isSolid()) {
+                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(((BlockItem) item.getItem()).getBlock()) && !state.get(CONTAINS_BLOCK)) {
                         ((FrameBlockTile) tileEntity).clear();
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                         ((FrameBlockTile) tileEntity).setMimic(handBlockState);
@@ -78,6 +81,14 @@ public class ButtonFrameBlock extends WoodButtonBlock {
                     }
                 }
             }
+            if (item.getItem() instanceof BlockItem) {
+                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
+                if (BlockSavingHelper.isValidBlock(heldBlock) && !heldBlock.getDefaultState().isSolid()) {
+                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
+                } else {
+                    RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
+                }
+            }
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
@@ -85,9 +96,8 @@ public class ButtonFrameBlock extends WoodButtonBlock {
             }
             BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
             BlockAppearanceHelper.setTexture(item,state,world,player,pos);
-            if (item.getItem() == Registration.TEXTURE_WRENCH.get() && player.isSneaking()) {
-                //System.out.println("You should rotate now!");
-            }
+            BlockAppearanceHelper.setDesign(world,pos,player,item);
+            BlockAppearanceHelper.setDesignTexture(world,pos,player,item);
             if (state.get(POWERED)) {
                 return ActionResultType.CONSUME;
             } else {

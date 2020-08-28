@@ -10,6 +10,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GlassBlock;
 import net.minecraft.block.IceBlock;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -76,12 +78,10 @@ public class FrameBlock extends Block implements IForgeBlockState {
                     insertBlock(world, pos, state, handBlockState);
                     player.getHeldItem(hand).setCount(count - 1);
                 }
-                if (heldBlock instanceof GlassBlock || heldBlock instanceof IceBlock) {
-                    //TODO
-                    this.isTransparent = true;
+                if (BlockSavingHelper.isValidBlock(heldBlock) && !heldBlock.getDefaultState().isSolid()) {
+                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
                 } else {
-                    //TODO
-                    //this.isTransparent = false;
+                    RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
                 }
 
             }

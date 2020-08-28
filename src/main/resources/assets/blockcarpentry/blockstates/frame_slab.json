@@ -1,16 +1,11 @@
 {
   "variants": {
-    "contains_block=true,type=bottom,waterlogged=true": { "model": "blockcarpentry:block/frame_slab_bottom" },
-    "contains_block=true,type=top,waterlogged=true": { "model": "blockcarpentry:block/frame_slab_top" },
-    "contains_block=true,type=double,waterlogged=true": { "model": "blockcarpentry:block/frameblock" },
-	"contains_block=false,type=bottom,waterlogged=true": { "model": "blockcarpentry:block/frame_slab_empty" },
-	"contains_block=false,type=top,waterlogged=true": { "model": "blockcarpentry:block/frame_slab_empty_top" },
-	"contains_block=false,type=double,waterlogged=true": { "model": "blockcarpentry:block/frameblock_empty" },
-    "contains_block=true,type=bottom,waterlogged=false": { "model": "blockcarpentry:block/frame_slab_bottom" },
-    "contains_block=true,type=top,waterlogged=false": { "model": "blockcarpentry:block/frame_slab_top" },
-    "contains_block=true,type=double,waterlogged=false": { "model": "blockcarpentry:block/frameblock" },
-    "contains_block=false,type=bottom,waterlogged=false": { "model": "blockcarpentry:block/frame_slab_empty" },
-    "contains_block=false,type=top,waterlogged=false": { "model": "blockcarpentry:block/frame_slab_empty_top" },
-    "contains_block=false,type=double,waterlogged=false": { "model": "blockcarpentry:block/frameblock_empty" }
+	"contains_block=false,facing=down": { "model": "blockcarpentry:block/frame_slab_empty_bottom" },
+	"contains_block=false,facing=up": { "model": "blockcarpentry:block/frame_slab_empty_top" },
+	"contains_block=false,facing=north": { "model": "blockcarpentry:block/frame_slab_empty_side", "y": 180, "uvlock": true },
+    "contains_block=false,facing=east": { "model": "blockcarpentry:block/frame_slab_empty_side", "y": 270, "uvlock": true },
+    "contains_block=false,facing=south": { "model": "blockcarpentry:block/frame_slab_empty_side" },
+    "contains_block=false,facing=west": { "model": "blockcarpentry:block/frame_slab_empty_side", "y": 90, "uvlock": true },
+	"contains_block=true": { "model": "blockcarpentry:block/frame_slab" }
   }
 }

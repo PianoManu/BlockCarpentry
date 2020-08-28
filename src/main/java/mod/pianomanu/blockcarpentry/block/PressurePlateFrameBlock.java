@@ -5,10 +5,13 @@ import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
+import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PressurePlateBlock;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -61,7 +64,7 @@ public class PressurePlateFrameBlock extends PressurePlateBlock {
             if (item.getItem() instanceof BlockItem) {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().getDefaultState().isSolid() && !state.get(CONTAINS_BLOCK)) {
+                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(((BlockItem) item.getItem()).getBlock()) && !state.get(CONTAINS_BLOCK)) {
                     ((FrameBlockTile) tileEntity).clear();
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     ((FrameBlockTile) tileEntity).setMimic(handBlockState);
@@ -73,6 +76,14 @@ public class PressurePlateFrameBlock extends PressurePlateBlock {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
+            }
+            if (item.getItem() instanceof BlockItem) {
+                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
+                if (BlockSavingHelper.isValidBlock(heldBlock) && !heldBlock.getDefaultState().isSolid()) {
+                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
+                } else {
+                    RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
+                }
             }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);

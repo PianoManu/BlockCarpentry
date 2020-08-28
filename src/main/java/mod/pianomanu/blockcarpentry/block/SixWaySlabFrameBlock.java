@@ -6,44 +6,73 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.block.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.DoorHingeSide;
-import net.minecraft.state.properties.DoubleBlockHalf;
+import net.minecraft.state.*;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.state.properties.Half;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
-
-public class DoorFrameBlock extends DoorBlock {
+@SuppressWarnings("deprecation")
+public class SixWaySlabFrameBlock extends Block {
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
+    public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
+    //everything is inverted because when placing, we would need to take the opposite - I figured it out when I completed my work and I don't want to change everything again
+    protected static final VoxelShape BOTTOM = Block.makeCuboidShape(0.0D, 8.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape TOP = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
+    protected static final VoxelShape EAST = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 8.0D, 16.0D, 16.0D);
+    protected static final VoxelShape SOUTH = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 8.0D);
+    protected static final VoxelShape WEST = Block.makeCuboidShape(8.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape NORTH = Block.makeCuboidShape(0.0D, 0.0D, 8.0D, 16.0D, 16.0D, 16.0D);
 
-    public DoorFrameBlock(Properties builder) {
-        super(builder);
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(FACING, Direction.NORTH).with(OPEN, Boolean.valueOf(false)).with(HINGE, DoorHingeSide.LEFT).with(POWERED, Boolean.valueOf(false)).with(HALF, DoubleBlockHalf.LOWER).with(LIGHT_LEVEL, 0));
+    public SixWaySlabFrameBlock(Properties properties) {
+        super(properties);
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.DOWN).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK, FACING, OPEN, HINGE, POWERED, HALF, LIGHT_LEVEL);
+        builder.add(FACING, CONTAINS_BLOCK, LIGHT_LEVEL);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        switch (state.get(FACING)) {
+            case EAST:
+                return EAST;
+            case NORTH:
+                return NORTH;
+            case SOUTH:
+                return SOUTH;
+            case WEST:
+                return WEST;
+            case UP:
+                return TOP;
+            default:
+                return BOTTOM;
+        }
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.getDefaultState().with(FACING, context.getFace());
     }
 
     @Override
@@ -64,44 +93,32 @@ public class DoorFrameBlock extends DoorBlock {
             if (item.getItem() instanceof BlockItem) {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(((BlockItem) item.getItem()).getBlock()) && !state.get(CONTAINS_BLOCK)) {
+                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
+                //TODO fix for non-solid blocks
+                //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
+                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
                     ((FrameBlockTile) tileEntity).clear();
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                     insertBlock(world, pos, state, handBlockState);
                     player.getHeldItem(hand).setCount(count - 1);
                 }
-            } else if (!(item.getItem() == Items.GLOWSTONE_DUST) && !(item.getItem() == Items.COAL) && !(item.getItem() == Items.CHARCOAL) && !(item.getItem() == Registration.TEXTURE_WRENCH.get()) && !(item.getItem() == Registration.CHISEL.get()) && !(item.getItem() == Registration.PAINTBRUSH.get())) {
-                if (state.get(DoorBlock.OPEN)) {
-                    state = state.with(OPEN, false);
-                } else {
-                    state = state.with(OPEN, true);
-                }
-                world.setBlockState(pos, state, 10);
-                world.playEvent(player, state.get(OPEN) ? 1006 : 1012, pos, 0);
+
             }
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
             }
-            if (item.getItem() instanceof BlockItem) {
-                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (BlockSavingHelper.isValidBlock(heldBlock) && !heldBlock.getDefaultState().isSolid()) {
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
-                } else {
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
-                }
-            }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setDesign(world,pos,player,item);
+            BlockAppearanceHelper.setDesignTexture(world,pos,player,item);
         }
         return ActionResultType.SUCCESS;
     }
 
-    private void dropContainedBlock(World worldIn, BlockPos pos) {
+    protected void dropContainedBlock(World worldIn, BlockPos pos) {
         if (!worldIn.isRemote) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
             if (tileentity instanceof FrameBlockTile) {
@@ -135,7 +152,6 @@ public class DoorFrameBlock extends DoorBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             dropContainedBlock(worldIn, pos);
@@ -144,8 +160,7 @@ public class DoorFrameBlock extends DoorBlock {
         }
     }
 
-    @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightValue(BlockState state) {
         if (state.get(LIGHT_LEVEL) > 15) {
             return 15;
         }

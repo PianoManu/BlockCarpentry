@@ -7,8 +7,10 @@ import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.block.TrapdoorFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
+import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.GrassBlock;
 import net.minecraft.block.TrapDoorBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -190,6 +192,10 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
             } else {
                 texture = textureList.get(0);
             }
+            int tintIndex = -1;
+            if (mimic.getBlock() instanceof GrassBlock) {
+                tintIndex = 1;
+            }
             List<BakedQuad> quads = new ArrayList<>();
             Direction dir = state.get(DoorFrameBlock.FACING);
             boolean open = state.get(TrapdoorFrameBlock.OPEN);
@@ -207,52 +213,58 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
 
             if (dir == north && open) {
                 flag = 1;
-                quads.add(create3x16SideQuad(v(0, 1, 13 / 16f), v(0, 0, 13 / 16f), v(0, 0, 1), v(0, 1, 1), texture, flag));
-                quads.add(create3x16SideQuad(v(1, 1, 1), v(1, 0, 1), v(1, 0, 13 / 16f), v(1, 1, 13 / 16f), texture, flag));
-                quads.add(createSquareQuad(v(1, 1, 13 / 16f), v(1, 0, 13 / 16f), v(0, 0, 13 / 16f), v(0, 1, 13 / 16f), texture));
-                quads.add(createSquareQuad(v(0, 1, 1), v(0, 0, 1), v(1, 0, 1), v(1, 1, 1), texture));
-                quads.add(create3x16TopQuad(v(0, 0, 1), v(0, 0, 13 / 16f), v(1, 0, 13 / 16f), v(1, 0, 1), texture, flag));
-                quads.add(create3x16TopQuad(v(0, 1, 13 / 16f), v(0, 1, 1), v(1, 1, 1), v(1, 1, 13 / 16f), texture, flag));
+                quads.addAll(ModelHelper.createCuboid(0f,1f,0f,1f,13/16f,1f, texture, tintIndex));
+                //quads.add(create3x16SideQuad(v(0, 1, 13 / 16f), v(0, 0, 13 / 16f), v(0, 0, 1), v(0, 1, 1), texture, flag));
+                //quads.add(create3x16SideQuad(v(1, 1, 1), v(1, 0, 1), v(1, 0, 13 / 16f), v(1, 1, 13 / 16f), texture, flag));
+                //quads.add(createSquareQuad(v(1, 1, 13 / 16f), v(1, 0, 13 / 16f), v(0, 0, 13 / 16f), v(0, 1, 13 / 16f), texture));
+                //quads.add(createSquareQuad(v(0, 1, 1), v(0, 0, 1), v(1, 0, 1), v(1, 1, 1), texture));
+                //quads.add(create3x16TopQuad(v(0, 0, 1), v(0, 0, 13 / 16f), v(1, 0, 13 / 16f), v(1, 0, 1), texture, flag));
+                //quads.add(create3x16TopQuad(v(0, 1, 13 / 16f), v(0, 1, 1), v(1, 1, 1), v(1, 1, 13 / 16f), texture, flag));
 
             } else if (dir == west && open) {
                 flag = 2;
-                quads.add(createSquareQuad(v(13 / 16f, 1, 0), v(13 / 16f, 0, 0), v(13 / 16f, 0, 1), v(13 / 16f, 1, 1), texture));
-                quads.add(createSquareQuad(v(1, 1, 1), v(1, 0, 1), v(1, 0, 0), v(1, 1, 0), texture));
-                quads.add(create3x16SideQuad(v(13 / 16f, 0, 0), v(13 / 16f, 1, 0), v(1, 1, 0), v(1, 0, 0), texture, flag));
-                quads.add(create3x16SideQuad(v(13 / 16f, 1, 1), v(13 / 16f, 0, 1), v(1, 0, 1), v(1, 1, 1), texture, flag));
-                quads.add(create3x16TopQuad(v(13 / 16f, 0, 1), v(13 / 16f, 0, 0), v(1, 0, 0), v(1, 0, 1), texture, flag));
-                quads.add(create3x16TopQuad(v(13 / 16f, 1, 0), v(13 / 16f, 1, 1), v(1, 1, 1), v(1, 1, 0), texture, flag));
+                quads.addAll(ModelHelper.createCuboid(13/16f,1f,0f,1f,0f,1f, texture, tintIndex));
+                //quads.add(createSquareQuad(v(13 / 16f, 1, 0), v(13 / 16f, 0, 0), v(13 / 16f, 0, 1), v(13 / 16f, 1, 1), texture));
+                //quads.add(createSquareQuad(v(1, 1, 1), v(1, 0, 1), v(1, 0, 0), v(1, 1, 0), texture));
+                //quads.add(create3x16SideQuad(v(13 / 16f, 0, 0), v(13 / 16f, 1, 0), v(1, 1, 0), v(1, 0, 0), texture, flag));
+                //quads.add(create3x16SideQuad(v(13 / 16f, 1, 1), v(13 / 16f, 0, 1), v(1, 0, 1), v(1, 1, 1), texture, flag));
+                //quads.add(create3x16TopQuad(v(13 / 16f, 0, 1), v(13 / 16f, 0, 0), v(1, 0, 0), v(1, 0, 1), texture, flag));
+                //quads.add(create3x16TopQuad(v(13 / 16f, 1, 0), v(13 / 16f, 1, 1), v(1, 1, 1), v(1, 1, 0), texture, flag));
             } else if (dir == east && open) {
                 flag = 3;
-                quads.add(createSquareQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 1), v(0, 1, 1), texture));
-                quads.add(createSquareQuad(v(3 / 16f, 1, 1), v(3 / 16f, 0, 1), v(3 / 16f, 0, 0), v(3 / 16f, 1, 0), texture));
-                quads.add(create3x16SideQuad(v(3 / 16f, 1, 0), v(3 / 16f, 0, 0), v(0, 0, 0), v(0, 1, 0), texture, flag));
-                quads.add(create3x16SideQuad(v(0, 1, 1), v(0, 0, 1), v(3 / 16f, 0, 1), v(3 / 16f, 1, 1), texture, flag));
-                quads.add(create3x16TopQuad(v(0, 0, 1), v(0, 0, 0), v(3 / 16f, 0, 0), v(3 / 16f, 0, 1), texture, flag));
-                quads.add(create3x16TopQuad(v(0, 1, 0), v(0, 1, 1), v(3 / 16f, 1, 1), v(3 / 16f, 1, 0), texture, flag));
+                quads.addAll(ModelHelper.createCuboid(0f,3/16f,0f,1f,0f,1f,texture, tintIndex));
+                //quads.add(createSquareQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 1), v(0, 1, 1), texture));
+                //quads.add(createSquareQuad(v(3 / 16f, 1, 1), v(3 / 16f, 0, 1), v(3 / 16f, 0, 0), v(3 / 16f, 1, 0), texture));
+                //quads.add(create3x16SideQuad(v(3 / 16f, 1, 0), v(3 / 16f, 0, 0), v(0, 0, 0), v(0, 1, 0), texture, flag));
+                //quads.add(create3x16SideQuad(v(0, 1, 1), v(0, 0, 1), v(3 / 16f, 0, 1), v(3 / 16f, 1, 1), texture, flag));
+                //quads.add(create3x16TopQuad(v(0, 0, 1), v(0, 0, 0), v(3 / 16f, 0, 0), v(3 / 16f, 0, 1), texture, flag));
+                //quads.add(create3x16TopQuad(v(0, 1, 0), v(0, 1, 1), v(3 / 16f, 1, 1), v(3 / 16f, 1, 0), texture, flag));
 
             } else if (dir == south && open) {
-                quads.add(create3x16SideQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 3 / 16f), v(0, 1, 3 / 16f), texture, flag));
-                quads.add(create3x16SideQuad(v(1, 1, 3 / 16f), v(1, 0, 3 / 16f), v(1, 0, 0), v(1, 1, 0), texture, flag));
-                quads.add(createSquareQuad(v(1, 1, 0), v(1, 0, 0), v(0, 0, 0), v(0, 1, 0), texture));
-                quads.add(createSquareQuad(v(0, 1, 3 / 16f), v(0, 0, 3 / 16f), v(1, 0, 3 / 16f), v(1, 1, 3 / 16f), texture));
-                quads.add(create3x16TopQuad(v(0, 0, 3 / 16f), v(0, 0, 0), v(1, 0, 0), v(1, 0, 3 / 16f), texture, flag));
-                quads.add(create3x16TopQuad(v(0, 1, 0), v(0, 1, 3 / 16f), v(1, 1, 3 / 16f), v(1, 1, 0), texture, flag));
+                quads.addAll(ModelHelper.createCuboid(0f,1f,0f,1f,0f,3/16f,texture,tintIndex));
+                //quads.add(create3x16SideQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 3 / 16f), v(0, 1, 3 / 16f), texture, flag));
+                //quads.add(create3x16SideQuad(v(1, 1, 3 / 16f), v(1, 0, 3 / 16f), v(1, 0, 0), v(1, 1, 0), texture, flag));
+                //quads.add(createSquareQuad(v(1, 1, 0), v(1, 0, 0), v(0, 0, 0), v(0, 1, 0), texture));
+                //quads.add(createSquareQuad(v(0, 1, 3 / 16f), v(0, 0, 3 / 16f), v(1, 0, 3 / 16f), v(1, 1, 3 / 16f), texture));
+                //quads.add(create3x16TopQuad(v(0, 0, 3 / 16f), v(0, 0, 0), v(1, 0, 0), v(1, 0, 3 / 16f), texture, flag));
+                //quads.add(create3x16TopQuad(v(0, 1, 0), v(0, 1, 3 / 16f), v(1, 1, 3 / 16f), v(1, 1, 0), texture, flag));
 
             } else if (half == bottom) {
-                quads.add(create3x16TopQuad(v(0, 3 / 16f, 0), v(0, 0, 0), v(0, 0, 1), v(0, 3 / 16f, 1), texture, flag));
-                quads.add(create3x16TopQuad(v(1, 3 / 16f, 1), v(1, 0, 1), v(1, 0, 0), v(1, 3 / 16f, 0), texture, flag));
-                quads.add(create3x16TopQuad(v(1, 3 / 16f, 0), v(1, 0, 0), v(0, 0, 0), v(0, 3 / 16f, 0), texture, flag));
-                quads.add(create3x16TopQuad(v(0, 3 / 16f, 1), v(0, 0, 1), v(1, 0, 1), v(1, 3 / 16f, 1), texture, flag));
-                quads.add(createSquareQuad(v(0, 0, 1), v(0, 0, 0), v(1, 0, 0), v(1, 0, 1), texture));
-                quads.add(createSquareQuad(v(0, 3 / 16f, 0), v(0, 3 / 16f, 1), v(1, 3 / 16f, 1), v(1, 3 / 16f, 0), texture));
+                quads.addAll(ModelHelper.createCuboid(0f,1f,0f,3/16f,0f,1f,texture,tintIndex));
+                //quads.add(create3x16TopQuad(v(0, 3 / 16f, 0), v(0, 0, 0), v(0, 0, 1), v(0, 3 / 16f, 1), texture, flag));
+                //quads.add(create3x16TopQuad(v(1, 3 / 16f, 1), v(1, 0, 1), v(1, 0, 0), v(1, 3 / 16f, 0), texture, flag));
+                //quads.add(create3x16TopQuad(v(1, 3 / 16f, 0), v(1, 0, 0), v(0, 0, 0), v(0, 3 / 16f, 0), texture, flag));
+                //quads.add(create3x16TopQuad(v(0, 3 / 16f, 1), v(0, 0, 1), v(1, 0, 1), v(1, 3 / 16f, 1), texture, flag));
+                //quads.add(createSquareQuad(v(0, 0, 1), v(0, 0, 0), v(1, 0, 0), v(1, 0, 1), texture));
+                //quads.add(createSquareQuad(v(0, 3 / 16f, 0), v(0, 3 / 16f, 1), v(1, 3 / 16f, 1), v(1, 3 / 16f, 0), texture));
             } else if (half == top) {
-                quads.add(create3x16TopQuad(v(0, 1, 0), v(0, 13 / 16f, 0), v(0, 13 / 16f, 1), v(0, 1, 1), texture, flag));
-                quads.add(create3x16TopQuad(v(1, 1, 1), v(1, 13 / 16f, 1), v(1, 13 / 16f, 0), v(1, 1, 0), texture, flag));
-                quads.add(create3x16TopQuad(v(1, 1, 0), v(1, 13 / 16f, 0), v(0, 13 / 16f, 0), v(0, 1, 0), texture, flag));
-                quads.add(create3x16TopQuad(v(0, 1, 1), v(0, 13 / 16f, 1), v(1, 13 / 16f, 1), v(1, 1, 1), texture, flag));
-                quads.add(createSquareQuad(v(0, 13 / 16f, 1), v(0, 13 / 16f, 0), v(1, 13 / 16f, 0), v(1, 13 / 16f, 1), texture));
-                quads.add(createSquareQuad(v(0, 1, 0), v(0, 1, 1), v(1, 1, 1), v(1, 1, 0), texture));
+                quads.addAll(ModelHelper.createCuboid(0f,1f,13/16f,1f,0f,1f,texture,tintIndex));
+                //quads.add(create3x16TopQuad(v(0, 1, 0), v(0, 13 / 16f, 0), v(0, 13 / 16f, 1), v(0, 1, 1), texture, flag));
+                //quads.add(create3x16TopQuad(v(1, 1, 1), v(1, 13 / 16f, 1), v(1, 13 / 16f, 0), v(1, 1, 0), texture, flag));
+                //quads.add(create3x16TopQuad(v(1, 1, 0), v(1, 13 / 16f, 0), v(0, 13 / 16f, 0), v(0, 1, 0), texture, flag));
+                //quads.add(create3x16TopQuad(v(0, 1, 1), v(0, 13 / 16f, 1), v(1, 13 / 16f, 1), v(1, 1, 1), texture, flag));
+                //quads.add(createSquareQuad(v(0, 13 / 16f, 1), v(0, 13 / 16f, 0), v(1, 13 / 16f, 0), v(1, 13 / 16f, 1), texture));
+                //quads.add(createSquareQuad(v(0, 1, 0), v(0, 1, 1), v(1, 1, 1), v(1, 1, 0), texture));
 
             }
             if (design == 1) {

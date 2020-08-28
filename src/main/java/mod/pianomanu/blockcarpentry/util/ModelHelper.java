@@ -48,7 +48,7 @@ public class ModelHelper {
                     builder.put(j, (float) x, (float) y, (float) z, 1.0f);
                     break;
                 case COLOR:
-                    builder.put(j, r, g, b, 1.0f);
+                    builder.put(j, r, g, b, 0.0f);
                     break;
                 case UV:
                     switch (e.getIndex()) {

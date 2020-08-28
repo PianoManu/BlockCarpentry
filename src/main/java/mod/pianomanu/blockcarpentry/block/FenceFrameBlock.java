@@ -7,6 +7,8 @@ import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import net.minecraft.block.*;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -79,14 +81,10 @@ public class FenceFrameBlock extends FenceBlock {
                         insertBlock(world,pos, state,handBlockState);
                         player.getHeldItem(hand).setCount(count-1);
                     }
-                    if (heldBlock instanceof GlassBlock || heldBlock instanceof IceBlock) {
-                        //TODO
-                        //System.out.println("is Transparent");
-                        //this.isTransparent = true;
+                    if (BlockSavingHelper.isValidBlock(heldBlock) && !heldBlock.getDefaultState().isSolid()) {
+                        RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
                     } else {
-                        //TODO
-                        //System.out.println("is not Transparent");
-                        //this.isTransparent = false;
+                        RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
                     }
                 }
             }
@@ -97,31 +95,8 @@ public class FenceFrameBlock extends FenceBlock {
             }
             BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
             BlockAppearanceHelper.setTexture(item,state,world,player,pos);
-            if (item.getItem() == Registration.TEXTURE_WRENCH.get() && player.isSneaking()) {
-                //System.out.println("You should rotate now!");
-            }
-            if (item.getItem() == Registration.CHISEL.get() && !player.isSneaking()) {
-                TileEntity tileEntity = world.getTileEntity(pos);
-                if (tileEntity instanceof FrameBlockTile) {
-                    FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                    if (fte.getDesign() < fte.maxDesigns) {
-                        fte.setDesign(fte.getDesign()+1);
-                    } else {
-                        fte.setDesign(0);
-                    }
-                }
-            }
-            if (item.getItem() == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
-                TileEntity tileEntity = world.getTileEntity(pos);
-                if (tileEntity instanceof FrameBlockTile) {
-                    FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                    if (fte.getDesignTexture() < fte.maxDesignTextures) {
-                        fte.setDesignTexture(fte.getDesignTexture()+1);
-                    } else {
-                        fte.setDesignTexture(0);
-                    }
-                }
-            }
+            BlockAppearanceHelper.setDesign(world,pos,player,item);
+            BlockAppearanceHelper.setDesignTexture(world,pos,player,item);
         }
         return ActionResultType.SUCCESS;
     }

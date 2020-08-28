@@ -5,9 +5,12 @@ import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
+import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TrapDoorBlock;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -80,7 +83,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                     Block heldBlock = ((BlockItem) item.getItem()).getBlock();
                     //TODO fix for non-solid blocks
                     //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
-                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && ((BlockItem) item.getItem()).getBlock().getDefaultState().isSolid() && !state.get(CONTAINS_BLOCK)) {
+                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
                         ((FrameBlockTile) tileEntity).clear();
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                         ((FrameBlockTile) tileEntity).setMimic(handBlockState);
@@ -88,6 +91,14 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                         //this.contained_block=handBlockState.getBlock();
                         player.getHeldItem(hand).setCount(count-1);
                     }
+                }
+            }
+            if (item.getItem() instanceof BlockItem) {
+                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
+                if (BlockSavingHelper.isValidBlock(heldBlock) && !heldBlock.getDefaultState().isSolid()) {
+                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
+                } else {
+                    RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
                 }
             }
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
