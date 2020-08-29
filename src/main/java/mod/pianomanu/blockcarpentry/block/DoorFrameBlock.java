@@ -65,6 +65,7 @@ public class DoorFrameBlock extends DoorBlock {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
                 if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(((BlockItem) item.getItem()).getBlock()) && !state.get(CONTAINS_BLOCK)) {
+                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
                     ((FrameBlockTile) tileEntity).clear();
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     ((FrameBlockTile) tileEntity).setMimic(handBlockState);
@@ -84,14 +85,6 @@ public class DoorFrameBlock extends DoorBlock {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
-            }
-            if (item.getItem() instanceof BlockItem) {
-                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (BlockSavingHelper.isValidBlock(heldBlock) && !heldBlock.getDefaultState().isSolid()) {
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
-                } else {
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
-                }
             }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);

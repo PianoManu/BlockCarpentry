@@ -90,21 +90,15 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                         insertBlock(world,pos, state,handBlockState);
                         //this.contained_block=handBlockState.getBlock();
                         player.getHeldItem(hand).setCount(count-1);
+                        RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
                     }
-                }
-            }
-            if (item.getItem() instanceof BlockItem) {
-                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (BlockSavingHelper.isValidBlock(heldBlock) && !heldBlock.getDefaultState().isSolid()) {
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
-                } else {
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
                 }
             }
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
+                RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
             }
             BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
             BlockAppearanceHelper.setTexture(item,state,world,player,pos);
