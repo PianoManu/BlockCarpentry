@@ -32,10 +32,10 @@ description='''
 Fork Mod of Carpenter's Blocks Mod created by Mineshopper (owner of the idea) for older versions of Minecraft.
 I created this fork because friends of mine would like to play this mod on 1.15 (and me too).
 
-Right now there is no guide for this mod, so here is one in small form (ONLY WORKS WITH SOLID BLOCKS BY NOW):
+Right now there is no guide for this mod, so here is one in small form (ONLY WORKS WITH SOLID VANILLA BLOCKS BY NOW):
 - Rightclick on a frame block to give it the texture of the block you clicked it with
-- Shift-Rightclick with an empty hand, to get the block back out of the frame
-- (Not yet implemented) for blocks with different textures on each side, you later will be able to select the texture you want
+- Right-Click with the hammer to get the block back out of the frame (you can change this feature in the config file, so that you only need an empty hand and Sneak-Rightclick
+- For blocks with different textures on each side, you can select the texture you want using the texture wrench
 
 Have fun!
 '''
