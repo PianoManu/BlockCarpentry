@@ -37,6 +37,12 @@ import java.util.function.Supplier;
 
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
+/**
+ * Main class for frame stairs - all important block info can be found here
+ * Visit {@link FrameBlock} for a better documentation
+ * @author PianoManu
+ * @version 1.0 08/29/20
+ */
 public class StairsFrameBlock extends StairsBlock {
 
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;

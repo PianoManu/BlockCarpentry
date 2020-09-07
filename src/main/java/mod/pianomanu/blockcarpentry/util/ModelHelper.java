@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Util class for building cuboid shapes
  * @author PianoManu
- * @version 1.1
+ * @version 1.1 08/29/20
  */
 public class ModelHelper {
 

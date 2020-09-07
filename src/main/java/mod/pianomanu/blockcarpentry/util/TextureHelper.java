@@ -13,7 +13,7 @@ import java.util.List;
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
  *
  * @author PianoManu
- * @version 1.0
+ * @version 1.0 08/29/20
  */
 public class TextureHelper {
     //unused... do we need this?

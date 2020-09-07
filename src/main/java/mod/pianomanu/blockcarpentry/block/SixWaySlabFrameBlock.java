@@ -31,6 +31,12 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+/**
+ * Main class for frame "slabs", they can be placed in six different ways (that's the reason for this class name) - all important block info can be found here
+ * Visit {@link FrameBlock} for a better documentation
+ * @author PianoManu
+ * @version 1.0 08/29/20
+ */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;

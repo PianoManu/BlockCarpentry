@@ -25,7 +25,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * TileEntity for {@link mod.pianomanu.blockcarpentry.block.FrameBlock} and all sorts of frame blocks
  * Contains all information about the block and the mimicked block
  * @author PianoManu
- * @version 1.0
+ * @version 1.0 08/29/20
  */
 public class FrameBlockTile extends TileEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();

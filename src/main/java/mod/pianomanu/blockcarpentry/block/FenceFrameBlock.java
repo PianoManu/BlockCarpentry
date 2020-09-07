@@ -31,6 +31,12 @@ import javax.annotation.Nullable;
 
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
+/**
+ * Main class for frame fences - all important block info can be found here
+ * Visit {@link FrameBlock} for a better documentation
+ * @author PianoManu
+ * @version 1.0 08/29/20
+ */
 public class FenceFrameBlock extends FenceBlock {
     //private boolean isTransparent = true;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;

@@ -27,7 +27,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.*;
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.0
+ * @version 1.0 08/29/20
  */
 public class BlockAppearanceHelper {
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {

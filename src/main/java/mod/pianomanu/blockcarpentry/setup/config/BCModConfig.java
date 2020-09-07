@@ -9,6 +9,11 @@ import net.minecraftforge.fml.config.ModConfig;
 
 import java.nio.file.Path;
 
+/**
+ * Config class for customizable values, values can be found and changed in the corresponding file at /config/blockcarpentry-common.toml
+ * @author PianoManu
+ * @version 1.0 08/29/20
+ */
 @Mod.EventBusSubscriber
 public class BCModConfig {
     public static final String CATEGORY_TOOLS = "tools";

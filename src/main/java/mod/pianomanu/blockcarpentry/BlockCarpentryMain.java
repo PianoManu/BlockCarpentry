@@ -28,7 +28,7 @@ import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
  * Main class of the BlockCarpentry mod
  *
  * @author PianoManu
- * @version 1.0
+ * @version 1.0 08/29/20
  */
 @Mod(MOD_ID)
 public class BlockCarpentryMain

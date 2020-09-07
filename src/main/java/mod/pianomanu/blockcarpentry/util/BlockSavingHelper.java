@@ -12,6 +12,8 @@ import java.util.*;
 
 /**
  * Currently unused, may be used (or rewritten) for frame beds
+ * @author PianoManu
+ * @version 1.0 08/29/20
  */
 public class BlockSavingHelper {
     public static List<Block> validBlocks = new ArrayList<>();

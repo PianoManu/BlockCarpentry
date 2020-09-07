@@ -37,6 +37,12 @@ import javax.annotation.Nullable;
 
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
+/**
+ * Main class for frame buttons - all important block info can be found here
+ * Visit {@link FrameBlock} for a better documentation
+ * @author PianoManu
+ * @version 1.0 08/29/20
+ */
 public class ButtonFrameBlock extends WoodButtonBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;

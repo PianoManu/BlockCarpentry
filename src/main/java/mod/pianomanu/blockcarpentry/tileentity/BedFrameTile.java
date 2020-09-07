@@ -28,6 +28,11 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Currently unused - TileEntity for frame beds, you can customize both pillow and blanket
+ * @author PianoManu
+ * @version 1.0 08/29/20
+ */
 public class BedFrameTile extends TileEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<BlockState> PILLOW = new ModelProperty<>();

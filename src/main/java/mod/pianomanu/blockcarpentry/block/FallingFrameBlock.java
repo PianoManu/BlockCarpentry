@@ -34,6 +34,11 @@ import java.util.Random;
 
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
+/**
+ * Nothing important to see here, this class is currently unused, visit {@link FrameBlock} for a better documentation
+ * @author PianoManu
+ * @version 1.0 08/29/20
+ */
 public class FallingFrameBlock extends FallingBlock {
 
     //TODO fix falling block losing tile entity

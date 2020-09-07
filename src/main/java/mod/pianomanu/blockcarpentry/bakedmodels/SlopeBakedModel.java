@@ -52,7 +52,7 @@ public class SlopeBakedModel implements IDynamicBakedModel {
             index = 0;
         }
         int tint = 0;
-        //quads.addAll(ModelHelper.makeSlope(0,1,0,1,0,1, texture.get(index), tint,state.get(StairsBlock.FACING), state.get(StairsBlock.HALF)));
+        //quads.addAll(ModelHelper.makeSlope(0,1,0,1,0,1, texture.get(index), tint,state.get(StairsBlock.FACING), state.get(StairsBlock.HALF))); //TODO remove or fix
         return quads;
     }
 

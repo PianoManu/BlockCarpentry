@@ -6,7 +6,7 @@ import net.minecraft.state.IntegerProperty;
 /**
  * Some properties needed for frame blocks
  * @author PianoManu
- * @version 1.0
+ * @version 1.0 08/29/20
  */
 public class BCBlockStateProperties {
     /**

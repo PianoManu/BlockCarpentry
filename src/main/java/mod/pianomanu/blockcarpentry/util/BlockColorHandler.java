@@ -24,6 +24,8 @@ import javax.annotation.Nullable;
 
 /**
  * does not work right now...
+ * @author PianoManu
+ * @version 1.0 08/29/20
  */
 public class BlockColorHandler implements IBlockColor {
     public static final IBlockColor INSTANCE =new BlockColorHandler();

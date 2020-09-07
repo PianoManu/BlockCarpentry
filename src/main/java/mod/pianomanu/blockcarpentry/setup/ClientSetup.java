@@ -14,7 +14,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
  * Class for client setup
  * Things like model loaders are registered here
  * @author PianoManu
- * @version 1.0
+ * @version 1.1 08/29/20
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
@@ -34,10 +34,7 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_door_loader"), new DoorFrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_trapdoor_loader"), new TrapdoorFrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_fence_loader"), new FenceFrameModelLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_slope_loader"), new SlopeFrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_edged_slope_loader"), new EdgedSlopeFrameModelLoader());
-
-        //SlabFrameBottomRenderer.register();
-        //ClientRegistry.bindTileEntityRenderer(Registration.BUTTON_FRAME_TILE.get(), ButtonFrameTileEntityRenderer::new);
-        //ClientRegistry.bindTileEntityRenderer(Registration.BED_FRAME_TILE.get(), BedFrameTileEntityRenderer::new);
     }
 }

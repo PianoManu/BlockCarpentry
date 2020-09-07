@@ -3,6 +3,11 @@ package mod.pianomanu.blockcarpentry.setup;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 
+/**
+ * Registering standard rendering layers for all frame blocks - need to be translucent to work with glass and similar blocks
+ * @author PianoManu
+ * @version 1.0 08/29/20
+ */
 public class RenderSetup {
     public static void setup() {
         RenderTypeLookup.setRenderLayer(Registration.FRAMEBLOCK.get(), RenderType.getTranslucent());
