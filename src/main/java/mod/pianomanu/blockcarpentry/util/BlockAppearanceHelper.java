@@ -125,22 +125,14 @@ public class BlockAppearanceHelper {
 
     private static String glassColorToString(int glassColor) {
         List<String> colors = new ArrayList<>();
-<<<<<<< HEAD
-        for (Item item : Tags.Items.DYES.func_230236_b_()) {
-=======
         for (Item item : Tags.Items.DYES.getAllElements()) {
->>>>>>> Ported all features to 1.16.2 - might still be buggy
             colors.add(item.getName().getString());
         }
         return colors.get(glassColor);
     }
 
     public static Integer dyeItemToInt(Item item) {
-<<<<<<< HEAD
-        List<Item> colors = new ArrayList<>(Tags.Items.DYES.func_230236_b_());
-=======
         List<Item> colors = new ArrayList<>(Tags.Items.DYES.getAllElements());
->>>>>>> Ported all features to 1.16.2 - might still be buggy
         if (colors.contains(item)) {
             return colors.indexOf(item);
         }
