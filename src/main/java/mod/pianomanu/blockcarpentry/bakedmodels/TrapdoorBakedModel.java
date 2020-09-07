@@ -6,7 +6,6 @@ import mod.pianomanu.blockcarpentry.block.DoorFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.block.TrapdoorFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
@@ -18,8 +17,6 @@ import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.state.properties.AttachFace;
-import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.state.properties.Half;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -185,6 +182,7 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
         int tex = extraData.getData(FrameBlockTile.TEXTURE);
         if (mimic != null && state != null) {
             //get texture from block in tile entity and apply it to the quads
+            TextureAtlasSprite glass = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/glass")); //TODO different glass panels
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
             TextureAtlasSprite texture;
             if (textureList.size() > tex) {
@@ -211,61 +209,23 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
             int desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE); //state.get(DoorFrameBlock.DESIGN_TEXTURE);
             int flag = 0;
 
-            if (dir == north && open) {
-                flag = 1;
-                quads.addAll(ModelHelper.createCuboid(0f,1f,0f,1f,13/16f,1f, texture, tintIndex));
-                //quads.add(create3x16SideQuad(v(0, 1, 13 / 16f), v(0, 0, 13 / 16f), v(0, 0, 1), v(0, 1, 1), texture, flag));
-                //quads.add(create3x16SideQuad(v(1, 1, 1), v(1, 0, 1), v(1, 0, 13 / 16f), v(1, 1, 13 / 16f), texture, flag));
-                //quads.add(createSquareQuad(v(1, 1, 13 / 16f), v(1, 0, 13 / 16f), v(0, 0, 13 / 16f), v(0, 1, 13 / 16f), texture));
-                //quads.add(createSquareQuad(v(0, 1, 1), v(0, 0, 1), v(1, 0, 1), v(1, 1, 1), texture));
-                //quads.add(create3x16TopQuad(v(0, 0, 1), v(0, 0, 13 / 16f), v(1, 0, 13 / 16f), v(1, 0, 1), texture, flag));
-                //quads.add(create3x16TopQuad(v(0, 1, 13 / 16f), v(0, 1, 1), v(1, 1, 1), v(1, 1, 13 / 16f), texture, flag));
-
-            } else if (dir == west && open) {
-                flag = 2;
-                quads.addAll(ModelHelper.createCuboid(13/16f,1f,0f,1f,0f,1f, texture, tintIndex));
-                //quads.add(createSquareQuad(v(13 / 16f, 1, 0), v(13 / 16f, 0, 0), v(13 / 16f, 0, 1), v(13 / 16f, 1, 1), texture));
-                //quads.add(createSquareQuad(v(1, 1, 1), v(1, 0, 1), v(1, 0, 0), v(1, 1, 0), texture));
-                //quads.add(create3x16SideQuad(v(13 / 16f, 0, 0), v(13 / 16f, 1, 0), v(1, 1, 0), v(1, 0, 0), texture, flag));
-                //quads.add(create3x16SideQuad(v(13 / 16f, 1, 1), v(13 / 16f, 0, 1), v(1, 0, 1), v(1, 1, 1), texture, flag));
-                //quads.add(create3x16TopQuad(v(13 / 16f, 0, 1), v(13 / 16f, 0, 0), v(1, 0, 0), v(1, 0, 1), texture, flag));
-                //quads.add(create3x16TopQuad(v(13 / 16f, 1, 0), v(13 / 16f, 1, 1), v(1, 1, 1), v(1, 1, 0), texture, flag));
-            } else if (dir == east && open) {
-                flag = 3;
-                quads.addAll(ModelHelper.createCuboid(0f,3/16f,0f,1f,0f,1f,texture, tintIndex));
-                //quads.add(createSquareQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 1), v(0, 1, 1), texture));
-                //quads.add(createSquareQuad(v(3 / 16f, 1, 1), v(3 / 16f, 0, 1), v(3 / 16f, 0, 0), v(3 / 16f, 1, 0), texture));
-                //quads.add(create3x16SideQuad(v(3 / 16f, 1, 0), v(3 / 16f, 0, 0), v(0, 0, 0), v(0, 1, 0), texture, flag));
-                //quads.add(create3x16SideQuad(v(0, 1, 1), v(0, 0, 1), v(3 / 16f, 0, 1), v(3 / 16f, 1, 1), texture, flag));
-                //quads.add(create3x16TopQuad(v(0, 0, 1), v(0, 0, 0), v(3 / 16f, 0, 0), v(3 / 16f, 0, 1), texture, flag));
-                //quads.add(create3x16TopQuad(v(0, 1, 0), v(0, 1, 1), v(3 / 16f, 1, 1), v(3 / 16f, 1, 0), texture, flag));
-
-            } else if (dir == south && open) {
-                quads.addAll(ModelHelper.createCuboid(0f,1f,0f,1f,0f,3/16f,texture,tintIndex));
-                //quads.add(create3x16SideQuad(v(0, 1, 0), v(0, 0, 0), v(0, 0, 3 / 16f), v(0, 1, 3 / 16f), texture, flag));
-                //quads.add(create3x16SideQuad(v(1, 1, 3 / 16f), v(1, 0, 3 / 16f), v(1, 0, 0), v(1, 1, 0), texture, flag));
-                //quads.add(createSquareQuad(v(1, 1, 0), v(1, 0, 0), v(0, 0, 0), v(0, 1, 0), texture));
-                //quads.add(createSquareQuad(v(0, 1, 3 / 16f), v(0, 0, 3 / 16f), v(1, 0, 3 / 16f), v(1, 1, 3 / 16f), texture));
-                //quads.add(create3x16TopQuad(v(0, 0, 3 / 16f), v(0, 0, 0), v(1, 0, 0), v(1, 0, 3 / 16f), texture, flag));
-                //quads.add(create3x16TopQuad(v(0, 1, 0), v(0, 1, 3 / 16f), v(1, 1, 3 / 16f), v(1, 1, 0), texture, flag));
-
-            } else if (half == bottom) {
-                quads.addAll(ModelHelper.createCuboid(0f,1f,0f,3/16f,0f,1f,texture,tintIndex));
-                //quads.add(create3x16TopQuad(v(0, 3 / 16f, 0), v(0, 0, 0), v(0, 0, 1), v(0, 3 / 16f, 1), texture, flag));
-                //quads.add(create3x16TopQuad(v(1, 3 / 16f, 1), v(1, 0, 1), v(1, 0, 0), v(1, 3 / 16f, 0), texture, flag));
-                //quads.add(create3x16TopQuad(v(1, 3 / 16f, 0), v(1, 0, 0), v(0, 0, 0), v(0, 3 / 16f, 0), texture, flag));
-                //quads.add(create3x16TopQuad(v(0, 3 / 16f, 1), v(0, 0, 1), v(1, 0, 1), v(1, 3 / 16f, 1), texture, flag));
-                //quads.add(createSquareQuad(v(0, 0, 1), v(0, 0, 0), v(1, 0, 0), v(1, 0, 1), texture));
-                //quads.add(createSquareQuad(v(0, 3 / 16f, 0), v(0, 3 / 16f, 1), v(1, 3 / 16f, 1), v(1, 3 / 16f, 0), texture));
-            } else if (half == top) {
-                quads.addAll(ModelHelper.createCuboid(0f,1f,13/16f,1f,0f,1f,texture,tintIndex));
-                //quads.add(create3x16TopQuad(v(0, 1, 0), v(0, 13 / 16f, 0), v(0, 13 / 16f, 1), v(0, 1, 1), texture, flag));
-                //quads.add(create3x16TopQuad(v(1, 1, 1), v(1, 13 / 16f, 1), v(1, 13 / 16f, 0), v(1, 1, 0), texture, flag));
-                //quads.add(create3x16TopQuad(v(1, 1, 0), v(1, 13 / 16f, 0), v(0, 13 / 16f, 0), v(0, 1, 0), texture, flag));
-                //quads.add(create3x16TopQuad(v(0, 1, 1), v(0, 13 / 16f, 1), v(1, 13 / 16f, 1), v(1, 1, 1), texture, flag));
-                //quads.add(createSquareQuad(v(0, 13 / 16f, 1), v(0, 13 / 16f, 0), v(1, 13 / 16f, 0), v(1, 13 / 16f, 1), texture));
-                //quads.add(createSquareQuad(v(0, 1, 0), v(0, 1, 1), v(1, 1, 1), v(1, 1, 0), texture));
-
+            if (design == 0 || design == 1) {
+                if (dir == north && open) {
+                    flag = 1;
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, texture, tintIndex));
+                } else if (dir == west && open) {
+                    flag = 2;
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex));
+                } else if (dir == east && open) {
+                    flag = 3;
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, texture, tintIndex));
+                } else if (dir == south && open) {
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, texture, tintIndex));
+                } else if (half == bottom) {
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 3 / 16f, 0f, 1f, texture, tintIndex));
+                } else if (half == top) {
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 1f, 0f, 1f, texture, tintIndex));
+                }
             }
             if (design == 1) {
                 /*DIFFERENT DIRECTIONS = DIFFERENT QUADS
@@ -278,56 +238,219 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
                 int rotationFlag = 0;
                 if (open && half == bottom) {
                     if (dir == north) {
-                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 13 / 16f, 14 / 16f, 12 / 16f, 17 / 16f,2, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 13 / 16f, 14 / 16f, 12 / 16f, 17 / 16f, 2, desTex));
                     }
                     if (dir == east) {
-                        quads.addAll(HandleBakedModel.createHandle(-1 / 16f, 4 / 16f, 13 / 16f, 14 / 16f, 6 / 16f, 10 / 16f,3, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(-1 / 16f, 4 / 16f, 13 / 16f, 14 / 16f, 6 / 16f, 10 / 16f, 3, desTex));
                     }
                     if (dir == south) {
-                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 13 / 16f, 14 / 16f, -1 / 16f, 4 / 16f,2, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 13 / 16f, 14 / 16f, -1 / 16f, 4 / 16f, 2, desTex));
                     }
                     if (dir == west) {
-                        quads.addAll(HandleBakedModel.createHandle(12 / 16f, 17 / 16f, 13 / 16f, 14 / 16f, 6 / 16f, 10 / 16f,3, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(12 / 16f, 17 / 16f, 13 / 16f, 14 / 16f, 6 / 16f, 10 / 16f, 3, desTex));
                     }
                 } else if (open && half == top) {
                     if (dir == north) {
-                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 2 / 16f, 3 / 16f, 12 / 16f, 17 / 16f,2, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 2 / 16f, 3 / 16f, 12 / 16f, 17 / 16f, 2, desTex));
                     }
                     if (dir == east) {
-                        quads.addAll(HandleBakedModel.createHandle(-1 / 16f, 4 / 16f, 2 / 16f, 3 / 16f, 6 / 16f, 10 / 16f,3, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(-1 / 16f, 4 / 16f, 2 / 16f, 3 / 16f, 6 / 16f, 10 / 16f, 3, desTex));
                     }
                     if (dir == south) {
-                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 2 / 16f, 3 / 16f, -1 / 16f, 4 / 16f,2, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 2 / 16f, 3 / 16f, -1 / 16f, 4 / 16f, 2, desTex));
                     }
                     if (dir == west) {
-                        quads.addAll(HandleBakedModel.createHandle(12 / 16f, 17 / 16f, 2 / 16f, 3 / 16f, 6 / 16f, 10 / 16f,3, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(12 / 16f, 17 / 16f, 2 / 16f, 3 / 16f, 6 / 16f, 10 / 16f, 3, desTex));
                     }
                 }
                 if (half == bottom && !open) {
                     if (dir == north) {
-                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, -1 / 16f, 4 / 16f, 2 / 16f, 3 / 16f,1, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, -1 / 16f, 4 / 16f, 2 / 16f, 3 / 16f, 1, desTex));
                     }
                     if (dir == east) {
-                        quads.addAll(HandleBakedModel.createHandle(2 / 16f, 3 / 16f, -1 / 16f, 4 / 16f, 6 / 16f, 10 / 16f,0, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(13 / 16f, 14 / 16f, -1 / 16f, 4 / 16f, 6 / 16f, 10 / 16f, 0, desTex));
                     }
                     if (dir == south) {
-                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, -1 / 16f, 4 / 16f, 13 / 16f, 14 / 16f,1, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, -1 / 16f, 4 / 16f, 13 / 16f, 14 / 16f, 1, desTex));
                     }
                     if (dir == west) {
-                        quads.addAll(HandleBakedModel.createHandle(13 / 16f, 14 / 16f, -1 / 16f, 4 / 16f, 6 / 16f, 10 / 16f,0, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(2 / 16f, 3 / 16f, -1 / 16f, 4 / 16f, 6 / 16f, 10 / 16f, 0, desTex));
                     }
                 } else if (half == top && !open) {
                     if (dir == north) {
-                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 12 / 16f, 17 / 16f, 2 / 16f, 3 / 16f,1, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 12 / 16f, 17 / 16f, 2 / 16f, 3 / 16f, 1, desTex));
                     }
                     if (dir == west) {
-                        quads.addAll(HandleBakedModel.createHandle(2 / 16f, 3 / 16f, 12 / 16f, 17 / 16f, 6 / 16f, 10 / 16f,0, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(2 / 16f, 3 / 16f, 12 / 16f, 17 / 16f, 6 / 16f, 10 / 16f, 0, desTex));
                     }
                     if (dir == south) {
-                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 12 / 16f, 17 / 16f, 13 / 16f, 14 / 16f,1, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 12 / 16f, 17 / 16f, 13 / 16f, 14 / 16f, 1, desTex));
                     }
                     if (dir == east) {
-                        quads.addAll(HandleBakedModel.createHandle(13 / 16f, 14 / 16f, 12 / 16f, 17 / 16f, 6 / 16f, 10 / 16f,0, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(13 / 16f, 14 / 16f, 12 / 16f, 17 / 16f, 6 / 16f, 10 / 16f, 0, desTex));
+                    }
+                }
+            }
+            if (design == 2 || design == 3 || design == 4) {
+                if (dir == north && open) {
+                    //quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 3 / 16f, 13 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 3 / 16f, 13 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 14 / 16f, 15 / 16f, glass, tintIndex));
+                } else if (dir == west && open) {
+                    //quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 1f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 1f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 3 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(14 / 16f, 15 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, glass, tintIndex));
+                } else if (dir == east && open) {
+                    //quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 3 / 16f, 13 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 13 / 16f, 1f, 0f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 3 / 16f, 13 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 3 / 16f, 0f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(1 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, glass, tintIndex));
+                } else if (dir == south && open) {
+                    //quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 3 / 16f, 13 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 3 / 16f, 13 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 1 / 16f, 2 / 16f, glass, tintIndex));
+                } else if (half == bottom) {
+                    //quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 3 / 16f, 0f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 3 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 3 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 1 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, glass, tintIndex));
+                } else if (half == top) {
+                    //quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 1f, 0f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 14 / 16f, 15 / 16f, 3 / 16f, 13 / 16f, glass, tintIndex));
+                }
+                if (design == 3) {
+                    if (dir == north && open) {
+                        //quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                    } else if (dir == west && open) {
+                        //quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    } else if (dir == east && open) {
+                        //quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    } else if (dir == south && open) {
+                        //quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                    } else if (half == bottom) {
+                        //quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 3 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 0f, 3 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 0f, 3 / 16f, 7 / 16f, 9 / 16f, texture, tintIndex));
+                    } else if (half == top) {
+                        //quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 1f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 13 / 16f, 1f, 7 / 16f, 9 / 16f, texture, tintIndex));
+                    }
+                }
+                if (design == 4) {
+                    if (dir == north && open) {
+                        //quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 14 / 16f, 15 / 16f, texture, tintIndex));
+                    } else if (dir == west && open) {
+                        //quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 15 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    } else if (dir == east && open) {
+                        //quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    } else if (dir == south && open) {
+                        //quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 1 / 16f, 2 / 16f, texture, tintIndex));
+                    } else if (half == bottom) {
+                        //quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 3 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 1 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    } else if (half == top) {
+                        //quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 1f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 14 / 16f, 15 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
+                    }
+                }
+                if (open && half == bottom) {
+                    if (dir == north) {
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 13 / 16f, 14 / 16f, 12 / 16f, 13 / 16f, 2, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 13 / 16f, 14 / 16f, 1f, 17 / 16f, 2, desTex));
+                    }
+                    if (dir == east) {
+                        quads.addAll(HandleBakedModel.createHandle(-1 / 16f, 0 / 16f, 13 / 16f, 14 / 16f, 6 / 16f, 10 / 16f, 3, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(3 / 16f, 4 / 16f, 13 / 16f, 14 / 16f, 6 / 16f, 10 / 16f, 3, desTex));
+                    }
+                    if (dir == south) {
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 13 / 16f, 14 / 16f, -1 / 16f, 0 / 16f, 2, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 13 / 16f, 14 / 16f, 3 / 16f, 4 / 16f, 2, desTex));
+                    }
+                    if (dir == west) {
+                        quads.addAll(HandleBakedModel.createHandle(12 / 16f, 13 / 16f, 13 / 16f, 14 / 16f, 6 / 16f, 10 / 16f, 3, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(1f, 17 / 16f, 13 / 16f, 14 / 16f, 6 / 16f, 10 / 16f, 3, desTex));
+                    }
+                } else if (open && half == top) {
+                    if (dir == north) {
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 2 / 16f, 3 / 16f, 12 / 16f, 13 / 16f, 2, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 2 / 16f, 3 / 16f, 1f, 17 / 16f, 2, desTex));
+                    }
+                    if (dir == east) {
+                        quads.addAll(HandleBakedModel.createHandle(-1 / 16f, 0f, 2 / 16f, 3 / 16f, 6 / 16f, 10 / 16f, 3, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(3 / 16f, 4 / 16f, 2 / 16f, 3 / 16f, 6 / 16f, 10 / 16f, 3, desTex));
+                    }
+                    if (dir == south) {
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 2 / 16f, 3 / 16f, -1 / 16f, 0, 2, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 2 / 16f, 3 / 16f, 3 / 16f, 4 / 16f, 2, desTex));
+                    }
+                    if (dir == west) {
+                        quads.addAll(HandleBakedModel.createHandle(12 / 16f, 13 / 16f, 2 / 16f, 3 / 16f, 6 / 16f, 10 / 16f, 3, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(1f, 17 / 16f, 2 / 16f, 3 / 16f, 6 / 16f, 10 / 16f, 3, desTex));
+                    }
+                }
+                if (half == bottom && !open) {
+                    if (dir == north) {
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, -1 / 16f, 0f, 2 / 16f, 3 / 16f, 1, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 3 / 16f, 4 / 16f, 2 / 16f, 3 / 16f, 1, desTex));
+                    }
+                    if (dir == east) {
+                        quads.addAll(HandleBakedModel.createHandle(13 / 16f, 14 / 16f, -1 / 16f, 0f, 6 / 16f, 10 / 16f, 0, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(13 / 16f, 14 / 16f, 3 / 16f, 4 / 16f, 6 / 16f, 10 / 16f, 0, desTex));
+                    }
+                    if (dir == south) {
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, -1 / 16f, 0f, 13 / 16f, 14 / 16f, 1, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 3 / 16f, 4 / 16f, 13 / 16f, 14 / 16f, 1, desTex));
+                    }
+                    if (dir == west) {
+                        quads.addAll(HandleBakedModel.createHandle(2 / 16f, 3 / 16f, -1 / 16f, 0f, 6 / 16f, 10 / 16f, 0, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(2 / 16f, 3 / 16f, 3 / 16f, 4 / 16f, 6 / 16f, 10 / 16f, 0, desTex));
+                    }
+                } else if (half == top && !open) {
+                    if (dir == north) {
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 12 / 16f, 13 / 16f, 2 / 16f, 3 / 16f, 1, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 1f, 17 / 16f, 2 / 16f, 3 / 16f, 1, desTex));
+                    }
+                    if (dir == west) {
+                        quads.addAll(HandleBakedModel.createHandle(2 / 16f, 3 / 16f, 12 / 16f, 13 / 16f, 6 / 16f, 10 / 16f, 0, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(2 / 16f, 3 / 16f, 1f, 17 / 16f, 6 / 16f, 10 / 16f, 0, desTex));
+                    }
+                    if (dir == south) {
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 12 / 16f, 13 / 16f, 13 / 16f, 14 / 16f, 1, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(6 / 16f, 10 / 16f, 1f, 17 / 16f, 13 / 16f, 14 / 16f, 1, desTex));
+                    }
+                    if (dir == east) {
+                        quads.addAll(HandleBakedModel.createHandle(13 / 16f, 14 / 16f, 12 / 16f, 13 / 16f, 6 / 16f, 10 / 16f, 0, desTex));
+                        quads.addAll(HandleBakedModel.createHandle(13 / 16f, 14 / 16f, 1f, 17 / 16f, 6 / 16f, 10 / 16f, 0, desTex));
                     }
                 }
             }

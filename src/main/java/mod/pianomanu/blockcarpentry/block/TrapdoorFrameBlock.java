@@ -32,8 +32,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
-
 /**
  * Main class for frame trapdoors - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
@@ -104,7 +102,6 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
-                RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
             }
             BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
             BlockAppearanceHelper.setTexture(item,state,world,player,pos);
