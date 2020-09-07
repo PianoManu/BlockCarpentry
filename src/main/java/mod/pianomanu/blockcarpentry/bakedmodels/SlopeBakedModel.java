@@ -2,10 +2,8 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.StairsBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
@@ -23,6 +21,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Contains all information for the block model
+ * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ * @author PianoManu
+ * @version 1.0 08/29/20
+ */
 public class SlopeBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override

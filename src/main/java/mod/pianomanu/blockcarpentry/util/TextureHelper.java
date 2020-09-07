@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
  *
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.1 09/07/20
  */
 public class TextureHelper {
     //unused... do we need this?
@@ -240,5 +241,18 @@ public class TextureHelper {
             textureList.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(location));
         }
         return textureList;
+    }
+
+    /**
+     * Used for dyed glass doors, trapdoors etc
+     * @return list of all glass textures
+     */
+    public static List<TextureAtlasSprite> getGlassTextures() {
+        List<TextureAtlasSprite> glassTextures = new ArrayList<>();
+        for (Block block: Tags.Blocks.GLASS.func_230236_b_()) {
+            ResourceLocation textureLocation = new ResourceLocation(block.getRegistryName().getNamespace(),"block/"+block.getRegistryName().getPath());
+            glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(textureLocation));
+        }
+        return glassTextures;
     }
 }

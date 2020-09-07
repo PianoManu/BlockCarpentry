@@ -2,11 +2,9 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import com.google.common.collect.ImmutableList;
 import mod.pianomanu.blockcarpentry.bakedmodels.helper.DoorKnobBakedModel;
-import mod.pianomanu.blockcarpentry.bakedmodels.helper.HandleBakedModel;
 import mod.pianomanu.blockcarpentry.block.DoorFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
@@ -21,7 +19,6 @@ import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.state.properties.Half;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
@@ -36,6 +33,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Contains all information for the block model
+ * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ * @author PianoManu
+ * @version 1.1 09/07/20
+ */
 public class DoorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
@@ -268,7 +271,8 @@ public class DoorBakedModel implements IDynamicBakedModel {
         if (mimic != null && state != null && extraData.getData(FrameBlockTile.DESIGN) != null && extraData.getData(FrameBlockTile.DESIGN_TEXTURE) != null) {
             //get texture from block in tile entity and apply it to the quads
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
-            TextureAtlasSprite glass = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/glass")); //TODO different glass panels
+            List<TextureAtlasSprite> glassBlockList = TextureHelper.getGlassTextures();
+            TextureAtlasSprite glass = glassBlockList.get(extraData.getData(FrameBlockTile.GLASS_COLOR));
             TextureAtlasSprite texture;
             if (textureList.size() > tex) {
                 texture = textureList.get(tex);

@@ -28,6 +28,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Contains all information for the block model
+ * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ * @author PianoManu
+ * @version 1.0 08/29/20
+ */
 @SuppressWarnings("deprecation")
 public class SlabFrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");

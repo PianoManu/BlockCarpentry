@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import mod.pianomanu.blockcarpentry.block.ButtonFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -28,6 +27,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Contains all information for the block model
+ * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ * @author PianoManu
+ * @version 1.0 08/29/20
+ */
 public class ButtonPoweredBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 

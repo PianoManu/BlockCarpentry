@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
@@ -15,7 +16,6 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.DoorHingeSide;
@@ -38,7 +38,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Main class for frame doors - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.1 09/07/20
  */
 public class DoorFrameBlock extends DoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -78,7 +78,7 @@ public class DoorFrameBlock extends DoorBlock {
                     insertBlock(world, pos, state, handBlockState);
                     player.getHeldItem(hand).setCount(count - 1);
                 }
-            } else if (!(item.getItem() == Items.GLOWSTONE_DUST) && !(item.getItem() == Items.COAL) && !(item.getItem() == Items.CHARCOAL) && !(item.getItem() == Registration.TEXTURE_WRENCH.get()) && !(item.getItem() == Registration.CHISEL.get()) && !(item.getItem() == Registration.PAINTBRUSH.get())) {
+            } if (!item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                 if (state.get(DoorBlock.OPEN)) {
                     state = state.with(OPEN, false);
                 } else {
@@ -96,6 +96,7 @@ public class DoorFrameBlock extends DoorBlock {
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
             BlockAppearanceHelper.setDesign(world, pos, player, item);
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setGlassColor(world, pos, player, hand);
         }
         return ActionResultType.SUCCESS;
     }

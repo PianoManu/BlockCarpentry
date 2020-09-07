@@ -32,6 +32,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Contains all information for the block model
+ * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ * @author PianoManu
+ * @version 1.1 09/07/20
+ */
 public class TrapdoorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
@@ -182,7 +188,8 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
         int tex = extraData.getData(FrameBlockTile.TEXTURE);
         if (mimic != null && state != null) {
             //get texture from block in tile entity and apply it to the quads
-            TextureAtlasSprite glass = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/glass")); //TODO different glass panels
+            List<TextureAtlasSprite> glassBlockList = TextureHelper.getGlassTextures();
+            TextureAtlasSprite glass = glassBlockList.get(extraData.getData(FrameBlockTile.GLASS_COLOR));
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
             TextureAtlasSprite texture;
             if (textureList.size() > tex) {
