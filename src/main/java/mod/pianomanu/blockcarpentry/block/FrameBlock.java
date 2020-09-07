@@ -4,12 +4,10 @@ import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
+import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.GlassBlock;
-import net.minecraft.block.IceBlock;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
@@ -17,7 +15,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -228,3 +225,4 @@ public class FrameBlock extends Block implements IForgeBlockState {
         return state.get(LIGHT_LEVEL);
     }
 }
+//========SOLI DEO GLORIA========//

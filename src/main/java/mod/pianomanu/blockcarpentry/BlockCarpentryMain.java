@@ -115,3 +115,5 @@ public class BlockCarpentryMain
         }
     }
 }
+//This mod is dedicated to the living God and His son, Jesus. Without His support, I would never have had enough strength and perseverance to get this project working and publish it. Learn to hear His voice, it will transform your life. (Based on a quote from Covert_Jaguar, creator of RailCraft)
+//========SOLI DEO GLORIA========//

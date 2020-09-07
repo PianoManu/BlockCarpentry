@@ -198,3 +198,4 @@ public class PressurePlateFrameBakedModel implements IDynamicBakedModel {
         return ItemCameraTransforms.DEFAULT;
     }
 }
+//========SOLI DEO GLORIA========//

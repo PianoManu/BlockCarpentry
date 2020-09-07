@@ -207,3 +207,4 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
         return ItemCameraTransforms.DEFAULT;
     }
 }
+//========SOLI DEO GLORIA========//

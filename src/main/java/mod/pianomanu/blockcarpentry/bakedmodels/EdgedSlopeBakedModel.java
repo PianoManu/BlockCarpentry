@@ -703,3 +703,4 @@ public class EdgedSlopeBakedModel implements IDynamicBakedModel {
         return ItemOverrideList.EMPTY;
     }
 }
+//========SOLI DEO GLORIA========//

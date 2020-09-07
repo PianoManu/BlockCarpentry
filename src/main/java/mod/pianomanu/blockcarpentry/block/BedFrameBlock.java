@@ -4,8 +4,8 @@ import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
+import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -28,8 +28,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
 /**
  * Main class for frame beds (currently unused) - all important block info can be found here
@@ -223,3 +221,4 @@ public class BedFrameBlock extends BedBlock {
         return state.get(LIGHT_LEVEL);
     }
 }
+//========SOLI DEO GLORIA========//

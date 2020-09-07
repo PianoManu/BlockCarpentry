@@ -65,3 +65,4 @@ public class BlockColorHandler implements IBlockColor {
         LOGGER.info("Registered block color handler");
     }
 }
+//========SOLI DEO GLORIA========//

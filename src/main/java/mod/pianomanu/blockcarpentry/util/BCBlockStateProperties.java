@@ -27,3 +27,4 @@ public class BCBlockStateProperties {
      */
     public static final IntegerProperty PILLOW_COLOR = IntegerProperty.create("pillow_color",0,15);
 }
+//========SOLI DEO GLORIA========//

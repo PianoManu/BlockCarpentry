@@ -23,3 +23,4 @@ public class RenderSetup {
         RenderTypeLookup.setRenderLayer(Registration.SLOPE_FRAMEBLOCK.get(), RenderType.getTranslucent());
     }
 }
+//========SOLI DEO GLORIA========//
