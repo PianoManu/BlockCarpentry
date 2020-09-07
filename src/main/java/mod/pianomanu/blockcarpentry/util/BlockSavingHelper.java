@@ -35,7 +35,11 @@ public class BlockSavingHelper {
     }
 
     public static boolean isDyeItem(Item item) {
+<<<<<<< HEAD
         return Tags.Items.DYES.func_230235_a_(item);
+=======
+        return Tags.Items.DYES.contains(item);
+>>>>>>> Ported all features to 1.16.2 - might still be buggy
     }
 
     public static boolean isWoolBlock(Block block) {

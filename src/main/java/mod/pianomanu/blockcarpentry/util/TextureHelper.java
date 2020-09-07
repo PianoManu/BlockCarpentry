@@ -249,7 +249,11 @@ public class TextureHelper {
      */
     public static List<TextureAtlasSprite> getGlassTextures() {
         List<TextureAtlasSprite> glassTextures = new ArrayList<>();
+<<<<<<< HEAD
         for (Block block: Tags.Blocks.GLASS.func_230236_b_()) {
+=======
+        for (Block block: Tags.Blocks.GLASS.getAllElements()) {
+>>>>>>> Ported all features to 1.16.2 - might still be buggy
             ResourceLocation textureLocation = new ResourceLocation(block.getRegistryName().getNamespace(),"block/"+block.getRegistryName().getPath());
             glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(textureLocation));
         }

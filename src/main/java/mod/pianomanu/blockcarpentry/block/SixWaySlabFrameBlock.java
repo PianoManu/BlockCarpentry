@@ -34,6 +34,11 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+<<<<<<< HEAD
+=======
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
+
+>>>>>>> Ported all features to 1.16.2 - might still be buggy
 /**
  * Main class for frame "slabs", they can be placed in six different ways (that's the reason for this class name) - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
@@ -173,7 +178,12 @@ public class SixWaySlabFrameBlock extends Block {
         }
     }
 
+<<<<<<< HEAD
     public int getLightValue(BlockState state) {
+=======
+    @Override
+    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+>>>>>>> Ported all features to 1.16.2 - might still be buggy
         if (state.get(LIGHT_LEVEL) > 15) {
             return 15;
         }

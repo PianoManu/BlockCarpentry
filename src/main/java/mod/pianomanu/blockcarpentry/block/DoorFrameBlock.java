@@ -77,6 +77,10 @@ public class DoorFrameBlock extends DoorBlock {
                     ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                     insertBlock(world, pos, state, handBlockState);
                     player.getHeldItem(hand).setCount(count - 1);
+<<<<<<< HEAD
+=======
+                    return ActionResultType.SUCCESS;
+>>>>>>> Ported all features to 1.16.2 - might still be buggy
                 }
             } if (!item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                 if (state.get(DoorBlock.OPEN)) {
