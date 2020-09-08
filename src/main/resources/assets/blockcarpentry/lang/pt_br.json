@@ -1,0 +1,19 @@
+{
+	"block.blockcarpentry.frameblock":"Armação",
+	"block.blockcarpentry.frame_slab":"Armação de Laje",
+	"block.blockcarpentry.falling_frameblock":"Armação (afetado pela gravidade)",
+	"block.blockcarpentry.frame_button":"Armação de Botão de Madeira",
+	"block.blockcarpentry.frame_stairs":"Armação de Escada",
+	"block.blockcarpentry.frame_pressure_plate":"Armação de Placa de Pressão de Madeira",
+	"block.blockcarpentry.frame_door":"Armação de Porta",
+	"block.blockcarpentry.frame_trapdoor":"Armação de Alçapão",
+	"block.blockcarpentry.frame_fence":"Armação de Cerca",
+	"block.blockcarpentry.illusion_block":"Bloco de Ilusão",
+	
+	"item.blockcarpentry.hammer":"Martelo",
+	"item.blockcarpentry.texture_wrench":"Chave de Textura",
+	"item.blockcarpentry.chisel":"Formão",
+	"item.blockcarpentry.paintbrush":"Pincel",
+	
+	"itemGroup.blockcarpentry":"BlockCarpentry"
+}
