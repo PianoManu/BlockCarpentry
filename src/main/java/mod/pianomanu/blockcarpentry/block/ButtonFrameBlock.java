@@ -9,8 +9,6 @@ import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WoodButtonBlock;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -39,7 +37,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Main class for frame buttons - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.1 09/08/20
  */
 public class ButtonFrameBlock extends WoodButtonBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -81,7 +79,6 @@ public class ButtonFrameBlock extends WoodButtonBlock {
                         ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                         insertBlock(world, pos, state, handBlockState);
                         player.getHeldItem(hand).setCount(count - 1);
-                        RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
                         return ActionResultType.CONSUME;
                     }
                 }
@@ -90,7 +87,6 @@ public class ButtonFrameBlock extends WoodButtonBlock {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos,state,2);
-                RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
             }
             BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
             BlockAppearanceHelper.setTexture(item,state,world,player,pos);

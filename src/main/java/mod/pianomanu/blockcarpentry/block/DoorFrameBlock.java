@@ -77,6 +77,7 @@ public class DoorFrameBlock extends DoorBlock {
                     ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                     insertBlock(world, pos, state, handBlockState);
                     player.getHeldItem(hand).setCount(count - 1);
+                    return ActionResultType.SUCCESS;
                 }
             } if (!item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                 if (state.get(DoorBlock.OPEN)) {

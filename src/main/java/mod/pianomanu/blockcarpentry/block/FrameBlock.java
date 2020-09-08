@@ -35,7 +35,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Main class for frameblocks - all important block info can be found here
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  * @author PianoManu
- * @version 1.0 09/07/20
+ * @version 1.2 09/08/20
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends Block implements IForgeBlockState {
@@ -122,7 +122,6 @@ public class FrameBlock extends Block implements IForgeBlockState {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
-                RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
             }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
