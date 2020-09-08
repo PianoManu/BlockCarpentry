@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 /**
  * Registering standard rendering layers for all frame blocks - need to be translucent to work with glass and similar blocks
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.1 09/08/20
  */
 public class RenderSetup {
     public static void setup() {
@@ -21,6 +21,15 @@ public class RenderSetup {
         RenderTypeLookup.setRenderLayer(Registration.EDGED_SLOPE_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.ILLUSION_BLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.SLOPE_FRAMEBLOCK.get(), RenderType.getTranslucent());
+
+        RenderTypeLookup.setRenderLayer(Registration.ILLUSION_BLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.SLAB_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.STAIRS_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.FENCE_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.DOOR_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.TRAPDOOR_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.PRESSURE_PLATE_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.BUTTON_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
     }
 }
 //========SOLI DEO GLORIA========//

@@ -38,7 +38,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Main class for frame stairs - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.1 09/08/20
  */
 public class StairsFrameBlock extends StairsBlock {
 
@@ -84,7 +84,6 @@ public class StairsFrameBlock extends StairsBlock {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
-                RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
             }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);

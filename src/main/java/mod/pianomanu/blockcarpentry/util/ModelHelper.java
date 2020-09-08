@@ -1,20 +1,25 @@
 package mod.pianomanu.blockcarpentry.util;
 
 import com.google.common.collect.ImmutableList;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Util class for building cuboid shapes
  * @author PianoManu
- * @version 1.1 08/29/20
+ * @version 1.2 09/08/20
  */
 public class ModelHelper {
 
@@ -161,6 +166,69 @@ public class ModelHelper {
         quads.add(createQuad(NEU, NED, SED, SEU, texture, xl*16, xh*16, 16-yh*16, 16-yl*16, tintIndex));
         quads.add(createQuad(NWU, NWD, NED, NEU, texture, zl*16, zh*16, 16-yh*16, 16-yl*16, tintIndex));
         quads.add(createQuad(SEU, SED, SWD, SWU, texture, zl*16, zh*16, 16-yh*16, 16-yl*16, tintIndex));
+        return quads;
+    }
+
+    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, IBakedModel model, IModelData extraData, Random rand, int tintIndex) {
+        List<BakedQuad> quads = new ArrayList<>();
+        //Eight corners of the block
+        Vector3d NWU = v(xl,yh,zl); //North-West-Up
+        Vector3d NEU = v(xl,yh,zh); //...
+        Vector3d NWD = v(xl,yl,zl);
+        Vector3d NED = v(xl,yl,zh);
+        Vector3d SWU = v(xh,yh,zl);
+        Vector3d SEU = v(xh,yh,zh);
+        Vector3d SWD = v(xh,yl,zl);
+        Vector3d SED = v(xh,yl,zh); //South-East-Down
+        if(xl < 0) {
+            xl++;
+        }
+        if(xh > 1) {
+            xh--;
+        }
+        if(yl < 0) {
+            yl++;
+        }
+        if(yh > 1) {
+            yh--;
+        }
+        if(zl < 0) {
+            zl++;
+        }
+        if(zh > 1) {
+            zh--;
+        }
+        List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
+        TextureAtlasSprite textureNorth = textureList.get(0);
+        TextureAtlasSprite textureEast = textureList.get(0);
+        TextureAtlasSprite textureSouth = textureList.get(0);
+        TextureAtlasSprite textureWest = textureList.get(0);
+        TextureAtlasSprite textureUp = textureList.get(0);
+        TextureAtlasSprite textureDown = textureList.get(0);
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.NORTH, rand, extraData)) {
+            textureNorth = quad.func_187508_a();
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.EAST, rand, extraData)) {
+            textureEast = quad.func_187508_a();
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.SOUTH, rand, extraData)) {
+            textureSouth = quad.func_187508_a();
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.WEST, rand, extraData)) {
+            textureWest = quad.func_187508_a();
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.UP, rand, extraData)) {
+            textureUp = quad.func_187508_a();
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.DOWN, rand, extraData)) {
+            textureDown = quad.func_187508_a();
+        }
+        quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl*16, xh*16, zl*16, zh*16, tintIndex));
+        quads.add(createQuad(SWD, SED, NED, NWD, textureDown, xl*16, xh*16, zl*16, zh*16, tintIndex));
+        quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, xl*16, xh*16, 16-yh*16, 16-yl*16, tintIndex));
+        quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xl*16, xh*16, 16-yh*16, 16-yl*16, tintIndex));
+        quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zl*16, zh*16, 16-yh*16, 16-yl*16, tintIndex));
+        quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, zl*16, zh*16, 16-yh*16, 16-yl*16, tintIndex));
         return quads;
     }
 

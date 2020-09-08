@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
  * Main class for frame "slabs", they can be placed in six different ways (that's the reason for this class name) - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.1 09/08/20
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends Block {
@@ -121,7 +121,6 @@ public class SixWaySlabFrameBlock extends Block {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
-                RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
             }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
