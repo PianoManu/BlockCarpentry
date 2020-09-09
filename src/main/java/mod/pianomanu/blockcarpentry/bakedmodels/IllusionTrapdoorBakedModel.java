@@ -56,7 +56,12 @@ public class IllusionTrapdoorBakedModel implements IDynamicBakedModel {
         if (mimic != null && state != null) {
             //get texture from block in tile entity and apply it to the quads
             List<TextureAtlasSprite> glassBlockList = TextureHelper.getGlassTextures();
-            TextureAtlasSprite glass = glassBlockList.get(extraData.getData(FrameBlockTile.GLASS_COLOR));
+            TextureAtlasSprite glass;
+            if (extraData.getData(FrameBlockTile.GLASS_COLOR) > 0) {
+                glass = glassBlockList.get(extraData.getData(FrameBlockTile.GLASS_COLOR)-1);
+            } else  {
+                glass = glassBlockList.get(0);
+            }
             int tintIndex = -1;
             if (mimic.getBlock() instanceof GrassBlock) {
                 tintIndex = 1;
