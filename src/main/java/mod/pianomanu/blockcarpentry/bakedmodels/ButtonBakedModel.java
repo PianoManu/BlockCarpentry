@@ -31,7 +31,7 @@ import java.util.Random;
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.1 09/09/20
  */
 public class ButtonBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURES = new ResourceLocation("minecraft", "block/oak_planks");

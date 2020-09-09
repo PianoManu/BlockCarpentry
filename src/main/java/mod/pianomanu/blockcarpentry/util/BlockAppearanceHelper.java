@@ -25,7 +25,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.1 09/07/20
+ * @version 1.2 09/09/20
  */
 public class BlockAppearanceHelper {
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
@@ -94,15 +94,6 @@ public class BlockAppearanceHelper {
                 //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
                 Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Design Texture: " + fte.getDesignTexture()), true);
             }
-        }
-    }
-
-    //unused
-    public static void clearContent(World world, BlockState state, BlockPos pos, PlayerEntity player, Hand hand) {
-        if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get()) {
-            //this.dropContainedBlock(world, pos);
-            state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-            world.setBlockState(pos, state, 2);
         }
     }
 

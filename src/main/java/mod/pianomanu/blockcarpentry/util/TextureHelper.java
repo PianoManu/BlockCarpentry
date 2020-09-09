@@ -20,35 +20,9 @@ import java.util.Random;
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
  *
  * @author PianoManu
- * @version 1.1 09/07/20
+ * @version 1.2 09/09/20
  */
 public class TextureHelper {
-    //unused... do we need this?
-    public static TextureAtlasSprite getTextureFromBlock(Block blockIn) {
-        ResourceLocation location;
-        List<ResourceLocation> locationList = new ArrayList<>();
-        String m = "minecraft";
-        String n = blockIn.getRegistryName().getNamespace();
-        String p = blockIn.getRegistryName().getPath();
-        String b = "block/";
-        locationList.add(loc(n,b+p));
-        if(blockIn instanceof GrassBlock) {
-            locationList.set(0,loc(m,b+"dirt"));
-            locationList.add(loc(m,b+"grass_block_top"));
-        }
-        if(blockIn instanceof RotatedPillarBlock) {
-            locationList.set(0,loc(n, b+p));
-            locationList.add(loc(n, b+p+"_top"));
-        }
-        if(blockIn instanceof CraftingTableBlock) {
-            locationList.set(0,loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side"));
-            locationList.add(loc(m,b+p+"_front"));
-        }
-        System.out.println(locationList.toString());
-        location=locationList.get(0);
-        return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(location);
-    }
 
     private static ResourceLocation loc(String nameSpace, String path) {
         return new ResourceLocation(nameSpace, path);
@@ -296,10 +270,5 @@ public class TextureHelper {
         }
         return textureList;
     }
-
-    /*public static List<TextureAtlasSprite> getTextureFromModel(BlockState state, World world, BlockPos pos) {
-        state.getBlock().getRenderShape(state, world, pos);
-
-    }*/
 }
 //========SOLI DEO GLORIA========//
