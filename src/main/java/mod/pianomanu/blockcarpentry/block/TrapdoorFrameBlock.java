@@ -10,8 +10,6 @@ import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TrapDoorBlock;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -95,7 +93,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                         insertBlock(world, pos, state, handBlockState);
                         //this.contained_block=handBlockState.getBlock();
                         player.getHeldItem(hand).setCount(count - 1);
-                        RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
+
                     }
                 }
             }*/
@@ -112,7 +110,6 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                     insertBlock(world, pos, state, handBlockState);
                     //this.contained_block=handBlockState.getBlock();
                     player.getHeldItem(hand).setCount(count - 1);
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
                     return ActionResultType.SUCCESS;
                 }
             }

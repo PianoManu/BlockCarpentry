@@ -8,8 +8,6 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -114,7 +112,6 @@ public class FrameBlock extends Block implements IForgeBlockState {
                     ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                     insertBlock(world, pos, state, handBlockState);
                     player.getHeldItem(hand).setCount(count - 1);
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
                 }
             }
             //hammer is needed to remove the block from the frame - you can change it in the config
