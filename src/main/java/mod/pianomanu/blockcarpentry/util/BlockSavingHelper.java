@@ -1,30 +1,31 @@
 package mod.pianomanu.blockcarpentry.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Currently unused, may be used (or rewritten) for frame beds
+ * @author PianoManu
+ * @version 1.1 09/08/20
  */
 public class BlockSavingHelper {
     public static List<Block> validBlocks = new ArrayList<>();
     public static void createValidBlockList() {
         List<Block> blockList = new ArrayList<>();
         for(Block b : ForgeRegistries.BLOCKS) {
-            if (b.isSolid(b.getDefaultState())) {
+            if (b.getDefaultState().isSolid()) {
                 blockList.add(b);
             }
         }
         blockList.add(Blocks.GLASS);
-        Collection<Block> glass = Tags.Blocks.GLASS.getAllElements();
-        blockList.addAll(glass);
+        //Collection<Block> glass = Tags.Blocks.GLASS.func_230236_b_();
+        //blockList.addAll(glass);
         blockList.add(Blocks.ICE);
         validBlocks = blockList;
     }
@@ -58,3 +59,4 @@ public class BlockSavingHelper {
         return wool_blocks.contains(block);
     }
 }
+//========SOLI DEO GLORIA========//

@@ -6,13 +6,9 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WoodButtonBlock;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -35,8 +31,14 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-import static mod.pianomanu.blockcarpentry.block.FrameBlock.LIGHT_LEVEL;
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
+/**
+ * Main class for frame buttons - all important block info can be found here
+ * Visit {@link FrameBlock} for a better documentation
+ * @author PianoManu
+ * @version 1.1 09/08/20
+ */
 public class ButtonFrameBlock extends WoodButtonBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -81,14 +83,6 @@ public class ButtonFrameBlock extends WoodButtonBlock {
                     }
                 }
             }
-            if (item.getItem() instanceof BlockItem) {
-                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (BlockSavingHelper.isValidBlock(heldBlock) && !heldBlock.getDefaultState().isSolid()) {
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
-                } else {
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getSolid());
-                }
-            }
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
@@ -96,8 +90,8 @@ public class ButtonFrameBlock extends WoodButtonBlock {
             }
             BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
             BlockAppearanceHelper.setTexture(item,state,world,player,pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setDesign(world,pos,player,item);
+            BlockAppearanceHelper.setDesignTexture(world,pos,player,item);
             if (state.get(POWERED)) {
                 return ActionResultType.CONSUME;
             } else {
@@ -151,11 +145,11 @@ public class ButtonFrameBlock extends WoodButtonBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public int getLightValue(BlockState state) {
-        if (state.get(LIGHT_LEVEL)>15) {
+    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+        if (state.get(LIGHT_LEVEL) > 15) {
             return 15;
         }
         return state.get(LIGHT_LEVEL);
     }
 }
+//========SOLI DEO GLORIA========//

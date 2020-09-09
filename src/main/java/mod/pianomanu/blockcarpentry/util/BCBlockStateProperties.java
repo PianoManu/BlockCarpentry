@@ -6,7 +6,7 @@ import net.minecraft.state.IntegerProperty;
 /**
  * Some properties needed for frame blocks
  * @author PianoManu
- * @version 1.0
+ * @version 1.1 09/08/20
  */
 public class BCBlockStateProperties {
     /**
@@ -27,3 +27,4 @@ public class BCBlockStateProperties {
      */
     public static final IntegerProperty PILLOW_COLOR = IntegerProperty.create("pillow_color",0,15);
 }
+//========SOLI DEO GLORIA========//

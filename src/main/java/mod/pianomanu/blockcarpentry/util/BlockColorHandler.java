@@ -24,6 +24,8 @@ import javax.annotation.Nullable;
 
 /**
  * does not work right now...
+ * @author PianoManu
+ * @version 1.1 09/08/20
  */
 public class BlockColorHandler implements IBlockColor {
     public static final IBlockColor INSTANCE =new BlockColorHandler();
@@ -63,3 +65,4 @@ public class BlockColorHandler implements IBlockColor {
         LOGGER.info("Registered block color handler");
     }
 }
+//========SOLI DEO GLORIA========//

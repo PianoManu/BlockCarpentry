@@ -13,7 +13,6 @@ import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,13 +24,15 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * TileEntity for {@link mod.pianomanu.blockcarpentry.block.FrameBlock} and all sorts of frame blocks
  * Contains all information about the block and the mimicked block
  * @author PianoManu
- * @version 1.0
+ * @version 1.1 09/08/20
  */
 public class FrameBlockTile extends TileEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN_TEXTURE = new ModelProperty<>();
+    //currently only for doors and trapdoors
+    public static final ModelProperty<Integer> GLASS_COLOR = new ModelProperty<>();
 
     public final int maxTextures = 8;
     public final int maxDesignTextures = 4;
@@ -41,6 +42,7 @@ public class FrameBlockTile extends TileEntity {
     private Integer texture = 0;
     private Integer design = 0;
     private Integer designTexture = 0;
+    private Integer glassColor = 0;
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -88,6 +90,13 @@ public class FrameBlockTile extends TileEntity {
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
+    public Integer getGlassColor() {
+        return this.glassColor;
+    }
+
+    public void setGlassColor(Integer colorNumber) {
+        this.glassColor = colorNumber;
+    }
 
     @Override
     public CompoundNBT getUpdateTag() {
@@ -104,6 +113,9 @@ public class FrameBlockTile extends TileEntity {
         if (designTexture != null) {
             tag.put("design_texture", writeInteger(designTexture));
         }
+        if (glassColor != null) {
+            tag.put("glass_color", writeInteger(glassColor));
+        }
         return tag;
     }
 
@@ -119,6 +131,7 @@ public class FrameBlockTile extends TileEntity {
         Integer oldTexture = texture;
         Integer oldDesign = design;
         Integer oldDesignTexture = designTexture;
+        Integer oldGlassColor = glassColor;
         CompoundNBT tag = pkt.getNbtCompound();
         if (tag.contains("mimic")) {
             mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
@@ -148,6 +161,13 @@ public class FrameBlockTile extends TileEntity {
                 world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
+        if (tag.contains("glass_color")) {
+            glassColor = readInteger(tag.getCompound("glass_color"));
+            if (!Objects.equals(oldGlassColor, glassColor)) {
+                ModelDataManager.requestModelDataRefresh(this);
+                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+            }
+        }
     }
 
     @Nonnull
@@ -158,6 +178,7 @@ public class FrameBlockTile extends TileEntity {
                 .withInitial(TEXTURE, texture)
                 .withInitial(DESIGN, design)
                 .withInitial(DESIGN_TEXTURE, designTexture)
+                .withInitial(GLASS_COLOR, glassColor)
                 .build();
     }
 
@@ -176,6 +197,9 @@ public class FrameBlockTile extends TileEntity {
         if (tag.contains("design_texture")) {
             designTexture = readInteger(tag.getCompound("design_texture"));
         }
+        if (tag.contains("glass_color")) {
+            glassColor = readInteger(tag.getCompound("glass_color"));
+        }
     }
 
     @Override
@@ -192,6 +216,9 @@ public class FrameBlockTile extends TileEntity {
         if (designTexture != null) {
             tag.put("design_texture", writeInteger(designTexture));
         }
+        if (glassColor != null) {
+            tag.put("glass_color", writeInteger(glassColor));
+        }
         return super.write(tag);
     }
 
@@ -200,6 +227,7 @@ public class FrameBlockTile extends TileEntity {
         this.setDesign(0);
         this.setDesign(0);
         this.setDesign(0);
+        this.setGlassColor(0);
     }
 
     private static CompoundNBT writeInteger(Integer tag) {
@@ -221,3 +249,4 @@ public class FrameBlockTile extends TileEntity {
         }
     }
 }
+//========SOLI DEO GLORIA========//

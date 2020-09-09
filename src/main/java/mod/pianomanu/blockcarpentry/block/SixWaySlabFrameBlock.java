@@ -6,15 +6,20 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.*;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.Half;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -29,6 +34,12 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+/**
+ * Main class for frame "slabs", they can be placed in six different ways (that's the reason for this class name) - all important block info can be found here
+ * Visit {@link FrameBlock} for a better documentation
+ * @author PianoManu
+ * @version 1.1 09/08/20
+ */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
@@ -102,6 +113,7 @@ public class SixWaySlabFrameBlock extends Block {
                     ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                     insertBlock(world, pos, state, handBlockState);
                     player.getHeldItem(hand).setCount(count - 1);
+                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
                 }
 
             }
@@ -160,10 +172,12 @@ public class SixWaySlabFrameBlock extends Block {
         }
     }
 
-    public int getLightValue(BlockState state) {
+    @Override
+    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
         if (state.get(LIGHT_LEVEL) > 15) {
             return 15;
         }
         return state.get(LIGHT_LEVEL);
     }
 }
+//========SOLI DEO GLORIA========//
