@@ -31,7 +31,7 @@ import java.util.Random;
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.1 09/09/20
  */
 public class ButtonPoweredBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -205,14 +205,14 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 model.getBakedModel().getQuads(mimic, side, rand, extraData);
                 if (model != null) {
-                    return getMimicQuads(state, side, rand, extraData);
+                    return getMimicQuads(state, side, rand, extraData, model);
                 }
             }
         }
         return Collections.emptyList();
     }
 
-    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, IBakedModel model) {
         if (side != null) {
             return Collections.emptyList();
         }
@@ -223,14 +223,14 @@ public class ButtonPoweredBakedModel implements IDynamicBakedModel {
             Direction direction = state.get(ButtonFrameBlock.HORIZONTAL_FACING);
             AttachFace face = state.get(ButtonFrameBlock.FACE);
             //get texture from block in tile entity and apply it to the quads
-            List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
+            List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
             TextureAtlasSprite texture;
-            if(textureList.size()> tex) {
-                texture = textureList.get(tex);
+            if (textureList.size() <= tex) {
+                //texture = textureList.get(0);
+                extraData.setData(FrameBlockTile.TEXTURE, 0);
+                tex = 0;
             }
-            else {
-                texture = textureList.get(0);
-            }
+            texture = textureList.get(tex);
             List<BakedQuad> quads = new ArrayList<>();
             //down
             quads.add(createUpDownQuad(v(x(direction,face), y(direction,face), z(direction,face)), v(x(direction,face)+xr(direction, face), y(direction,face), z(direction,face)), v(x(direction,face)+xr(direction, face), y(direction,face), z(direction,face)+zr(direction, face)), v(x(direction,face), y(direction,face), z(direction,face)+zr(direction, face)), texture, direction, face));

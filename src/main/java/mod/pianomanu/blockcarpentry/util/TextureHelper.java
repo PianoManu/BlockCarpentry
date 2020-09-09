@@ -1,48 +1,28 @@
 package mod.pianomanu.blockcarpentry.util;
 
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
  *
  * @author PianoManu
- * @version 1.1 09/07/20
+ * @version 1.2 09/09/20
  */
 public class TextureHelper {
-    //unused... do we need this?
-    public static TextureAtlasSprite getTextureFromBlock(Block blockIn) {
-        ResourceLocation location;
-        List<ResourceLocation> locationList = new ArrayList<>();
-        String m = "minecraft";
-        String n = blockIn.getRegistryName().getNamespace();
-        String p = blockIn.getRegistryName().getPath();
-        String b = "block/";
-        locationList.add(loc(n,b+p));
-        if(blockIn instanceof GrassBlock) {
-            locationList.set(0,loc(m,b+"dirt"));
-            locationList.add(loc(m,b+"grass_block_top"));
-        }
-        if(blockIn instanceof RotatedPillarBlock) {
-            locationList.set(0,loc(n, b+p));
-            locationList.add(loc(n, b+p+"_top"));
-        }
-        if(blockIn instanceof CraftingTableBlock) {
-            locationList.set(0,loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side"));
-            locationList.add(loc(m,b+p+"_front"));
-        }
-        System.out.println(locationList.toString());
-        location=locationList.get(0);
-        return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(location);
-    }
 
     private static ResourceLocation loc(String nameSpace, String path) {
         return new ResourceLocation(nameSpace, path);
@@ -254,6 +234,41 @@ public class TextureHelper {
             glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(textureLocation));
         }
         return glassTextures;
+    }
+
+    public static List<TextureAtlasSprite> getTextureFromModel(IBakedModel model, IModelData extraData, Random rand) {
+        List<TextureAtlasSprite> textureList = new ArrayList<>();
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.UP, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.DOWN, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.NORTH, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.EAST, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.SOUTH, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.WEST, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        return textureList;
     }
 }
 //========SOLI DEO GLORIA========//

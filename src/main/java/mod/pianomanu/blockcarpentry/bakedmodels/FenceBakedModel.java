@@ -31,7 +31,7 @@ import java.util.Random;
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.1 09/09/20
  */
 public class FenceBakedModel implements IDynamicBakedModel {
 
@@ -50,7 +50,7 @@ public class FenceBakedModel implements IDynamicBakedModel {
             if (location != null && state!=null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 if (model != null) {
-                    return getMimicQuads(state, side, rand, extraData);
+                    return getMimicQuads(state, side, rand, extraData, model);
                 }
             }
         }
@@ -58,13 +58,14 @@ public class FenceBakedModel implements IDynamicBakedModel {
     }
 
     @Nonnull
-    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, IModelData extraData) {
+    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, IModelData extraData, IBakedModel model) {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         Integer design = extraData.getData(FrameBlockTile.DESIGN);
         if (mimic!=null && state != null) {
-            List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(mimic.getBlock());
             int index = extraData.getData(FrameBlockTile.TEXTURE);
-            if (index >= texture.size()) {
+            List<TextureAtlasSprite> texture = TextureHelper.getTextureFromModel(model, extraData, rand);
+            if (texture.size() <= index) {
+                extraData.setData(FrameBlockTile.TEXTURE, 0);
                 index = 0;
             }
             int tintIndex = -1;
