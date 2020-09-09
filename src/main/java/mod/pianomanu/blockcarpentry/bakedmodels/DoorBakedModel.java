@@ -254,14 +254,14 @@ public class DoorBakedModel implements IDynamicBakedModel {
                 model.getBakedModel().getQuads(mimic, side, rand, extraData);
                 if (model != null) {
                     //only if model (from block saved in tile entity) exists:
-                    return getMimicQuads(state, side, rand, extraData);
+                    return getMimicQuads(state, side, rand, extraData, model);
                 }
             }
         }
         return Collections.emptyList();
     }
 
-    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, IBakedModel model) {
         if (side != null) {
             return Collections.emptyList();
         }
@@ -270,9 +270,14 @@ public class DoorBakedModel implements IDynamicBakedModel {
         int tex = extraData.getData(FrameBlockTile.TEXTURE);
         if (mimic != null && state != null && extraData.getData(FrameBlockTile.DESIGN) != null && extraData.getData(FrameBlockTile.DESIGN_TEXTURE) != null) {
             //get texture from block in tile entity and apply it to the quads
-            List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
+            List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
             List<TextureAtlasSprite> glassBlockList = TextureHelper.getGlassTextures();
-            TextureAtlasSprite glass = glassBlockList.get(extraData.getData(FrameBlockTile.GLASS_COLOR)-1);
+            TextureAtlasSprite glass;
+            if (extraData.getData(FrameBlockTile.GLASS_COLOR) > 0) {
+                glass = glassBlockList.get(extraData.getData(FrameBlockTile.GLASS_COLOR)-1);
+            } else  {
+                glass = glassBlockList.get(0);
+            }
             TextureAtlasSprite texture;
             if (textureList.size() > tex) {
                 texture = textureList.get(tex);

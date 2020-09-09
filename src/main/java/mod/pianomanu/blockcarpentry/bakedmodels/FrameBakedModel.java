@@ -31,7 +31,7 @@ import java.util.Random;
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.1 09/09/20
  */
 public class FrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -100,7 +100,6 @@ public class FrameBakedModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        Integer texIndex = extraData.getData(FrameBlockTile.TEXTURE);
         Integer design = extraData.getData(FrameBlockTile.DESIGN);
         Integer desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
@@ -109,16 +108,20 @@ public class FrameBakedModel implements IDynamicBakedModel {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 if (model != null) {
                     //TODO what about full blocks with different side textures -> IllusionBlock
-                    List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(mimic.getBlock());
-                    int index = texIndex;
-                    if (index >= texture.size()) {
-                        index = 0;
+                    List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
+                    TextureAtlasSprite texture;
+                    Integer tex = extraData.getData(FrameBlockTile.TEXTURE);
+                    if (textureList.size() <= tex) {
+                        //texture = textureList.get(0);
+                        extraData.setData(FrameBlockTile.TEXTURE, 0);
+                        tex = 0;
                     }
+                    texture = textureList.get(tex);
                     int tintIndex = -1;
                     if (mimic.getBlock() instanceof GrassBlock) {
                         tintIndex = 1;
                     }
-                    return ModelHelper.createCuboid(0f,1f,0f,1f,0f,1f, texture.get(index), tintIndex);
+                    return ModelHelper.createCuboid(0f,1f,0f,1f,0f,1f, texture, tintIndex);
                 }
             }
         }
