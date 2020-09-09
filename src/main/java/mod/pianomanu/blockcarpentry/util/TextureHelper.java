@@ -1,14 +1,20 @@
 package mod.pianomanu.blockcarpentry.util;
 
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
@@ -255,5 +261,45 @@ public class TextureHelper {
         }
         return glassTextures;
     }
+
+    public static List<TextureAtlasSprite> getTextureFromModel(IBakedModel model, IModelData extraData, Random rand) {
+        List<TextureAtlasSprite> textureList = new ArrayList<>();
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.UP, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.DOWN, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.NORTH, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.EAST, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.SOUTH, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.WEST, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        return textureList;
+    }
+
+    /*public static List<TextureAtlasSprite> getTextureFromModel(BlockState state, World world, BlockPos pos) {
+        state.getBlock().getRenderShape(state, world, pos);
+
+    }*/
 }
 //========SOLI DEO GLORIA========//

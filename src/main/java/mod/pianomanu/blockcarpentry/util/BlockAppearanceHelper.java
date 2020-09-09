@@ -4,7 +4,6 @@ import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -57,8 +56,7 @@ public class BlockAppearanceHelper {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(fte.getMimic().getBlock());
-                if (fte.getTexture() < texture.size() - 1 && fte.getTexture() < texture.size() - 1) {
+                if (fte.getTexture() < 5) { //six sides possible
                     fte.setTexture(fte.getTexture() + 1);
                 } else {
                     fte.setTexture(0);
