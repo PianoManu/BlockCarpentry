@@ -55,7 +55,12 @@ public class IllusionDoorBakedModel implements IDynamicBakedModel {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic!=null && state!=null) {
             List<TextureAtlasSprite> glassBlockList = TextureHelper.getGlassTextures();
-            TextureAtlasSprite glass = glassBlockList.get(extraData.getData(FrameBlockTile.GLASS_COLOR)-1);
+            TextureAtlasSprite glass;
+            if (extraData.getData(FrameBlockTile.GLASS_COLOR) > 0) {
+                glass = glassBlockList.get(extraData.getData(FrameBlockTile.GLASS_COLOR)-1);
+            } else  {
+                glass = glassBlockList.get(0);
+            }
             List<BakedQuad> quads = new ArrayList<>();
             Direction dir = state.get(DoorFrameBlock.FACING);
             boolean open = state.get(DoorFrameBlock.OPEN);
