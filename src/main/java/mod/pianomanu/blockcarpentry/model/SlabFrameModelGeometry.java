@@ -1,8 +1,8 @@
 package mod.pianomanu.blockcarpentry.model;
 
-import mod.pianomanu.blockcarpentry.bakedmodels.SlabFrameBakedModel;
-import mod.pianomanu.blockcarpentry.bakedmodels.SlabFrameTopBakedModel;
 import com.mojang.datafixers.util.Pair;
+import mod.pianomanu.blockcarpentry.bakedmodels.FrameBakedModel;
+import mod.pianomanu.blockcarpentry.bakedmodels.SlabFrameBakedModel;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -23,6 +23,6 @@ public class SlabFrameModelGeometry implements IModelGeometry<SlabFrameModelGeom
 
     @Override
     public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, IUnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-        return Collections.singletonList(new Material(AtlasTexture.LOCATION_BLOCKS_TEXTURE, SlabFrameTopBakedModel.TEXTURE));
+        return Collections.singletonList(new Material(AtlasTexture.LOCATION_BLOCKS_TEXTURE, FrameBakedModel.TEXTURE));
     }
 }
