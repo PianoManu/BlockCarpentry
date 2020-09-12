@@ -10,8 +10,6 @@ import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TrapDoorBlock;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -70,35 +68,6 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            /*if (!player.isSneaking() && !(item.getItem() instanceof BlockItem) && !(item.getItem() == Registration.TEXTURE_WRENCH.get()) && !(item.getItem() == Registration.CHISEL.get()) && !(item.getItem() == Registration.PAINTBRUSH.get())) {
-                if (state.get(OPEN)) {
-                    state = state.with(OPEN, false);
-                } else {
-                    state = state.with(OPEN, true);
-                }
-                world.setBlockState(pos, state, 2);
-                if (state.get(WATERLOGGED)) {
-                    world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-                }
-                this.playSound(player, world, pos, state.get(OPEN));
-            } else {
-                if (item.getItem() instanceof BlockItem) {
-                    TileEntity tileEntity = world.getTileEntity(pos);
-                    int count = player.getHeldItem(hand).getCount();
-                    Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                    //TODO fix for non-solid blocks
-                    //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
-                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
-                        ((FrameBlockTile) tileEntity).clear();
-                        BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                        ((FrameBlockTile) tileEntity).setMimic(handBlockState);
-                        insertBlock(world, pos, state, handBlockState);
-                        //this.contained_block=handBlockState.getBlock();
-                        player.getHeldItem(hand).setCount(count - 1);
-                        RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
-                    }
-                }
-            }*/
             if (item.getItem() instanceof BlockItem) {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
@@ -112,7 +81,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                     insertBlock(world, pos, state, handBlockState);
                     //this.contained_block=handBlockState.getBlock();
                     player.getHeldItem(hand).setCount(count - 1);
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
+
                     return ActionResultType.SUCCESS;
                 }
             }
@@ -156,7 +125,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
                     double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
                     double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    ItemStack itemstack1 = blockState.getBlock().asItem().getDefaultInstance();
+                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
                     ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickupDelay();
                     worldIn.addEntity(itementity);
