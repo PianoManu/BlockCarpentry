@@ -8,8 +8,6 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -35,7 +33,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Main class for frameblocks - all important block info can be found here
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  * @author PianoManu
- * @version 1.2 09/08/20
+ * @version 1.3 09/12/20
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends Block implements IForgeBlockState {
@@ -107,14 +105,12 @@ public class FrameBlock extends Block implements IForgeBlockState {
                 int count = player.getHeldItem(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
                 //TODO fix for non-solid blocks
-                //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
                 if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
                     ((FrameBlockTile) tileEntity).clear();
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                     insertBlock(world, pos, state, handBlockState);
                     player.getHeldItem(hand).setCount(count - 1);
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
                 }
             }
             //hammer is needed to remove the block from the frame - you can change it in the config

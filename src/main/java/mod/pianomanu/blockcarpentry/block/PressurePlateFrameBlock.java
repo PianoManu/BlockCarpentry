@@ -9,8 +9,6 @@ import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PressurePlateBlock;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -34,7 +32,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Main class for frame pressure plates - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  * @author PianoManu
- * @version 1.1 09/08/20
+ * @version 1.2 09/12/20
  */
 public class PressurePlateFrameBlock extends PressurePlateBlock {
 
@@ -74,7 +72,6 @@ public class PressurePlateFrameBlock extends PressurePlateBlock {
                     ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                     insertBlock(world, pos, state, handBlockState);
                     player.getHeldItem(hand).setCount(count - 1);
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
                 }
             }
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {

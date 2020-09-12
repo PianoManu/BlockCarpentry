@@ -10,8 +10,6 @@ import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TrapDoorBlock;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -38,13 +36,11 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 09/07/20
+ * @version 1.2 09/12/20
  */
 public class TrapdoorFrameBlock extends TrapDoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
-    //public static final IntegerProperty DESIGN = BCBlockStateProperties.DESIGN;
-    //public static final IntegerProperty DESIGN_TEXTURE = BCBlockStateProperties.DESIGN_TEXTURE;
 
     public TrapdoorFrameBlock(Properties properties) {
         super(properties);
@@ -70,35 +66,6 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            /*if (!player.isSneaking() && !(item.getItem() instanceof BlockItem) && !(item.getItem() == Registration.TEXTURE_WRENCH.get()) && !(item.getItem() == Registration.CHISEL.get()) && !(item.getItem() == Registration.PAINTBRUSH.get())) {
-                if (state.get(OPEN)) {
-                    state = state.with(OPEN, false);
-                } else {
-                    state = state.with(OPEN, true);
-                }
-                world.setBlockState(pos, state, 2);
-                if (state.get(WATERLOGGED)) {
-                    world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-                }
-                this.playSound(player, world, pos, state.get(OPEN));
-            } else {
-                if (item.getItem() instanceof BlockItem) {
-                    TileEntity tileEntity = world.getTileEntity(pos);
-                    int count = player.getHeldItem(hand).getCount();
-                    Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                    //TODO fix for non-solid blocks
-                    //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
-                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
-                        ((FrameBlockTile) tileEntity).clear();
-                        BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                        ((FrameBlockTile) tileEntity).setMimic(handBlockState);
-                        insertBlock(world, pos, state, handBlockState);
-                        //this.contained_block=handBlockState.getBlock();
-                        player.getHeldItem(hand).setCount(count - 1);
-                        RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
-                    }
-                }
-            }*/
             if (item.getItem() instanceof BlockItem) {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
@@ -112,7 +79,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                     insertBlock(world, pos, state, handBlockState);
                     //this.contained_block=handBlockState.getBlock();
                     player.getHeldItem(hand).setCount(count - 1);
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
+
                     return ActionResultType.SUCCESS;
                 }
             }

@@ -9,8 +9,6 @@ import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceBlock;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -35,10 +33,9 @@ import javax.annotation.Nullable;
  * Main class for frame fences - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  * @author PianoManu
- * @version 1.1 09/08/20
+ * @version 1.2 09/12/20
  */
 public class FenceFrameBlock extends FenceBlock {
-    //private boolean isTransparent = true;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
 
@@ -69,11 +66,7 @@ public class FenceFrameBlock extends FenceBlock {
             if(item.getItem()==Items.LEAD) {
                 return LeadItem.func_226641_a_(player, world, pos);
             }
-            /*if(state.get(CONTAINS_BLOCK) && player.isSneaking()) {
-                this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos,state,2);
-            }*/ else {
+            else {
                 if(item.getItem() instanceof BlockItem) {
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
@@ -86,7 +79,6 @@ public class FenceFrameBlock extends FenceBlock {
                         ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                         insertBlock(world,pos, state,handBlockState);
                         player.getHeldItem(hand).setCount(count-1);
-                        RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
                     }
                 }
             }

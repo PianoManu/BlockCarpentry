@@ -3,7 +3,6 @@ package mod.pianomanu.blockcarpentry.util;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,7 +24,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.2 09/09/20
+ * @version 1.3 09/12/20
  */
 public class BlockAppearanceHelper {
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
@@ -33,19 +32,19 @@ public class BlockAppearanceHelper {
             int count = player.getHeldItem(hand).getCount();
             world.setBlockState(pos, state.with(LIGHT_LEVEL, state.getBlock().getLightValue(state, world, pos) + 3));
             player.getHeldItem(hand).setCount(count - 1);
-            Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Light Level: " + (state.get(LIGHT_LEVEL) + 3)), true);
+            player.sendStatusMessage(new TranslationTextComponent("Light Level: " + (state.get(LIGHT_LEVEL) + 3)), true);
         }
         if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL) < 15) {
             int count = player.getHeldItem(hand).getCount();
             world.setBlockState(pos, state.with(LIGHT_LEVEL, state.getBlock().getLightValue(state, world, pos) + 1));
             player.getHeldItem(hand).setCount(count - 1);
-            Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Light Level: " + (state.get(LIGHT_LEVEL) + 1)), true);
+            player.sendStatusMessage(new TranslationTextComponent("Light Level: " + (state.get(LIGHT_LEVEL) + 1)), true);
         }
         if (item.getItem() == Items.GLOWSTONE_DUST && state.get(LIGHT_LEVEL) >= 13) {
-            Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Light Level: " + state.get(LIGHT_LEVEL)), true);
+            player.sendStatusMessage(new TranslationTextComponent("Light Level: " + state.get(LIGHT_LEVEL)), true);
         }
         if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.get(LIGHT_LEVEL) == 15) {
-            Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Light Level: " + state.get(LIGHT_LEVEL)), true);
+            player.sendStatusMessage(new TranslationTextComponent("Light Level: " + state.get(LIGHT_LEVEL)), true);
         }
         return state.get(LIGHT_LEVEL);
     }
@@ -61,7 +60,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setTexture(0);
                 }
-                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Texture: " + fte.getTexture()), true);
+                player.sendStatusMessage(new TranslationTextComponent("Texture: " + fte.getTexture()), true);
             }
         }
     }
@@ -76,7 +75,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setDesign(0);
                 }
-                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Design: " + fte.getDesign()), true);
+                player.sendStatusMessage(new TranslationTextComponent("Design: " + fte.getDesign()), true);
             }
         }
     }
@@ -92,7 +91,7 @@ public class BlockAppearanceHelper {
                     fte.setDesignTexture(0);
                 }
                 //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
-                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Design Texture: " + fte.getDesignTexture()), true);
+                player.sendStatusMessage(new TranslationTextComponent("Design Texture: " + fte.getDesignTexture()), true);
             }
         }
     }
@@ -102,12 +101,8 @@ public class BlockAppearanceHelper {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                //if (fte.getDesignTexture() < fte.maxDesignTextures) {
-                    fte.setGlassColor(dyeItemToInt(player.getHeldItem(hand).getItem())+1); //plus 1, because 0 is undyed glass
-                //} else {
-                //    fte.setGlassColor(0);
-                //}
-                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("Glass Color: " + glassColorToString(fte.getGlassColor()-1)), true);
+                fte.setGlassColor(dyeItemToInt(player.getHeldItem(hand).getItem()) + 1); //plus 1, because 0 is undyed glass
+                //player.sendStatusMessage(new TranslationTextComponent("Glass Color: " + glassColorToString(fte.getGlassColor() - 1)), true);
             }
         }
     }

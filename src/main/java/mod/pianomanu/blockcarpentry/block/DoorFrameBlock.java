@@ -10,8 +10,6 @@ import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -37,8 +35,9 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
 /**
  * Main class for frame doors - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
+ *
  * @author PianoManu
- * @version 1.1 09/07/20
+ * @version 1.2 09/12/20
  */
 public class DoorFrameBlock extends DoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -71,7 +70,6 @@ public class DoorFrameBlock extends DoorBlock {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
                 if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(((BlockItem) item.getItem()).getBlock()) && !state.get(CONTAINS_BLOCK)) {
-                    RenderTypeLookup.setRenderLayer(this, RenderType.getTranslucent());
                     ((FrameBlockTile) tileEntity).clear();
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     ((FrameBlockTile) tileEntity).setMimic(handBlockState);
@@ -79,7 +77,8 @@ public class DoorFrameBlock extends DoorBlock {
                     player.getHeldItem(hand).setCount(count - 1);
                     return ActionResultType.SUCCESS;
                 }
-            } if (!item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+            }
+            if (!item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                 if (state.get(DoorBlock.OPEN)) {
                     state = state.with(OPEN, false);
                 } else {
