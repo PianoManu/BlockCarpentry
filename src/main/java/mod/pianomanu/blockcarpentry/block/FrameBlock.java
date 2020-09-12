@@ -107,9 +107,7 @@ public class FrameBlock extends Block implements IForgeBlockState {
                 //TODO fix for non-solid blocks
                 //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
                 if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
-                    ((FrameBlockTile) tileEntity).clear();
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                    ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                     insertBlock(world, pos, state, handBlockState);
                     player.getHeldItem(hand).setCount(count - 1);
                 }
@@ -147,7 +145,7 @@ public class FrameBlock extends Block implements IForgeBlockState {
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
                     double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
                     double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    ItemStack itemstack1 = blockState.getBlock().asItem().getDefaultInstance();
+                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
                     ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickupDelay();
                     worldIn.addEntity(itementity);
@@ -190,20 +188,6 @@ public class FrameBlock extends Block implements IForgeBlockState {
 
             super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
-    }
-
-    //unused
-    public int setLightValue(BlockState state, int amount) {
-        if (state.get(LIGHT_LEVEL) > 15) {
-            return 15;
-        }
-        return state.get(LIGHT_LEVEL);
-    }
-
-    //unused
-    public boolean isTransparent(BlockState state) {
-        //return this.isTransparent;
-        return true;
     }
 
     /**

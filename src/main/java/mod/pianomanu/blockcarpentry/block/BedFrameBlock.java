@@ -157,7 +157,7 @@ public class BedFrameBlock extends BedBlock {
                     double d0 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
                     double d1 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.060000002F + 0.6D;
                     double d2 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
-                    ItemStack itemstack1 = blockState.getBlock().asItem().getDefaultInstance();
+                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
                     ItemEntity itementity = new ItemEntity(worldIn, (double)pos.getX() + d0, (double)pos.getY() + d1, (double)pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickupDelay();
                     worldIn.addEntity(itementity);
@@ -170,7 +170,7 @@ public class BedFrameBlock extends BedBlock {
                     double d0 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
                     double d1 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.060000002F + 0.6D;
                     double d2 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
-                    ItemStack itemstack1 = blockState2.getBlock().asItem().getDefaultInstance();
+                    ItemStack itemstack1 = new ItemStack(blockState2.getBlock());
                     ItemEntity itementity = new ItemEntity(worldIn, (double)pos.getX() + d0, (double)pos.getY() + d1, (double)pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickupDelay();
                     worldIn.addEntity(itementity);
@@ -183,7 +183,7 @@ public class BedFrameBlock extends BedBlock {
                     double d0 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
                     double d1 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.060000002F + 0.6D;
                     double d2 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
-                    ItemStack itemstack1 = blockState3.getBlock().asItem().getDefaultInstance();
+                    ItemStack itemstack1 = new ItemStack(blockState3.getBlock());
                     ItemEntity itementity = new ItemEntity(worldIn, (double)pos.getX() + d0, (double)pos.getY() + d1, (double)pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickupDelay();
                     worldIn.addEntity(itementity);
