@@ -1,0 +1,29 @@
+{
+	"block.blockcarpentry.frameblock":"Marco de bloque",
+	"block.blockcarpentry.frame_slab":"Marco de baldosa",
+	"block.blockcarpentry.falling_frameblock":"Marco de bloque con gravedad (affected by Gravity - WIP)",
+	"block.blockcarpentry.frame_button":"Marco de botón de madera",
+	"block.blockcarpentry.frame_stairs":"Marco de escaleras",
+	"block.blockcarpentry.frame_pressure_plate":"Marco de placa de presión de madera",
+	"block.blockcarpentry.frame_door":"Marco de puerta",
+	"block.blockcarpentry.frame_trapdoor":"Marco de escotilla",
+	"block.blockcarpentry.frame_fence":"Marco de valla",
+	"block.blockcarpentry.frame_slope":"Marco de pendiente (WIP)",
+	"block.blockcarpentry.frame_edged_slope":"Marco de pendiente escalonada (WIP)",
+	
+	"block.blockcarpentry.illusion_block":"Bloque de ilusión",
+	"block.blockcarpentry.illusion_slab":"Baldosa de ilusión",
+	"block.blockcarpentry.illusion_button":"Botón de ilusión",
+	"block.blockcarpentry.illusion_stairs":"Escaleras de ilusión",
+	"block.blockcarpentry.illusion_pressure_plate":"Placa de presión de ilusión",
+	"block.blockcarpentry.illusion_door":"Puerta de ilusión",
+	"block.blockcarpentry.illusion_trapdoor":"Escotilla de ilusión",
+	"block.blockcarpentry.illusion_fence":"Valla de ilusión",
+	
+	"item.blockcarpentry.hammer":"Martillo",
+	"item.blockcarpentry.texture_wrench":"Llave de textura",
+	"item.blockcarpentry.chisel":"Cincel",
+	"item.blockcarpentry.paintbrush":"Rodillo",
+	
+	"itemGroup.blockcarpentry":"BlockCarpentry"
+}
