@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 /**
  * This class ensures that blocks of grass take on the correct color
  * @author PianoManu
- * @version 1.1 09/12/20
+ * @version 1.2 09/14/20
  */
 public class BlockColorHandler implements IBlockColor {
     public static final IBlockColor INSTANCE =new BlockColorHandler();
@@ -45,7 +45,7 @@ public class BlockColorHandler implements IBlockColor {
         //TODO does this work?
         if(state.getBlock() instanceof FrameBlock && lightReader!=null && pos!=null) {
             TileEntity te = lightReader.getTileEntity(pos);
-            if (te instanceof FrameBlockTile) {
+            if (te instanceof FrameBlockTile && state.get(BCBlockStateProperties.CONTAINS_BLOCK)) {
                 BlockState containedBlock = ((FrameBlockTile) te).getMimic();
                 if (containedBlock.getBlock() instanceof GrassBlock) {
                     return BiomeColors.getGrassColor(lightReader,pos);

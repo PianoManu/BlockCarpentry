@@ -19,7 +19,7 @@ import java.util.Random;
 /**
  * Util class for building cuboid shapes
  * @author PianoManu
- * @version 1.2 09/08/20
+ * @version 1.3 09/14/20
  */
 public class ModelHelper {
 
@@ -198,7 +198,7 @@ public class ModelHelper {
         if(zh > 1) {
             zh--;
         }
-        List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
+        List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
         TextureAtlasSprite textureNorth = textureList.get(0);
         TextureAtlasSprite textureEast = textureList.get(0);
         TextureAtlasSprite textureSouth = textureList.get(0);
