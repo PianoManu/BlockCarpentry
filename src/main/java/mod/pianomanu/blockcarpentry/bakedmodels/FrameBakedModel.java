@@ -31,7 +31,7 @@ import java.util.Random;
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  * @author PianoManu
- * @version 1.1 09/09/20
+ * @version 1.2 09/14/20
  */
 public class FrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -85,6 +85,9 @@ public class FrameBakedModel implements IDynamicBakedModel {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         Integer design = extraData.getData(FrameBlockTile.DESIGN);
         Integer desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE);
+        if (side != null) {
+            return Collections.emptyList();
+        }
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null && state!=null) {

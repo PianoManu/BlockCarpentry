@@ -43,7 +43,7 @@ Right now there is no guide for this mod, so here is one in small form (ONLY WOR
 Have fun!
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.examplemod]] #optional
+[[dependencies.blockcarpentry]] #optional
     # the modid of the dependency
     modId="forge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
@@ -55,7 +55,7 @@ Have fun!
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 # Here's another dependency
-[[dependencies.examplemod]]
+[[dependencies.blockcarpentry]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.16.2]"

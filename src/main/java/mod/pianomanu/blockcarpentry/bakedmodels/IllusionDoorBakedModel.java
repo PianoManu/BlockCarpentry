@@ -32,7 +32,7 @@ import java.util.Random;
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  * @author PianoManu
- * @version 1.0 09/08/20
+ * @version 1.1 09/14/20
  */
 public class IllusionDoorBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -52,6 +52,9 @@ public class IllusionDoorBakedModel implements IDynamicBakedModel {
     }
 
     private List<BakedQuad> getIllusionQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, IBakedModel model) {
+        if (side != null) {
+            return Collections.emptyList();
+        }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic!=null && state!=null) {
             List<TextureAtlasSprite> glassBlockList = TextureHelper.getGlassTextures();

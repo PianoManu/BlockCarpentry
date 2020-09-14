@@ -33,7 +33,7 @@ import java.util.Random;
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  * @author PianoManu
- * @version 1.1 09/12/20
+ * @version 1.2 09/14/20
  */
 public class EdgedSlopeBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -59,6 +59,9 @@ public class EdgedSlopeBakedModel implements IDynamicBakedModel {
     }
 
     public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, IModelData extraData, IBakedModel model) {
+        if (side != null) {
+            return Collections.emptyList();
+        }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         Integer design = extraData.getData(FrameBlockTile.DESIGN);
         if (mimic != null && state != null) {
