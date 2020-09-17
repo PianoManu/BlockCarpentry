@@ -3,7 +3,6 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GrassBlock;
 import net.minecraft.block.WoodButtonBlock;
@@ -27,8 +26,9 @@ import java.util.Random;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ *
  * @author PianoManu
- * @version 1.1 09/14/20
+ * @version 1.2 09/17/20
  */
 public class IllusionButtonPoweredBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -53,14 +53,6 @@ public class IllusionButtonPoweredBakedModel implements IDynamicBakedModel {
         }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic != null && state != null) {
-            List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
-            TextureAtlasSprite texture;
-            int tex = extraData.getData(FrameBlockTile.TEXTURE);
-            if (textureList.size() > tex) {
-                texture = textureList.get(tex);
-            } else {
-                texture = textureList.get(0);
-            }
             int tintIndex = -1;
             if (mimic.getBlock() instanceof GrassBlock) {
                 tintIndex = 1;
@@ -87,17 +79,15 @@ public class IllusionButtonPoweredBakedModel implements IDynamicBakedModel {
                 case WALL:
                     switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
                         case EAST:
-                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(0f, 1/16f, 6/16f, 10/16f, 5/16f, 11/16f, mimic,model,extraData,rand, tintIndex));
+                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(0f, 1 / 16f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
                         case WEST:
-                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(15/16f, 1f, 6/16f, 10/16f, 5/16f, 11/16f, mimic,model,extraData,rand, tintIndex));
+                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(15 / 16f, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
                         case NORTH:
-                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(5/16f, 11/16f, 6/16f, 10/16f, 15/16f, 1f, mimic,model,extraData,rand, tintIndex));
+                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 15 / 16f, 1f, mimic, model, extraData, rand, tintIndex));
                         case SOUTH:
-                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(5/16f, 11/16f, 6/16f, 10/16f, 0f, 1/16f, mimic,model,extraData,rand, tintIndex));
+                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 0f, 1 / 16f, mimic, model, extraData, rand, tintIndex));
                     }
             }
-
-            return new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, texture, tintIndex));
         }
         return Collections.emptyList();
     }

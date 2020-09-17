@@ -25,8 +25,9 @@ import java.util.Random;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ *
  * @author PianoManu
- * @version 1.1 09/14/20
+ * @version 1.2 09/17/20
  */
 public class IllusionPressurePlateBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -38,8 +39,7 @@ public class IllusionPressurePlateBakedModel implements IDynamicBakedModel {
             if (location != null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 if (model != null) {
-                    return getIllusionQuads(state,side,rand,extraData,model);
-                    //return model.getQuads(mimic, side, rand, extraData);
+                    return getIllusionQuads(state, side, rand, extraData, model);
                 }
             }
         }
@@ -51,12 +51,12 @@ public class IllusionPressurePlateBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic!=null && state!=null) {
+        if (mimic != null && state != null) {
             int tintIndex = -1;
             if (mimic.getBlock() instanceof GrassBlock) {
                 tintIndex = 1;
             }
-            return new ArrayList<>(ModelHelper.createSixFaceCuboid(1/16f, 15/16f, 0f, 1/16f, 1/16f, 15/16f, mimic,model,extraData,rand, tintIndex));
+            return new ArrayList<>(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 0f, 1 / 16f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex));
         }
         return Collections.emptyList();
     }

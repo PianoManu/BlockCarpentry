@@ -36,13 +36,11 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 09/07/20
+ * @version 1.2 09/17/20
  */
 public class TrapdoorFrameBlock extends TrapDoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
-    //public static final IntegerProperty DESIGN = BCBlockStateProperties.DESIGN;
-    //public static final IntegerProperty DESIGN_TEXTURE = BCBlockStateProperties.DESIGN_TEXTURE;
 
     public TrapdoorFrameBlock(Properties properties) {
         super(properties);
@@ -72,16 +70,10 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                //TODO fix for non-solid blocks
-                //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
                 if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
-                    ((FrameBlockTile) tileEntity).clear();
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                    ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                     insertBlock(world, pos, state, handBlockState);
-                    //this.contained_block=handBlockState.getBlock();
                     player.getHeldItem(hand).setCount(count - 1);
-
                     return ActionResultType.SUCCESS;
                 }
             }

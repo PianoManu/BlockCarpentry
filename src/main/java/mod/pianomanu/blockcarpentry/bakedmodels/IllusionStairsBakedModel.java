@@ -3,7 +3,6 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GrassBlock;
 import net.minecraft.block.StairsBlock;
@@ -27,8 +26,9 @@ import java.util.Random;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ *
  * @author PianoManu
- * @version 1.1 09/14/20
+ * @version 1.2 09/17/20
  */
 public class IllusionStairsBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -40,7 +40,7 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
             if (location != null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 if (model != null) {
-                    return getIllusionQuads(state,side,rand,extraData,model);
+                    return getIllusionQuads(state, side, rand, extraData, model);
                 }
             }
         }
@@ -52,16 +52,7 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic!=null && state!=null) {
-            List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
-            TextureAtlasSprite texture;
-            int tex = extraData.getData(FrameBlockTile.TEXTURE);
-            if(textureList.size()>tex) {
-                texture = textureList.get(tex);
-            }
-            else {
-                texture = textureList.get(0);
-            }
+        if (mimic != null && state != null) {
             int tintIndex = -1;
             if (mimic.getBlock() instanceof GrassBlock) {
                 tintIndex = 1;
@@ -69,186 +60,186 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
             List<BakedQuad> quads = new ArrayList<>();
             switch (state.get(StairsBlock.HALF)) {
                 case BOTTOM:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0f,0.5f,0f,1f,mimic,model,extraData,rand,tintIndex));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
                     switch (state.get(StairsBlock.SHAPE)) {
                         case STRAIGHT:
                             switch (state.get(StairsBlock.FACING)) {
                                 case SOUTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0.5f,1f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case NORTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0.5f,1f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case WEST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0.5f,1f,0f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0.5f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case EAST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0.5f,1f,0f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0.5f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                             }
                             break;
                         case INNER_LEFT:
                             switch (state.get(StairsBlock.FACING)) {
                                 case SOUTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0.5f,1f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0.5f,1f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0.5f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case NORTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0.5f,1f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0.5f,1f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0.5f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case WEST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0.5f,1f,0f,1f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0.5f,1f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0.5f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0.5f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case EAST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0.5f,1f,0f,1f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0.5f,1f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0.5f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0.5f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                             }
                             break;
                         case INNER_RIGHT:
                             switch (state.get(StairsBlock.FACING)) {
                                 case SOUTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0.5f,1f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0.5f,1f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0.5f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case NORTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0.5f,1f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0.5f,1f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0.5f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case WEST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0.5f,1f,0f,1f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0.5f,1f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0.5f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0.5f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case EAST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0.5f,1f,0f,1f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0.5f,1f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0.5f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0.5f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                             }
                             break;
                         case OUTER_LEFT:
                             switch (state.get(StairsBlock.FACING)) {
                                 case SOUTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0.5f,1f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0.5f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case NORTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0.5f,1f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0.5f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case WEST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0.5f,1f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0.5f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case EAST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0.5f,1f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0.5f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                             }
                             break;
                         case OUTER_RIGHT:
                             switch (state.get(StairsBlock.FACING)) {
                                 case SOUTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0.5f,1f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0.5f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case NORTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0.5f,1f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0.5f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case WEST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0.5f,1f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0.5f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case EAST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0.5f,1f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0.5f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                             }
                             break;
                     }
                     break;
                 case TOP:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0.5f,1f,0f,1f,mimic,model,extraData,rand,tintIndex));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
                     switch (state.get(StairsBlock.SHAPE)) {
                         case STRAIGHT:
                             switch (state.get(StairsBlock.FACING)) {
                                 case SOUTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0f,0.5f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case NORTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0f,0.5f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case WEST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0f,0.5f,0f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 0.5f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case EAST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0f,0.5f,0f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 0.5f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                             }
                             break;
                         case INNER_LEFT:
                             switch (state.get(StairsBlock.FACING)) {
                                 case SOUTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0f,0.5f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0f,0.5f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 0.5f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case NORTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0f,0.5f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0f,0.5f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 0.5f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case WEST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0f,0.5f,0f,1f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0f,0.5f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 0.5f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 0.5f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case EAST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0f,0.5f,0f,1f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0f,0.5f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 0.5f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 0.5f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                             }
                             break;
                         case INNER_RIGHT:
                             switch (state.get(StairsBlock.FACING)) {
                                 case SOUTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0f,0.5f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0f,0.5f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 0.5f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case NORTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,1f,0f,0.5f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0f,0.5f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 0.5f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case WEST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0f,0.5f,0f,1f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0f,0.5f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 0.5f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 0.5f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case EAST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0f,0.5f,0f,1f,mimic,model,extraData,rand,tintIndex));
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0f,0.5f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 0.5f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 0.5f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                             }
                             break;
                         case OUTER_LEFT:
                             switch (state.get(StairsBlock.FACING)) {
                                 case SOUTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0f,0.5f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 0.5f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case NORTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0f,0.5f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 0.5f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case WEST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0f,0.5f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 0.5f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case EAST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0f,0.5f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 0.5f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                             }
                             break;
                         case OUTER_RIGHT:
                             switch (state.get(StairsBlock.FACING)) {
                                 case SOUTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0f,0.5f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 0.5f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case NORTH:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0f,0.5f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 0.5f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case WEST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f,0.5f,0f,0.5f,0f,0.5f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 0.5f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
                                     break;
                                 case EAST:
-                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f,1f,0f,0.5f,0.5f,1f,mimic,model,extraData,rand,tintIndex));
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 0.5f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
                                     break;
                             }
                             break;
@@ -256,7 +247,6 @@ public class IllusionStairsBakedModel implements IDynamicBakedModel {
                     break;
             }
             return quads;
-            //return new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, texture, tintIndex));
         }
         return Collections.emptyList();
     }

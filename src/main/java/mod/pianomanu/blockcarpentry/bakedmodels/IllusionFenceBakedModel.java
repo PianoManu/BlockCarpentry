@@ -4,7 +4,6 @@ import mod.pianomanu.blockcarpentry.block.FenceFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GrassBlock;
 import net.minecraft.client.Minecraft;
@@ -27,8 +26,9 @@ import java.util.Random;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ *
  * @author PianoManu
- * @version 1.1 09/14/20
+ * @version 1.2 09/17/20
  */
 public class IllusionFenceBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -54,11 +54,6 @@ public class IllusionFenceBakedModel implements IDynamicBakedModel {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         Integer design = extraData.getData(FrameBlockTile.DESIGN);
         if (mimic != null && state != null) {
-            List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(mimic.getBlock());
-            int index = extraData.getData(FrameBlockTile.TEXTURE);
-            if (index >= texture.size()) {
-                index = 0;
-            }
             int tintIndex = -1;
             if (mimic.getBlock() instanceof GrassBlock) {
                 tintIndex = 1;
