@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WWW",
+	"###"
+  ],
+  "key": {
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+	"#": {
+      "item": "blockcarpentry:frameblock"
+    }
+  },
+  "result": {
+    "item": "blockcarpentry:frame_bed",
+    "count": 1
+  }
+}

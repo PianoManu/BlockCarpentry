@@ -1,7 +1,8 @@
 package mod.pianomanu.blockcarpentry.model;
 
-import mod.pianomanu.blockcarpentry.bakedmodels.SlabFrameTopBakedModel;
 import com.mojang.datafixers.util.Pair;
+import mod.pianomanu.blockcarpentry.bakedmodels.BedBakedModel;
+import mod.pianomanu.blockcarpentry.bakedmodels.FrameBakedModel;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -14,14 +15,15 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;
 
-public class SlabFrameTopModelGeometry implements IModelGeometry<SlabFrameTopModelGeometry> {
+public class BedFrameModelGeometry implements IModelGeometry<BedFrameModelGeometry> {
+
     @Override
     public IBakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform, ItemOverrideList overrides, ResourceLocation modelLocation) {
-        return new SlabFrameTopBakedModel();
+        return new BedBakedModel();
     }
 
     @Override
     public Collection<RenderMaterial> getTextures(IModelConfiguration owner, Function<ResourceLocation, IUnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-        return Collections.singletonList(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS_TEXTURE, SlabFrameTopBakedModel.TEXTURE));
+        return Collections.singletonList(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS_TEXTURE, FrameBakedModel.TEXTURE));
     }
 }

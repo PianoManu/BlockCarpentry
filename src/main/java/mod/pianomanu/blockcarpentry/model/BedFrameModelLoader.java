@@ -5,14 +5,14 @@ import com.google.gson.JsonObject;
 import net.minecraft.resources.IResourceManager;
 import net.minecraftforge.client.model.IModelLoader;
 
-public class SlabFrameTopModelLoader implements IModelLoader<SlabFrameTopModelGeometry> {
+public class BedFrameModelLoader implements IModelLoader<BedFrameModelGeometry> {
     @Override
     public void onResourceManagerReload(IResourceManager resourceManager) {
 
     }
 
     @Override
-    public SlabFrameTopModelGeometry read(JsonDeserializationContext deserializationContext, JsonObject modelContents) {
-        return new SlabFrameTopModelGeometry();
+    public BedFrameModelGeometry read(JsonDeserializationContext deserializationContext, JsonObject modelContents) {
+        return new BedFrameModelGeometry();
     }
 }

@@ -18,8 +18,9 @@ import java.util.Random;
 
 /**
  * Util class for building cuboid shapes
+ *
  * @author PianoManu
- * @version 1.3 09/14/20
+ * @version 1.4 09/17/20
  */
 public class ModelHelper {
 
@@ -28,23 +29,24 @@ public class ModelHelper {
      * is something like a point or a vector with special attributes. These include the
      * texture, the light level and so on. This method is needed for the quads (which
      * are something like the faces of a cuboid) and those are determined by 4 vertices
+     *
      * @param builder used to construct the quads, content is saved as int array afterwards
-     * @param normal normal vector
-     * @param x x component of the vertex
-     * @param y y component of the vertex
-     * @param z z component of the vertex
-     * @param u u component of the texture, that means the horizontal axis
-     * @param v v component of the texture, that means the vertical axis
-     * @param sprite the texture for the vertex, sprite[u,v] will be displayed for this vertex
-     * @param r red value
-     * @param g green value
-     * @param b blue value
+     * @param normal  normal vector
+     * @param x       x component of the vertex
+     * @param y       y component of the vertex
+     * @param z       z component of the vertex
+     * @param u       u component of the texture, that means the horizontal axis
+     * @param v       v component of the texture, that means the vertical axis
+     * @param sprite  the texture for the vertex, sprite[u,v] will be displayed for this vertex
+     * @param r       red value
+     * @param g       green value
+     * @param b       blue value
      */
     private static void putVertex(BakedQuadBuilder builder, Vector3d normal,
                                   double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
 
         ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
-        for (int j = 0 ; j < elements.size() ; j++) {
+        for (int j = 0; j < elements.size(); j++) {
             VertexFormatElement e = elements.get(j);
             switch (e.getUsage()) {
                 case POSITION:
@@ -84,15 +86,16 @@ public class ModelHelper {
      * This method calls the putVertex method four times, because we need 4 vertices
      * to determine a rectangle, which is the face of the block. For this reason we
      * need 4 vectors, the texture, and 4 u and v values
-     * @param v1 first vector/point of the face
-     * @param v2 second vector/point of the face
-     * @param v3 third vector/point of the face
-     * @param v4 forth vector/point of the face
-     * @param sprite texture of the block, saved as TextureAtlasSprite
-     * @param ulow low u value, determines the left corners of the sprite
-     * @param uhigh  high u value, determines the right corners of the sprite
-     * @param vlow  low v value, determines the top corners of the sprite
-     * @param vhigh  high v value, determines the bottom corners of the sprite
+     *
+     * @param v1        first vector/point of the face
+     * @param v2        second vector/point of the face
+     * @param v3        third vector/point of the face
+     * @param v4        forth vector/point of the face
+     * @param sprite    texture of the block, saved as TextureAtlasSprite
+     * @param ulow      low u value, determines the left corners of the sprite
+     * @param uhigh     high u value, determines the right corners of the sprite
+     * @param vlow      low v value, determines the top corners of the sprite
+     * @param vhigh     high v value, determines the bottom corners of the sprite
      * @param tintIndex only needed for tintable blocks like grass
      * @return Baked quad i.e. the completed face of a block
      */
@@ -102,7 +105,7 @@ public class ModelHelper {
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
         builder.setApplyDiffuseLighting(true);
-        if (tintIndex>-1) {
+        if (tintIndex > -1) {
             builder.setQuadTint(tintIndex);
         }
         putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f);
@@ -116,86 +119,93 @@ public class ModelHelper {
      * This method is used to create a cuboid from six faces. Input values determine
      * the dimensions of the cuboid and the texture to apply.
      * Example 1: full block with dirt texture would be:
-     *            (0f,1f,0f,1f,0f,1f, >path of dirt texture<, 0)
-     *            I.e. the dimensions of the block are from (0,0,0) to (16,16,16)
+     * (0f,1f,0f,1f,0f,1f, >path of dirt texture<, 0)
+     * I.e. the dimensions of the block are from (0,0,0) to (16,16,16)
      * Example 2: oak fence:
-     *            (6/16f,10/16f,0f,1f,6/16f,10/16f, >oak planks<, 0)
-     *            I.e. the dimensions of a fence, being (6,0,6) to (10,16,10)
-     * @param xl low x component of the block
-     * @param xh high x component of the block
-     * @param yl low y component of the block
-     * @param yh high y component of the block
-     * @param zl low z component of the block
-     * @param zh high z component of the block
-     * @param texture TextureAtlasSprite of the block
+     * (6/16f,10/16f,0f,1f,6/16f,10/16f, >oak planks<, 0)
+     * I.e. the dimensions of a fence, being (6,0,6) to (10,16,10)
+     *
+     * @param xl        low x component of the block
+     * @param xh        high x component of the block
+     * @param yl        low y component of the block
+     * @param yh        high y component of the block
+     * @param zl        low z component of the block
+     * @param zh        high z component of the block
+     * @param texture   TextureAtlasSprite of the block
      * @param tintIndex only needed for tintable blocks like grass
      * @return List of baked quads, i.e. List of six faces
      */
     public static List<BakedQuad> createCuboid(float xl, float xh, float yl, float yh, float zl, float zh, TextureAtlasSprite texture, int tintIndex) {
         List<BakedQuad> quads = new ArrayList<>();
         //Eight corners of the block
-        Vector3d NWU = v(xl,yh,zl); //North-West-Up
-        Vector3d NEU = v(xl,yh,zh); //...
-        Vector3d NWD = v(xl,yl,zl);
-        Vector3d NED = v(xl,yl,zh);
-        Vector3d SWU = v(xh,yh,zl);
-        Vector3d SEU = v(xh,yh,zh);
-        Vector3d SWD = v(xh,yl,zl);
-        Vector3d SED = v(xh,yl,zh); //South-East-Down
-        if(xl < 0) {
+        Vector3d NWU = v(xl, yh, zl); //North-West-Up
+        Vector3d NEU = v(xl, yh, zh); //...
+        Vector3d NWD = v(xl, yl, zl);
+        Vector3d NED = v(xl, yl, zh);
+        Vector3d SWU = v(xh, yh, zl);
+        Vector3d SEU = v(xh, yh, zh);
+        Vector3d SWD = v(xh, yl, zl);
+        Vector3d SED = v(xh, yl, zh); //South-East-Down
+        if (xl < 0) {
             xl++;
+            xh++;
         }
-        if(xh > 1) {
+        if (xh > 1) {
             xh--;
+            xl--;
         }
-        if(yl < 0) {
+        if (yl < 0) {
             yl++;
+            yh++;
         }
-        if(yh > 1) {
+        if (yh > 1) {
             yh--;
+            yl--;
         }
-        if(zl < 0) {
+        if (zl < 0) {
             zl++;
+            zh++;
         }
-        if(zh > 1) {
+        if (zh > 1) {
             zh--;
+            zl--;
         }
-        quads.add(createQuad(NWU, NEU, SEU, SWU, texture, xl*16, xh*16, zl*16, zh*16, tintIndex));
-        quads.add(createQuad(SWD, SED, NED, NWD, texture, xl*16, xh*16, zl*16, zh*16, tintIndex));
-        quads.add(createQuad(SWU, SWD, NWD, NWU, texture, xl*16, xh*16, 16-yh*16, 16-yl*16, tintIndex));
-        quads.add(createQuad(NEU, NED, SED, SEU, texture, xl*16, xh*16, 16-yh*16, 16-yl*16, tintIndex));
-        quads.add(createQuad(NWU, NWD, NED, NEU, texture, zl*16, zh*16, 16-yh*16, 16-yl*16, tintIndex));
-        quads.add(createQuad(SEU, SED, SWD, SWU, texture, zl*16, zh*16, 16-yh*16, 16-yl*16, tintIndex));
+        quads.add(createQuad(NWU, NEU, SEU, SWU, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+        quads.add(createQuad(SWD, SED, NED, NWD, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+        quads.add(createQuad(SWU, SWD, NWD, NWU, texture, xh * 16, xl * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
+        quads.add(createQuad(NEU, NED, SED, SEU, texture, xl * 16, xh * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
+        quads.add(createQuad(NWU, NWD, NED, NEU, texture, zl * 16, zh * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
+        quads.add(createQuad(SEU, SED, SWD, SWU, texture, zh * 16, zl * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
         return quads;
     }
 
     public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, IBakedModel model, IModelData extraData, Random rand, int tintIndex) {
         List<BakedQuad> quads = new ArrayList<>();
         //Eight corners of the block
-        Vector3d NWU = v(xl,yh,zl); //North-West-Up
-        Vector3d NEU = v(xl,yh,zh); //...
-        Vector3d NWD = v(xl,yl,zl);
-        Vector3d NED = v(xl,yl,zh);
-        Vector3d SWU = v(xh,yh,zl);
-        Vector3d SEU = v(xh,yh,zh);
-        Vector3d SWD = v(xh,yl,zl);
-        Vector3d SED = v(xh,yl,zh); //South-East-Down
-        if(xl < 0) {
+        Vector3d NWU = v(xl, yh, zl); //North-West-Up
+        Vector3d NEU = v(xl, yh, zh); //...
+        Vector3d NWD = v(xl, yl, zl);
+        Vector3d NED = v(xl, yl, zh);
+        Vector3d SWU = v(xh, yh, zl);
+        Vector3d SEU = v(xh, yh, zh);
+        Vector3d SWD = v(xh, yl, zl);
+        Vector3d SED = v(xh, yl, zh); //South-East-Down
+        if (xl < 0) {
             xl++;
         }
-        if(xh > 1) {
+        if (xh > 1) {
             xh--;
         }
-        if(yl < 0) {
+        if (yl < 0) {
             yl++;
         }
-        if(yh > 1) {
+        if (yh > 1) {
             yh--;
         }
-        if(zl < 0) {
+        if (zl < 0) {
             zl++;
         }
-        if(zh > 1) {
+        if (zh > 1) {
             zh--;
         }
         List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
@@ -205,36 +215,37 @@ public class ModelHelper {
         TextureAtlasSprite textureWest = textureList.get(0);
         TextureAtlasSprite textureUp = textureList.get(0);
         TextureAtlasSprite textureDown = textureList.get(0);
-        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.NORTH, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.NORTH, rand, extraData)) {
             textureNorth = quad.func_187508_a();
         }
-        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.EAST, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.EAST, rand, extraData)) {
             textureEast = quad.func_187508_a();
         }
-        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.SOUTH, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.SOUTH, rand, extraData)) {
             textureSouth = quad.func_187508_a();
         }
-        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.WEST, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.WEST, rand, extraData)) {
             textureWest = quad.func_187508_a();
         }
-        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.UP, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.UP, rand, extraData)) {
             textureUp = quad.func_187508_a();
         }
-        for (BakedQuad quad: model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.DOWN, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.DOWN, rand, extraData)) {
             textureDown = quad.func_187508_a();
         }
-        quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl*16, xh*16, zl*16, zh*16, tintIndex));
-        quads.add(createQuad(SWD, SED, NED, NWD, textureDown, xl*16, xh*16, zl*16, zh*16, tintIndex));
-        quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, xl*16, xh*16, 16-yh*16, 16-yl*16, tintIndex));
-        quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xl*16, xh*16, 16-yh*16, 16-yl*16, tintIndex));
-        quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zl*16, zh*16, 16-yh*16, 16-yl*16, tintIndex));
-        quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, zl*16, zh*16, 16-yh*16, 16-yl*16, tintIndex));
+        quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+        quads.add(createQuad(SWD, SED, NED, NWD, textureDown, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+        quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, xl * 16, xh * 16, yh * 16, yl * 16, tintIndex));
+        quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xh * 16, xl * 16, yh * 16, yl * 16, tintIndex));
+        quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zh * 16, zl * 16, yh * 16, yl * 16, tintIndex));
+        quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, zl * 16, zh * 16, yh * 16, yl * 16, tintIndex));
         return quads;
     }
 
 
     /**
      * This just builds vectors and is useful for clean code
+     *
      * @param x x component
      * @param y y component
      * @param z z component
