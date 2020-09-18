@@ -8,8 +8,8 @@
   "block.blockcarpentry.frame_door": "Frame Door",
   "block.blockcarpentry.frame_trapdoor": "Frame Trapdoor",
   "block.blockcarpentry.frame_fence": "Frame Fence",
-  "block.blockcarpentry.frame_wall": "Frame Wall",
   "block.blockcarpentry.frame_bed": "Frame Bed",
+  "block.blockcarpentry.frame_wall": "Frame Wall",
   "block.blockcarpentry.frame_slope": "Frame Slope (WIP)",
   "block.blockcarpentry.frame_edged_slope": "Edged Frame Slope (WIP)",
 
@@ -21,6 +21,7 @@
   "block.blockcarpentry.illusion_door": "Illusion Door",
   "block.blockcarpentry.illusion_trapdoor": "Illusion Trapdoor",
   "block.blockcarpentry.illusion_fence": "Illusion Fence",
+  "block.blockcarpentry.illusion_bed": "Illusion Bed",
   "block.blockcarpentry.illusion_wall": "Illusion Wall",
 
   "item.blockcarpentry.hammer": "Hammer",

@@ -8,8 +8,8 @@
   "block.blockcarpentry.frame_door": "Rahmentür",
   "block.blockcarpentry.frame_trapdoor": "Rahmenfalltür",
   "block.blockcarpentry.frame_fence": "Rahmenzaum",
-  "block.blockcarpentry.frame_wall": "Rahmenmauer",
   "block.blockcarpentry.frame_bed": "Rahmenbett",
+  "block.blockcarpentry.frame_wall": "Rahmenmauer",
   "block.blockcarpentry.frame_slope": "Rahmenschräge (WIP)",
   "block.blockcarpentry.frame_edged_slope": "Eckige Rahmenschräge (WIP)",
 
@@ -21,6 +21,7 @@
   "block.blockcarpentry.illusion_door": "Illusionstür",
   "block.blockcarpentry.illusion_trapdoor": "Illusionsfalltür",
   "block.blockcarpentry.illusion_fence": "Illusionszaun",
+  "block.blockcarpentry.illusion_bed": "Illusionsbett",
   "block.blockcarpentry.illusion_wall": "Illusionsmauer",
 
   "item.blockcarpentry.hammer": "Hammer",
