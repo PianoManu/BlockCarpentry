@@ -2,12 +2,15 @@ package mod.pianomanu.blockcarpentry.setup;
 
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.*;
+import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,8 +25,9 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Just a normal registering class. See Forge-Documentation on how to register objects
+ *
  * @author PianoManu
- * @version 1.3 09/14/20
+ * @version 1.4 09/17/20
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("all") //only warning: datafixer for build()-method is null, but method is annotated as "NotNull"
@@ -31,7 +35,8 @@ public class Registration {
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, BlockCarpentryMain.MOD_ID);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BlockCarpentryMain.MOD_ID);
     private static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, BlockCarpentryMain.MOD_ID);
-    //private static final DeferredRegister<ContainerType<?>> CONTAINERS = new DeferredRegister<>(ForgeRegistries.CONTAINERS, BlockCarpentryMain.MOD_ID);
+    //WHAT THE FACK???
+    private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, BlockCarpentryMain.MOD_ID);
     //private static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, BlockCarpentryMain.MOD_ID);
     //private static final DeferredRegister<ModDimension> DIMENSIONS = new DeferredRegister<>(ForgeRegistries.MOD_DIMENSIONS, BlockCarpentryMain.MOD_ID);
     private static final Logger LOGGER = LogManager.getLogger();
@@ -49,7 +54,6 @@ public class Registration {
         //DIMENSIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-
     public static final RegistryObject<FrameBlock> FRAMEBLOCK = BLOCKS.register("frameblock", () -> new FrameBlock(Block.Properties.create(Material.WOOD)
             .sound(SoundType.WOOD)
             .hardnessAndResistance(0.4f)
@@ -59,11 +63,6 @@ public class Registration {
             .notSolid()));
     public static final RegistryObject<Item> FRAMEBLOCK_ITEM = ITEMS.register("frameblock", () -> new BlockItem(FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> FRAMEBLOCK_TILE = TILES.register("frameblock", () -> TileEntityType.Builder.create(FrameBlockTile::new, FRAMEBLOCK.get()).build(null));
-
-    //TODO think about translucent blocks and baked models
-    //public static final RegistryObject<SlabFrameBlock> TRANSPARENT_FRAMEBLOCK = BLOCKS.register("frame_slab", () -> new SlabFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
-    //public static final RegistryObject<Item> TRANSPARENT_FRAMEBLOCK_ITEM = ITEMS.register("frame_slab", () -> new BlockItem(TRANSPARENT_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    //public static final RegistryObject<TileEntityType<FrameBlockTile>> TRANSPARENT_FRAMEBLOCK_TILE = TILES.register("frame_slab", () -> TileEntityType.Builder.create(FrameBlockTile::new, TRANSPARENT_FRAMEBLOCK.get()).build(null));
 
     //fixme or deleteme
     //public static final RegistryObject<FallingFrameBlock> FALLING_FRAMEBLOCK = BLOCKS.register("falling_frameblock", () -> new FallingFrameBlock(Block.Properties.from(FRAMEBLOCK.get()).notSolid()));
@@ -102,9 +101,20 @@ public class Registration {
     public static final RegistryObject<Item> FENCE_FRAME_ITEM = ITEMS.register("frame_fence", () -> new BlockItem(FENCE_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> FENCE_FRAME_TILE = TILES.register("frame_fence", () -> TileEntityType.Builder.create(FrameBlockTile::new, FENCE_FRAMEBLOCK.get()).build(null));
 
+    //TODO bed, wall and chest
+    public static final RegistryObject<BedFrameBlock> BED_FRAMEBLOCK = BLOCKS.register("frame_bed", () -> new BedFrameBlock(DyeColor.BROWN, Block.Properties.from(FRAMEBLOCK.get()).notSolid()));
+    public static final RegistryObject<Item> BED_FRAME_ITEM = ITEMS.register("frame_bed", () -> new BlockItem(BED_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<TileEntityType<BedFrameTile>> BED_FRAME_TILE = TILES.register("frame_bed", () -> TileEntityType.Builder.create(BedFrameTile::new, BED_FRAMEBLOCK.get()).build(null));
+
     public static final RegistryObject<WallFrameBlock> WALL_FRAMEBLOCK = BLOCKS.register("frame_wall", () -> new WallFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> WALL_FRAME_ITEM = ITEMS.register("frame_wall", () -> new BlockItem(WALL_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> WALL_FRAME_TILE = TILES.register("frame_wall", () -> TileEntityType.Builder.create(FrameBlockTile::new, WALL_FRAMEBLOCK.get()).build(null));
+
+    //public static final RegistryObject<ChestFrameBlock> CHEST_FRAMEBLOCK = BLOCKS.register("frame_chest", () -> new ChestFrameBlock(Block.Properties.from(FRAMEBLOCK.get()), () -> {
+    //    return new TileEntityType.Builder.create(ChestFrameTileEntity::new,);
+    //}));
+    //public static final RegistryObject<Item> CHEST_FRAME_ITEM = ITEMS.register("frame_chest", () -> new BlockItem(CHEST_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    //public static final RegistryObject<TileEntityType<ChestFrameTileEntity>> CHEST_FRAME_TILE = TILES.register("frame_chest", () -> TileEntityType.Builder.create(ChestFrameTileEntity::new, CHEST_FRAMEBLOCK.get()).build(null));
 
     //TODO WIP - may be removed or rewritten in the future
     public static final RegistryObject<SlopeFrameBlock> SLOPE_FRAMEBLOCK = BLOCKS.register("frame_slope", () -> new SlopeFrameBlock(() -> FRAMEBLOCK.get().getDefaultState(), Block.Properties.from(FRAMEBLOCK.get())));
@@ -115,12 +125,6 @@ public class Registration {
     public static final RegistryObject<Item> EDGED_SLOPE_FRAME_ITEM = ITEMS.register("frame_edged_slope", () -> new BlockItem(EDGED_SLOPE_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> EDGED_SLOPE_FRAME_TILE = TILES.register("frame_edged_slope", () -> TileEntityType.Builder.create(FrameBlockTile::new, EDGED_SLOPE_FRAMEBLOCK.get()).build(null));
 
-    //TODO bed, wall and chest
-    //public static final RegistryObject<BedFrameBlock> BED_FRAMEBLOCK = BLOCKS.register("frame_bed", () -> new BedFrameBlock(DyeColor.BROWN, Block.Properties.from(FRAMEBLOCK.get()).notSolid().doesNotBlockMovement()));
-    //public static final RegistryObject<Item> BED_FRAME_ITEM = ITEMS.register("frame_bed", () -> new BlockItem(BED_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    //public static final RegistryObject<TileEntityType<BedFrameTile>> BED_FRAME_TILE = TILES.register("frame_bed", () -> TileEntityType.Builder.create(BedFrameTile::new, BED_FRAMEBLOCK.get()).build(null));
-
-    //public static final RegistryObject<Block> SLAB_FRAMEBLOCK = BLOCKS.register("frame_slab", () -> new SlabFrameBlock(Block.Properties.create(Material.WOOD)));
     public static final RegistryObject<SixWaySlabFrameBlock> SLAB_ILLUSIONBLOCK = BLOCKS.register("illusion_slab", () -> new SixWaySlabFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> SLAB_ILLUSION_ITEM = ITEMS.register("illusion_slab", () -> new BlockItem(SLAB_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> SLAB_ILLUSION_TILE = TILES.register("illusion_slab", () -> TileEntityType.Builder.create(FrameBlockTile::new, SLAB_FRAMEBLOCK.get()).build(null));
@@ -152,7 +156,6 @@ public class Registration {
     public static final RegistryObject<WallFrameBlock> WALL_ILLUSIONBLOCK = BLOCKS.register("illusion_wall", () -> new WallFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> WALL_ILLUSION_ITEM = ITEMS.register("illusion_wall", () -> new BlockItem(WALL_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> WALL_ILLUSION_TILE = TILES.register("illusion_wall", () -> TileEntityType.Builder.create(FrameBlockTile::new, WALL_FRAMEBLOCK.get()).build(null));
-
 
 
     public static final RegistryObject<Item> HAMMER = ITEMS.register("hammer", () -> new Item(new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).maxStackSize(1)));
