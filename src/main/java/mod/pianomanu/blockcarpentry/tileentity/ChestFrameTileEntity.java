@@ -293,7 +293,6 @@ public class ChestFrameTileEntity extends LockableLootTileEntity {
 
         this.chestContents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         if (!this.checkLootAndRead(tag)) {
-            System.out.println("laden");
             ItemStackHelper.loadAllItems(tag, this.chestContents);
         }
     }
@@ -316,9 +315,7 @@ public class ChestFrameTileEntity extends LockableLootTileEntity {
             tag.put("glass_color", writeInteger(glassColor));
         }
         super.write(tag);
-        System.out.println("ss1");
         if (!this.checkLootAndWrite(tag)) {
-            System.out.println("speichern");
             ItemStackHelper.saveAllItems(tag, this.chestContents);
         }
         return tag;

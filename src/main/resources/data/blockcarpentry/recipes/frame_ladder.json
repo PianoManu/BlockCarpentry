@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "# #",
+    "#i#",
+    "# #"
+  ],
+  "key": {
+    "#": {
+      "item": "blockcarpentry:frameblock"
+    },
+	"i": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "blockcarpentry:frame_ladder",
+    "count": 6
+  }
+}

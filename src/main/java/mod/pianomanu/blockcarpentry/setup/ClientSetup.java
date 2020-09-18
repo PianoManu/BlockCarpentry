@@ -33,6 +33,7 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_fence_loader"), new FenceFrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_bed_loader"), new BedFrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_wall_loader"), new WallFrameModelLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_ladder_loader"), new LadderFrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_slope_loader"), new SlopeFrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_edged_slope_loader"), new EdgedSlopeFrameModelLoader());
 
@@ -48,6 +49,7 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "illusion_fence_loader"), new IllusionFenceModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "illusion_bed_loader"), new IllusionBedModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "illusion_wall_loader"), new IllusionWallModelLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "illusion_ladder_loader"), new IllusionLadderModelLoader());
     }
 }
 //========SOLI DEO GLORIA========//

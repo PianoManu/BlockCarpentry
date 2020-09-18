@@ -20,7 +20,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.4 09/17/20
+ * @version 1.5 09/18/20
  */
 public class ModelHelper {
 
@@ -170,12 +170,13 @@ public class ModelHelper {
             zh--;
             zl--;
         }
+        //TODO fix uv - texture is being moved
         quads.add(createQuad(NWU, NEU, SEU, SWU, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
         quads.add(createQuad(SWD, SED, NED, NWD, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-        quads.add(createQuad(SWU, SWD, NWD, NWU, texture, xh * 16, xl * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
-        quads.add(createQuad(NEU, NED, SED, SEU, texture, xl * 16, xh * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
-        quads.add(createQuad(NWU, NWD, NED, NEU, texture, zl * 16, zh * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
-        quads.add(createQuad(SEU, SED, SWD, SWU, texture, zh * 16, zl * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
+        quads.add(createQuad(SWU, SWD, NWD, NWU, texture, xh * 16, xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        quads.add(createQuad(NEU, NED, SED, SEU, texture, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        quads.add(createQuad(NWU, NWD, NED, NEU, texture, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        quads.add(createQuad(SEU, SED, SWD, SWU, texture, zh * 16, zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         return quads;
     }
 
@@ -235,10 +236,10 @@ public class ModelHelper {
         }
         quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
         quads.add(createQuad(SWD, SED, NED, NWD, textureDown, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-        quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, xh * 16, xl * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
-        quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xl * 16, xh * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
-        quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zl * 16, zh * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
-        quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, zh * 16, zl * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
+        quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, xh * 16, xl * 16, yl * 16, yh * 16, tintIndex));
+        quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xl * 16, xh * 16, yl * 16, yh * 16, tintIndex));
+        quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zl * 16, zh * 16, yl * 16, yh * 16, tintIndex));
+        quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, zh * 16, zl * 16, yl * 16, yh * 16, tintIndex));
         return quads;
     }
 

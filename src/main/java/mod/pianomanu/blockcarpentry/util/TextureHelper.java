@@ -20,7 +20,7 @@ import java.util.Random;
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
  *
  * @author PianoManu
- * @version 1.3 09/17/20
+ * @version 1.4 09/18/20
  */
 public class TextureHelper {
 
@@ -70,6 +70,15 @@ public class TextureHelper {
         planksTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/crimson_planks")));
         planksTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/warped_planks")));
         return planksTextures;
+    }
+
+    public static List<TextureAtlasSprite> getMetalTextures() {
+        List<TextureAtlasSprite> metalTextures = new ArrayList<>();
+        metalTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft","block/iron_block")));
+        metalTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft","block/obsidian")));
+        metalTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft","block/stone")));
+        metalTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft","block/oak_log")));
+        return metalTextures;
     }
 
     public static List<TextureAtlasSprite> getTextureFromModel(IBakedModel model, IModelData extraData, Random rand) {

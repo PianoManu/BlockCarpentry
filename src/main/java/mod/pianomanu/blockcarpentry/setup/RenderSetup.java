@@ -21,6 +21,7 @@ public class RenderSetup {
         RenderTypeLookup.setRenderLayer(Registration.BUTTON_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.BED_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.WALL_FRAMEBLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.LADDER_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.EDGED_SLOPE_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.SLOPE_FRAMEBLOCK.get(), RenderType.getTranslucent());
 
@@ -34,6 +35,7 @@ public class RenderSetup {
         RenderTypeLookup.setRenderLayer(Registration.BUTTON_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.BED_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.WALL_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.LADDER_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
     }
 }
 //========SOLI DEO GLORIA========//

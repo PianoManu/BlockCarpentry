@@ -10,6 +10,7 @@
   "block.blockcarpentry.frame_fence": "Frame Fence",
   "block.blockcarpentry.frame_bed": "Frame Bed",
   "block.blockcarpentry.frame_wall": "Frame Wall",
+  "block.blockcarpentry.frame_ladder": "Frame Ladder",
   "block.blockcarpentry.frame_slope": "Frame Slope (WIP)",
   "block.blockcarpentry.frame_edged_slope": "Edged Frame Slope (WIP)",
 
@@ -23,6 +24,7 @@
   "block.blockcarpentry.illusion_fence": "Illusion Fence",
   "block.blockcarpentry.illusion_bed": "Illusion Bed",
   "block.blockcarpentry.illusion_wall": "Illusion Wall",
+  "block.blockcarpentry.illusion_ladder": "Illusion Ladder",
 
   "item.blockcarpentry.hammer": "Hammer",
   "item.blockcarpentry.texture_wrench": "Texture Wrench",
