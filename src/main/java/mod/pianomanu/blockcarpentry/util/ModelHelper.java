@@ -235,10 +235,10 @@ public class ModelHelper {
         }
         quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
         quads.add(createQuad(SWD, SED, NED, NWD, textureDown, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-        quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, xl * 16, xh * 16, yh * 16, yl * 16, tintIndex));
-        quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xh * 16, xl * 16, yh * 16, yl * 16, tintIndex));
-        quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zh * 16, zl * 16, yh * 16, yl * 16, tintIndex));
-        quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, zl * 16, zh * 16, yh * 16, yl * 16, tintIndex));
+        quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, xh * 16, xl * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
+        quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xl * 16, xh * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
+        quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zl * 16, zh * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
+        quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, zh * 16, zl * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
         return quads;
     }
 

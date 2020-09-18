@@ -1,26 +1,40 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
+import mod.pianomanu.blockcarpentry.block.ChestFrameBlock;
+import mod.pianomanu.blockcarpentry.setup.Registration;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.IChestLid;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableLootTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,31 +42,28 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class ChestFrameTileEntity extends LockableLootTileEntity implements IChestLid, ITickableTileEntity {
+/**
+ * TileEntity for frame chests, does not work currently
+ *
+ * @author PianoManu
+ * @version 1.0 09/18/20
+ */
+public class ChestFrameTileEntity extends LockableLootTileEntity {
 
     private NonNullList<ItemStack> chestContents = NonNullList.withSize(27, ItemStack.EMPTY);
-    /**
-     * The current angle of the lid (between 0 and 1)
-     */
-    protected float lidAngle;
-    /**
-     * The angle of the lid last tick
-     */
-    protected float prevLidAngle;
     /**
      * The number of players currently using this chest
      */
     protected int numPlayersUsing;
-    /**
-     * A counter that is incremented once each tick. Used to determine when to recompute ; this is done every 200 ticks
-     * (but staggered between different chests). However, the new value isn't actually sent to clients when it is
-     * changed.
-     */
-    private int ticksSinceSync;
-    private net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.IItemHandlerModifiable> chestHandler;
+    private IItemHandlerModifiable items = createHandler();
+    private LazyOptional<IItemHandlerModifiable> itemHandler = LazyOptional.of(() -> items);
 
     public ChestFrameTileEntity(TileEntityType<?> typeIn) {
         super(typeIn);
+    }
+
+    public ChestFrameTileEntity() {
+        this(Registration.CHEST_FRAME_TILE.get());
     }
 
     @Override
@@ -60,9 +71,15 @@ public class ChestFrameTileEntity extends LockableLootTileEntity implements IChe
         return new TranslationTextComponent("container.frame_chest");
     }
 
-    @Override
-    protected Container createMenu(int id, PlayerInventory player) {
-        return null;
+    public static int getPlayersUsing(IBlockReader reader, BlockPos pos) {
+        BlockState blockstate = reader.getBlockState(pos);
+        if (blockstate.hasTileEntity()) {
+            TileEntity tileentity = reader.getTileEntity(pos);
+            if (tileentity instanceof ChestFrameTileEntity) {
+                return ((ChestFrameTileEntity) tileentity).numPlayersUsing;
+            }
+        }
+        return 0;
     }
 
     //===========================================FRAME STUFF END
@@ -217,53 +234,15 @@ public class ChestFrameTileEntity extends LockableLootTileEntity implements IChe
                 .build();
     }
 
-    @Override
-    public void read(BlockState state, CompoundNBT tag) {
-        super.read(state, tag);
-        if (tag.contains("mimic")) {
-            mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
-        }
-        if (tag.contains("texture")) {
-            texture = readInteger(tag.getCompound("texture"));
-        }
-        if (tag.contains("design")) {
-            design = readInteger(tag.getCompound("design"));
-        }
-        if (tag.contains("design_texture")) {
-            designTexture = readInteger(tag.getCompound("design_texture"));
-        }
-        if (tag.contains("glass_color")) {
-            glassColor = readInteger(tag.getCompound("glass_color"));
-        }
-
-        this.chestContents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        if (!this.checkLootAndRead(tag)) {
-            ItemStackHelper.loadAllItems(tag, this.chestContents);
-        }
+    public static void swapContents(ChestFrameTileEntity te, ChestFrameTileEntity otherTe) {
+        NonNullList<ItemStack> list = te.getItems();
+        te.setItems(otherTe.getItems());
+        otherTe.setItems(list);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
-        if (mimic != null) {
-            tag.put("mimic", NBTUtil.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            tag.put("texture", writeInteger(texture));
-        }
-        if (design != null) {
-            tag.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            tag.put("design_texture", writeInteger(designTexture));
-        }
-        if (glassColor != null) {
-            tag.put("glass_color", writeInteger(glassColor));
-        }
-
-        if (!this.checkLootAndWrite(tag)) {
-            ItemStackHelper.saveAllItems(tag, this.chestContents);
-        }
-        return super.write(tag);
+    protected Container createMenu(int id, PlayerInventory player) {
+        return ChestContainer.createGeneric9X3(id, player);
     }
 
     public void clear() {
@@ -272,16 +251,6 @@ public class ChestFrameTileEntity extends LockableLootTileEntity implements IChe
         this.setDesign(0);
         this.setDesign(0);
         this.setGlassColor(0);
-    }
-
-    @Override
-    protected NonNullList<ItemStack> getItems() {
-        return null;
-    }
-
-    @Override
-    protected void setItems(NonNullList<ItemStack> itemsIn) {
-
     }
 
     private static CompoundNBT writeInteger(Integer tag) {
@@ -303,33 +272,147 @@ public class ChestFrameTileEntity extends LockableLootTileEntity implements IChe
         }
     }
 
+    @Override
+    public void read(BlockState state, CompoundNBT tag) {
+        super.read(state, tag);
+        if (tag.contains("mimic")) {
+            mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
+        }
+        if (tag.contains("texture")) {
+            texture = readInteger(tag.getCompound("texture"));
+        }
+        if (tag.contains("design")) {
+            design = readInteger(tag.getCompound("design"));
+        }
+        if (tag.contains("design_texture")) {
+            designTexture = readInteger(tag.getCompound("design_texture"));
+        }
+        if (tag.contains("glass_color")) {
+            glassColor = readInteger(tag.getCompound("glass_color"));
+        }
+
+        this.chestContents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        if (!this.checkLootAndRead(tag)) {
+            System.out.println("laden");
+            ItemStackHelper.loadAllItems(tag, this.chestContents);
+        }
+    }
+
+    @Override
+    public CompoundNBT write(CompoundNBT tag) {
+        if (mimic != null) {
+            tag.put("mimic", NBTUtil.writeBlockState(mimic));
+        }
+        if (texture != null) {
+            tag.put("texture", writeInteger(texture));
+        }
+        if (design != null) {
+            tag.put("design", writeInteger(design));
+        }
+        if (designTexture != null) {
+            tag.put("design_texture", writeInteger(designTexture));
+        }
+        if (glassColor != null) {
+            tag.put("glass_color", writeInteger(glassColor));
+        }
+        super.write(tag);
+        System.out.println("ss1");
+        if (!this.checkLootAndWrite(tag)) {
+            System.out.println("speichern");
+            ItemStackHelper.saveAllItems(tag, this.chestContents);
+        }
+        return tag;
+    }
+
     //===========================================FRAME STUFF END
     @Override
+    public NonNullList<ItemStack> getItems() {
+        return this.chestContents;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> itemsIn) {
+        this.chestContents = itemsIn;
+    }
+
+    @Override
     public int getSizeInventory() {
-        return 0;
+        return 27;
+    }
+
+    private IItemHandlerModifiable createHandler() {
+        return new InvWrapper(this);
+    }
+
+    private void playSound(SoundEvent sound) {
+        double dx = (double) this.pos.getX() + 0.5D;
+        double dy = (double) this.pos.getY() + 0.5D;
+        double dz = (double) this.pos.getZ() + 0.5D;
+        this.world.playSound((PlayerEntity) null, dx, dy, dz, sound, SoundCategory.BLOCKS, 0.5f,
+                this.world.rand.nextFloat() * 0.1f + 0.9f);
     }
 
     @Override
-    public float getLidAngle(float partialTicks) {
-        return 0;
+    public boolean receiveClientEvent(int id, int type) {
+        if (id == 1) {
+            this.numPlayersUsing = type;
+            return true;
+        } else {
+            return super.receiveClientEvent(id, type);
+        }
     }
 
     @Override
-    public void tick() {
+    public void openInventory(PlayerEntity player) {
+        if (!player.isSpectator()) {
+            if (this.numPlayersUsing < 0) {
+                this.numPlayersUsing = 0;
+            }
 
+            ++this.numPlayersUsing;
+            this.onOpenOrClose();
+        }
     }
 
-    /*public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
-
-
+    @Override
+    public void closeInventory(PlayerEntity player) {
+        if (!player.isSpectator()) {
+            --this.numPlayersUsing;
+            this.onOpenOrClose();
+        }
     }
 
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    protected void onOpenOrClose() {
+        Block block = this.getBlockState().getBlock();
+        if (block instanceof ChestFrameBlock) {
+            this.world.addBlockEvent(this.pos, block, 1, this.numPlayersUsing);
+            this.world.notifyNeighborsOfStateChange(this.pos, block);
+        }
+    }
 
+    @Override
+    public void updateContainingBlockInfo() {
+        super.updateContainingBlockInfo();
+        if (this.itemHandler != null) {
+            this.itemHandler.invalidate();
+            this.itemHandler = null;
+        }
+    }
 
-        return compound;
-    }*/
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nonnull Direction side) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return itemHandler.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        if(itemHandler != null) {
+            itemHandler.invalidate();
+        }
+    }
 }
 //========SOLI DEO GLORIA========//
