@@ -28,7 +28,7 @@ import java.util.Random;
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  * @author PianoManu
- * @version 1.1 09/09/20
+ * @version 1.2 09/21/20
  */
 @SuppressWarnings("deprecation")
 public class SlabFrameBakedModel implements IDynamicBakedModel {
@@ -68,9 +68,11 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
             TextureAtlasSprite texture;
             if (textureList.size() <= tex) {
-                //texture = textureList.get(0);
                 extraData.setData(FrameBlockTile.TEXTURE, 0);
                 tex = 0;
+            }
+            if (textureList.size() == 0) {
+                return Collections.emptyList();
             }
             texture = textureList.get(tex);
             int tintIndex = -1;

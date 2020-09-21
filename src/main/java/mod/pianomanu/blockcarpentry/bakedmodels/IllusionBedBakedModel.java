@@ -30,7 +30,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 09/18/20
+ * @version 1.1 09/21/20
  */
 @SuppressWarnings("deprecation")
 public class IllusionBedBakedModel implements IDynamicBakedModel {
@@ -62,7 +62,7 @@ public class IllusionBedBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
         BlockState mimic = extraData.getData(BedFrameTile.MIMIC);
-        if (mimic != null && state != null) {// && extraData.getData(BedFrameTile.PILLOW)!=null && extraData.getData(BedFrameTile.BLANKET)!=null) {
+        if (mimic != null && state != null) {
             int tintIndex = -1;
             if (mimic.getBlock() instanceof GrassBlock) {
                 tintIndex = 1;

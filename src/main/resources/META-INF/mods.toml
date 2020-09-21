@@ -35,10 +35,12 @@ description='''
 Fork Mod of Carpenter's Blocks Mod created by Mineshopper (owner of the idea) for older versions of Minecraft.
 I created this fork because friends of mine would like to play this mod on 1.15 (and me too).
 
-Right now there is no guide for this mod, so here is one in small form (ONLY WORKS WITH SOLID VANILLA BLOCKS BY NOW):
+Right now there is no guide for this mod, so here is one in small form:
 - Rightclick on a frame block to give it the texture of the block you clicked it with
-- Right-Click with the hammer to get the block back out of the frame (you can change this feature in the config file, so that you only need an empty hand and Sneak-Rightclick
+- Right-Click with the hammer to get the block back out of the frame (you can change this feature in the config file, so that you only need an empty hand and Sneak-Rightclick)
 - For blocks with different textures on each side, you can select the texture you want using the texture wrench
+- Let the blocks glow by right-clicking them with glowstone dust or coal/charcoal
+- You can also change the appearance of a block by right-clicking it with the chisel and the paintbrush
 
 Have fun!
 '''
@@ -58,6 +60,6 @@ Have fun!
 [[dependencies.blockcarpentry]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.2]"
+    versionRange="[1.16.2,1.16.3]"
     ordering="NONE"
     side="BOTH"

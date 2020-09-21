@@ -32,7 +32,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 09/14/20
+ * @version 1.1 09/21/20
  */
 public class WallBakedModel implements IDynamicBakedModel {
 
@@ -71,6 +71,9 @@ public class WallBakedModel implements IDynamicBakedModel {
             if (texture.size() <= index) {
                 extraData.setData(FrameBlockTile.TEXTURE, 0);
                 index = 0;
+            }
+            if (texture.size() == 0) {
+                return Collections.emptyList();
             }
             int tintIndex = -1;
             if (mimic.getBlock() instanceof GrassBlock) {

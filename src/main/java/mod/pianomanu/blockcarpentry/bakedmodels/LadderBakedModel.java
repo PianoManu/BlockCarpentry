@@ -29,7 +29,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 09/18/20
+ * @version 1.1 09/21/20
  */
 @SuppressWarnings("deprecation")
 public class LadderBakedModel implements IDynamicBakedModel {
@@ -72,6 +72,9 @@ public class LadderBakedModel implements IDynamicBakedModel {
             if (textureList.size() <= tex) {
                 extraData.setData(FrameBlockTile.TEXTURE, 0);
                 tex = 0;
+            }
+            if (textureList.size() == 0) {
+                return Collections.emptyList();
             }
             texture = textureList.get(tex);
             int tintIndex = -1;

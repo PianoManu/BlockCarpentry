@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Currently unused, may be used (or rewritten) for frame beds
  * @author PianoManu
- * @version 1.1 09/14/20
+ * @version 1.2 09/21/20
  */
 public class BlockSavingHelper {
     public static List<Block> validBlocks = new ArrayList<>();
@@ -28,6 +28,9 @@ public class BlockSavingHelper {
                 blockList.add(b);
             }
             if (b instanceof SlimeBlock) {
+                blockList.add(b);
+            }
+            if (b instanceof HoneyBlock) {
                 blockList.add(b);
             }
         }

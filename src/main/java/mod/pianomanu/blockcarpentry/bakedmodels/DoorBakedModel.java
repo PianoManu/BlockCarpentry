@@ -32,7 +32,7 @@ import java.util.Random;
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  * @author PianoManu
- * @version 1.2 09/09/20
+ * @version 1.3 09/21/20
  */
 public class DoorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -77,6 +77,9 @@ public class DoorBakedModel implements IDynamicBakedModel {
                 //texture = textureList.get(0);
                 extraData.setData(FrameBlockTile.TEXTURE, 0);
                 tex = 0;
+            }
+            if (textureList.size() == 0) {
+                return Collections.emptyList();
             }
             texture = textureList.get(tex);
             List<BakedQuad> quads = new ArrayList<>();

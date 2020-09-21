@@ -31,7 +31,7 @@ import java.util.Random;
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  * @author PianoManu
- * @version 1.2 09/14/20
+ * @version 1.3 09/21/20
  */
 public class FenceBakedModel implements IDynamicBakedModel {
 
@@ -70,6 +70,9 @@ public class FenceBakedModel implements IDynamicBakedModel {
             if (texture.size() <= index) {
                 extraData.setData(FrameBlockTile.TEXTURE, 0);
                 index = 0;
+            }
+            if (texture.size() == 0) {
+                return Collections.emptyList();
             }
             int tintIndex = -1;
             if (mimic.getBlock() instanceof GrassBlock) {
