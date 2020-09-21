@@ -20,7 +20,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.5 09/18/20
+ * @version 1.6 09/21/20
  */
 public class ModelHelper {
 
@@ -136,6 +136,10 @@ public class ModelHelper {
      * @return List of baked quads, i.e. List of six faces
      */
     public static List<BakedQuad> createCuboid(float xl, float xh, float yl, float yh, float zl, float zh, TextureAtlasSprite texture, int tintIndex) {
+        return createCuboid(xl, xh, yl, yh, zl, zh, texture, tintIndex, true, true, true, true, true, true);
+    }
+
+    public static List<BakedQuad> createCuboid(float xl, float xh, float yl, float yh, float zl, float zh, TextureAtlasSprite texture, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down) {
         List<BakedQuad> quads = new ArrayList<>();
         //Eight corners of the block
         Vector3d NWU = v(xl, yh, zl); //North-West-Up
@@ -148,39 +152,41 @@ public class ModelHelper {
         Vector3d SED = v(xh, yl, zh); //South-East-Down
         if (xl < 0) {
             xl++;
-            xh++;
         }
         if (xh > 1) {
             xh--;
-            xl--;
         }
         if (yl < 0) {
             yl++;
-            yh++;
         }
         if (yh > 1) {
             yh--;
-            yl--;
         }
         if (zl < 0) {
             zl++;
-            zh++;
         }
         if (zh > 1) {
             zh--;
-            zl--;
         }
-        //TODO fix uv - texture is being moved
-        quads.add(createQuad(NWU, NEU, SEU, SWU, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-        quads.add(createQuad(SWD, SED, NED, NWD, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-        quads.add(createQuad(SWU, SWD, NWD, NWU, texture, xh * 16, xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-        quads.add(createQuad(NEU, NED, SED, SEU, texture, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-        quads.add(createQuad(NWU, NWD, NED, NEU, texture, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-        quads.add(createQuad(SEU, SED, SWD, SWU, texture, zh * 16, zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (up) quads.add(createQuad(NWU, NEU, SEU, SWU, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+        if (down)
+            quads.add(createQuad(NED, NWD, SWD, SED, texture, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
+        if (west)
+            quads.add(createQuad(SWU, SWD, NWD, NWU, texture, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (east)
+            quads.add(createQuad(NEU, NED, SED, SEU, texture, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (north)
+            quads.add(createQuad(NWU, NWD, NED, NEU, texture, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (south)
+            quads.add(createQuad(SEU, SED, SWD, SWU, texture, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         return quads;
     }
 
     public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, IBakedModel model, IModelData extraData, Random rand, int tintIndex) {
+        return createSixFaceCuboid(xl, xh, yl, yh, zl, zh, mimic, model, extraData, rand, tintIndex, true, true, true, true, true, true);
+    }
+
+    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, IBakedModel model, IModelData extraData, Random rand, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down) {
         List<BakedQuad> quads = new ArrayList<>();
         //Eight corners of the block
         Vector3d NWU = v(xl, yh, zl); //North-West-Up
@@ -234,12 +240,17 @@ public class ModelHelper {
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.DOWN, rand, extraData)) {
             textureDown = quad.func_187508_a();
         }
-        quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-        quads.add(createQuad(SWD, SED, NED, NWD, textureDown, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-        quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, xh * 16, xl * 16, yl * 16, yh * 16, tintIndex));
-        quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xl * 16, xh * 16, yl * 16, yh * 16, tintIndex));
-        quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zl * 16, zh * 16, yl * 16, yh * 16, tintIndex));
-        quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, zh * 16, zl * 16, yl * 16, yh * 16, tintIndex));
+        if (up) quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+        if (down)
+            quads.add(createQuad(NED, NWD, SWD, SED, textureDown, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
+        if (west)
+            quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (east)
+            quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (north)
+            quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (south)
+            quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         return quads;
     }
 
