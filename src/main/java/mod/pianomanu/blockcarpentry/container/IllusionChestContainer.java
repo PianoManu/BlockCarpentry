@@ -14,18 +14,18 @@ import net.minecraft.util.IWorldPosCallable;
 import java.util.Objects;
 
 /**
- * Here you can find all information about the Chest Frame Container, like number of slots and stored itemStacks
+ * Here you can find all information about the Chest Illusion Container, like number of slots and stored itemStacks
  *
  * @author PianoManu
  * @version 1.0 09/22/20
  */
-public class ChestFrameContainer extends Container {
+public class IllusionChestContainer extends Container {
 
     public final ChestFrameTileEntity tileEntity;
     private final IWorldPosCallable canInteractWithCallable;
 
-    public ChestFrameContainer(final int windowId, final PlayerInventory playerInventory, final ChestFrameTileEntity tileEntity) {
-        super(Registration.CHEST_FRAME_CONTAINER.get(), windowId);
+    public IllusionChestContainer(final int windowId, final PlayerInventory playerInventory, final ChestFrameTileEntity tileEntity) {
+        super(Registration.CHEST_ILLUSION_CONTAINER.get(), windowId);
         this.tileEntity = tileEntity;
         this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
 
@@ -56,7 +56,7 @@ public class ChestFrameContainer extends Container {
         }
     }
 
-    public ChestFrameContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
+    public IllusionChestContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
         this(windowId,playerInventory,getTileEntity(playerInventory, data));
     }
 
@@ -72,7 +72,7 @@ public class ChestFrameContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(canInteractWithCallable, playerIn, Registration.CHEST_FRAMEBLOCK.get()) || isWithinUsableDistance(canInteractWithCallable, playerIn, Registration.CHEST_ILLUSIONBLOCK.get());
+        return isWithinUsableDistance(canInteractWithCallable, playerIn, Registration.CHEST_ILLUSIONBLOCK.get());
     }
 
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {

@@ -2,6 +2,8 @@ package mod.pianomanu.blockcarpentry.setup;
 
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.*;
+import mod.pianomanu.blockcarpentry.container.ChestFrameContainer;
+import mod.pianomanu.blockcarpentry.container.IllusionChestContainer;
 import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
 import mod.pianomanu.blockcarpentry.tileentity.ChestFrameTileEntity;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
@@ -16,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -28,7 +31,7 @@ import org.apache.logging.log4j.Logger;
  * Just a normal registering class. See Forge-Documentation on how to register objects
  *
  * @author PianoManu
- * @version 1.5 09/18/20
+ * @version 1.6 09/22/20
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("all") //only warning: datafixer for build()-method is null, but method is annotated as "NotNull"
@@ -42,18 +45,7 @@ public class Registration {
     //private static final DeferredRegister<ModDimension> DIMENSIONS = new DeferredRegister<>(ForgeRegistries.MOD_DIMENSIONS, BlockCarpentryMain.MOD_ID);
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static void init() {
-        LOGGER.info("Registering blocks from BlockCarpentry");
-        BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        LOGGER.info("Registering items from BlockCarpentry");
-        ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        LOGGER.info("Registering tiles from BlockCarpentry");
-        TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        LOGGER.info("Registering containers from BlockCarpentry");
-        //CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        //ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        //DIMENSIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
-    }
+    public static final RegistryObject<ContainerType<ChestFrameContainer>> CHEST_FRAME_CONTAINER = CONTAINERS.register("frame_chest", () -> IForgeContainerType.create(ChestFrameContainer::new));
 
     public static final RegistryObject<FrameBlock> FRAMEBLOCK = BLOCKS.register("frameblock", () -> new FrameBlock(Block.Properties.create(Material.WOOD)
             .sound(SoundType.WOOD)
@@ -118,7 +110,7 @@ public class Registration {
     public static final RegistryObject<ChestFrameBlock> CHEST_FRAMEBLOCK = BLOCKS.register("frame_chest", () -> new ChestFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> CHEST_FRAME_ITEM = ITEMS.register("frame_chest", () -> new BlockItem(CHEST_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<ChestFrameTileEntity>> CHEST_FRAME_TILE = TILES.register("frame_chest", () -> TileEntityType.Builder.create(ChestFrameTileEntity::new, CHEST_FRAMEBLOCK.get()).build(null));
-    //public static final RegistryObject<ContainerType<ChestFrameContainer>> CHEST_FRAME_CONTAINER = CONTAINERS.register("frame_chest", () -> Container);
+    public static final RegistryObject<ChestFrameBlock> CHEST_ILLUSIONBLOCK = BLOCKS.register("illusion_chest", () -> new ChestFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
 
     //TODO WIP - may be removed or rewritten in the future
     public static final RegistryObject<SlopeFrameBlock> SLOPE_FRAMEBLOCK = BLOCKS.register("frame_slope", () -> new SlopeFrameBlock(() -> FRAMEBLOCK.get().getDefaultState(), Block.Properties.from(FRAMEBLOCK.get())));
@@ -168,6 +160,22 @@ public class Registration {
     public static final RegistryObject<LadderFrameBlock> LADDER_ILLUSIONBLOCK = BLOCKS.register("illusion_ladder", () -> new LadderFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> LADDER_ILLUSION_ITEM = ITEMS.register("illusion_ladder", () -> new BlockItem(LADDER_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> LADDER_ILLUSION_TILE = TILES.register("illusion_ladder", () -> TileEntityType.Builder.create(FrameBlockTile::new, LADDER_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<Item> CHEST_ILLUSION_ITEM = ITEMS.register("illusion_chest", () -> new BlockItem(CHEST_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<TileEntityType<ChestFrameTileEntity>> CHEST_ILLUSION_TILE = TILES.register("illusion_chest", () -> TileEntityType.Builder.create(ChestFrameTileEntity::new, CHEST_ILLUSIONBLOCK.get()).build(null));
+    public static final RegistryObject<ContainerType<IllusionChestContainer>> CHEST_ILLUSION_CONTAINER = CONTAINERS.register("illusion_chest", () -> IForgeContainerType.create(IllusionChestContainer::new));
+
+    public static void init() {
+        LOGGER.info("Registering blocks from BlockCarpentry");
+        BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        LOGGER.info("Registering items from BlockCarpentry");
+        ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        LOGGER.info("Registering tiles from BlockCarpentry");
+        TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        LOGGER.info("Registering containers from BlockCarpentry");
+        CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        //ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        //DIMENSIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
 
 
     public static final RegistryObject<Item> HAMMER = ITEMS.register("hammer", () -> new Item(new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).maxStackSize(1)));

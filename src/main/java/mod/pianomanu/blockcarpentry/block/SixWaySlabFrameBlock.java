@@ -8,6 +8,7 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -36,10 +37,10 @@ import javax.annotation.Nullable;
  * Main class for frame "slabs", they can be placed in six different ways (that's the reason for this class name) - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  * @author PianoManu
- * @version 1.1 09/08/20
+ * @version 1.2 09/22/20
  */
 @SuppressWarnings("deprecation")
-public class SixWaySlabFrameBlock extends Block {
+public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;

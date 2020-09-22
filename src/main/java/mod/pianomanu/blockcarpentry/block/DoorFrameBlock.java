@@ -10,6 +10,7 @@ import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -36,9 +37,9 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Main class for frame doors - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  * @author PianoManu
- * @version 1.1 09/07/20
+ * @version 1.2 09/22/20
  */
-public class DoorFrameBlock extends DoorBlock {
+public class DoorFrameBlock extends DoorBlock implements IWaterLoggable {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
 
     public DoorFrameBlock(Properties builder) {

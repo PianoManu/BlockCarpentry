@@ -10,6 +10,8 @@
 	"block.blockcarpentry.frame_fence": "Châssis de barrière",
 	"block.blockcarpentry.frame_bed": "Frame Bed",
 	"block.blockcarpentry.frame_wall": "Frame Wall",
+	"block.blockcarpentry.frame_ladder": "Frame Ladder",
+	"block.blockcarpentry.frame_chest": "Frame Chest",
 	"block.blockcarpentry.frame_slope": "Châssis de rampe (WIP)",
 	"block.blockcarpentry.frame_edged_slope": "Châssis de rampe (WIP)",
 
@@ -23,6 +25,10 @@
 	"block.blockcarpentry.illusion_fence": "Barrière illusion",
 	"block.blockcarpentry.illusion_bed": "Illusion Bed",
 	"block.blockcarpentry.illusion_wall": "Illusion Wall",
+	"block.blockcarpentry.illusion_ladder": "Illusion Ladder",
+	"block.blockcarpentry.illusion_chest": "Illusion Chest",
+
+	"container.frame_chest": "Frame Chest",
 
 	"item.blockcarpentry.hammer": "Marteau",
 	"item.blockcarpentry.texture_wrench": "Clé à texture",

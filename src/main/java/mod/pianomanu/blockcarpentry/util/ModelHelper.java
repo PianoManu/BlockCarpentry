@@ -13,6 +13,7 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -254,6 +255,38 @@ public class ModelHelper {
         return quads;
     }
 
+    public static List<BakedQuad> createCuboid(float xl, float xh, float yl, float yh, float zl, float zh, TextureAtlasSprite texture, int tintIndex, int[] ulow, int[] uhigh, int[] vlow, int[] vhigh) {
+        return createCuboid(xl, xh, yl, yh, zl, zh, texture, tintIndex, true, true, true, true, true, true, ulow, uhigh, vlow, vhigh);
+    }
+
+    public static List<BakedQuad> createCuboid(float xl, float xh, float yl, float yh, float zl, float zh, TextureAtlasSprite texture, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, int[] ulow, int[] uhigh, int[] vlow, int[] vhigh) {
+        if (ulow.length != 6 || uhigh.length != 6 || vlow.length != 6 || vhigh.length != 6) {
+            return Collections.emptyList();
+        }
+        List<BakedQuad> quads = new ArrayList<>();
+        //Eight corners of the block
+        Vector3d NWU = v(xl, yh, zl); //North-West-Up
+        Vector3d NEU = v(xl, yh, zh); //...
+        Vector3d NWD = v(xl, yl, zl);
+        Vector3d NED = v(xl, yl, zh);
+        Vector3d SWU = v(xh, yh, zl);
+        Vector3d SEU = v(xh, yh, zh);
+        Vector3d SWD = v(xh, yl, zl);
+        Vector3d SED = v(xh, yl, zh); //South-East-Down
+        if (up)
+            quads.add(createQuad(NWU, NEU, SEU, SWU, texture, ulow[0], uhigh[0], vlow[0], vhigh[0], tintIndex));
+        if (down)
+            quads.add(createQuad(NED, NWD, SWD, SED, texture, ulow[1], uhigh[1], vlow[1], vhigh[1], tintIndex));
+        if (north)
+            quads.add(createQuad(NWU, NWD, NED, NEU, texture, ulow[2], uhigh[2], vlow[2], vhigh[2], tintIndex));
+        if (east)
+            quads.add(createQuad(NEU, NED, SED, SEU, texture, ulow[3], uhigh[3], vlow[3], vhigh[3], tintIndex));
+        if (south)
+            quads.add(createQuad(SEU, SED, SWD, SWU, texture, ulow[4], uhigh[4], vlow[4], vhigh[4], tintIndex));
+        if (west)
+            quads.add(createQuad(SWU, SWD, NWD, NWU, texture, ulow[5], uhigh[5], vlow[5], vhigh[5], tintIndex));
+        return quads;
+    }
 
     /**
      * This just builds vectors and is useful for clean code

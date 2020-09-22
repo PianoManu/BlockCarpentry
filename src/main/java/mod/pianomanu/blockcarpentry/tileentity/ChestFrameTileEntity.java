@@ -1,13 +1,13 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
 import mod.pianomanu.blockcarpentry.block.ChestFrameBlock;
+import mod.pianomanu.blockcarpentry.container.ChestFrameContainer;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -43,10 +43,10 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 
 /**
- * TileEntity for frame chests, does not work currently
- *
+ * TileEntity for {@link mod.pianomanu.blockcarpentry.block.ChestFrameBlock} and all sorts of frame/illusion chest blocks
+ * Contains all information about the block and the mimicked block, as well as the inventory size and stored items
  * @author PianoManu
- * @version 1.0 09/18/20
+ * @version 1.0 09/22/20
  */
 public class ChestFrameTileEntity extends LockableLootTileEntity {
 
@@ -66,9 +66,130 @@ public class ChestFrameTileEntity extends LockableLootTileEntity {
         this(Registration.CHEST_FRAME_TILE.get());
     }
 
+    public static void swapContents(ChestFrameTileEntity te, ChestFrameTileEntity otherTe) {
+        NonNullList<ItemStack> list = te.getItems();
+        te.setItems(otherTe.getItems());
+        otherTe.setItems(list);
+    }
+
+    private static Integer readInteger(CompoundNBT tag) {
+        if (!tag.contains("number", 8)) {
+            return 0;
+        } else {
+            try {
+                return Integer.parseInt(tag.getString("number"));
+            } catch (NumberFormatException e) {
+                LOGGER.error("Not a valid Number Format: "+tag.getString("number"));
+                return 0;
+            }
+        }
+    }
+
+    @Override
+    public int getSizeInventory() {
+        return 27;
+    }
+
     @Override
     protected ITextComponent getDefaultName() {
         return new TranslationTextComponent("container.frame_chest");
+    }
+
+    @Override
+    public NonNullList<ItemStack> getItems() {
+        return this.chestContents;
+    }
+
+    @Override
+    public void setItems(NonNullList<ItemStack> itemsIn) {
+        this.chestContents = itemsIn;
+    }
+
+    @Override
+    protected Container createMenu(int id, PlayerInventory player) {
+        return new ChestFrameContainer(id, player, this);
+    }
+
+    @Override
+    public CompoundNBT write(CompoundNBT compound) {
+        //FRAME BEGIN
+        if (mimic != null) {
+            compound.put("mimic", NBTUtil.writeBlockState(mimic));
+        }
+        if (texture != null) {
+            compound.put("texture", writeInteger(texture));
+        }
+        if (design != null) {
+            compound.put("design", writeInteger(design));
+        }
+        if (designTexture != null) {
+            compound.put("design_texture", writeInteger(designTexture));
+        }
+        if (glassColor != null) {
+            compound.put("glass_color", writeInteger(glassColor));
+        }
+        //FRAME END
+        super.write(compound);
+        if (!this.checkLootAndWrite(compound)) {
+            ItemStackHelper.saveAllItems(compound, this.chestContents);
+        }
+        return compound;
+    }
+
+    @Override
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
+        //FRAME BEGIN
+        if (compound.contains("mimic")) {
+            mimic = NBTUtil.readBlockState(compound.getCompound("mimic"));
+        }
+        if (compound.contains("texture")) {
+            texture = readInteger(compound.getCompound("texture"));
+        }
+        if (compound.contains("design")) {
+            design = readInteger(compound.getCompound("design"));
+        }
+        if (compound.contains("design_texture")) {
+            designTexture = readInteger(compound.getCompound("design_texture"));
+        }
+        if (compound.contains("glass_color")) {
+            glassColor = readInteger(compound.getCompound("glass_color"));
+        }
+        //FRAME END
+        this.chestContents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        if (!this.checkLootAndRead(compound)) {
+            ItemStackHelper.loadAllItems(compound, this.chestContents);
+        }
+    }
+
+    private void playSound(SoundEvent sound) {
+        double dx = (double) this.pos.getX() + 0.5D;
+        double dy = (double) this.pos.getY() + 0.5D;
+        double dz = (double) this.pos.getZ() + 0.5D;
+        this.world.playSound((PlayerEntity) null, dx, dy, dz, sound, SoundCategory.BLOCKS, 0.5f,
+                this.world.rand.nextFloat() * 0.1f + 0.9f);
+    }
+
+    @Override
+    public boolean receiveClientEvent(int id, int type) {
+        if (id == 1) {
+            this.numPlayersUsing = type;
+            return true;
+        } else {
+            return super.receiveClientEvent(id, type);
+        }
+    }
+
+    @Override
+    public void openInventory(PlayerEntity player) {
+        if (!player.isSpectator()) {
+            if (this.numPlayersUsing < 0) {
+                this.numPlayersUsing = 0;
+            }
+
+            ++this.numPlayersUsing;
+            this.onOpenOrClose();
+        }
     }
 
     public static int getPlayersUsing(IBlockReader reader, BlockPos pos) {
@@ -82,7 +203,49 @@ public class ChestFrameTileEntity extends LockableLootTileEntity {
         return 0;
     }
 
-    //===========================================FRAME STUFF END
+    @Override
+    public void closeInventory(PlayerEntity player) {
+        if (!player.isSpectator()) {
+            --this.numPlayersUsing;
+            this.onOpenOrClose();
+        }
+    }
+
+    protected void onOpenOrClose() {
+        Block block = this.getBlockState().getBlock();
+        if (block instanceof ChestFrameBlock) {
+            this.world.addBlockEvent(this.pos, block, 1, this.numPlayersUsing);
+            this.world.notifyNeighborsOfStateChange(this.pos, block);
+        }
+    }
+
+    @Override
+    public void updateContainingBlockInfo() {
+        super.updateContainingBlockInfo();
+        if (this.itemHandler != null) {
+            this.itemHandler.invalidate();
+            this.itemHandler = null;
+        }
+    }
+
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nonnull Direction side) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return itemHandler.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    private IItemHandlerModifiable createHandler() {
+        return new InvWrapper(this);
+    }
+
+
+
+    //=======================================FRAME STUFF=======================================//
+
+
+
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN = new ModelProperty<>();
@@ -234,17 +397,6 @@ public class ChestFrameTileEntity extends LockableLootTileEntity {
                 .build();
     }
 
-    public static void swapContents(ChestFrameTileEntity te, ChestFrameTileEntity otherTe) {
-        NonNullList<ItemStack> list = te.getItems();
-        te.setItems(otherTe.getItems());
-        otherTe.setItems(list);
-    }
-
-    @Override
-    protected Container createMenu(int id, PlayerInventory player) {
-        return ChestContainer.createGeneric9X3(id, player);
-    }
-
     public void clear() {
         this.setMimic(null);
         this.setDesign(0);
@@ -257,151 +409,6 @@ public class ChestFrameTileEntity extends LockableLootTileEntity {
         CompoundNBT compoundnbt = new CompoundNBT();
         compoundnbt.putString("number", tag.toString());
         return compoundnbt;
-    }
-
-    private static Integer readInteger(CompoundNBT tag) {
-        if (!tag.contains("number", 8)) {
-            return 0;
-        } else {
-            try {
-                return Integer.parseInt(tag.getString("number"));
-            } catch (NumberFormatException e) {
-                LOGGER.error("Not a valid Number Format: " + tag.getString("number"));
-                return 0;
-            }
-        }
-    }
-
-    @Override
-    public void read(BlockState state, CompoundNBT tag) {
-        super.read(state, tag);
-        if (tag.contains("mimic")) {
-            mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
-        }
-        if (tag.contains("texture")) {
-            texture = readInteger(tag.getCompound("texture"));
-        }
-        if (tag.contains("design")) {
-            design = readInteger(tag.getCompound("design"));
-        }
-        if (tag.contains("design_texture")) {
-            designTexture = readInteger(tag.getCompound("design_texture"));
-        }
-        if (tag.contains("glass_color")) {
-            glassColor = readInteger(tag.getCompound("glass_color"));
-        }
-
-        this.chestContents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        if (!this.checkLootAndRead(tag)) {
-            ItemStackHelper.loadAllItems(tag, this.chestContents);
-        }
-    }
-
-    @Override
-    public CompoundNBT write(CompoundNBT tag) {
-        if (mimic != null) {
-            tag.put("mimic", NBTUtil.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            tag.put("texture", writeInteger(texture));
-        }
-        if (design != null) {
-            tag.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            tag.put("design_texture", writeInteger(designTexture));
-        }
-        if (glassColor != null) {
-            tag.put("glass_color", writeInteger(glassColor));
-        }
-        super.write(tag);
-        if (!this.checkLootAndWrite(tag)) {
-            ItemStackHelper.saveAllItems(tag, this.chestContents);
-        }
-        return tag;
-    }
-
-    //===========================================FRAME STUFF END
-    @Override
-    public NonNullList<ItemStack> getItems() {
-        return this.chestContents;
-    }
-
-    @Override
-    protected void setItems(NonNullList<ItemStack> itemsIn) {
-        this.chestContents = itemsIn;
-    }
-
-    @Override
-    public int getSizeInventory() {
-        return 27;
-    }
-
-    private IItemHandlerModifiable createHandler() {
-        return new InvWrapper(this);
-    }
-
-    private void playSound(SoundEvent sound) {
-        double dx = (double) this.pos.getX() + 0.5D;
-        double dy = (double) this.pos.getY() + 0.5D;
-        double dz = (double) this.pos.getZ() + 0.5D;
-        this.world.playSound((PlayerEntity) null, dx, dy, dz, sound, SoundCategory.BLOCKS, 0.5f,
-                this.world.rand.nextFloat() * 0.1f + 0.9f);
-    }
-
-    @Override
-    public boolean receiveClientEvent(int id, int type) {
-        if (id == 1) {
-            this.numPlayersUsing = type;
-            return true;
-        } else {
-            return super.receiveClientEvent(id, type);
-        }
-    }
-
-    @Override
-    public void openInventory(PlayerEntity player) {
-        if (!player.isSpectator()) {
-            if (this.numPlayersUsing < 0) {
-                this.numPlayersUsing = 0;
-            }
-
-            ++this.numPlayersUsing;
-            this.onOpenOrClose();
-        }
-    }
-
-    @Override
-    public void closeInventory(PlayerEntity player) {
-        if (!player.isSpectator()) {
-            --this.numPlayersUsing;
-            this.onOpenOrClose();
-        }
-    }
-
-    protected void onOpenOrClose() {
-        Block block = this.getBlockState().getBlock();
-        if (block instanceof ChestFrameBlock) {
-            this.world.addBlockEvent(this.pos, block, 1, this.numPlayersUsing);
-            this.world.notifyNeighborsOfStateChange(this.pos, block);
-        }
-    }
-
-    @Override
-    public void updateContainingBlockInfo() {
-        super.updateContainingBlockInfo();
-        if (this.itemHandler != null) {
-            this.itemHandler.invalidate();
-            this.itemHandler = null;
-        }
-    }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nonnull Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return itemHandler.cast();
-        }
-        return super.getCapability(cap, side);
     }
 
     @Override

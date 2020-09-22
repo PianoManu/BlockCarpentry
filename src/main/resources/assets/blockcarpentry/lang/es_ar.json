@@ -10,6 +10,8 @@
 	"block.blockcarpentry.frame_fence": "Marco de valla",
 	"block.blockcarpentry.frame_bed": "Frame Bed",
 	"block.blockcarpentry.frame_wall": "Frame Wall",
+	"block.blockcarpentry.frame_ladder": "Frame Ladder",
+	"block.blockcarpentry.frame_chest": "Frame Chest",
 	"block.blockcarpentry.frame_slope": "Marco de pendiente (WIP)",
 	"block.blockcarpentry.frame_edged_slope": "Marco de pendiente escalonada (WIP)",
 
@@ -23,6 +25,10 @@
 	"block.blockcarpentry.illusion_fence": "Valla de ilusión",
 	"block.blockcarpentry.illusion_bed": "Illusion Bed",
 	"block.blockcarpentry.illusion_wall": "Illusion Wall",
+	"block.blockcarpentry.illusion_ladder": "Illusion Ladder",
+	"block.blockcarpentry.illusion_chest": "Illusion Chest",
+
+	"container.frame_chest": "Frame Chest",
 
 	"item.blockcarpentry.hammer": "Martillo",
 	"item.blockcarpentry.texture_wrench": "Llave de textura",

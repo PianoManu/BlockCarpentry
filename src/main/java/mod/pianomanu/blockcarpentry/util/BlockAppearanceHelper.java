@@ -3,6 +3,7 @@ package mod.pianomanu.blockcarpentry.util;
 import mod.pianomanu.blockcarpentry.block.BedFrameBlock;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
+import mod.pianomanu.blockcarpentry.tileentity.ChestFrameTileEntity;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -73,6 +74,15 @@ public class BlockAppearanceHelper {
                 }
                 player.sendStatusMessage(new TranslationTextComponent("Texture: " + fte.getTexture()), true);
             }
+            if (tileEntity instanceof ChestFrameTileEntity) {
+                ChestFrameTileEntity fte = (ChestFrameTileEntity) tileEntity;
+                if (fte.getTexture() < 5) { //six sides possible
+                    fte.setTexture(fte.getTexture() + 1);
+                } else {
+                    fte.setTexture(0);
+                }
+                player.sendStatusMessage(new TranslationTextComponent("Texture: " + fte.getTexture()), true);
+            }
         }
     }
 
@@ -90,6 +100,15 @@ public class BlockAppearanceHelper {
             }
             if (tileEntity instanceof BedFrameTile) {
                 BedFrameTile fte = (BedFrameTile) tileEntity;
+                if (fte.getDesign() < fte.maxDesigns) {
+                    fte.setDesign(fte.getDesign() + 1);
+                } else {
+                    fte.setDesign(0);
+                }
+                player.sendStatusMessage(new TranslationTextComponent("Design: " + fte.getDesign()), true);
+            }
+            if (tileEntity instanceof ChestFrameTileEntity) {
+                ChestFrameTileEntity fte = (ChestFrameTileEntity) tileEntity;
                 if (fte.getDesign() < fte.maxDesigns) {
                     fte.setDesign(fte.getDesign() + 1);
                 } else {
@@ -116,6 +135,16 @@ public class BlockAppearanceHelper {
             if (tileEntity instanceof BedFrameTile) {
                 BedFrameTile fte = (BedFrameTile) tileEntity;
                 if (fte.getDesignTexture() < 7) {
+                    fte.setDesignTexture(fte.getDesignTexture() + 1);
+                } else {
+                    fte.setDesignTexture(0);
+                }
+                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
+                player.sendStatusMessage(new TranslationTextComponent("Design Texture: " + fte.getDesignTexture()), true);
+            }
+            if (tileEntity instanceof ChestFrameTileEntity) {
+                ChestFrameTileEntity fte = (ChestFrameTileEntity) tileEntity;
+                if (fte.getDesignTexture() < fte.maxDesignTextures) {
                     fte.setDesignTexture(fte.getDesignTexture() + 1);
                 } else {
                     fte.setDesignTexture(0);
