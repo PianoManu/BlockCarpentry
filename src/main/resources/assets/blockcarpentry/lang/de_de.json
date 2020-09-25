@@ -12,6 +12,7 @@
   "block.blockcarpentry.frame_wall": "Mauerrahmen",
   "block.blockcarpentry.frame_ladder": "Leiterrahmen",
   "block.blockcarpentry.frame_chest": "Truhenrahmen",
+  "block.blockcarpentry.frame_fence_gate": "Zauntorrahmen",
   "block.blockcarpentry.frame_slope": "Rahmenschräge (WIP)",
   "block.blockcarpentry.frame_edged_slope": "Eckige Rahmenschräge (WIP)",
 
@@ -27,6 +28,7 @@
   "block.blockcarpentry.illusion_wall": "Illusionsmauer",
   "block.blockcarpentry.illusion_ladder": "Illusionsleiter",
   "block.blockcarpentry.illusion_chest": "Illusionstruhe",
+  "block.blockcarpentry.illusion_fence_gate": "Illusionszauntor",
 
   "container.frame_chest": "Truhe",
 

@@ -1,25 +1,22 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.FenceBlock;
+import net.minecraft.block.FenceGateBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.LeadItem;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -28,24 +25,26 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
+
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.CONTAINS_BLOCK;
+import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
 /**
- * Main class for frame fences - all important block info can be found here
+ * Main class for frame fence gates - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  * @author PianoManu
- * @version 1.2 09/24/20
+ * @version 1.0 09/24/20
  */
-public class FenceFrameBlock extends FenceBlock {
-    public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
-    public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
-
-    public FenceFrameBlock(Properties properties) {
+public class FenceGateFrameBlock extends FenceGateBlock {
+    public FenceGateFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(NORTH, Boolean.valueOf(false)).with(EAST, Boolean.valueOf(false)).with(SOUTH, Boolean.valueOf(false)).with(WEST, Boolean.valueOf(false)).with(WATERLOGGED, Boolean.valueOf(false)).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(OPEN, Boolean.FALSE).with(POWERED, Boolean.FALSE).with(IN_WALL, Boolean.FALSE).with(CONTAINS_BLOCK, false).with(LIGHT_LEVEL,0));
     }
 
+    @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
+        builder.add(HORIZONTAL_FACING, OPEN, POWERED, IN_WALL, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
     @Override
@@ -63,9 +62,22 @@ public class FenceFrameBlock extends FenceBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            if(item.getItem()==Items.LEAD) {
-                return LeadItem.bindPlayerMobs(player, world, pos);
-            } else {
+            if((state.get(CONTAINS_BLOCK) || !(item.getItem() instanceof BlockItem)) && !(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
+                if (state.get(OPEN)) {
+                    state = state.with(OPEN, Boolean.FALSE);
+                } else {
+                    Direction direction = player.getHorizontalFacing();
+                    if (state.get(HORIZONTAL_FACING) == direction.getOpposite()) {
+                        state = state.with(HORIZONTAL_FACING, direction);
+                    }
+                    state = state.with(OPEN, Boolean.TRUE);
+                }
+                world.setBlockState(pos, state, 10);
+                world.playEvent(player, state.get(OPEN) ? 1008 : 1014, pos, 0);
+                //return ActionResultType.SUCCESS;
+            }
+
+            else {
                 if(item.getItem() instanceof BlockItem) {
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.RenderTypeLookup;
  * Registering standard rendering layers for all frame blocks - need to be translucent to work with glass and similar blocks
  *
  * @author PianoManu
- * @version 1.5 09/22/20
+ * @version 1.5 09/24/20
  */
 public class RenderSetup {
     public static void setup() {
@@ -26,6 +26,7 @@ public class RenderSetup {
         RenderTypeLookup.setRenderLayer(Registration.WALL_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.LADDER_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.CHEST_FRAMEBLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.FENCE_GATE_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.EDGED_SLOPE_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.SLOPE_FRAMEBLOCK.get(), RenderType.getTranslucent());
 
@@ -41,10 +42,12 @@ public class RenderSetup {
         RenderTypeLookup.setRenderLayer(Registration.WALL_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.LADDER_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.CHEST_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.FENCE_GATE_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
 
 
         ScreenManager.registerFactory(Registration.CHEST_FRAME_CONTAINER.get(), ChestFrameScreen::new);
         ScreenManager.registerFactory(Registration.CHEST_ILLUSION_CONTAINER.get(), IllusionChestScreen::new);
+        //ScreenManager.registerFactory(Registration.STANDING_SIGN_FRAME_CONTAINER.get(), EditSignScreen::new);
     }
 }
 //========SOLI DEO GLORIA========//

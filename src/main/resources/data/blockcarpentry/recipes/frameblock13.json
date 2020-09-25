@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "blockcarpentry:frame_fence_gate",
+	  "count": 1
+    }
+  ],
+  "result": {
+    "item": "blockcarpentry:frameblock",
+    "count": 2
+  }
+}
