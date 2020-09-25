@@ -21,7 +21,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.6 09/21/20
+ * @version 1.7 09/25/20
  */
 public class ModelHelper {
 
@@ -79,7 +79,6 @@ public class ModelHelper {
                     break;
             }
         }
-        builder.setQuadTint(1);
     }
 
     /**
@@ -106,9 +105,7 @@ public class ModelHelper {
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
         builder.setApplyDiffuseLighting(true);
-        if (tintIndex > -1) {
-            builder.setQuadTint(tintIndex);
-        }
+        builder.setQuadTint(tintIndex);
         putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f);
         putVertex(builder, normal, v2.x, v2.y, v2.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f);
         putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f);
