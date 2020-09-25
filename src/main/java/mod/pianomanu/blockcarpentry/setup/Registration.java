@@ -4,13 +4,9 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.*;
 import mod.pianomanu.blockcarpentry.container.ChestFrameContainer;
 import mod.pianomanu.blockcarpentry.container.IllusionChestContainer;
-import mod.pianomanu.blockcarpentry.container.StandingSignFrameContainer;
-import mod.pianomanu.blockcarpentry.container.WallSignFrameContainer;
-import mod.pianomanu.blockcarpentry.item.FrameSignItem;
 import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
 import mod.pianomanu.blockcarpentry.tileentity.ChestFrameTileEntity;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.tileentity.SignFrameTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.SoundType;
@@ -35,7 +31,7 @@ import org.apache.logging.log4j.Logger;
  * Just a normal registering class. See Forge-Documentation on how to register objects
  *
  * @author PianoManu
- * @version 1.7 09/24/20
+ * @version 1.8 09/25/20
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("all") //only warning: datafixer for build()-method is null, but method is annotated as "NotNull"
@@ -117,12 +113,11 @@ public class Registration {
     public static final RegistryObject<Item> FENCE_GATE_FRAME_ITEM = ITEMS.register("frame_fence_gate", () -> new BlockItem(FENCE_GATE_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> FENCE_GATE_FRAME_TILE = TILES.register("frame_fence_gate", () -> TileEntityType.Builder.create(FrameBlockTile::new, FENCE_GATE_FRAMEBLOCK.get()).build(null));
 
-    public static final RegistryObject<StandingSignFrameBlock> STANDING_SIGN_FRAMEBLOCK = BLOCKS.register("standing_frame_sign", () -> new StandingSignFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
-    public static final RegistryObject<WallSignFrameBlock> WALL_SIGN_FRAMEBLOCK = BLOCKS.register("wall_frame_sign", () -> new WallSignFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
-    public static final RegistryObject<Item> SIGN_FRAME_ITEM = ITEMS.register("frame_sign", () -> new FrameSignItem((new Item.Properties()).maxStackSize(16).group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY), Registration.STANDING_SIGN_FRAMEBLOCK.get(), Registration.WALL_SIGN_FRAMEBLOCK.get()));
-    public static final RegistryObject<TileEntityType<SignFrameTile>> SIGN_FRAME_TILE = TILES.register("frame_sign", () -> TileEntityType.Builder.create(SignFrameTile::new, STANDING_SIGN_FRAMEBLOCK.get(), WALL_SIGN_FRAMEBLOCK.get()).build(null));
-    public static final RegistryObject<ContainerType<StandingSignFrameContainer>> STANDING_SIGN_FRAME_CONTAINER = CONTAINERS.register("standing_frame_sign", () -> IForgeContainerType.create(StandingSignFrameContainer::new));
-    public static final RegistryObject<ContainerType<WallSignFrameContainer>> WALL_SIGN_FRAME_CONTAINER = CONTAINERS.register("wall_frame_sign", () -> IForgeContainerType.create(WallSignFrameContainer::new));
+    //disabled signs - TODO fix signs
+    //public static final RegistryObject<StandingSignFrameBlock> STANDING_SIGN_FRAMEBLOCK = BLOCKS.register("standing_frame_sign", () -> new StandingSignFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
+    //public static final RegistryObject<WallSignFrameBlock> WALL_SIGN_FRAMEBLOCK = BLOCKS.register("wall_frame_sign", () -> new WallSignFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
+    //public static final RegistryObject<Item> SIGN_FRAME_ITEM = ITEMS.register("frame_sign", () -> new FrameSignItem((new Item.Properties()).maxStackSize(16).group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY), Registration.STANDING_SIGN_FRAMEBLOCK.get(), Registration.WALL_SIGN_FRAMEBLOCK.get()));
+    //public static final RegistryObject<TileEntityType<SignFrameTile>> SIGN_FRAME_TILE = TILES.register("frame_sign", () -> TileEntityType.Builder.create(SignFrameTile::new, STANDING_SIGN_FRAMEBLOCK.get(), WALL_SIGN_FRAMEBLOCK.get()).build(null));
 
     //TODO WIP - may be removed or rewritten in the future
     public static final RegistryObject<SlopeFrameBlock> SLOPE_FRAMEBLOCK = BLOCKS.register("frame_slope", () -> new SlopeFrameBlock(() -> FRAMEBLOCK.get().getDefaultState(), Block.Properties.from(FRAMEBLOCK.get())));

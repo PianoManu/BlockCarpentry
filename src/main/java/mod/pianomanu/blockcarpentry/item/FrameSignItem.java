@@ -1,11 +1,11 @@
 package mod.pianomanu.blockcarpentry.item;
 
+import mod.pianomanu.blockcarpentry.tileentity.SignFrameTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SignItem;
-import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -20,7 +20,7 @@ public class FrameSignItem extends SignItem {
         boolean flag = super.onBlockPlaced(pos, worldIn, player, stack, state);
         if (!worldIn.isRemote && !flag && player != null) {
             System.out.println("platziert");
-            player.openSignEditor((SignTileEntity) worldIn.getTileEntity(pos));
+            player.openSignEditor((SignFrameTile) worldIn.getTileEntity(pos));
         }
 
         return flag;
