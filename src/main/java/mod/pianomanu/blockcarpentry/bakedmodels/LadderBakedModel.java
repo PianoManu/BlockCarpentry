@@ -67,18 +67,18 @@ public class LadderBakedModel implements IDynamicBakedModel {
         if (mimic != null && state != null) {
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
             List<TextureAtlasSprite> designTextureList = new ArrayList<>();
+            if (textureList.size() == 0) {
+                if (Minecraft.getInstance().player != null) {
+                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
+                }
+                return Collections.emptyList();
+            }
             designTextureList.add(textureList.get(0));
             designTextureList.addAll(TextureHelper.getMetalTextures());
             TextureAtlasSprite texture;
             if (textureList.size() <= tex) {
                 extraData.setData(FrameBlockTile.TEXTURE, 0);
                 tex = 0;
-            }
-            if (textureList.size() == 0) {
-                if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
-                }
-                return Collections.emptyList();
             }
             texture = textureList.get(tex);
             int tintIndex = -1;
