@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "contains_block=true": { "model": "blockcarpentry:block/frame_chest" },
+    "contains_block=false": { "model": "blockcarpentry:block/frame_chest_empty" }
+  }
+}

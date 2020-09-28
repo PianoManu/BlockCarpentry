@@ -1,19 +1,39 @@
 {
-	"block.blockcarpentry.frameblock":"Armação",
-	"block.blockcarpentry.frame_slab":"Armação de Laje",
-	"block.blockcarpentry.falling_frameblock":"Armação (afetado pela gravidade)",
-	"block.blockcarpentry.frame_button":"Armação de Botão de Madeira",
-	"block.blockcarpentry.frame_stairs":"Armação de Escada",
-	"block.blockcarpentry.frame_pressure_plate":"Armação de Placa de Pressão de Madeira",
-	"block.blockcarpentry.frame_door":"Armação de Porta",
-	"block.blockcarpentry.frame_trapdoor":"Armação de Alçapão",
-	"block.blockcarpentry.frame_fence":"Armação de Cerca",
-	"block.blockcarpentry.illusion_block":"Bloco de Ilusão",
-	
-	"item.blockcarpentry.hammer":"Martelo",
-	"item.blockcarpentry.texture_wrench":"Chave de Textura",
-	"item.blockcarpentry.chisel":"Formão",
-	"item.blockcarpentry.paintbrush":"Pincel",
-	
-	"itemGroup.blockcarpentry":"BlockCarpentry"
+	"block.blockcarpentry.frameblock": "Armação",
+	"block.blockcarpentry.frame_slab": "Armação de Laje",
+	"block.blockcarpentry.falling_frameblock": "Armação (afetado pela gravidade)",
+	"block.blockcarpentry.frame_button": "Armação de Botão de Madeira",
+	"block.blockcarpentry.frame_stairs": "Armação de Escada",
+	"block.blockcarpentry.frame_pressure_plate": "Armação de Placa de Pressão de Madeira",
+	"block.blockcarpentry.frame_door": "Armação de Porta",
+	"block.blockcarpentry.frame_trapdoor": "Armação de Alçapão",
+	"block.blockcarpentry.frame_fence": "Armação de Cerca",
+	"block.blockcarpentry.frame_bed": "Frame Bed",
+	"block.blockcarpentry.frame_wall": "Frame Wall",
+	"block.blockcarpentry.frame_ladder": "Frame Ladder",
+	"block.blockcarpentry.frame_chest": "Frame Chest",
+	"block.blockcarpentry.frame_slope": "Frame Slope (WIP)",
+	"block.blockcarpentry.frame_edged_slope": "Edged Frame Slope (WIP)",
+
+	"block.blockcarpentry.illusion_block": "Bloco de Ilusão",
+	"block.blockcarpentry.illusion_slab": "Illusion Slab",
+	"block.blockcarpentry.illusion_button": "Illusion Button",
+	"block.blockcarpentry.illusion_stairs": "Illusion Stairs",
+	"block.blockcarpentry.illusion_pressure_plate": "Illusion Pressure Plate",
+	"block.blockcarpentry.illusion_door": "Illusion Door",
+	"block.blockcarpentry.illusion_trapdoor": "Illusion Trapdoor",
+	"block.blockcarpentry.illusion_fence": "Illusion Fence",
+	"block.blockcarpentry.illusion_bed": "Illusion Bed",
+	"block.blockcarpentry.illusion_wall": "Illusion Wall",
+	"block.blockcarpentry.illusion_ladder": "Illusion Ladder",
+	"block.blockcarpentry.illusion_chest": "Illusion Chest",
+
+	"container.frame_chest": "Frame Chest",
+
+	"item.blockcarpentry.hammer": "Martelo",
+	"item.blockcarpentry.texture_wrench": "Chave de Textura",
+	"item.blockcarpentry.chisel": "Formão",
+	"item.blockcarpentry.paintbrush": "Pincel",
+
+	"itemGroup.blockcarpentry": "BlockCarpentry"
 }

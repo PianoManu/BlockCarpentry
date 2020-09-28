@@ -2,12 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "blockcarpentry:frame_edged_slope",
+      "item": "blockcarpentry:frame_wall",
 	  "count": 1
     }
   ],
   "result": {
-    "item": "blockcarpentry:frame_stairs",
-    "count": 2
+    "item": "blockcarpentry:frameblock",
+    "count": 1
   }
 }

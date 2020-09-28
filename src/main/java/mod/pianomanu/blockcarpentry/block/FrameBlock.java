@@ -8,6 +8,7 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -27,16 +28,18 @@ import net.minecraftforge.common.extensions.IForgeBlockState;
 import javax.annotation.Nullable;
 
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
+import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 
 
 /**
  * Main class for frameblocks - all important block info can be found here
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
+ *
  * @author PianoManu
- * @version 1.2 09/08/20
+ * @version 1.4 09/28/20
  */
 @SuppressWarnings("deprecation")
-public class FrameBlock extends Block implements IForgeBlockState {
+public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggable {
     /**
      * Block property (can be seed when pressing F3 in-game)
      * This is needed, because we need to detect whether the blockstate has changed
@@ -45,22 +48,24 @@ public class FrameBlock extends Block implements IForgeBlockState {
 
     /**
      * classic constructor, all default values are set
+     *
      * @param properties determined when registering the block (see {@link Registration}
      */
     public FrameBlock(Properties properties) {
         super(properties.variableOpacity());
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0));//.with(TEXTURE,0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(WATERLOGGED, false));//.with(TEXTURE,0));
     }
 
     /**
      * Assign needed blockstates to frame block - we need "contains_block" and "light_level", both because we have to check for blockstate changes
      */
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK).add(LIGHT_LEVEL);//.add(TEXTURE);
+        builder.add(WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
     /**
      * Yep, it's a complex block structure, so we need a tile entity
+     *
      * @param state regardless of its state, it always has a TileEntity
      * @return regardless of its state, it always has a TileEntity -> returns true every time
      */
@@ -72,6 +77,7 @@ public class FrameBlock extends Block implements IForgeBlockState {
     /**
      * When placed, this method is called and a new FrameBlockTile is created
      * This is needed to store a block inside the frame, change its light value etc.
+     *
      * @param state regardless of its state, we always create the TileEntity
      * @param world regardless of the world it's in, we always create the TileEntity
      * @return the new empty FrameBlock-TileEntity
@@ -92,8 +98,8 @@ public class FrameBlock extends Block implements IForgeBlockState {
      * @param world world the block is placed in
      * @param pos position (x,y,z) of block
      * @param player entity of the player that includes all important information (health, armor, inventory,
-     * @param hand which hand is used (e.g. you have a sword in your main hand and an axe in your off-hand and right click a log -> you use the off-hand, not the main hand)
-     * @param trace to determine which part of the block is clickedf (upper half, lower half, right side, left side, corners...)
+     * @param hand   which hand is used (e.g. you have a sword in your main hand and an axe in your off-hand and right click a log -> you use the off-hand, not the main hand)
+     * @param trace  to determine which part of the block is clickedf (upper half, lower half, right side, left side, corners...)
      * @return see {@link ActionResultType}
      */
     @Override
@@ -104,8 +110,6 @@ public class FrameBlock extends Block implements IForgeBlockState {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                //TODO fix for non-solid blocks
-                //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
                 if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     insertBlock(world, pos, state, handBlockState);
@@ -120,8 +124,9 @@ public class FrameBlock extends Block implements IForgeBlockState {
             }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world,pos,player,item);
-            BlockAppearanceHelper.setDesignTexture(world,pos,player,item);
+            BlockAppearanceHelper.setDesign(world, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setOverlay(world, pos, player, item);
         }
         return ActionResultType.SUCCESS;
     }
@@ -129,8 +134,9 @@ public class FrameBlock extends Block implements IForgeBlockState {
     /**
      * Used to drop the contained block
      * We check the tile entity, get the block from the tile entity and drop it at the block pos plus some small random coords in the world
+     *
      * @param worldIn the world where we drop the block
-     * @param pos the block position where we drop the block
+     * @param pos     the block position where we drop the block
      */
     protected void dropContainedBlock(World worldIn, BlockPos pos) {
         if (!worldIn.isRemote) {
@@ -158,9 +164,10 @@ public class FrameBlock extends Block implements IForgeBlockState {
     /**
      * Used to place a block in a frame. Therefor we need the tile entity of the block and set its mimic to the given block state.
      * Lastly, we update the block state (useful for observers or something, idk)
-     * @param worldIn the world where we drop the block
-     * @param pos the block position where we drop the block
-     * @param state the old block state
+     *
+     * @param worldIn   the world where we drop the block
+     * @param pos       the block position where we drop the block
+     * @param state     the old block state
      * @param handBlock the block state of the held block - the block we want to insert into the frame
      */
     public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
@@ -175,9 +182,10 @@ public class FrameBlock extends Block implements IForgeBlockState {
 
     /**
      * This method is called, whenever the state of the block changes (e.g. the block is harvested)
-     * @param state old blockstate
-     * @param worldIn world of the block
-     * @param pos block position
+     *
+     * @param state    old blockstate
+     * @param worldIn  world of the block
+     * @param pos      block position
      * @param newState new blockstate
      * @param isMoving whether the block has some sort of motion (should never be moving - false)
      */
@@ -190,11 +198,26 @@ public class FrameBlock extends Block implements IForgeBlockState {
         }
     }
 
+    //unused
+    public int setLightValue(BlockState state, int amount) {
+        if (state.get(LIGHT_LEVEL) > 15) {
+            return 15;
+        }
+        return state.get(LIGHT_LEVEL);
+    }
+
+    //unused
+    public boolean isTransparent(BlockState state) {
+        //return this.isTransparent;
+        return true;
+    }
+
     /**
      * This method returns the light value of the block, i.e. the emitted light level
+     *
      * @param state state of the block
      * @param world world the block is in
-     * @param pos block position
+     * @param pos   block position
      * @return new amount of light that is emitted by the block
      */
     @Override

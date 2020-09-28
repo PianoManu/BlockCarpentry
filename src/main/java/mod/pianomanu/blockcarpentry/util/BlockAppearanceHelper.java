@@ -1,12 +1,16 @@
 package mod.pianomanu.blockcarpentry.util;
 
+import mod.pianomanu.blockcarpentry.block.BedFrameBlock;
 import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
+import mod.pianomanu.blockcarpentry.tileentity.ChestFrameTileEntity;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.state.properties.BedPart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +28,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.2 09/09/20
+ * @version 1.4 09/28/20
  */
 public class BlockAppearanceHelper {
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
@@ -50,11 +54,28 @@ public class BlockAppearanceHelper {
     }
 
     public static void setTexture(ItemStack item, BlockState state, World world, PlayerEntity player, BlockPos pos) {
-
         if (item.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking() && state.get(CONTAINS_BLOCK)) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                if (fte.getTexture() < 5) { //six sides possible
+                    fte.setTexture(fte.getTexture() + 1);
+                } else {
+                    fte.setTexture(0);
+                }
+                player.sendStatusMessage(new TranslationTextComponent("Texture: " + fte.getTexture()), true);
+            }
+            if (tileEntity instanceof BedFrameTile) {
+                BedFrameTile fte = (BedFrameTile) tileEntity;
+                if (fte.getTexture() < 5) { //six sides possible
+                    fte.setTexture(fte.getTexture() + 1);
+                } else {
+                    fte.setTexture(0);
+                }
+                player.sendStatusMessage(new TranslationTextComponent("Texture: " + fte.getTexture()), true);
+            }
+            if (tileEntity instanceof ChestFrameTileEntity) {
+                ChestFrameTileEntity fte = (ChestFrameTileEntity) tileEntity;
                 if (fte.getTexture() < 5) { //six sides possible
                     fte.setTexture(fte.getTexture() + 1);
                 } else {
@@ -77,6 +98,24 @@ public class BlockAppearanceHelper {
                 }
                 player.sendStatusMessage(new TranslationTextComponent("Design: " + fte.getDesign()), true);
             }
+            if (tileEntity instanceof BedFrameTile) {
+                BedFrameTile fte = (BedFrameTile) tileEntity;
+                if (fte.getDesign() < fte.maxDesigns) {
+                    fte.setDesign(fte.getDesign() + 1);
+                } else {
+                    fte.setDesign(0);
+                }
+                player.sendStatusMessage(new TranslationTextComponent("Design: " + fte.getDesign()), true);
+            }
+            if (tileEntity instanceof ChestFrameTileEntity) {
+                ChestFrameTileEntity fte = (ChestFrameTileEntity) tileEntity;
+                if (fte.getDesign() < fte.maxDesigns) {
+                    fte.setDesign(fte.getDesign() + 1);
+                } else {
+                    fte.setDesign(0);
+                }
+                player.sendStatusMessage(new TranslationTextComponent("Design: " + fte.getDesign()), true);
+            }
         }
     }
 
@@ -90,6 +129,27 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setDesignTexture(0);
                 }
+                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
+                player.sendStatusMessage(new TranslationTextComponent("Design Texture: " + fte.getDesignTexture()), true);
+            }
+            if (tileEntity instanceof BedFrameTile) {
+                BedFrameTile fte = (BedFrameTile) tileEntity;
+                if (fte.getDesignTexture() < 7) {
+                    fte.setDesignTexture(fte.getDesignTexture() + 1);
+                } else {
+                    fte.setDesignTexture(0);
+                }
+                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
+                player.sendStatusMessage(new TranslationTextComponent("Design Texture: " + fte.getDesignTexture()), true);
+            }
+            if (tileEntity instanceof ChestFrameTileEntity) {
+                ChestFrameTileEntity fte = (ChestFrameTileEntity) tileEntity;
+                if (fte.getDesignTexture() < fte.maxDesignTextures) {
+                    fte.setDesignTexture(fte.getDesignTexture() + 1);
+                } else {
+                    fte.setDesignTexture(0);
+                }
+                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
                 player.sendStatusMessage(new TranslationTextComponent("Design Texture: " + fte.getDesignTexture()), true);
             }
         }
@@ -106,58 +166,29 @@ public class BlockAppearanceHelper {
         }
     }
 
-    private static String glassColorToString(int glassColor) {
-        if (glassColor > 0 && glassColor < 17) {
-            if (glassColor == 1) {
-                return Items.WHITE_DYE.getName().getString();
-            }
-            if (glassColor == 2) {
-                return Items.ORANGE_DYE.getName().getString();
-            }
-            if (glassColor == 3) {
-                return Items.MAGENTA_DYE.getName().getString();
-            }
-            if (glassColor == 4) {
-                return Items.LIGHT_BLUE_DYE.getName().getString();
-            }
-            if (glassColor == 5) {
-                return Items.YELLOW_DYE.getName().getString();
-            }
-            if (glassColor == 6) {
-                return Items.LIME_DYE.getName().getString();
-            }
-            if (glassColor == 7) {
-                return Items.PINK_DYE.getName().getString();
-            }
-            if (glassColor == 8) {
-                return Items.GRAY_DYE.getName().getString();
-            }
-            if (glassColor == 9) {
-                return Items.LIGHT_GRAY_DYE.getName().getString();
-            }
-            if (glassColor == 10) {
-                return Items.CYAN_DYE.getName().getString();
-            }
-            if (glassColor == 11) {
-                return Items.PURPLE_DYE.getName().getString();
-            }
-            if (glassColor == 12) {
-                return Items.BLUE_DYE.getName().getString();
-            }
-            if (glassColor == 13) {
-                return Items.BROWN_DYE.getName().getString();
-            }
-            if (glassColor == 14) {
-                return Items.GREEN_DYE.getName().getString();
-            }
-            if (glassColor == 15) {
-                return Items.RED_DYE.getName().getString();
-            }
-            if (glassColor == 16) {
-                return Items.BLACK_DYE.getName().getString();
+    public static void setWoolColor(World world, BlockPos pos, PlayerEntity player, Hand hand) {
+        if (player.getHeldItem(hand).getItem().isIn(Tags.Items.DYES)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof BedFrameTile) {
+                BedFrameTile fte = (BedFrameTile) tileEntity;
+                if (world.getBlockState(pos).get(BedFrameBlock.PART) == BedPart.FOOT) {
+                    fte.setBlanketColor(dyeItemToInt(player.getHeldItem(hand).getItem()));
+                }
+                if (world.getBlockState(pos).get(BedFrameBlock.PART) == BedPart.HEAD) {
+                    fte.setPillowColor(dyeItemToInt(player.getHeldItem(hand).getItem()));
+                }
+                //player.sendStatusMessage(new TranslationTextComponent("Glass Color: " + glassColorToString(fte.getGlassColor()-1)), true);
             }
         }
-        return Items.WHITE_DYE.getName().getString();
+    }
+
+    //reminder to myself: DO NOT USE, CAUSES SERVER CRASHES, fix or remove
+    private static String glassColorToString(int glassColor) {
+        List<String> colors = new ArrayList<>();
+        for (Item item : Tags.Items.DYES.getAllElements()) {
+            colors.add(item.getName().getString());
+        }
+        return colors.get(glassColor);
     }
 
     public static Integer dyeItemToInt(Item item) {
@@ -214,6 +245,43 @@ public class BlockAppearanceHelper {
             return colors.indexOf(item);
         }
         return 0;
+    }
+
+    public static void setOverlay(World world, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
+        if (itemStack.getItem().equals(Items.GRASS)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                if (fte.getOverlay() == 1) {
+                    fte.setOverlay(2);
+                    player.sendStatusMessage(new TranslationTextComponent("Activated Large Grass Overlay"), true);
+                } else {
+                    fte.setOverlay(1);
+                    player.sendStatusMessage(new TranslationTextComponent("Activated Grass Overlay"), true);
+                }
+            }
+        }
+        if (itemStack.getItem().equals(Items.SNOWBALL)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                if (fte.getOverlay() == 3) {
+                    fte.setOverlay(4);
+                    player.sendStatusMessage(new TranslationTextComponent("Activated Small Snow Overlay"), true);
+                } else {
+                    fte.setOverlay(3);
+                    player.sendStatusMessage(new TranslationTextComponent("Activated Snow Overlay"), true);
+                }
+            }
+        }
+        if (itemStack.getItem().equals(Items.VINE)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                fte.setOverlay(5);
+                player.sendStatusMessage(new TranslationTextComponent("Activated Vine Overlay"), true);
+            }
+        }
     }
 }
 //========SOLI DEO GLORIA========//

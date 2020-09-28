@@ -3,6 +3,7 @@ package mod.pianomanu.blockcarpentry;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.RenderSetup;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
+import mod.pianomanu.blockcarpentry.util.BlockColorHandler;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -28,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
  * Main class of the BlockCarpentry mod
  *
  * @author PianoManu
- * @version 1.0
+ * @version 1.1 09/28/20
  */
 @Mod(MOD_ID)
 public class BlockCarpentryMain
@@ -70,6 +71,7 @@ public class BlockCarpentryMain
      */
     private void doClientStuff(final FMLClientSetupEvent event) {
         RenderSetup.setup();
+        BlockColorHandler.registerBlockColors();
         LOGGER.info("Setting up client things for BlockCarpentry");
     }
 
@@ -115,3 +117,5 @@ public class BlockCarpentryMain
         }
     }
 }
+//This mod is dedicated to the living God and His son, Jesus. Without His support, I would never have had enough strength and perseverance to get this project working and publish it. Learn to hear His voice, it will transform your life. (Based on a quote from Covert_Jaguar, creator of RailCraft)
+//========SOLI DEO GLORIA========//

@@ -3,7 +3,6 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GrassBlock;
 import net.minecraft.block.WoodButtonBlock;
@@ -12,6 +11,7 @@ import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
@@ -27,8 +27,9 @@ import java.util.Random;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ *
  * @author PianoManu
- * @version 1.0 09/08/20
+ * @version 1.3 09/28/20
  */
 public class IllusionButtonPoweredBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -48,53 +49,86 @@ public class IllusionButtonPoweredBakedModel implements IDynamicBakedModel {
     }
 
     private List<BakedQuad> getIllusionQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, IBakedModel model) {
+        if (side != null) {
+            return Collections.emptyList();
+        }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic != null && state != null) {
-            List<TextureAtlasSprite> textureList = TextureHelper.getTextureListFromBlock(mimic.getBlock());
-            TextureAtlasSprite texture;
-            int tex = extraData.getData(FrameBlockTile.TEXTURE);
-            if (textureList.size() > tex) {
-                texture = textureList.get(tex);
-            } else {
-                texture = textureList.get(0);
-            }
             int tintIndex = -1;
             if (mimic.getBlock() instanceof GrassBlock) {
                 tintIndex = 1;
             }
+            float yl = 0f;
+            float yh = 1 / 16f;
+            if (state.get(WoodButtonBlock.FACE).equals(AttachFace.CEILING)) {
+                yl = 15 / 16f;
+                yh = 1f;
+            }
+            List<BakedQuad> quads = new ArrayList<>();
             switch (state.get(WoodButtonBlock.FACE)) {
-                case FLOOR:
+                case WALL:
                     switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
-                        case EAST:
-                        case WEST:
-                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(6 / 16f, 10 / 16f, 0f, 1 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
                         case NORTH:
+                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 15 / 16f, 1f, mimic, model, extraData, rand, tintIndex));
+                            break;
+                        case EAST:
+                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 1 / 16f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
+                            break;
+                        case WEST:
+                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(15 / 16f, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
+                            break;
                         case SOUTH:
-                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, 1 / 16f, 6 / 16f, 10 / 16f, mimic, model, extraData, rand, tintIndex));
+                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 0f, 1 / 16f, mimic, model, extraData, rand, tintIndex));
+                            break;
                     }
+                    break;
+                case FLOOR:
                 case CEILING:
                     switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
                         case EAST:
                         case WEST:
-                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(6 / 16f, 10 / 16f, 15 / 16f, 1f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
-                        case NORTH:
+                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(6 / 16f, 10 / 16f, yl, yh, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
+                            break;
                         case SOUTH:
-                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 15 / 16f, 1f, 6 / 16f, 10 / 16f, mimic, model, extraData, rand, tintIndex));
-                    }
-                case WALL:
-                    switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
-                        case EAST:
-                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(0f, 1/16f, 6/16f, 10/16f, 5/16f, 11/16f, mimic,model,extraData,rand, tintIndex));
-                        case WEST:
-                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(15/16f, 1f, 6/16f, 10/16f, 5/16f, 11/16f, mimic,model,extraData,rand, tintIndex));
                         case NORTH:
-                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(5/16f, 11/16f, 6/16f, 10/16f, 15/16f, 1f, mimic,model,extraData,rand, tintIndex));
-                        case SOUTH:
-                            return new ArrayList<>(ModelHelper.createSixFaceCuboid(5/16f, 11/16f, 6/16f, 10/16f, 0f, 1/16f, mimic,model,extraData,rand, tintIndex));
+                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, yl, yh, 6 / 16f, 10 / 16f, mimic, model, extraData, rand, tintIndex));
+                            break;
                     }
             }
-
-            return new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, texture, tintIndex));
+            int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+            if (overlayIndex != 0) {
+                switch (state.get(WoodButtonBlock.FACE)) {
+                    case WALL:
+                        switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
+                            case NORTH:
+                                quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlay(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 15 / 16f, 1f, overlayIndex));
+                                break;
+                            case EAST:
+                                quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlay(0f, 1 / 16f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
+                                break;
+                            case WEST:
+                                quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlay(15 / 16f, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
+                                break;
+                            case SOUTH:
+                                quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlay(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 0f, 1 / 16f, overlayIndex));
+                                break;
+                        }
+                        break;
+                    case FLOOR:
+                    case CEILING:
+                        switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
+                            case EAST:
+                            case WEST:
+                                quads.addAll(ModelHelper.createOverlay(6 / 16f, 10 / 16f, yl, yh, 5 / 16f, 11 / 16f, overlayIndex));
+                                break;
+                            case SOUTH:
+                            case NORTH:
+                                quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, yl, yh, 6 / 16f, 10 / 16f, overlayIndex));
+                                break;
+                        }
+                }
+            }
+            return quads;
         }
         return Collections.emptyList();
     }

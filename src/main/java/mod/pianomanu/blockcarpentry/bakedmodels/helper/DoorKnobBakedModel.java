@@ -19,7 +19,7 @@ public class DoorKnobBakedModel {
                                   double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
 
         ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
-        for (int j = 0 ; j < elements.size() ; j++) {
+        for (int j = 0; j < elements.size(); j++) {
             VertexFormatElement e = elements.get(j);
             switch (e.getUsage()) {
                 case POSITION:
@@ -81,16 +81,16 @@ public class DoorKnobBakedModel {
         float uh = 4;
         float vl = 0;
         float vh = 1;
-        if(flag == 3) {
+        if (flag == 3) {
             uh = 5;
             vh = 1;
-        } else if(flag == 1) {
+        } else if (flag == 1) {
             uh = 4;
             vh = 5;
-        } else if(flag == 2) {
+        } else if (flag == 2) {
             uh = 4;
             vh = 1;
-        } else if(flag == 0) {
+        } else if (flag == 0) {
             uh = 1;
             vh = 5;
         }
@@ -111,12 +111,12 @@ public class DoorKnobBakedModel {
         float uh = 1;
         float vl = 0;
         float vh = 5;
-        if(flag == 3) {
+        if (flag == 3) {
             vh = 4;
-        } else if(flag == 1) {
+        } else if (flag == 1) {
             uh = 4;
             vh = 1;
-        } else if(flag == 0) {
+        } else if (flag == 0) {
             vh = 4;
             uh = 5;
         }
@@ -129,24 +129,24 @@ public class DoorKnobBakedModel {
 
     public static List<BakedQuad> createDoorKnob(float xl, float xh, float yl, float yh, float zl, float zh, int flag, int design_texture) {
         TextureAtlasSprite texture;
-        if (design_texture==0) {
+        if (design_texture == 0) {
             texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/iron_block"));
-        } else if (design_texture==1) {
+        } else if (design_texture == 1) {
             texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/obsidian"));
-        } else if (design_texture==2) {
+        } else if (design_texture == 2) {
             texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/stone"));
         } else {
             texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/gold_block"));
         }
         List<BakedQuad> quads = new ArrayList<>();
-        Vec3d NWU = v(xl,yh,zl);
-        Vec3d NEU = v(xl,yh,zh);
-        Vec3d NWD = v(xl,yl,zl);
-        Vec3d NED = v(xl,yl,zh);
-        Vec3d SWU = v(xh,yh,zl);
-        Vec3d SEU = v(xh,yh,zh);
-        Vec3d SWD = v(xh,yl,zl);
-        Vec3d SED = v(xh,yl,zh);
+        Vec3d NWU = v(xl, yh, zl);
+        Vec3d NEU = v(xl, yh, zh);
+        Vec3d NWD = v(xl, yl, zl);
+        Vec3d NED = v(xl, yl, zh);
+        Vec3d SWU = v(xh, yh, zl);
+        Vec3d SEU = v(xh, yh, zh);
+        Vec3d SWD = v(xh, yl, zl);
+        Vec3d SED = v(xh, yl, zh);
         quads.add(createSquareQuad(NWU, NEU, SEU, SWU, texture, flag));
         quads.add(createSquareQuad(SWD, SED, NED, NWD, texture, flag));
         quads.add(createSquareQuad(NWD, NWU, SWU, SWD, texture, flag));

@@ -32,11 +32,11 @@ import javax.annotation.Nullable;
 /**
  * Main class for frame fences - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
+ *
  * @author PianoManu
- * @version 1.1 09/08/20
+ * @version 1.3 09/28/20
  */
 public class FenceFrameBlock extends FenceBlock {
-    //private boolean isTransparent = true;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
 
@@ -64,26 +64,19 @@ public class FenceFrameBlock extends FenceBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            if(item.getItem()==Items.LEAD) {
+            if (item.getItem() == Items.LEAD) {
                 return LeadItem.bindPlayerMobs(player, world, pos);
-            }
-            /*if(state.get(CONTAINS_BLOCK) && player.isSneaking()) {
-                this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos,state,2);
-            }*/ else {
-                if(item.getItem() instanceof BlockItem) {
+            } else {
+                if (item.getItem() instanceof BlockItem) {
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
                     Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                    //TODO fix for non-solid blocks
-                    //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
                     if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
                         ((FrameBlockTile) tileEntity).clear();
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                         ((FrameBlockTile) tileEntity).setMimic(handBlockState);
-                        insertBlock(world,pos, state,handBlockState);
-                        player.getHeldItem(hand).setCount(count-1);
+                        insertBlock(world, pos, state, handBlockState);
+                        player.getHeldItem(hand).setCount(count - 1);
 
                     }
                 }
@@ -91,12 +84,13 @@ public class FenceFrameBlock extends FenceBlock {
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos,state,2);
+                world.setBlockState(pos, state, 2);
             }
-            BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
-            BlockAppearanceHelper.setTexture(item,state,world,player,pos);
-            BlockAppearanceHelper.setDesign(world,pos,player,item);
-            BlockAppearanceHelper.setDesignTexture(world,pos,player,item);
+            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
+            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
+            BlockAppearanceHelper.setDesign(world, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setOverlay(world, pos, player, item);
         }
         return ActionResultType.SUCCESS;
     }
@@ -107,15 +101,15 @@ public class FenceFrameBlock extends FenceBlock {
             if (tileentity instanceof FrameBlockTile) {
                 FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
                 BlockState blockState = frameTileEntity.getMimic();
-                if (!(blockState==null)) {
+                if (!(blockState == null)) {
                     worldIn.playEvent(1010, pos, 0);
                     frameTileEntity.clear();
                     float f = 0.7F;
-                    double d0 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
-                    double d1 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.060000002F + 0.6D;
-                    double d2 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
+                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
                     ItemStack itemstack1 = new ItemStack(blockState.getBlock());
-                    ItemEntity itementity = new ItemEntity(worldIn, (double)pos.getX() + d0, (double)pos.getY() + d1, (double)pos.getZ() + d2, itemstack1);
+                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickupDelay();
                     worldIn.addEntity(itementity);
                     frameTileEntity.clear();
@@ -134,8 +128,7 @@ public class FenceFrameBlock extends FenceBlock {
         }
     }
 
-    //TODO add everywhere AND FIX!!! - is it fixed?? -> testing!
-
+    @SuppressWarnings("deprecation")
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {

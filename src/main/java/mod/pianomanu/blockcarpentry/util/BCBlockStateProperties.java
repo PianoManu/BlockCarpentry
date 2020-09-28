@@ -5,8 +5,9 @@ import net.minecraft.state.IntegerProperty;
 
 /**
  * Some properties needed for frame blocks
+ *
  * @author PianoManu
- * @version 1.1 09/08/20
+ * @version 1.1 09/17/20
  */
 public class BCBlockStateProperties {
     /**
@@ -16,15 +17,10 @@ public class BCBlockStateProperties {
 
     /**
      * Whether a block emits light
-     *      0  : no light
-     *      ...
-     *      15 : full light
+     * 0  : no light
+     * ...
+     * 15 : full light
      */
-    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light_level",0,15);
-
-    /**
-     * For beds, currently unused (May be removed in the future and saved in the block-tile-entity)
-     */
-    public static final IntegerProperty PILLOW_COLOR = IntegerProperty.create("pillow_color",0,15);
+    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light_level", 0, 15);
 }
 //========SOLI DEO GLORIA========//

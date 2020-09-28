@@ -36,8 +36,9 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
 /**
  * Main class for frame buttons - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
+ *
  * @author PianoManu
- * @version 1.1 09/08/20
+ * @version 1.2 09/28/20
  */
 public class ButtonFrameBlock extends WoodButtonBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -46,7 +47,7 @@ public class ButtonFrameBlock extends WoodButtonBlock {
 
     public ButtonFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(HORIZONTAL_FACING, Direction.NORTH).with(POWERED,false).with(FACE, AttachFace.WALL).with(LIGHT_LEVEL, 0));
+        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(HORIZONTAL_FACING, Direction.NORTH).with(POWERED, false).with(FACE, AttachFace.WALL).with(LIGHT_LEVEL, 0));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
@@ -86,12 +87,13 @@ public class ButtonFrameBlock extends WoodButtonBlock {
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
                 this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos,state,2);
+                world.setBlockState(pos, state, 2);
             }
-            BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
-            BlockAppearanceHelper.setTexture(item,state,world,player,pos);
-            BlockAppearanceHelper.setDesign(world,pos,player,item);
-            BlockAppearanceHelper.setDesignTexture(world,pos,player,item);
+            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
+            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
+            BlockAppearanceHelper.setDesign(world, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setOverlay(world, pos, player, item);
             if (state.get(POWERED)) {
                 return ActionResultType.CONSUME;
             } else {
@@ -108,15 +110,15 @@ public class ButtonFrameBlock extends WoodButtonBlock {
             if (tileentity instanceof FrameBlockTile) {
                 FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
                 BlockState blockState = frameTileEntity.getMimic();
-                if (!(blockState==null)) {
+                if (!(blockState == null)) {
                     worldIn.playEvent(1010, pos, 0);
                     frameTileEntity.clear();
                     float f = 0.7F;
-                    double d0 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
-                    double d1 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.060000002F + 0.6D;
-                    double d2 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
-                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
-                    ItemEntity itementity = new ItemEntity(worldIn, (double)pos.getX() + d0, (double)pos.getY() + d1, (double)pos.getZ() + d2, itemstack1);
+                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
+                    ItemStack itemstack1 = blockState.getBlock().asItem().getDefaultInstance();
+                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickupDelay();
                     worldIn.addEntity(itementity);
                     frameTileEntity.clear();

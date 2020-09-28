@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "name": "frame_ladder",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "blockcarpentry:frame_ladder"
+        }
+      ]
+    }
+  ]
+}

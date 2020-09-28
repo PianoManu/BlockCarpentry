@@ -1,6 +1,5 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
-import com.google.common.collect.ImmutableList;
 import mod.pianomanu.blockcarpentry.bakedmodels.helper.DoorKnobBakedModel;
 import mod.pianomanu.blockcarpentry.block.DoorFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
@@ -15,16 +14,13 @@ import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,210 +32,15 @@ import java.util.Random;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ *
  * @author PianoManu
- * @version 1.1 09/07/20
+ * @version 1.4 09/28/20
  */
 public class DoorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
     private TextureAtlasSprite getTexture() {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
-    }
-
-    private void putVertex(BakedQuadBuilder builder, Vec3d normal,
-                           double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
-
-        ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
-        for (int j = 0; j < elements.size(); j++) {
-            VertexFormatElement e = elements.get(j);
-            switch (e.getUsage()) {
-                case POSITION:
-                    builder.put(j, (float) x, (float) y, (float) z, 1.0f);
-                    break;
-                case COLOR:
-                    builder.put(j, r, g, b, 1.0f);
-                    break;
-                case UV:
-                    switch (e.getIndex()) {
-                        case 0:
-                            float iu = sprite.getInterpolatedU(u);
-                            float iv = sprite.getInterpolatedV(v);
-                            builder.put(j, iu, iv);
-                            break;
-                        case 2:
-                            builder.put(j, (short) 0, (short) 0);
-                            break;
-                        default:
-                            builder.put(j);
-                            break;
-                    }
-                    break;
-                case NORMAL:
-                    builder.put(j, (float) normal.x, (float) normal.y, (float) normal.z);
-                    break;
-                default:
-                    builder.put(j);
-                    break;
-            }
-        }
-        builder.setApplyDiffuseLighting(true);
-        builder.setQuadTint(1);
-    }
-
-    //Top part of door
-    private BakedQuad createTopPartQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, Direction facing, AttachFace face) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
-
-        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
-        builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
-        builder.setApplyDiffuseLighting(true);
-        float uShort = 5;
-        float uLong = 11;
-        float vShort = 14;
-        float vLong = 16;
-        if (face == AttachFace.WALL && (facing == Direction.SOUTH || facing == Direction.NORTH)) {
-            uShort = 6;
-            uLong = 10;
-            vShort = 6;
-            vLong = 10;
-        }
-        if (face == AttachFace.WALL && (facing == Direction.WEST || facing == Direction.EAST)) {
-            //uShort = 5;
-            //uLong = 11; //already set
-            vShort = 6;
-            vLong = 10;
-        }
-        if (face != AttachFace.WALL && (facing == Direction.NORTH || facing == Direction.SOUTH)) {
-            uShort = 6;
-            uLong = 10;
-            vShort = 7;
-            vLong = 9;
-        }
-        putVertex(builder, normal, v1.x, v1.y, v1.z, uShort, vShort, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v2.x, v2.y, v2.z, uShort, vLong, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v3.x, v3.y, v3.z, uLong, vLong, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v4.x, v4.y, v4.z, uLong, vShort, sprite, 1.0f, 1.0f, 1.0f);
-        return builder.build();
-    }
-
-    //Bottom part of door
-    private BakedQuad createBottomPartQuad(TextureAtlasSprite sprite, int flag) {
-        //NWD = north west up etc.
-        Vec3d NWD = v(0, 0, 0);
-        Vec3d NWU = v(0, 16, 0);
-        Vec3d NED = v(3, 0, 0);
-        Vec3d NEU = v(3, 16, 0);
-        Vec3d SWD = v(0, 0, 16);
-        Vec3d SWU = v(0, 16, 16);
-        Vec3d SED = v(3, 0, 16);
-        Vec3d SEU = v(3, 16, 16);
-        Vec3d v1, v2, v3, v4;
-        if (flag == 0) {
-            v1 = NWD;
-            v2 = NWU;
-            v3 = NEU;
-            v4 = NED;
-        } else {
-            v1 = SED;
-            v2 = SEU;
-            v3 = SWU;
-            v4 = SWD;
-        }
-        Vec3d normal1 = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
-        Vec3d normal2 = v3.subtract(v1).crossProduct(v2.subtract(v1)).normalize();
-        Vec3d normal3 = v2.subtract(v3).crossProduct(v1.subtract(v3)).normalize();
-        Vec3d normal4 = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
-        System.out.println(v1.toString() + ", " + v2.toString() + ", " + v3.toString() + ", " + v4.toString());
-        System.out.println(normal1.toString() + normal2.toString() + normal3.toString() + normal4.toString());
-
-        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
-        builder.setQuadOrientation(Direction.getFacingFromVector(normal1.x, normal1.y, normal1.z));
-        builder.setApplyDiffuseLighting(true);
-        float uShort = 6;
-        float uLong = 10;
-        float vShort = 14;
-        float vLong = 16;
-        putVertex(builder, normal1, v1.x, v1.y, v1.z, uShort, vShort, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal1, v2.x, v2.y, v2.z, uShort, vLong, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal1, v3.x, v3.y, v3.z, uLong, vLong, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal1, v4.x, v4.y, v4.z, uLong, vShort, sprite, 1.0f, 1.0f, 1.0f);
-        return builder.build();
-    }
-
-    private static Vec3d v(double x, double y, double z) {
-        return new Vec3d(x, y, z);
-    }
-
-    private BakedQuad createSquareQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
-
-        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
-        builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
-        builder.setApplyDiffuseLighting(true);
-
-        putVertex(builder, normal, v1.x, v1.y, v1.z, 0, 0, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v2.x, v2.y, v2.z, 0, 16, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v3.x, v3.y, v3.z, 16, 16, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v4.x, v4.y, v4.z, 16, 0, sprite, 1.0f, 1.0f, 1.0f);
-        return builder.build();
-    }
-
-    private BakedQuad create3x16SideQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, int flag) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
-
-        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
-        builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
-        builder.setApplyDiffuseLighting(true);
-        float ul = 0;
-        float uh = 3;
-        if (flag == 0 || flag == 2) {
-            ul = 13;
-            uh = 16;
-        }
-
-
-        putVertex(builder, normal, v1.x, v1.y, v1.z, ul, 0, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v2.x, v2.y, v2.z, ul, 16, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v3.x, v3.y, v3.z, uh, 16, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v4.x, v4.y, v4.z, uh, 0, sprite, 1.0f, 1.0f, 1.0f);
-        return builder.build();
-    }
-
-    private BakedQuad create3x16TopQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, int flag) {
-        Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
-
-        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
-        builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
-        builder.setApplyDiffuseLighting(true);
-        float ul = 0;
-        float uh = 16;
-        float vl = 0;
-        float vh = 3;
-        if (flag == 1) {
-            vl = 13;
-            vh = 16;
-            ul = 0;
-            uh = 16;
-        }
-        if (flag == 2) {
-            vl = 0;
-            vh = 16;
-            ul = 13;
-            uh = 16;
-        }
-        if (flag == 3) {
-            ul = 0;
-            uh = 3;
-            vl = 0;
-            vh = 16;
-        }
-
-
-        putVertex(builder, normal, v1.x, v1.y, v1.z, ul, vl, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v2.x, v2.y, v2.z, ul, vh, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v3.x, v3.y, v3.z, uh, vh, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v4.x, v4.y, v4.z, uh, vl, sprite, 1.0f, 1.0f, 1.0f);
-        return builder.build();
     }
 
     @Nonnull
@@ -279,11 +80,18 @@ public class DoorBakedModel implements IDynamicBakedModel {
                 glass = glassBlockList.get(0);
             }
             TextureAtlasSprite texture;
-            if (textureList.size() > tex) {
-                texture = textureList.get(tex);
-            } else {
-                texture = textureList.get(0);
+            if (textureList.size() <= tex) {
+                //texture = textureList.get(0);
+                extraData.setData(FrameBlockTile.TEXTURE, 0);
+                tex = 0;
             }
+            if (textureList.size() == 0) {
+                if (Minecraft.getInstance().player != null) {
+                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
+                }
+                return Collections.emptyList();
+            }
+            texture = textureList.get(tex);
             List<BakedQuad> quads = new ArrayList<>();
             Direction dir = state.get(DoorFrameBlock.FACING);
             boolean open = state.get(DoorFrameBlock.OPEN);
@@ -303,8 +111,11 @@ public class DoorBakedModel implements IDynamicBakedModel {
             if (mimic.getBlock() instanceof GrassBlock) {
                 tintIndex = 1;
             }
+            boolean northSide = (dir == north && !open && hinge == right) || (dir == east && open && hinge == right) || (dir == west && open && hinge == left) || (dir == north && !open && hinge == left);
+            boolean westSide = (dir == west && !open && hinge == right) || (dir == north && open && hinge == right) || (dir == south && open && hinge == left) || (dir == west && !open && hinge == left);
+            boolean eastSide = (dir == south && open && hinge == right) || (dir == east && !open && hinge == right) || (dir == east && !open && hinge == left) || (dir == north && open && hinge == left);
             if (design == 0) {
-                if ((dir == north && !open && hinge == right) || (dir == east && open && hinge == right) || (dir == west && open && hinge == left) || (dir == north && !open && hinge == left)) {
+                if (northSide) {
                     if (half == lower) {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
@@ -317,7 +128,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 12 / 16f, 14 / 16f, 15 / 16f, glass, tintIndex));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex));
                     }
-                } else if ((dir == west && !open && hinge == right) || (dir == north && open && hinge == right) || (dir == south && open && hinge == left) || (dir == west && !open && hinge == left)) {
+                } else if (westSide) {
                     if (half == lower) {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
@@ -330,7 +141,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, glass, tintIndex));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
                     }
-                } else if ((dir == south && open && hinge == right) || (dir == east && !open && hinge == right) || (dir == east && !open && hinge == left) || (dir == north && open && hinge == left)) {
+                } else if (eastSide) {
                     if (half == lower) {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
@@ -359,7 +170,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
                 }
             }
             if (design == 3) {
-                if ((dir == north && !open && hinge == right) || (dir == east && open && hinge == right) || (dir == west && open && hinge == left) || (dir == north && !open && hinge == left)) {
+                if (northSide) {
                     if (half == lower) {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
@@ -374,7 +185,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, texture, tintIndex));
                     }
-                } else if ((dir == west && !open && hinge == right) || (dir == north && open && hinge == right) || (dir == south && open && hinge == left) || (dir == west && !open && hinge == left)) {
+                } else if (westSide) {
                     if (half == lower) {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
@@ -389,7 +200,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex));
                     }
-                } else if ((dir == south && open && hinge == right) || (dir == east && !open && hinge == right) || (dir == east && !open && hinge == left) || (dir == north && open && hinge == left)) {
+                } else if (eastSide) {
                     if (half == lower) {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
@@ -423,13 +234,13 @@ public class DoorBakedModel implements IDynamicBakedModel {
             }
             if (design == 1 || design == 2) {
                 int flag = 0;
-                if ((dir == north && !open && hinge == right) || (dir == east && open && hinge == right) || (dir == west && open && hinge == left) || (dir == north && !open && hinge == left)) {
+                if (northSide) {
                     flag = 1;
                     quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, texture, tintIndex));
-                } else if ((dir == west && !open && hinge == right) || (dir == north && open && hinge == right) || (dir == south && open && hinge == left) || (dir == west && !open && hinge == left)) {
+                } else if (westSide) {
                     flag = 2;
                     quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex));
-                } else if ((dir == south && open && hinge == right) || (dir == east && !open && hinge == right) || (dir == east && !open && hinge == left) || (dir == north && open && hinge == left)) {
+                } else if (eastSide) {
                     flag = 3;
                     quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, texture, tintIndex));
                 } else {
@@ -475,7 +286,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
                 }
             }
             if (design == 4) {
-                if ((dir == north && !open && hinge == right) || (dir == east && open && hinge == right) || (dir == west && open && hinge == left) || (dir == north && !open && hinge == left)) {
+                if (northSide) {
                     quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 14 / 16f, 15 / 16f, glass, tintIndex));
@@ -483,7 +294,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 13 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, 13 / 16f, 1f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, 13 / 16f, 1f, texture, tintIndex));
-                } else if ((dir == west && !open && hinge == right) || (dir == north && open && hinge == right) || (dir == south && open && hinge == left) || (dir == west && !open && hinge == left)) {
+                } else if (westSide) {
                     quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(14 / 16f, 15 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, glass, tintIndex));
@@ -491,7 +302,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, texture, tintIndex));
-                } else if ((dir == south && open && hinge == right) || (dir == east && !open && hinge == right) || (dir == east && !open && hinge == left) || (dir == north && open && hinge == left)) {
+                } else if (eastSide) {
                     quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(1 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, glass, tintIndex));
@@ -507,6 +318,18 @@ public class DoorBakedModel implements IDynamicBakedModel {
                     quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 13 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, 0f, 3 / 16f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                }
+            }
+            int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+            if (overlayIndex != 0) {
+                if (northSide) {
+                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 13 / 16f, 1f, overlayIndex));
+                } else if (westSide) {
+                    quads.addAll(ModelHelper.createOverlay(13 / 16f, 1f, 0f, 1f, 0f, 1f, overlayIndex));
+                } else if (eastSide) {
+                    quads.addAll(ModelHelper.createOverlay(0f, 3 / 16f, 0f, 1f, 0f, 1f, overlayIndex));
+                } else {
+                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 3 / 16f, overlayIndex));
                 }
             }
 

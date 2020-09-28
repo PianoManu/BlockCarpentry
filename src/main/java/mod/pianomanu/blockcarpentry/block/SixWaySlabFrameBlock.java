@@ -8,8 +8,11 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -32,14 +35,17 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
+
 /**
  * Main class for frame "slabs", they can be placed in six different ways (that's the reason for this class name) - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
+ *
  * @author PianoManu
- * @version 1.1 09/08/20
+ * @version 1.3 09/28/20
  */
 @SuppressWarnings("deprecation")
-public class SixWaySlabFrameBlock extends Block {
+public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
@@ -53,11 +59,11 @@ public class SixWaySlabFrameBlock extends Block {
 
     public SixWaySlabFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.DOWN).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.DOWN).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(WATERLOGGED, false));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, CONTAINS_BLOCK, LIGHT_LEVEL);
+        builder.add(FACING, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
     @Override
@@ -111,6 +117,7 @@ public class SixWaySlabFrameBlock extends Block {
                     ((FrameBlockTile) tileEntity).setMimic(handBlockState);
                     insertBlock(world, pos, state, handBlockState);
                     player.getHeldItem(hand).setCount(count - 1);
+
                 }
 
             }
@@ -121,8 +128,9 @@ public class SixWaySlabFrameBlock extends Block {
             }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world,pos,player,item);
-            BlockAppearanceHelper.setDesignTexture(world,pos,player,item);
+            BlockAppearanceHelper.setDesign(world, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setOverlay(world, pos, player, item);
         }
         return ActionResultType.SUCCESS;
     }
@@ -175,6 +183,12 @@ public class SixWaySlabFrameBlock extends Block {
             return 15;
         }
         return state.get(LIGHT_LEVEL);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public IFluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 }
 //========SOLI DEO GLORIA========//
