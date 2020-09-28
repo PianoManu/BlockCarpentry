@@ -50,28 +50,13 @@ import java.util.Objects;
  */
 public class ChestFrameTileEntity extends LockableLootTileEntity {
 
-    public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
-    public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
-    public static final ModelProperty<Integer> DESIGN = new ModelProperty<>();
-    public static final ModelProperty<Integer> DESIGN_TEXTURE = new ModelProperty<>();
-    //currently only for doors and trapdoors
-    public static final ModelProperty<Integer> GLASS_COLOR = new ModelProperty<>();
-    private static final Logger LOGGER = LogManager.getLogger();
-    public final int maxTextures = 8;
-    public final int maxDesignTextures = 4;
-    public final int maxDesigns = 4;
+    private NonNullList<ItemStack> chestContents = NonNullList.withSize(27, ItemStack.EMPTY);
     /**
      * The number of players currently using this chest
      */
     protected int numPlayersUsing;
-    private NonNullList<ItemStack> chestContents = NonNullList.withSize(27, ItemStack.EMPTY);
     private IItemHandlerModifiable items = createHandler();
     private LazyOptional<IItemHandlerModifiable> itemHandler = LazyOptional.of(() -> items);
-    private BlockState mimic;
-    private Integer texture = 0;
-    private Integer design = 0;
-    private Integer designTexture = 0;
-    private Integer glassColor = 0;
 
     public ChestFrameTileEntity(TileEntityType<?> typeIn) {
         super(typeIn);
@@ -99,27 +84,6 @@ public class ChestFrameTileEntity extends LockableLootTileEntity {
             }
         }
     }
-
-    public static int getPlayersUsing(IBlockReader reader, BlockPos pos) {
-        BlockState blockstate = reader.getBlockState(pos);
-        if (blockstate.hasTileEntity()) {
-            TileEntity tileentity = reader.getTileEntity(pos);
-            if (tileentity instanceof ChestFrameTileEntity) {
-                return ((ChestFrameTileEntity) tileentity).numPlayersUsing;
-            }
-        }
-        return 0;
-    }
-
-    private static CompoundNBT writeInteger(Integer tag) {
-        CompoundNBT compoundnbt = new CompoundNBT();
-        compoundnbt.putString("number", tag.toString());
-        return compoundnbt;
-    }
-
-
-
-    //=======================================FRAME STUFF=======================================//
 
     @Override
     public int getSizeInventory() {
@@ -228,6 +192,17 @@ public class ChestFrameTileEntity extends LockableLootTileEntity {
         }
     }
 
+    public static int getPlayersUsing(IBlockReader reader, BlockPos pos) {
+        BlockState blockstate = reader.getBlockState(pos);
+        if (blockstate.hasTileEntity()) {
+            TileEntity tileentity = reader.getTileEntity(pos);
+            if (tileentity instanceof ChestFrameTileEntity) {
+                return ((ChestFrameTileEntity) tileentity).numPlayersUsing;
+            }
+        }
+        return 0;
+    }
+
     @Override
     public void closeInventory(PlayerEntity player) {
         if (!player.isSpectator()) {
@@ -265,14 +240,39 @@ public class ChestFrameTileEntity extends LockableLootTileEntity {
         return new InvWrapper(this);
     }
 
-    public BlockState getMimic() {
-        return this.mimic;
-    }
+
+
+    //=======================================FRAME STUFF=======================================//
+
+
+
+    public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
+    public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
+    public static final ModelProperty<Integer> DESIGN = new ModelProperty<>();
+    public static final ModelProperty<Integer> DESIGN_TEXTURE = new ModelProperty<>();
+    //currently only for doors and trapdoors
+    public static final ModelProperty<Integer> GLASS_COLOR = new ModelProperty<>();
+
+    public final int maxTextures = 8;
+    public final int maxDesignTextures = 4;
+    public final int maxDesigns = 4;
+
+    private BlockState mimic;
+    private Integer texture = 0;
+    private Integer design = 0;
+    private Integer designTexture = 0;
+    private Integer glassColor = 0;
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     public void setMimic(BlockState mimic) {
         this.mimic = mimic;
         markDirty();
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    }
+
+    public BlockState getMimic() {
+        return this.mimic;
     }
 
     public Integer getDesign() {
@@ -403,6 +403,12 @@ public class ChestFrameTileEntity extends LockableLootTileEntity {
         this.setDesign(0);
         this.setDesign(0);
         this.setGlassColor(0);
+    }
+
+    private static CompoundNBT writeInteger(Integer tag) {
+        CompoundNBT compoundnbt = new CompoundNBT();
+        compoundnbt.putString("number", tag.toString());
+        return compoundnbt;
     }
 
     @Override

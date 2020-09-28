@@ -114,12 +114,6 @@ public class FrameBlockTile extends TileEntity {
         }
     }
 
-    private static CompoundNBT writeInteger(Integer tag) {
-        CompoundNBT compoundnbt = new CompoundNBT();
-        compoundnbt.putString("number", tag.toString());
-        return compoundnbt;
-    }
-
     public Integer getOverlay() {
         return this.overlay;
     }
@@ -270,6 +264,12 @@ public class FrameBlockTile extends TileEntity {
             tag.put("overlay", writeInteger(overlay));
         }
         return super.write(tag);
+    }
+
+    private static CompoundNBT writeInteger(Integer tag) {
+        CompoundNBT compoundnbt = new CompoundNBT();
+        compoundnbt.putString("number", tag.toString());
+        return compoundnbt;
     }
 
     public void clear() {
