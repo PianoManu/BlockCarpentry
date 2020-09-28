@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
+import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
@@ -14,6 +15,7 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -27,8 +29,9 @@ import java.util.Random;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ *
  * @author PianoManu
- * @version 1.1 09/09/20
+ * @version 1.3 09/28/20
  */
 @SuppressWarnings("deprecation")
 public class SlabFrameBakedModel implements IDynamicBakedModel {
@@ -64,36 +67,95 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
         }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         int tex = extraData.getData(FrameBlockTile.TEXTURE);
-        if (mimic!=null && state!=null) {
+        if (mimic != null && state != null) {
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
             TextureAtlasSprite texture;
             if (textureList.size() <= tex) {
-                //texture = textureList.get(0);
                 extraData.setData(FrameBlockTile.TEXTURE, 0);
                 tex = 0;
+            }
+            if (textureList.size() == 0) {
+                if (Minecraft.getInstance().player != null) {
+                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
+                }
+                return Collections.emptyList();
             }
             texture = textureList.get(tex);
             int tintIndex = -1;
             if (mimic.getBlock() instanceof GrassBlock) {
                 tintIndex = 1;
             }
+            List<BakedQuad> quads = new ArrayList<>();
             switch (state.get(SixWaySlabFrameBlock.FACING)) {
                 case UP:
-                    return new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, texture, tintIndex));
+                    break;
                 case DOWN:
-                    return new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0.5f, 1f, 0f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0.5f, 1f, 0f, 1f, texture, tintIndex));
+                    break;
                 case WEST:
-                    return new ArrayList<>(ModelHelper.createCuboid(0.5f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0.5f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex));
+                    break;
                 case SOUTH:
-                    return new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 0.5f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 0.5f, texture, tintIndex));
+                    break;
                 case NORTH:
-                    return new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0.5f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0.5f, 1f, texture, tintIndex));
+                    break;
                 case EAST:
-                    return new ArrayList<>(ModelHelper.createCuboid(0f, 0.5f, 0f, 1f, 0f, 1f, texture, tintIndex));
-
+                    quads.addAll(ModelHelper.createCuboid(0f, 0.5f, 0f, 1f, 0f, 1f, texture, tintIndex));
+                    break;
             }
-
-            return new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, texture, tintIndex));
+            if (extraData.getData(FrameBlockTile.OVERLAY) != 0) {
+                TextureAtlasSprite overlay = null;
+                TextureAtlasSprite upOverlay = null;
+                TextureAtlasSprite downOverlay = null;
+                if (extraData.getData(FrameBlockTile.OVERLAY) == 1) {
+                    tintIndex = 1;
+                    overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/grass_block_side_overlay"));
+                    upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/grass_block_top"));
+                }
+                if (extraData.getData(FrameBlockTile.OVERLAY) == 2) {
+                    tintIndex = 1;
+                    overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_side_overlay_large"));
+                    upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/grass_block_top"));
+                }
+                if (extraData.getData(FrameBlockTile.OVERLAY) == 3) {
+                    tintIndex = -1;
+                    overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay"));
+                    upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/snow"));
+                }
+                if (extraData.getData(FrameBlockTile.OVERLAY) == 4) {
+                    tintIndex = -1;
+                    overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay_small"));
+                    upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/snow"));
+                }
+                if (extraData.getData(FrameBlockTile.OVERLAY) == 5) {
+                    tintIndex = 1;
+                    overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/vine"));
+                }
+                switch (state.get(SixWaySlabFrameBlock.FACING)) {
+                    case UP:
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, tintIndex, overlay, overlay, overlay, overlay, upOverlay, downOverlay));
+                        break;
+                    case DOWN:
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0f, 1f, tintIndex, overlay, overlay, overlay, overlay, upOverlay, downOverlay));
+                        break;
+                    case WEST:
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 1f, 0f, 1f, tintIndex, overlay, overlay, overlay, overlay, upOverlay, downOverlay));
+                        break;
+                    case SOUTH:
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 0.5f, tintIndex, overlay, overlay, overlay, overlay, upOverlay, downOverlay));
+                        break;
+                    case NORTH:
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0.5f, 1f, tintIndex, overlay, overlay, overlay, overlay, upOverlay, downOverlay));
+                        break;
+                    case EAST:
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 1f, 0f, 1f, tintIndex, overlay, overlay, overlay, overlay, upOverlay, downOverlay));
+                        break;
+                }
+            }
+            return quads;
         }
         return Collections.emptyList();
     }

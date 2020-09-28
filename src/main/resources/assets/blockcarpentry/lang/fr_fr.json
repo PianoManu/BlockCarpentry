@@ -1,0 +1,39 @@
+{
+	"block.blockcarpentry.frameblock": "Châssis de bloc",
+	"block.blockcarpentry.frame_slab": "Châssis de dalle",
+	"block.blockcarpentry.falling_frameblock": "Châssis de bloc tombant (WIP)",
+	"block.blockcarpentry.frame_button": "Châssis de bouton",
+	"block.blockcarpentry.frame_stairs": "Châssis d'escaliers",
+	"block.blockcarpentry.frame_pressure_plate": "Châssis de plaque de pression",
+	"block.blockcarpentry.frame_door": "Châssis de porte",
+	"block.blockcarpentry.frame_trapdoor": "Châssis de trappe",
+	"block.blockcarpentry.frame_fence": "Châssis de barrière",
+	"block.blockcarpentry.frame_bed": "Frame Bed",
+	"block.blockcarpentry.frame_wall": "Frame Wall",
+	"block.blockcarpentry.frame_ladder": "Frame Ladder",
+	"block.blockcarpentry.frame_chest": "Frame Chest",
+	"block.blockcarpentry.frame_slope": "Châssis de rampe (WIP)",
+	"block.blockcarpentry.frame_edged_slope": "Châssis de rampe (WIP)",
+
+	"block.blockcarpentry.illusion_block": "Bloc illusion",
+	"block.blockcarpentry.illusion_slab": "Dalle illusion",
+	"block.blockcarpentry.illusion_button": "Bouton illusion",
+	"block.blockcarpentry.illusion_stairs": "Escaliers illusions",
+	"block.blockcarpentry.illusion_pressure_plate": "Plaque de pression illusion",
+	"block.blockcarpentry.illusion_door": "Porte illusion",
+	"block.blockcarpentry.illusion_trapdoor": "Trappe illusion",
+	"block.blockcarpentry.illusion_fence": "Barrière illusion",
+	"block.blockcarpentry.illusion_bed": "Illusion Bed",
+	"block.blockcarpentry.illusion_wall": "Illusion Wall",
+	"block.blockcarpentry.illusion_ladder": "Illusion Ladder",
+	"block.blockcarpentry.illusion_chest": "Illusion Chest",
+
+	"container.frame_chest": "Frame Chest",
+
+	"item.blockcarpentry.hammer": "Marteau",
+	"item.blockcarpentry.texture_wrench": "Clé à texture",
+	"item.blockcarpentry.chisel": "Ciseau",
+	"item.blockcarpentry.paintbrush": "Pinceau",
+
+	"itemGroup.blockcarpentry": "BlockCarpentry"
+}

@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -25,7 +26,7 @@ import java.util.Random;
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.2 09/21/20
  */
 public class SlopeBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -40,20 +41,30 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                 model.getBakedModel().getQuads(mimic, side, rand, extraData);
                 if (model != null) {
                     //only if model (from block saved in tile entity) exists:
-                    return getMimicQuads(state, side, rand, extraData);
+                    return getMimicQuads(state, side, rand, extraData, model);
                 }
             }
         }
         return Collections.emptyList();
     }
 
-    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, IBakedModel model) {
         List<BakedQuad> quads = new ArrayList<>();
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        List<TextureAtlasSprite> texture = TextureHelper.getTextureListFromBlock(mimic.getBlock());
+        List<TextureAtlasSprite> texture = TextureHelper.getTextureFromModel(model, extraData, rand);
         int index = extraData.getData(FrameBlockTile.TEXTURE);
         if (index >= texture.size()) {
             index = 0;
+        }
+        if (texture.size() == 0) {
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
+            }
+            return Collections.emptyList();
+        }
+        //TODO Remove when slopes are fixed
+        if (Minecraft.getInstance().player != null) {
+            Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but Slopes do not work at the moment"), true);
         }
         int tint = 0;
         //quads.addAll(ModelHelper.makeSlope(0,1,0,1,0,1, texture.get(index), tint,state.get(StairsBlock.FACING), state.get(StairsBlock.HALF))); //TODO remove or fix

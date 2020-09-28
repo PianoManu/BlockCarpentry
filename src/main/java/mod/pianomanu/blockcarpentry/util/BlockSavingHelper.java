@@ -1,7 +1,6 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -12,7 +11,7 @@ import java.util.List;
 /**
  * Currently unused, may be used (or rewritten) for frame beds
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.2 09/21/20
  */
 public class BlockSavingHelper {
     public static List<Block> validBlocks = new ArrayList<>();
@@ -22,11 +21,19 @@ public class BlockSavingHelper {
             if (b.getDefaultState().isSolid()) {
                 blockList.add(b);
             }
+            if (b instanceof AbstractGlassBlock) {
+                blockList.add(b);
+            }
+            if (b instanceof IceBlock) {
+                blockList.add(b);
+            }
+            if (b instanceof SlimeBlock) {
+                blockList.add(b);
+            }
+            if (b instanceof HoneyBlock) {
+                blockList.add(b);
+            }
         }
-        blockList.add(Blocks.GLASS);
-        //Collection<Block> glass = Tags.Blocks.GLASS.func_230236_b_();
-        //blockList.addAll(glass);
-        blockList.add(Blocks.ICE);
         validBlocks = blockList;
     }
 
