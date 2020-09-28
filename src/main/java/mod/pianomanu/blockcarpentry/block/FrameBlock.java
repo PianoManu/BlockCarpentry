@@ -8,6 +8,7 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -27,6 +28,7 @@ import net.minecraftforge.common.extensions.IForgeBlockState;
 import javax.annotation.Nullable;
 
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
+import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 
 
 /**
@@ -37,7 +39,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * @version 1.4 09/28/20
  */
 @SuppressWarnings("deprecation")
-public class FrameBlock extends Block implements IForgeBlockState {
+public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggable {
     /**
      * Block property (can be seed when pressing F3 in-game)
      * This is needed, because we need to detect whether the blockstate has changed
@@ -51,14 +53,14 @@ public class FrameBlock extends Block implements IForgeBlockState {
      */
     public FrameBlock(Properties properties) {
         super(properties.variableOpacity());
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0));//.with(TEXTURE,0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(WATERLOGGED, false));//.with(TEXTURE,0));
     }
 
     /**
      * Assign needed blockstates to frame block - we need "contains_block" and "light_level", both because we have to check for blockstate changes
      */
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK).add(LIGHT_LEVEL);
+        builder.add(WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
     /**

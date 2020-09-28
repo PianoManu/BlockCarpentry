@@ -12,6 +12,8 @@ import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
@@ -32,22 +34,23 @@ import java.util.Objects;
 
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 
 /**
  * Main class for frame chests - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 09/22/20
+ * @version 1.2 09/28/20
  */
 public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
     public ChestFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(LIGHT_LEVEL, 0).with(HORIZONTAL_FACING, Direction.NORTH));
+        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(LIGHT_LEVEL, 0).with(HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING, CONTAINS_BLOCK, LIGHT_LEVEL);
+        builder.add(WATERLOGGED, HORIZONTAL_FACING, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
     @Override
@@ -144,6 +147,12 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
                 InventoryHelper.dropItems(worldIn, pos, ((ChestFrameTileEntity) te).getItems());
             }
         }
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 }
 //========SOLI DEO GLORIA========//
