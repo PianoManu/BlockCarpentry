@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -56,7 +57,14 @@ public class SlopeBakedModel implements IDynamicBakedModel {
             index = 0;
         }
         if (texture.size() == 0) {
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
+            }
             return Collections.emptyList();
+        }
+        //TODO Remove when slopes are fixed
+        if (Minecraft.getInstance().player != null) {
+            Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but Slopes do not work at the moment"), true);
         }
         int tint = 0;
         //quads.addAll(ModelHelper.makeSlope(0,1,0,1,0,1, texture.get(index), tint,state.get(StairsBlock.FACING), state.get(StairsBlock.HALF))); //TODO remove or fix

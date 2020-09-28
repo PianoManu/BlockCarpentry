@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -73,6 +74,9 @@ public class WallBakedModel implements IDynamicBakedModel {
                 index = 0;
             }
             if (texture.size() == 0) {
+                if (Minecraft.getInstance().player != null) {
+                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
+                }
                 return Collections.emptyList();
             }
             int tintIndex = -1;

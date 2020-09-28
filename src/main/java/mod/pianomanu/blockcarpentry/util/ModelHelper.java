@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
@@ -219,6 +220,9 @@ public class ModelHelper {
         }
         List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
         if (textureList.size() == 0) {
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
+            }
             return quads;
         }
         TextureAtlasSprite textureNorth = textureList.get(0);
