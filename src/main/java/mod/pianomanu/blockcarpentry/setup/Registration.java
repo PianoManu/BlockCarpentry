@@ -16,6 +16,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.village.PointOfInterestType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -43,6 +44,7 @@ public class Registration {
     private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, BlockCarpentryMain.MOD_ID);
     //private static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, BlockCarpentryMain.MOD_ID);
     //private static final DeferredRegister<ModDimension> DIMENSIONS = new DeferredRegister<>(ForgeRegistries.MOD_DIMENSIONS, BlockCarpentryMain.MOD_ID);
+    private static final DeferredRegister<PointOfInterestType> POI_TYPES = DeferredRegister.create(ForgeRegistries.POI_TYPES, BlockCarpentryMain.MOD_ID);
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final RegistryObject<FrameBlock> FRAMEBLOCK = BLOCKS.register("frameblock", () -> new FrameBlock(Block.Properties.create(Material.WOOD)
@@ -95,6 +97,8 @@ public class Registration {
     public static final RegistryObject<BedFrameBlock> BED_FRAMEBLOCK = BLOCKS.register("frame_bed", () -> new BedFrameBlock(DyeColor.BROWN, Block.Properties.from(FRAMEBLOCK.get()).notSolid()));
     public static final RegistryObject<Item> BED_FRAME_ITEM = ITEMS.register("frame_bed", () -> new BlockItem(BED_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<BedFrameTile>> BED_FRAME_TILE = TILES.register("frame_bed", () -> TileEntityType.Builder.create(BedFrameTile::new, BED_FRAMEBLOCK.get()).build(null));
+    //TODO this does not work...
+    public static final RegistryObject<PointOfInterestType> BED_FRAME_POI = POI_TYPES.register("frame_bed", () -> new PointOfInterestType("frame_bed_poit", PointOfInterestType.getAllStates(Registration.BED_FRAMEBLOCK.get()), 1,1));
 
     public static final RegistryObject<WallFrameBlock> WALL_FRAMEBLOCK = BLOCKS.register("frame_wall", () -> new WallFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> WALL_FRAME_ITEM = ITEMS.register("frame_wall", () -> new BlockItem(WALL_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
@@ -159,6 +163,7 @@ public class Registration {
     public static final RegistryObject<BedFrameBlock> BED_ILLUSIONBLOCK = BLOCKS.register("illusion_bed", () -> new BedFrameBlock(DyeColor.BROWN, Block.Properties.from(FRAMEBLOCK.get()).notSolid()));
     public static final RegistryObject<Item> BED_ILLUSION_ITEM = ITEMS.register("illusion_bed", () -> new BlockItem(BED_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<BedFrameTile>> BED_ILLUSION_TILE = TILES.register("illusion_bed", () -> TileEntityType.Builder.create(BedFrameTile::new, BED_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<PointOfInterestType> BED_ILLUSION_POI = POI_TYPES.register("illusion_bed", () -> new PointOfInterestType("illusion_bed", PointOfInterestType.getAllStates(Registration.BED_ILLUSIONBLOCK.get()), 1, PointOfInterestType.MATCH_ANY, 1));
 
     public static final RegistryObject<WallFrameBlock> WALL_ILLUSIONBLOCK = BLOCKS.register("illusion_wall", () -> new WallFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> WALL_ILLUSION_ITEM = ITEMS.register("illusion_wall", () -> new BlockItem(WALL_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
@@ -188,6 +193,8 @@ public class Registration {
         CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
         //ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         //DIMENSIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        LOGGER.info("Registering points of interest from Blockcarpentry");
+        POI_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
 
