@@ -1,13 +1,17 @@
 package mod.pianomanu.blockcarpentry.util;
 
 import com.google.common.collect.ImmutableList;
+import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
@@ -21,7 +25,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.7 09/25/20
+ * @version 1.8 09/28/20
  */
 public class ModelHelper {
 
@@ -214,6 +218,9 @@ public class ModelHelper {
             zh--;
         }
         List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
+        if (textureList.size() == 0) {
+            return quads;
+        }
         TextureAtlasSprite textureNorth = textureList.get(0);
         TextureAtlasSprite textureEast = textureList.get(0);
         TextureAtlasSprite textureSouth = textureList.get(0);
@@ -249,6 +256,64 @@ public class ModelHelper {
             quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         if (south)
             quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        return quads;
+    }
+
+    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, int tintIndex, TextureAtlasSprite textureNorth, TextureAtlasSprite textureSouth, TextureAtlasSprite textureEast, TextureAtlasSprite textureWest, TextureAtlasSprite textureUp, TextureAtlasSprite textureDown) {
+        return createSixFaceCuboid(xl, xh, yl, yh, zl, zh, tintIndex, true, true, true, true, true, true, textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, true);
+    }
+
+    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, TextureAtlasSprite textureNorth, TextureAtlasSprite textureSouth, TextureAtlasSprite textureEast, TextureAtlasSprite textureWest, TextureAtlasSprite textureUp, TextureAtlasSprite textureDown, Boolean moveOverlay) {
+        List<BakedQuad> quads = new ArrayList<>();
+        //Eight corners of the block
+        Vector3d NWU = v(xl, yh, zl); //North-West-Up
+        Vector3d NEU = v(xl, yh, zh); //...
+        Vector3d NWD = v(xl, yl, zl);
+        Vector3d NED = v(xl, yl, zh);
+        Vector3d SWU = v(xh, yh, zl);
+        Vector3d SEU = v(xh, yh, zh);
+        Vector3d SWD = v(xh, yl, zl);
+        Vector3d SED = v(xh, yl, zh); //South-East-Down
+        if (xl < 0) {
+            xl++;
+        }
+        if (xh > 1) {
+            xh--;
+        }
+        if (yl < 0) {
+            yl++;
+        }
+        if (yh > 1) {
+            yh--;
+        }
+        if (zl < 0) {
+            zl++;
+        }
+        if (zh > 1) {
+            zh--;
+        }
+        if (up && textureUp != null)
+            quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+        if (down && textureDown != null)
+            quads.add(createQuad(NED, NWD, SWD, SED, textureDown, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
+        //not moved overlay - texture starts from y=1
+        if (west && textureWest != null && !moveOverlay)
+            quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (east && textureEast != null && !moveOverlay)
+            quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (north && textureNorth != null && !moveOverlay)
+            quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (south && textureSouth != null && !moveOverlay)
+            quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        //moved overlay - texture starts from height of block
+        if (west && textureWest != null && moveOverlay)
+            quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, 16 - xh * 16, 16 - xl * 16, yl * 16, yh * 16, tintIndex));
+        if (east && textureEast != null && moveOverlay)
+            quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xl * 16, xh * 16, yl * 16, yh * 16, tintIndex));
+        if (north && textureNorth != null && moveOverlay)
+            quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zl * 16, zh * 16, yl * 16, yh * 16, tintIndex));
+        if (south && textureSouth != null && moveOverlay)
+            quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, 16 - zh * 16, 16 - zl * 16, yl * 16, yh * 16, tintIndex));
         return quads;
     }
 
@@ -295,6 +360,42 @@ public class ModelHelper {
      */
     private static Vector3d v(double x, double y, double z) {
         return new Vector3d(x, y, z);
+    }
+
+    public static List<BakedQuad> createOverlay(float xl, float xh, float yl, float yh, float zl, float zh, int overlayIndex) {
+        return createOverlay(xl, xh, yl, yh, zl, zh, overlayIndex, true, true, true, true, true, true, true);
+    }
+
+    public static List<BakedQuad> createOverlay(float xl, float xh, float yl, float yh, float zl, float zh, int overlayIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, Boolean moveOverlay) {
+        int tintIndex = -1;
+        TextureAtlasSprite overlay = null;
+        TextureAtlasSprite upOverlay = null;
+        TextureAtlasSprite downOverlay = null;
+        if (overlayIndex == 1) {
+            tintIndex = 1;
+            overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/grass_block_side_overlay"));
+            upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/grass_block_top"));
+        }
+        if (overlayIndex == 2) {
+            tintIndex = 1;
+            overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_side_overlay_large"));
+            upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/grass_block_top"));
+        }
+        if (overlayIndex == 3) {
+            tintIndex = -1;
+            overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay"));
+            upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/snow"));
+        }
+        if (overlayIndex == 4) {
+            tintIndex = -1;
+            overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay_small"));
+            upOverlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/snow"));
+        }
+        if (overlayIndex == 5) {
+            tintIndex = 1;
+            overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/vine"));
+        }
+        return ModelHelper.createSixFaceCuboid(xl, xh, yl, yh, zl, zh, tintIndex, north, south, east, west, up, down, overlay, overlay, overlay, overlay, upOverlay, downOverlay, moveOverlay);
     }
 }
 //========SOLI DEO GLORIA========//

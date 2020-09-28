@@ -36,8 +36,9 @@ import javax.annotation.Nullable;
 /**
  * Main class for frame "slabs", they can be placed in six different ways (that's the reason for this class name) - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
+ *
  * @author PianoManu
- * @version 1.2 09/22/20
+ * @version 1.3 09/28/20
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
@@ -123,8 +124,9 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
             }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world,pos,player,item);
-            BlockAppearanceHelper.setDesignTexture(world,pos,player,item);
+            BlockAppearanceHelper.setDesign(world, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setOverlay(world, pos, player, item);
         }
         return ActionResultType.SUCCESS;
     }

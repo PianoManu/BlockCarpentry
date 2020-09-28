@@ -17,6 +17,7 @@ import net.minecraftforge.client.model.data.IModelData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -26,7 +27,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.1 09/25/20
+ * @version 1.4 09/28/20
  */
 public class IllusionBlockBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -49,7 +50,12 @@ public class IllusionBlockBakedModel implements IDynamicBakedModel {
                     if (mimic.getBlock() instanceof GrassBlock) {
                         tintIndex = 1;
                     }
-                    return ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex);
+                    List<BakedQuad> quads = new ArrayList<>(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                    int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+                    if (overlayIndex != 0) {
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex));
+                    }
+                    return quads;
                 }
             }
         }

@@ -36,8 +36,9 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
 /**
  * Main class for frame doors - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
+ *
  * @author PianoManu
- * @version 1.2 09/22/20
+ * @version 1.3 09/28/20
  */
 public class DoorFrameBlock extends DoorBlock implements IWaterLoggable {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -78,7 +79,8 @@ public class DoorFrameBlock extends DoorBlock implements IWaterLoggable {
                     player.getHeldItem(hand).setCount(count - 1);
                     return ActionResultType.SUCCESS;
                 }
-            } if (!item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+            }
+            if (!item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                 if (state.get(DoorBlock.OPEN)) {
                     state = state.with(OPEN, false);
                 } else {
@@ -97,6 +99,7 @@ public class DoorFrameBlock extends DoorBlock implements IWaterLoggable {
             BlockAppearanceHelper.setDesign(world, pos, player, item);
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
             BlockAppearanceHelper.setGlassColor(world, pos, player, hand);
+            BlockAppearanceHelper.setOverlay(world, pos, player, item);
         }
         return ActionResultType.SUCCESS;
     }

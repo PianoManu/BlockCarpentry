@@ -23,8 +23,9 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
 /**
  * TileEntity for {@link mod.pianomanu.blockcarpentry.block.FrameBlock} and all sorts of frame blocks
  * Contains all information about the block and the mimicked block
+ *
  * @author PianoManu
- * @version 1.1 09/07/20
+ * @version 1.2 09/28/20
  */
 public class FrameBlockTile extends TileEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -33,6 +34,7 @@ public class FrameBlockTile extends TileEntity {
     public static final ModelProperty<Integer> DESIGN_TEXTURE = new ModelProperty<>();
     //currently only for doors and trapdoors
     public static final ModelProperty<Integer> GLASS_COLOR = new ModelProperty<>();
+    public static final ModelProperty<Integer> OVERLAY = new ModelProperty<>();
 
     public final int maxTextures = 8;
     public final int maxDesignTextures = 4;
@@ -43,6 +45,7 @@ public class FrameBlockTile extends TileEntity {
     private Integer design = 0;
     private Integer designTexture = 0;
     private Integer glassColor = 0;
+    private Integer overlay = 0;
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -98,6 +101,35 @@ public class FrameBlockTile extends TileEntity {
         this.glassColor = colorNumber;
     }
 
+    private static Integer readInteger(CompoundNBT tag) {
+        if (!tag.contains("number", 8)) {
+            return 0;
+        } else {
+            try {
+                return Integer.parseInt(tag.getString("number"));
+            } catch (NumberFormatException e) {
+                LOGGER.error("Not a valid Number Format: " + tag.getString("number"));
+                return 0;
+            }
+        }
+    }
+
+    public Integer getOverlay() {
+        return this.overlay;
+    }
+
+    public void setOverlay(Integer overlay) {
+        this.overlay = overlay;
+        markDirty();
+        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    }
+
+    @Nullable
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(pos, 1, getUpdateTag());
+    }
+
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT tag = super.getUpdateTag();
@@ -116,13 +148,10 @@ public class FrameBlockTile extends TileEntity {
         if (glassColor != null) {
             tag.put("glass_color", writeInteger(glassColor));
         }
+        if (overlay != null) {
+            tag.put("overlay", writeInteger(overlay));
+        }
         return tag;
-    }
-
-    @Nullable
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(pos, 1, getUpdateTag());
     }
 
     @Override
@@ -132,6 +161,7 @@ public class FrameBlockTile extends TileEntity {
         Integer oldDesign = design;
         Integer oldDesignTexture = designTexture;
         Integer oldGlassColor = glassColor;
+        Integer oldOverlay = overlay;
         CompoundNBT tag = pkt.getNbtCompound();
         if (tag.contains("mimic")) {
             mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
@@ -168,6 +198,13 @@ public class FrameBlockTile extends TileEntity {
                 world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
+        if (tag.contains("overlay")) {
+            overlay = readInteger(tag.getCompound("overlay"));
+            if (!Objects.equals(oldOverlay, overlay)) {
+                ModelDataManager.requestModelDataRefresh(this);
+                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+            }
+        }
     }
 
     @Nonnull
@@ -179,6 +216,7 @@ public class FrameBlockTile extends TileEntity {
                 .withInitial(DESIGN, design)
                 .withInitial(DESIGN_TEXTURE, designTexture)
                 .withInitial(GLASS_COLOR, glassColor)
+                .withInitial(OVERLAY, overlay)
                 .build();
     }
 
@@ -200,6 +238,9 @@ public class FrameBlockTile extends TileEntity {
         if (tag.contains("glass_color")) {
             glassColor = readInteger(tag.getCompound("glass_color"));
         }
+        if (tag.contains("overlay")) {
+            overlay = readInteger(tag.getCompound("overlay"));
+        }
     }
 
     @Override
@@ -219,15 +260,10 @@ public class FrameBlockTile extends TileEntity {
         if (glassColor != null) {
             tag.put("glass_color", writeInteger(glassColor));
         }
+        if (overlay != null) {
+            tag.put("overlay", writeInteger(overlay));
+        }
         return super.write(tag);
-    }
-
-    public void clear() {
-        this.setMimic(null);
-        this.setDesign(0);
-        this.setDesign(0);
-        this.setDesign(0);
-        this.setGlassColor(0);
     }
 
     private static CompoundNBT writeInteger(Integer tag) {
@@ -236,17 +272,13 @@ public class FrameBlockTile extends TileEntity {
         return compoundnbt;
     }
 
-    private static Integer readInteger(CompoundNBT tag) {
-        if (!tag.contains("number", 8)) {
-            return 0;
-        } else {
-            try {
-                return Integer.parseInt(tag.getString("number"));
-            } catch (NumberFormatException e) {
-                LOGGER.error("Not a valid Number Format: "+tag.getString("number"));
-                return 0;
-            }
-        }
+    public void clear() {
+        this.setMimic(null);
+        this.setDesign(0);
+        this.setDesign(0);
+        this.setDesign(0);
+        this.setGlassColor(0);
+        this.setOverlay(0);
     }
 }
 //========SOLI DEO GLORIA========//

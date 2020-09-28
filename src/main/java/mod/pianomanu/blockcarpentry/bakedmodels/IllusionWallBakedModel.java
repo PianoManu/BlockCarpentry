@@ -26,8 +26,9 @@ import java.util.Random;
 /**
  * Contains all information for the block model
  * See {@link ModelHelper} for more information
+ *
  * @author PianoManu
- * @version 1.1 09/17/20
+ * @version 1.2 09/28/20
  */
 public class IllusionWallBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -167,11 +168,11 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
                 }
                 if (state.get(FenceFrameBlock.EAST)) {
                     //Cross form
-                    quads.addAll(ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 12 / 16f, 14 / 16f, 5 / 16f, 11 /16f, mimic, model, extraData, rand, tintIndex));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 12 / 16f, 14 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
                     quads.addAll(ModelHelper.createSixFaceCuboid(12 / 16f, 15 / 16f, 10 / 16f, 12 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
                     quads.addAll(ModelHelper.createSixFaceCuboid(12 / 16f, 13 / 16f, 8 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
                     quads.addAll(ModelHelper.createSixFaceCuboid(12 / 16f, 15 / 16f, 2 / 16f, 8 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0f, 2 / 16f, 5 / 16f, 11 /16f, mimic, model, extraData, rand, tintIndex));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0f, 2 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
                 }
                 if (state.get(FenceFrameBlock.SOUTH)) {
                     //Cross form
@@ -183,12 +184,16 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
                 }
                 if (state.get(FenceFrameBlock.WEST)) {
                     //Cross form
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 12 / 16f, 14 / 16f, 5 /16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 12 / 16f, 14 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
                     quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 4 / 16f, 10 / 16f, 12 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
                     quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 4 / 16f, 8 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
                     quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 4 / 16f, 2 / 16f, 8 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0f, 2 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
                 }
+            }
+            int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+            if (overlayIndex != 0) {
+                quads.addAll(ModelHelper.createOverlay(4 / 16f, 12 / 16f, 0f, 1f, 4 / 16f, 12 / 16f, overlayIndex));
             }
             return quads;
         }

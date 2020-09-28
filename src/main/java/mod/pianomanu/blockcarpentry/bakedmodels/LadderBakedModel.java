@@ -29,7 +29,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.1 09/21/20
+ * @version 1.2 09/28/20
  */
 @SuppressWarnings("deprecation")
 public class LadderBakedModel implements IDynamicBakedModel {
@@ -117,167 +117,184 @@ public class LadderBakedModel implements IDynamicBakedModel {
                         break;
                 }
             }
-            if(design == 0 || design == 1) {
+            if (design == 0 || design == 1) {
                 switch (state.get(LadderBlock.FACING)) {
                     case WEST:
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,2/16f,3/16f,1/16f,15/16f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,6/16f,7/16f,1/16f,15/16f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,10/16f,11/16f,1/16f,15/16f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,14/16f,15/16f,1/16f,15/16f,texture,tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 2 / 16f, 3 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 6 / 16f, 7 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 10 / 16f, 11 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 14 / 16f, 15 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
                         break;
                     case SOUTH:
-                        quads.addAll(ModelHelper.createCuboid( 1/16f, 15/16f,2/16f, 3/16f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 1/16f, 15/16f,6/16f, 7/16f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 1/16f, 15/16f,10/16f, 11/16f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 1/16f, 15/16f,14/16f, 15/16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 2 / 16f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 6 / 16f, 7 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 10 / 16f, 11 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 14 / 16f, 15 / 16f, 0f, 3 / 16f, texture, tintIndex));
                         break;
                     case NORTH:
-                        quads.addAll(ModelHelper.createCuboid(1/16f, 15/16f, 2/16f, 3/16f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(1/16f, 15/16f, 6/16f, 7/16f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(1/16f, 15/16f, 10/16f, 11/16f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(1/16f, 15/16f, 14/16f, 15/16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 6 / 16f, 7 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 10 / 16f, 11 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 14 / 16f, 15 / 16f, 13 / 16f, 1f, texture, tintIndex));
                         break;
                     case EAST:
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 2/16f, 3/16f, 1/16f, 15/16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 6/16f, 7/16f, 1/16f, 15/16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 10/16f, 11/16f, 1/16f, 15/16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 14/16f, 15/16f, 1/16f, 15/16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 2 / 16f, 3 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 6 / 16f, 7 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 10 / 16f, 11 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 14 / 16f, 15 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
                         break;
                 }
             }
-            if(design == 1) {
+            if (design == 1) {
                 switch (state.get(LadderBlock.FACING)) {
                     case WEST:
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,0/16f,1/16f,1/16f,15/16f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,4/16f,5/16f,1/16f,15/16f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,8/16f,9/16f,1/16f,15/16f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,12/16f,13/16f,1/16f,15/16f,texture,tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0 / 16f, 1 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 4 / 16f, 5 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 8 / 16f, 9 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 13 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
                         break;
                     case SOUTH:
-                        quads.addAll(ModelHelper.createCuboid( 1/16f, 15/16f,0/16f, 1/16f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 1/16f, 15/16f,4/16f, 5/16f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 1/16f, 15/16f,8/16f, 9/16f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 1/16f, 15/16f,12/16f, 13/16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 0 / 16f, 1 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 4 / 16f, 5 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 8 / 16f, 9 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 12 / 16f, 13 / 16f, 0f, 3 / 16f, texture, tintIndex));
                         break;
                     case NORTH:
-                        quads.addAll(ModelHelper.createCuboid(1/16f, 15/16f, 0/16f, 1/16f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(1/16f, 15/16f, 4/16f, 5/16f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(1/16f, 15/16f, 8/16f, 9/16f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(1/16f, 15/16f, 12/16f, 13/16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 0 / 16f, 1 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 4 / 16f, 5 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 8 / 16f, 9 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 12 / 16f, 13 / 16f, 13 / 16f, 1f, texture, tintIndex));
                         break;
                     case EAST:
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0/16f, 1/16f, 1/16f, 15/16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 4/16f, 5/16f, 1/16f, 15/16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 8/16f, 9/16f, 1/16f, 15/16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 12/16f, 13/16f, 1/16f, 15/16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0 / 16f, 1 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 4 / 16f, 5 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 8 / 16f, 9 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 13 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
                         break;
                 }
             }
-            if(design == 2) {
+            if (design == 2) {
                 switch (state.get(LadderBlock.FACING)) {
                     case WEST:
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,1/16f,3/16f,1/16f,15/16f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,5/16f,7/16f,1/16f,15/16f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,9/16f,11/16f,1/16f,15/16f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,13/16f,15/16f,1/16f,15/16f,texture,tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 1 / 16f, 3 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 5 / 16f, 7 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 9 / 16f, 11 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 13 / 16f, 15 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
                         break;
                     case SOUTH:
-                        quads.addAll(ModelHelper.createCuboid( 1/16f, 15/16f,1/16f, 3/16f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 1/16f, 15/16f,5/16f, 7/16f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 1/16f, 15/16f,9/16f, 11/16f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 1/16f, 15/16f,13/16f, 15/16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 1 / 16f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 7 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 9 / 16f, 11 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 13 / 16f, 15 / 16f, 0f, 3 / 16f, texture, tintIndex));
                         break;
                     case NORTH:
-                        quads.addAll(ModelHelper.createCuboid(1/16f, 15/16f, 1/16f, 3/16f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(1/16f, 15/16f, 5/16f, 7/16f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(1/16f, 15/16f, 9/16f, 11/16f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(1/16f, 15/16f, 13/16f, 15/16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 1 / 16f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 7 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 9 / 16f, 11 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 13 / 16f, 15 / 16f, 13 / 16f, 1f, texture, tintIndex));
                         break;
                     case EAST:
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 1/16f, 3/16f, 1/16f, 15/16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 5/16f, 7/16f, 1/16f, 15/16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 9/16f, 11/16f, 1/16f, 15/16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 13/16f, 15/16f, 1/16f, 15/16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 1 / 16f, 3 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 5 / 16f, 7 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 9 / 16f, 11 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 13 / 16f, 15 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
                         break;
                 }
             }
             if (design == 3) {
                 switch (state.get(LadderBlock.FACING)) {
                     case WEST:
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,1/16f,3/16f,0f,1f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,5/16f,7/16f,0f,1f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,9/16f,11/16f,0f,1f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,13/16f,15/16f,0f,1f,texture,tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 1 / 16f, 3 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 5 / 16f, 7 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 9 / 16f, 11 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 13 / 16f, 15 / 16f, 0f, 1f, texture, tintIndex));
 
-                        quads.addAll(ModelHelper.createCuboid(14/16f,1f,0f,1f,2/16f,4/16f,designTexture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14/16f,1f,0f,1f,12/16f,14/16f,designTexture,tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, tintIndex));
                         break;
                     case SOUTH:
-                        quads.addAll(ModelHelper.createCuboid( 0f, 1f,1/16f, 3/16f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 0f, 1f,5/16f, 7/16f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 0f, 1f,9/16f, 11/16f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 0f, 1f,13/16f, 15/16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 1 / 16f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 7 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 9 / 16f, 11 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 15 / 16f, 0f, 3 / 16f, texture, tintIndex));
 
-                        quads.addAll(ModelHelper.createCuboid(2/16f,4/16f,0f,1f,0f,2/16f,designTexture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,14/16f,0f,1f,0f,2/16f,designTexture,tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, tintIndex));
                         break;
                     case NORTH:
-                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 1/16f, 3/16f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 5/16f, 7/16f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 9/16f, 11/16f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 13/16f, 15/16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 1 / 16f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 7 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 9 / 16f, 11 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 15 / 16f, 13 / 16f, 1f, texture, tintIndex));
 
-                        quads.addAll(ModelHelper.createCuboid(2/16f,4/16f,0f,1f,14/16f,1f,designTexture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,14/16f,0f,1f,14/16f,1f,designTexture,tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, tintIndex));
                         break;
                     case EAST:
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 1/16f, 3/16f, 0f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 5/16f, 7/16f, 0f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 9/16f, 11/16f, 0f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 13/16f, 15/16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 1 / 16f, 3 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 5 / 16f, 7 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 9 / 16f, 11 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 13 / 16f, 15 / 16f, 0f, 1f, texture, tintIndex));
 
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,0f,1f,2/16f,4/16f,designTexture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,0f,1f,12/16f,14/16f,designTexture,tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, tintIndex));
                         break;
                 }
             }
             if (design == 4) {
                 switch (state.get(LadderBlock.FACING)) {
                     case WEST:
-                        quads.addAll(ModelHelper.createCuboid(13/16f,14/16f,1/16f,3/16f,0f,1f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,14/16f,5/16f,7/16f,0f,1f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,14/16f,9/16f,11/16f,0f,1f,texture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,14/16f,13/16f,15/16f,0f,1f,texture,tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 14 / 16f, 1 / 16f, 3 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 14 / 16f, 5 / 16f, 7 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 14 / 16f, 9 / 16f, 11 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(13 / 16f, 14 / 16f, 13 / 16f, 15 / 16f, 0f, 1f, texture, tintIndex));
 
-                        quads.addAll(ModelHelper.createCuboid(14/16f,1f,0f,1f,2/16f,4/16f,designTexture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14/16f,1f,0f,1f,12/16f,14/16f,designTexture,tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, tintIndex));
                         break;
                     case SOUTH:
-                        quads.addAll(ModelHelper.createCuboid( 0f, 1f,1/16f, 3/16f, 2/16f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 0f, 1f,5/16f, 7/16f, 2/16f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 0f, 1f,9/16f, 11/16f, 2/16f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid( 0f, 1f,13/16f, 15/16f, 2/16f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 1 / 16f, 3 / 16f, 2 / 16f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 7 / 16f, 2 / 16f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 9 / 16f, 11 / 16f, 2 / 16f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 15 / 16f, 2 / 16f, 3 / 16f, texture, tintIndex));
 
-                        quads.addAll(ModelHelper.createCuboid(2/16f,4/16f,0f,1f,0f,2/16f,designTexture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,14/16f,0f,1f,0f,2/16f,designTexture,tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, tintIndex));
                         break;
                     case NORTH:
-                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 1/16f, 3/16f, 13 / 16f, 14/16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 5/16f, 7/16f, 13 / 16f, 14/16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 9/16f, 11/16f, 13 / 16f, 14/16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 13/16f, 15/16f, 13 / 16f, 14/16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 1 / 16f, 3 / 16f, 13 / 16f, 14 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 7 / 16f, 13 / 16f, 14 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 9 / 16f, 11 / 16f, 13 / 16f, 14 / 16f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 15 / 16f, 13 / 16f, 14 / 16f, texture, tintIndex));
 
-                        quads.addAll(ModelHelper.createCuboid(2/16f,4/16f,0f,1f,14/16f,1f,designTexture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,14/16f,0f,1f,14/16f,1f,designTexture,tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, tintIndex));
                         break;
                     case EAST:
-                        quads.addAll(ModelHelper.createCuboid(2/16f, 3 / 16f, 1/16f, 3/16f, 0f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(2/16f, 3 / 16f, 5/16f, 7/16f, 0f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(2/16f, 3 / 16f, 9/16f, 11/16f, 0f, 1f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(2/16f, 3 / 16f, 13/16f, 15/16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 3 / 16f, 1 / 16f, 3 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 3 / 16f, 5 / 16f, 7 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 3 / 16f, 9 / 16f, 11 / 16f, 0f, 1f, texture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 3 / 16f, 13 / 16f, 15 / 16f, 0f, 1f, texture, tintIndex));
 
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,0f,1f,2/16f,4/16f,designTexture,tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,0f,1f,12/16f,14/16f,designTexture,tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, tintIndex));
+                        break;
+                }
+            }
+            int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+            if (overlayIndex != 0) {
+                switch (state.get(LadderBlock.FACING)) {
+                    case NORTH:
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 13 / 16f, 1f, overlayIndex));
+                        break;
+                    case WEST:
+                        quads.addAll(ModelHelper.createOverlay(13 / 16f, 1f, 0f, 1f, 0f, 1f, overlayIndex));
+                        break;
+                    case EAST:
+                        quads.addAll(ModelHelper.createOverlay(0f, 3 / 16f, 0f, 1f, 0f, 1f, overlayIndex));
+                        break;
+                    case SOUTH:
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 3 / 16f, overlayIndex));
                         break;
                 }
             }

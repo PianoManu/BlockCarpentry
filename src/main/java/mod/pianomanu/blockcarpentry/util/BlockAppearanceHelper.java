@@ -28,7 +28,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.3 09/17/20
+ * @version 1.4 09/28/20
  */
 public class BlockAppearanceHelper {
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
@@ -197,6 +197,43 @@ public class BlockAppearanceHelper {
             return colors.indexOf(item);
         }
         return 0;
+    }
+
+    public static void setOverlay(World world, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
+        if (itemStack.getItem().equals(Items.GRASS)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                if (fte.getOverlay() == 1) {
+                    fte.setOverlay(2);
+                    player.sendStatusMessage(new TranslationTextComponent("Activated Large Grass Overlay"), true);
+                } else {
+                    fte.setOverlay(1);
+                    player.sendStatusMessage(new TranslationTextComponent("Activated Grass Overlay"), true);
+                }
+            }
+        }
+        if (itemStack.getItem().equals(Items.SNOWBALL)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                if (fte.getOverlay() == 3) {
+                    fte.setOverlay(4);
+                    player.sendStatusMessage(new TranslationTextComponent("Activated Small Snow Overlay"), true);
+                } else {
+                    fte.setOverlay(3);
+                    player.sendStatusMessage(new TranslationTextComponent("Activated Snow Overlay"), true);
+                }
+            }
+        }
+        if (itemStack.getItem().equals(Items.VINE)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                fte.setOverlay(5);
+                player.sendStatusMessage(new TranslationTextComponent("Activated Vine Overlay"), true);
+            }
+        }
     }
 }
 //========SOLI DEO GLORIA========//

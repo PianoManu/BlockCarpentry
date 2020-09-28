@@ -27,7 +27,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 09/17/20
+ * @version 1.3 09/28/20
  */
 public class IllusionPressurePlatePressedBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -56,7 +56,13 @@ public class IllusionPressurePlatePressedBakedModel implements IDynamicBakedMode
             if (mimic.getBlock() instanceof GrassBlock) {
                 tintIndex = 1;
             }
-            return new ArrayList<>(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, -1 / 32f, 1 / 32f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex));
+            List<BakedQuad> quads = new ArrayList<>();
+            quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 0f, 1 / 32f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex));
+            int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+            if (overlayIndex != 0) {
+                quads.addAll(ModelHelper.createOverlay(1 / 16f, 15 / 16f, 0f, 1 / 32f, 1 / 16f, 15 / 16f, overlayIndex));
+            }
+            return quads;
         }
         return Collections.emptyList();
     }

@@ -31,8 +31,9 @@ import java.util.Random;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ *
  * @author PianoManu
- * @version 1.3 09/21/20
+ * @version 1.4 09/28/20
  */
 public class TrapdoorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -95,20 +96,15 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
             Direction east = Direction.EAST;
             Direction north = Direction.NORTH;
             Direction south = Direction.SOUTH;
-            //int design = 0; //fixme
-            int design = extraData.getData(FrameBlockTile.DESIGN);//int design = state.get(DoorFrameBlock.DESIGN);
-            int desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE); //state.get(DoorFrameBlock.DESIGN_TEXTURE);
-            int flag = 0;
+            int design = extraData.getData(FrameBlockTile.DESIGN);
+            int desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE);
 
             if (design == 0 || design == 1) {
                 if (dir == north && open) {
-                    flag = 1;
                     quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, texture, tintIndex));
                 } else if (dir == west && open) {
-                    flag = 2;
                     quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex));
                 } else if (dir == east && open) {
-                    flag = 3;
                     quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, texture, tintIndex));
                 } else if (dir == south && open) {
                     quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, texture, tintIndex));
@@ -345,7 +341,22 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
                     }
                 }
             }
-
+            int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+            if (overlayIndex != 0) {
+                if (dir == north && open) {
+                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 13 / 16f, 1f, overlayIndex));
+                } else if (dir == west && open) {
+                    quads.addAll(ModelHelper.createOverlay(13 / 16f, 1f, 0f, 1f, 0f, 1f, overlayIndex));
+                } else if (dir == east && open) {
+                    quads.addAll(ModelHelper.createOverlay(0f, 3 / 16f, 0f, 1f, 0f, 1f, overlayIndex));
+                } else if (dir == south && open) {
+                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 3 / 16f, overlayIndex));
+                } else if (half == bottom) {
+                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 3 / 16f, 0f, 1f, overlayIndex));
+                } else if (half == top) {
+                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 13 / 16f, 1f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));
+                }
+            }
             return quads;
         }
         return Collections.emptyList();

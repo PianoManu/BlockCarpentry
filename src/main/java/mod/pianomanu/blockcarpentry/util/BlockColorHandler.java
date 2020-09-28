@@ -4,7 +4,6 @@ import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.GrassBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.tileentity.TileEntity;
@@ -24,11 +23,12 @@ import javax.annotation.Nullable;
 
 /**
  * This class ensures that blocks of grass take on the correct color
+ *
  * @author PianoManu
- * @version 1.3 09/25/20
+ * @version 1.4 09/28/20
  */
 public class BlockColorHandler implements IBlockColor {
-    public static final IBlockColor INSTANCE =new BlockColorHandler();
+    public static final IBlockColor INSTANCE = new BlockColorHandler();
     private static final Logger LOGGER = LogManager.getLogger();
 
     @OnlyIn(Dist.CLIENT)
@@ -40,23 +40,7 @@ public class BlockColorHandler implements IBlockColor {
                 : GrassColors.get(0.5D, 1.0D), Registration.FRAMEBLOCK.get());
     }
 
-    @Override
-    public int getColor(@Nonnull BlockState state, @Nullable IBlockDisplayReader lightReader, @Nullable BlockPos pos, int tintIndex) {
-        //TODO does this work?
-        if(state.getBlock() instanceof FrameBlock && lightReader!=null && pos!=null) {
-            TileEntity te = lightReader.getTileEntity(pos);
-            if (te instanceof FrameBlockTile && state.get(BCBlockStateProperties.CONTAINS_BLOCK)) {
-                BlockState containedBlock = ((FrameBlockTile) te).getMimic();
-                if (containedBlock.getBlock() instanceof GrassBlock) {
-                    return BiomeColors.getGrassColor(lightReader,pos);
-                }
-                return Minecraft.getInstance().getBlockColors().getColor(containedBlock, lightReader, pos, tintIndex);
-            }
-        }
-        return BiomeColors.getGrassColor(lightReader,pos);
-    }
-    public static void registerBlockColors()
-    {
+    public static void registerBlockColors() {
         // DEBUG
         LOGGER.info("Registering block color handler");
 
@@ -86,12 +70,27 @@ public class BlockColorHandler implements IBlockColor {
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.TRAPDOOR_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.FENCE_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.BED_ILLUSIONBLOCK.get());
-        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.WALL_FRAMEBLOCK.get());
-        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.LADDER_FRAMEBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.WALL_ILLUSIONBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.LADDER_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CHEST_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.FENCE_GATE_ILLUSIONBLOCK.get());
 
         LOGGER.info("Registered block color handler");
+    }
+
+    @Override
+    public int getColor(@Nonnull BlockState state, @Nullable IBlockDisplayReader lightReader, @Nullable BlockPos pos, int tintIndex) {
+        //TODO does this work?
+        if (state.getBlock() instanceof FrameBlock && lightReader != null && pos != null) {
+            TileEntity te = lightReader.getTileEntity(pos);
+            if (te instanceof FrameBlockTile && state.get(BCBlockStateProperties.CONTAINS_BLOCK)) {
+                BlockState containedBlock = ((FrameBlockTile) te).getMimic();
+                return BiomeColors.getGrassColor(lightReader, pos);
+
+                //return Minecraft.getInstance().getBlockColors().getColor(containedBlock, lightReader, pos, tintIndex);
+            }
+        }
+        return BiomeColors.getGrassColor(lightReader, pos);
     }
 }
 //========SOLI DEO GLORIA========//

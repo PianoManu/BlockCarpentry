@@ -26,8 +26,9 @@ import java.util.Random;
 /**
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
+ *
  * @author PianoManu
- * @version 1.2 09/21/20
+ * @version 1.3 09/28/20
  */
 public class PressurePlatePressedFrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -61,7 +62,7 @@ public class PressurePlatePressedFrameBakedModel implements IDynamicBakedModel {
         }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         int tex = extraData.getData(FrameBlockTile.TEXTURE);
-        if (mimic!=null) {
+        if (mimic != null) {
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
             TextureAtlasSprite texture;
             if (textureList.size() <= tex) {
@@ -76,7 +77,13 @@ public class PressurePlatePressedFrameBakedModel implements IDynamicBakedModel {
             if (mimic.getBlock() instanceof GrassBlock) {
                 tintIndex = 1;
             }
-            return new ArrayList<>(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 0f, 1 / 32f, 1 / 16f, 15 / 16f, texture, tintIndex));
+            List<BakedQuad> quads = new ArrayList<>();
+            quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 0f, 1 / 32f, 1 / 16f, 15 / 16f, texture, tintIndex));
+            int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+            if (overlayIndex != 0) {
+                quads.addAll(ModelHelper.createOverlay(1 / 16f, 15 / 16f, 0f, 1 / 32f, 1 / 16f, 15 / 16f, overlayIndex));
+            }
+            return quads;
         }
         return Collections.emptyList();
     }
