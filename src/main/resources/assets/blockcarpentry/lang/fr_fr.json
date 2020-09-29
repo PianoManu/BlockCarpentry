@@ -12,6 +12,7 @@
 	"block.blockcarpentry.frame_wall": "Frame Wall",
 	"block.blockcarpentry.frame_ladder": "Frame Ladder",
 	"block.blockcarpentry.frame_chest": "Frame Chest",
+	"block.blockcarpentry.frame_fence_gate": "Frame Fence Gate",
 	"block.blockcarpentry.frame_slope": "Châssis de rampe (WIP)",
 	"block.blockcarpentry.frame_edged_slope": "Châssis de rampe (WIP)",
 
@@ -27,6 +28,7 @@
 	"block.blockcarpentry.illusion_wall": "Illusion Wall",
 	"block.blockcarpentry.illusion_ladder": "Illusion Ladder",
 	"block.blockcarpentry.illusion_chest": "Illusion Chest",
+	"block.blockcarpentry.illusion_fence_gate": "Illusion Fence Gate",
 
 	"container.frame_chest": "Frame Chest",
 
