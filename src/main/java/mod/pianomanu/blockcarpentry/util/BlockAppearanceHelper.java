@@ -28,7 +28,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.4 09/28/20
+ * @version 1.5 09/30/20
  */
 public class BlockAppearanceHelper {
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
@@ -232,6 +232,16 @@ public class BlockAppearanceHelper {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
                 fte.setOverlay(5);
                 player.sendStatusMessage(new TranslationTextComponent("Activated Vine Overlay"), true);
+            }
+        }
+        if (itemStack.getItem().equals(Items.GUNPOWDER)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof  FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                if (fte.getOverlay() > 5 && fte.getOverlay() < 10) {
+                    fte.setOverlay(fte.getOverlay()+1);
+                } else fte.setOverlay(6);
+                player.sendStatusMessage(new TranslationTextComponent("Activated special Overlay "+(fte.getOverlay()-5)), true);
             }
         }
     }
