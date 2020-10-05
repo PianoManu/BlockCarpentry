@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
@@ -11,21 +12,29 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.extensions.IForgeBlockState;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
@@ -36,7 +45,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.4 09/28/20
+ * @version 1.5 10/05/20
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggable {
@@ -45,6 +54,18 @@ public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggabl
      * This is needed, because we need to detect whether the blockstate has changed
      */
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
+
+    private static final VoxelShape MIDDLE_STRIP_NORTH = Block.makeCuboidShape(0.0, 8.0, 1.0, 16.0, 9.0, 2.0);
+    private static final VoxelShape MIDDLE_STRIP_EAST = Block.makeCuboidShape(14.0, 8.0, 2.0, 15.0, 9.0, 14.0);
+    private static final VoxelShape MIDDLE_STRIP_SOUTH = Block.makeCuboidShape(0.0, 8.0, 14.0, 16.0, 9.0, 15.0);
+    private static final VoxelShape MIDDLE_STRIP_WEST = Block.makeCuboidShape(1.0, 8.0, 2.0, 2.0, 9.0, 14.0);
+    private static final VoxelShape TOP = Block.makeCuboidShape(0.0, 15.0, 0.0, 16.0, 16.0, 16.0);
+    private static final VoxelShape DOWN = Block.makeCuboidShape(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
+    private static final VoxelShape NW_PILLAR = Block.makeCuboidShape(0.0, 1.0, 0.0, 2.0, 15.0, 2.0);
+    private static final VoxelShape SW_PILLAR = Block.makeCuboidShape(0.0, 1.0, 14.0, 2.0, 15.0, 16.0);
+    private static final VoxelShape NE_PILLAR = Block.makeCuboidShape(14.0, 1.0, 0.0, 16.0, 15.0, 2.0);
+    private static final VoxelShape SE_PILLAR = Block.makeCuboidShape(14.0, 1.0, 14.0, 16.0, 15.0, 16.0);
+    private static final VoxelShape CUBE = VoxelShapes.or(MIDDLE_STRIP_EAST, MIDDLE_STRIP_SOUTH, MIDDLE_STRIP_WEST, MIDDLE_STRIP_NORTH, TOP, DOWN, NW_PILLAR, SW_PILLAR, NE_PILLAR, SE_PILLAR);
 
     /**
      * classic constructor, all default values are set
@@ -90,13 +111,14 @@ public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggabl
 
     /**
      * Is called, whenever the block is right-clicked:
-     *      First it is checked, whether the world is remote (this has to be done client-side only).
-     *      Afterwards, we check, whether the held item is some sort of block item (e.g. logs, but not torches)
-     *      If that's the case, we ask for the tile entity of the frame and if the frame is empty, we fill it with the held block and remove the item from the player's inventory
-     *      If the frame is not empty and the player holds the hammer, the contained block is dropped into the world
-     * @param state state of the block that is clicked
-     * @param world world the block is placed in
-     * @param pos position (x,y,z) of block
+     * First it is checked, whether the world is remote (this has to be done client-side only).
+     * Afterwards, we check, whether the held item is some sort of block item (e.g. logs, but not torches)
+     * If that's the case, we ask for the tile entity of the frame and if the frame is empty, we fill it with the held block and remove the item from the player's inventory
+     * If the frame is not empty and the player holds the hammer, the contained block is dropped into the world
+     *
+     * @param state  state of the block that is clicked
+     * @param world  world the block is placed in
+     * @param pos    position (x,y,z) of block
      * @param player entity of the player that includes all important information (health, armor, inventory,
      * @param hand   which hand is used (e.g. you have a sword in your main hand and an axe in your off-hand and right click a log -> you use the off-hand, not the main hand)
      * @param trace  to determine which part of the block is clickedf (upper half, lower half, right side, left side, corners...)
@@ -107,6 +129,9 @@ public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggabl
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
             if (item.getItem() instanceof BlockItem) {
+                if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                    return ActionResultType.PASS;
+                }
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
@@ -226,6 +251,41 @@ public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggabl
             return 15;
         }
         return state.get(LIGHT_LEVEL);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        BlockPos blockpos = context.getPos();
+        FluidState fluidstate = context.getWorld().getFluidState(blockpos);
+        if (fluidstate.getFluid() == Fluids.WATER) {
+            return this.getDefaultState().with(WATERLOGGED, fluidstate.isSource());
+        } else {
+            return this.getDefaultState();
+        }
+    }
+
+    @Override
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.get(WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        }
+
+        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        if (!state.get(CONTAINS_BLOCK)) {
+            return CUBE;
+        }
+        return VoxelShapes.fullCube();
     }
 }
 //========SOLI DEO GLORIA========//

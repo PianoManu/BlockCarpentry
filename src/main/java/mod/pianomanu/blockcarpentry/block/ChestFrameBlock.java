@@ -25,6 +25,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -41,9 +44,24 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.2 09/28/20
+ * @version 1.3 10/05/20
  */
 public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
+    private static final VoxelShape INNER_CUBE = Block.makeCuboidShape(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
+    private static final VoxelShape BOTTOM_NORTH = Block.makeCuboidShape(0.0, 0.0, 0.0, 16.0, 2.0, 2.0);
+    private static final VoxelShape BOTTOM_EAST = Block.makeCuboidShape(14.0, 0.0, 2.0, 16.0, 2.0, 14.0);
+    private static final VoxelShape BOTTOM_SOUTH = Block.makeCuboidShape(0.0, 0.0, 14.0, 16.0, 2.0, 16.0);
+    private static final VoxelShape BOTTOM_WEST = Block.makeCuboidShape(0.0, 0.0, 2.0, 2.0, 2.0, 14.0);
+    private static final VoxelShape TOP_NORTH = Block.makeCuboidShape(0.0, 14.0, 0.0, 16.0, 16.0, 2.0);
+    private static final VoxelShape TOP_EAST = Block.makeCuboidShape(14.0, 14.0, 2.0, 16.0, 16.0, 14.0);
+    private static final VoxelShape TOP_SOUTH = Block.makeCuboidShape(0.0, 14.0, 14.0, 16.0, 16.0, 16.0);
+    private static final VoxelShape TOP_WEST = Block.makeCuboidShape(0.0, 14.0, 2.0, 2.0, 16.0, 14.0);
+    private static final VoxelShape NW_PILLAR = Block.makeCuboidShape(0.0, 2.0, 0.0, 2.0, 14.0, 2.0);
+    private static final VoxelShape SW_PILLAR = Block.makeCuboidShape(0.0, 2.0, 14.0, 2.0, 14.0, 16.0);
+    private static final VoxelShape NE_PILLAR = Block.makeCuboidShape(14.0, 2.0, 0.0, 16.0, 14.0, 2.0);
+    private static final VoxelShape SE_PILLAR = Block.makeCuboidShape(14.0, 2.0, 14.0, 16.0, 14.0, 16.0);
+    private static final VoxelShape CHEST = VoxelShapes.or(INNER_CUBE, BOTTOM_EAST, BOTTOM_SOUTH, BOTTOM_WEST, BOTTOM_NORTH, TOP_EAST, TOP_SOUTH, TOP_WEST, TOP_NORTH, NW_PILLAR, SW_PILLAR, NE_PILLAR, SE_PILLAR);
+
     public ChestFrameBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(LIGHT_LEVEL, 0).with(HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false));
@@ -55,7 +73,13 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+        BlockPos blockpos = context.getPos();
+        FluidState fluidstate = context.getWorld().getFluidState(blockpos);
+        if (fluidstate.getFluid() == Fluids.WATER) {
+            return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite()).with(WATERLOGGED, fluidstate.isSource());
+        } else {
+            return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+        }
     }
 
     @Override
@@ -153,6 +177,21 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.get(WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        }
+
+        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return CHEST;
     }
 }
 //========SOLI DEO GLORIA========//
