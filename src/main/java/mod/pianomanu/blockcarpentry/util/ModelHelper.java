@@ -26,7 +26,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.9 09/30/20
+ * @version 1.10 10/06/20
  */
 public class ModelHelper {
 
@@ -153,23 +153,35 @@ public class ModelHelper {
         Vector3d SEU = v(xh, yh, zh);
         Vector3d SWD = v(xh, yl, zl);
         Vector3d SED = v(xh, yl, zh); //South-East-Down
+        if (xh-xl>1 || yh-yl > 1 || zh-zl > 1) {
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("An error occured with this block, please report to the mod author (PianoManu)"), true);
+            }
+            return quads;
+        }
         if (xl < 0) {
             xl++;
+            xh++;
         }
         if (xh > 1) {
             xh--;
+            xl--;
         }
         if (yl < 0) {
             yl++;
+            yh++;
         }
         if (yh > 1) {
             yh--;
+            yl--;
         }
         if (zl < 0) {
             zl++;
+            zh++;
         }
         if (zh > 1) {
             zh--;
+            zl--;
         }
         if (up) quads.add(createQuad(NWU, NEU, SEU, SWU, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
         if (down)
@@ -200,23 +212,35 @@ public class ModelHelper {
         Vector3d SEU = v(xh, yh, zh);
         Vector3d SWD = v(xh, yl, zl);
         Vector3d SED = v(xh, yl, zh); //South-East-Down
+        if (xh-xl>1 || yh-yl > 1 || zh-zl > 1) {
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("An error occured with this block, please report to the mod author (PianoManu)"), true);
+            }
+            return quads;
+        }
         if (xl < 0) {
             xl++;
+            xh++;
         }
         if (xh > 1) {
             xh--;
+            xl--;
         }
         if (yl < 0) {
             yl++;
+            yh++;
         }
         if (yh > 1) {
             yh--;
+            yl--;
         }
         if (zl < 0) {
             zl++;
+            zh++;
         }
         if (zh > 1) {
             zh--;
+            zl--;
         }
         List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
         if (textureList.size() == 0) {
@@ -278,23 +302,35 @@ public class ModelHelper {
         Vector3d SEU = v(xh, yh, zh);
         Vector3d SWD = v(xh, yl, zl);
         Vector3d SED = v(xh, yl, zh); //South-East-Down
+        if (xh-xl>1 || yh-yl > 1 || zh-zl > 1) {
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("An error occured with this block, please report to the mod author (PianoManu)"), true);
+            }
+            return quads;
+        }
         if (xl < 0) {
             xl++;
+            xh++;
         }
         if (xh > 1) {
             xh--;
+            xl--;
         }
         if (yl < 0) {
             yl++;
+            yh++;
         }
         if (yh > 1) {
             yh--;
+            yl--;
         }
         if (zl < 0) {
             zl++;
+            zh++;
         }
         if (zh > 1) {
             zh--;
+            zl--;
         }
         if (up && textureUp != null)
             quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
