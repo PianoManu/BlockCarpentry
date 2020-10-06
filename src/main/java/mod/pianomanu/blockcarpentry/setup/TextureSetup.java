@@ -31,6 +31,11 @@ public class TextureSetup {
             event.addSprite(loc("block/grass_block_snow_overlay"));
             event.addSprite(loc("block/grass_block_snow_overlay_small"));
             event.addSprite(loc("block/grass_block_side_overlay_large"));
+            event.addSprite(loc("block/stone_brick_overlay"));
+            event.addSprite(loc("block/brick_overlay"));
+            event.addSprite(loc("block/chiseled_sandstone_overlay"));
+            event.addSprite(loc("block/boundary_overlay"));
+            event.addSprite(loc("block/chiseled_stone_overlay"));
             LOGGER.info("Stitched all textures from BlockCarpentry");
         }
     }
