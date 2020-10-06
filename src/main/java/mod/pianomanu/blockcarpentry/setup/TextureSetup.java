@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
  * This class is used to register textures to the Texture Atlas (texture stitching)
  *
  * @author PianoManu
- * @version 1.1 09/28/20
+ * @version 1.2 09/30/20
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TextureSetup {
@@ -31,6 +31,11 @@ public class TextureSetup {
             event.addSprite(loc("block/grass_block_snow_overlay"));
             event.addSprite(loc("block/grass_block_snow_overlay_small"));
             event.addSprite(loc("block/grass_block_side_overlay_large"));
+            event.addSprite(loc("block/stone_brick_overlay"));
+            event.addSprite(loc("block/brick_overlay"));
+            event.addSprite(loc("block/chiseled_sandstone_overlay"));
+            event.addSprite(loc("block/boundary_overlay"));
+            event.addSprite(loc("block/chiseled_stone_overlay"));
             LOGGER.info("Stitched all textures from BlockCarpentry");
         }
     }

@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
@@ -34,6 +35,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 
@@ -42,7 +44,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.3 09/28/20
+ * @version 1.5 10/06/20
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
@@ -87,7 +89,13 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getFace());
+        BlockPos blockpos = context.getPos();
+        IFluidState fluidstate = context.getWorld().getFluidState(blockpos);
+        if (fluidstate.getFluid() == Fluids.WATER) {
+            return this.getDefaultState().with(FACING, context.getFace()).with(WATERLOGGED, fluidstate.isSource());
+        } else {
+            return this.getDefaultState().with(FACING, context.getFace());
+        }
     }
 
     @Override
@@ -105,32 +113,33 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            if (item.getItem() instanceof BlockItem) {
-                TileEntity tileEntity = world.getTileEntity(pos);
-                int count = player.getHeldItem(hand).getCount();
-                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                //TODO fix for non-solid blocks
-                //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
-                    ((FrameBlockTile) tileEntity).clear();
-                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                    ((FrameBlockTile) tileEntity).setMimic(handBlockState);
-                    insertBlock(world, pos, state, handBlockState);
-                    player.getHeldItem(hand).setCount(count - 1);
-
-                }
-
-            }
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
-                this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos, state, 2);
-            }
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
             BlockAppearanceHelper.setDesign(world, pos, player, item);
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
+            if (item.getItem() instanceof BlockItem) {
+                if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                    return ActionResultType.PASS;
+                }
+                TileEntity tileEntity = world.getTileEntity(pos);
+                int count = player.getHeldItem(hand).getCount();
+                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
+                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
+                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
+                    insertBlock(world, pos, state, handBlockState);
+                    if (!player.isCreative())
+                        player.getHeldItem(hand).setCount(count - 1);
+
+                }
+
+            }
+            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
+                if (!player.isCreative())
+                    this.dropContainedBlock(world, pos);
+                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
+                world.setBlockState(pos, state, 2);
+            }
         }
         return ActionResultType.SUCCESS;
     }
@@ -189,6 +198,15 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
     @SuppressWarnings("deprecation")
     public IFluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.get(WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        }
+
+        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 }
 //========SOLI DEO GLORIA========//

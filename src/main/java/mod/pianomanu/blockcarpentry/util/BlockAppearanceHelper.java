@@ -28,7 +28,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.4 09/28/20
+ * @version 1.5 09/30/20
  */
 public class BlockAppearanceHelper {
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
@@ -161,7 +161,7 @@ public class BlockAppearanceHelper {
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
                 fte.setGlassColor(dyeItemToInt(player.getHeldItem(hand).getItem()) + 1); //plus 1, because 0 is undyed glass
-                //player.sendStatusMessage(new TranslationTextComponent("Glass Color: " + glassColorToString(fte.getGlassColor() - 1)), true);
+                //player.sendStatusMessage(new TranslationTextComponent("Glass Color: " + glassColorToString(fte.getGlassColor()-1)), true);
             }
         }
     }
@@ -194,54 +194,6 @@ public class BlockAppearanceHelper {
     public static Integer dyeItemToInt(Item item) {
         List<Item> colors = new ArrayList<>(Tags.Items.DYES.getAllElements());
         if (colors.contains(item)) {
-            if (item == Items.WHITE_DYE) {
-                return 1;
-            }
-            if (item == Items.ORANGE_DYE) {
-                return 2;
-            }
-            if (item == Items.MAGENTA_DYE) {
-                return 3;
-            }
-            if (item == Items.LIGHT_BLUE_DYE) {
-                return 4;
-            }
-            if (item == Items.YELLOW_DYE) {
-                return 5;
-            }
-            if (item == Items.LIME_DYE) {
-                return 6;
-            }
-            if (item == Items.PINK_DYE) {
-                return 7;
-            }
-            if (item == Items.GRAY_DYE) {
-                return 8;
-            }
-            if (item == Items.LIGHT_GRAY_DYE) {
-                return 9;
-            }
-            if (item == Items.CYAN_DYE) {
-                return 10;
-            }
-            if (item == Items.PURPLE_DYE) {
-                return 11;
-            }
-            if (item == Items.BLUE_DYE) {
-                return 12;
-            }
-            if (item == Items.BROWN_DYE) {
-                return 13;
-            }
-            if (item == Items.GREEN_DYE) {
-                return 14;
-            }
-            if (item == Items.RED_DYE) {
-                return 15;
-            }
-            if (item == Items.BLACK_DYE) {
-                return 16;
-            }
             return colors.indexOf(item);
         }
         return 0;
@@ -280,6 +232,16 @@ public class BlockAppearanceHelper {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
                 fte.setOverlay(5);
                 player.sendStatusMessage(new TranslationTextComponent("Activated Vine Overlay"), true);
+            }
+        }
+        if (itemStack.getItem().equals(Items.GUNPOWDER)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof  FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                if (fte.getOverlay() > 5 && fte.getOverlay() < 10) {
+                    fte.setOverlay(fte.getOverlay()+1);
+                } else fte.setOverlay(6);
+                player.sendStatusMessage(new TranslationTextComponent("Activated special Overlay "+(fte.getOverlay()-5)), true);
             }
         }
     }

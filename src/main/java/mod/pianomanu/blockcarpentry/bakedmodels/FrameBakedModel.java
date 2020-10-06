@@ -1,12 +1,10 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.GrassBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -31,7 +29,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.4 09/28/20
+ * @version 1.5 10/01/20
  */
 public class FrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -75,46 +73,15 @@ public class FrameBakedModel implements IDynamicBakedModel {
                         tintIndex = 1;
                     }
                     List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex));
-                    if (extraData.getData(FrameBlockTile.OVERLAY) == 1) {
-                        BlockState grassBlock = Blocks.GRASS_BLOCK.getDefaultState();
-                        ModelResourceLocation locationGrass = BlockModelShapes.getModelLocation(grassBlock);
-                        IBakedModel modelGrass = Minecraft.getInstance().getModelManager().getModel(locationGrass);
-                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 1f, grassBlock, modelGrass, extraData, rand, 1));
-                        return quads;
-                    }
-                    if (extraData.getData(FrameBlockTile.OVERLAY) == 2) {
-                        TextureAtlasSprite overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_side_overlay_large"));
-                        TextureAtlasSprite grass = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/grass_block_top"));
-                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 1f, 1, overlay, overlay, overlay, overlay, grass, null));
-                        return quads;
-                    }
-                    if (extraData.getData(FrameBlockTile.OVERLAY) == 3) {
-                        TextureAtlasSprite overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay"));
-                        TextureAtlasSprite snow = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/snow"));
-                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 1f, -1, overlay, overlay, overlay, overlay, snow, null));
-                        return quads;
-                    }
-                    if (extraData.getData(FrameBlockTile.OVERLAY) == 4) {
-                        TextureAtlasSprite overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay_small"));
-                        TextureAtlasSprite snow = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/snow"));
-                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 1f, -1, overlay, overlay, overlay, overlay, snow, null));
-                        return quads;
-                    }
-                    if (extraData.getData(FrameBlockTile.OVERLAY) == 5) {
-                        TextureAtlasSprite overlay = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/vine"));
-                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 1f, 1, overlay, overlay, overlay, overlay, null, null));
-                        return quads;
+                    int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+                    if (overlayIndex != 0) {
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex));
                     }
                     return quads;
                 }
             }
         }
-
-        if (side != null) {
-            return Collections.emptyList();
-        }
-
-        return new ArrayList<>(); //collapse with if (side!=null)?
+        return Collections.emptyList();
     }
 
     @Override

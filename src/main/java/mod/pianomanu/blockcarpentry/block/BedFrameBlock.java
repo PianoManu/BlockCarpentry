@@ -45,7 +45,7 @@ import java.util.List;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.2 09/28/20
+ * @version 1.3 10/06/20
  */
 public class BedFrameBlock extends BedBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -90,7 +90,8 @@ public class BedFrameBlock extends BedBlock {
 
                 net.minecraftforge.common.extensions.IForgeDimension.SleepResult sleepResult = world.dimension.canSleepAt(player, pos);
                 if (sleepResult != net.minecraftforge.common.extensions.IForgeDimension.SleepResult.BED_EXPLODES) {
-                    if (sleepResult == net.minecraftforge.common.extensions.IForgeDimension.SleepResult.DENY) return ActionResultType.SUCCESS;
+                    if (sleepResult == net.minecraftforge.common.extensions.IForgeDimension.SleepResult.DENY)
+                        return ActionResultType.SUCCESS;
                     if (state.get(OCCUPIED)) {
                         if (!this.func_226861_a_(world, pos)) {
                             player.sendStatusMessage(new TranslationTextComponent("block.minecraft.bed.occupied"), true);
@@ -113,7 +114,7 @@ public class BedFrameBlock extends BedBlock {
                         world.removeBlock(blockpos, false);
                     }
 
-                    world.createExplosion((Entity)null, DamageSource.netherBedExplosion(), (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+                    world.createExplosion((Entity) null, DamageSource.netherBedExplosion(), (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
                     return ActionResultType.SUCCESS;
                 }
             }
@@ -126,18 +127,17 @@ public class BedFrameBlock extends BedBlock {
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
                     Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                    //TODO fix for non-solid blocks
-                    //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
                     if (tileEntity instanceof BedFrameTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                         insertBlock(world, pos, state, handBlockState);
-                        //this.contained_block=handBlockState.getBlock();
-                        player.getHeldItem(hand).setCount(count - 1);
+                        if (!player.isCreative())
+                            player.getHeldItem(hand).setCount(count - 1);
                     }
                 }
             }
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
-                this.dropContainedBlock(world, pos);
+                if (!player.isCreative())
+                    this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
             }

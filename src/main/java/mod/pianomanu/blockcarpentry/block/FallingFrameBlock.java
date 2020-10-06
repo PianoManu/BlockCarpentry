@@ -33,8 +33,9 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
 
 /**
  * Nothing important to see here, this class is currently unused, visit {@link FrameBlock} for a better documentation
+ *
  * @author PianoManu
- * @version 1.1 09/08/20
+ * @version 1.1 10/06/20
  */
 public class FallingFrameBlock extends FallingBlock {
 
@@ -67,25 +68,27 @@ public class FallingFrameBlock extends FallingBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            if(state.get(CONTAINS_BLOCK)) {
-                this.dropContainedBlock(world, pos);
+            if (state.get(CONTAINS_BLOCK)) {
+                if (!player.isCreative())
+                    this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos,state,2);
+                world.setBlockState(pos, state, 2);
             } else {
-                if(item.getItem() instanceof BlockItem) {
+                if (item.getItem() instanceof BlockItem) {
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
                     if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(((BlockItem) item.getItem()).getBlock()) && !state.get(CONTAINS_BLOCK)) {
                         ((FrameBlockTile) tileEntity).clear();
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                         ((FrameBlockTile) tileEntity).setMimic(handBlockState);
-                        insertBlock(world,pos, state,handBlockState);
-                        player.getHeldItem(hand).setCount(count-1);
+                        insertBlock(world, pos, state, handBlockState);
+                        if (!player.isCreative())
+                            player.getHeldItem(hand).setCount(count - 1);
                     }
                 }
             }
-            BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
-            BlockAppearanceHelper.setTexture(item,state,world,player,pos);
+            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
+            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
             if (item.getItem() == Registration.TEXTURE_WRENCH.get() && player.isSneaking()) {
                 //System.out.println("You should rotate now!");
             }
@@ -99,15 +102,15 @@ public class FallingFrameBlock extends FallingBlock {
             if (tileentity instanceof FrameBlockTile) {
                 FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
                 BlockState blockState = frameTileEntity.getMimic();
-                if (!(blockState==null)) {
+                if (!(blockState == null)) {
                     worldIn.playEvent(1010, pos, 0);
                     frameTileEntity.clear();
                     float f = 0.7F;
-                    double d0 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
-                    double d1 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.060000002F + 0.6D;
-                    double d2 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
+                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
                     ItemStack itemstack1 = new ItemStack(blockState.getBlock());
-                    ItemEntity itementity = new ItemEntity(worldIn, (double)pos.getX() + d0, (double)pos.getY() + d1, (double)pos.getZ() + d2, itemstack1);
+                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickupDelay();
                     worldIn.addEntity(itementity);
                     frameTileEntity.clear();
@@ -152,7 +155,7 @@ public class FallingFrameBlock extends FallingBlock {
         if (worldIn.isAirBlock(pos.down()) || canFallThrough(worldIn.getBlockState(pos.down())) && pos.getY() >= 0) {
             if (worldIn.getTileEntity(pos) instanceof FrameBlockTile) {
                 FrameBlockTile tileEntity = (FrameBlockTile) worldIn.getTileEntity(pos);
-                if (tileEntity.getMimic()!=null) {
+                if (tileEntity.getMimic() != null) {
                     //FallingFrameBlockEntity fallingFrameBlockEntity = new FallingFrameBlockEntity(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, worldIn.getBlockState(pos), tileEntity.getMimic());
                     //this.onStartFalling(fallingFrameBlockEntity);
                     //worldIn.addEntity(fallingFrameBlockEntity);

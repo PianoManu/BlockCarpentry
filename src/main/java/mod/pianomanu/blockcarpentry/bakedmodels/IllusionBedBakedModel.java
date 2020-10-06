@@ -68,8 +68,18 @@ public class IllusionBedBakedModel implements IDynamicBakedModel {
                 tintIndex = 1;
             }
             List<BakedQuad> quads = new ArrayList<>(ModelHelper.createSixFaceCuboid(0f, 1f, 3 / 16f, 5 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
-            TextureAtlasSprite pillow = TextureHelper.getWoolTextures().get(extraData.getData(BedFrameTile.PILLOW));
-            TextureAtlasSprite blanket = TextureHelper.getWoolTextures().get(extraData.getData(BedFrameTile.BLANKET));
+            TextureAtlasSprite pillow;
+            TextureAtlasSprite blanket;
+            if (extraData.getData(BedFrameTile.PILLOW) > 0) {
+                pillow = TextureHelper.getWoolTextures().get(extraData.getData(BedFrameTile.PILLOW)-1);
+            } else  {
+                pillow = TextureHelper.getWoolTextures().get(0);
+            }
+            if (extraData.getData(BedFrameTile.BLANKET) > 0) {
+                blanket = TextureHelper.getWoolTextures().get(extraData.getData(BedFrameTile.BLANKET)-1);
+            } else  {
+                blanket = TextureHelper.getWoolTextures().get(0);
+            }
             Integer design = extraData.getData(BedFrameTile.DESIGN);
             if (design == null) {
                 return quads;
