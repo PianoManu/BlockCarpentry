@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.3 09/28/20
+ * @version 1.4 10/06/20
  */
 public class TrapdoorFrameBlock extends TrapDoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -73,7 +73,8 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                 if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     insertBlock(world, pos, state, handBlockState);
-                    player.getHeldItem(hand).setCount(count - 1);
+                    if (!player.isCreative())
+                        player.getHeldItem(hand).setCount(count - 1);
                     return ActionResultType.SUCCESS;
                 }
             }
@@ -90,7 +91,8 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                 this.playSound(player, world, pos, state.get(OPEN));
             }
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
-                this.dropContainedBlock(world, pos);
+                if (!player.isCreative())
+                    this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
                 return ActionResultType.SUCCESS;

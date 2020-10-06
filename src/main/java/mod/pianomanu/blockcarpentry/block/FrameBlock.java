@@ -45,7 +45,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.5 10/05/20
+ * @version 1.6 10/06/20
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggable {
@@ -121,7 +121,7 @@ public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggabl
      * @param pos    position (x,y,z) of block
      * @param player entity of the player that includes all important information (health, armor, inventory,
      * @param hand   which hand is used (e.g. you have a sword in your main hand and an axe in your off-hand and right click a log -> you use the off-hand, not the main hand)
-     * @param trace  to determine which part of the block is clickedf (upper half, lower half, right side, left side, corners...)
+     * @param trace  to determine which part of the block is clicked (upper half, lower half, right side, left side, corners...)
      * @return see {@link ActionResultType}
      */
     @Override
@@ -138,12 +138,14 @@ public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggabl
                 if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     insertBlock(world, pos, state, handBlockState);
-                    player.getHeldItem(hand).setCount(count - 1);
+                    if (!player.isCreative())
+                        player.getHeldItem(hand).setCount(count - 1);
                 }
             }
             //hammer is needed to remove the block from the frame - you can change it in the config
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
-                this.dropContainedBlock(world, pos);
+                if (!player.isCreative())
+                    this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
             }
@@ -220,6 +222,9 @@ public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggabl
             dropContainedBlock(worldIn, pos);
 
             super.onReplaced(state, worldIn, pos, newState, isMoving);
+        }
+        if (state.get(WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
         }
     }
 
