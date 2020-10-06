@@ -69,6 +69,11 @@ public class ButtonFrameBlock extends WoodButtonBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
+            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
+            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
+            BlockAppearanceHelper.setDesign(world, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setOverlay(world, pos, player, item);
             //TODO clean up
             if (!state.get(CONTAINS_BLOCK)) {
                 if (item.getItem() instanceof BlockItem) {
@@ -91,11 +96,6 @@ public class ButtonFrameBlock extends WoodButtonBlock {
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
             }
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setOverlay(world, pos, player, item);
             if (state.get(POWERED)) {
                 return ActionResultType.CONSUME;
             } else {

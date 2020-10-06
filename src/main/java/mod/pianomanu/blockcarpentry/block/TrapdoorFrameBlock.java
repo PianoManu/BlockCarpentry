@@ -66,6 +66,12 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
+            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
+            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
+            BlockAppearanceHelper.setDesign(world, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setGlassColor(world, pos, player, hand);
+            BlockAppearanceHelper.setOverlay(world, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
@@ -97,12 +103,6 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                 world.setBlockState(pos, state, 2);
                 return ActionResultType.SUCCESS;
             }
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setGlassColor(world, pos, player, hand);
-            BlockAppearanceHelper.setOverlay(world, pos, player, item);
         }
         return ActionResultType.SUCCESS;
     }
