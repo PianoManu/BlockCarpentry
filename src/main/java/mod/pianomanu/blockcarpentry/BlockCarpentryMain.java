@@ -29,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
  * Main class of the BlockCarpentry mod
  *
  * @author PianoManu
- * @version 1.1 09/12/20
+ * @version 1.2 10/08/20
  */
 @Mod(MOD_ID)
 public class BlockCarpentryMain
@@ -41,6 +41,7 @@ public class BlockCarpentryMain
 
     public BlockCarpentryMain() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BCModConfig.COMMON_CONFIG);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, BCModConfig.CLIENT_CONFIG);
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -70,7 +71,10 @@ public class BlockCarpentryMain
      * client stuff, i.e. things that can only be done client-side, like rendering
      */
     private void doClientStuff(final FMLClientSetupEvent event) {
-        RenderSetup.setup();
+        if (!BCModConfig.OPAQUE_BLOCKS.get()) {
+            LOGGER.warn("Config value \"Opaque Blocks\" is set to false. When using OptiFine, frame and illusion blocks may appear invisible. If that is the case, change the value of \"Opaque Blocks\" to \"true\" in the mod config");
+            RenderSetup.setup();
+        }
         BlockColorHandler.registerBlockColors();
         LOGGER.info("Setting up client things for BlockCarpentry");
     }

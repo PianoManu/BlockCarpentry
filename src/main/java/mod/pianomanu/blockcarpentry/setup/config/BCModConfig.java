@@ -10,30 +10,43 @@ import net.minecraftforge.fml.config.ModConfig;
 import java.nio.file.Path;
 
 /**
- * Config class for customizable values, values can be found and changed in the corresponding file at /config/blockcarpentry-common.toml
+ * Config class for customizable values, values can be found and changed in the corresponding file at /config/blockcarpentry-common.toml and /config/blockcarpentry-client.toml
  * @author PianoManu
- * @version 1.0 08/29/20
+ * @version 1.1 10/08/20
  */
 @Mod.EventBusSubscriber
 public class BCModConfig {
     public static final String CATEGORY_TOOLS = "tools";
+    public static final String CATEGORY_CLIENT = "client_things";
 
     private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
+    private static final ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
 
     public static ForgeConfigSpec COMMON_CONFIG;
+    public static ForgeConfigSpec CLIENT_CONFIG;
 
     public static ForgeConfigSpec.BooleanValue HAMMER_NEEDED;
+    public static ForgeConfigSpec.BooleanValue OPAQUE_BLOCKS;
 
     static {
         COMMON_BUILDER.comment("Tool settings").push(CATEGORY_TOOLS);
         setupToolSettings();
         COMMON_BUILDER.pop();
 
+        CLIENT_BUILDER.comment("Optifine Work-Around").push(CATEGORY_CLIENT);
+        setupClientSettings();
+        CLIENT_BUILDER.pop();
+
         COMMON_CONFIG = COMMON_BUILDER.build();
+        CLIENT_CONFIG = CLIENT_BUILDER.build();
     }
 
     private static void setupToolSettings() {
         HAMMER_NEEDED = COMMON_BUILDER.comment("Determines whether you need a hammer to remove blocks from a frame, when set to false, you can remove blocks from a frame by sneaking and right-clicking the block (default: true)").define("hammer_needed",true);
+    }
+
+    private static void setupClientSettings() {
+        OPAQUE_BLOCKS = CLIENT_BUILDER.comment("Temporary work-around for OptiFine: when OptiFine is installed, frame/illusion blocks may appear invisible. You can enable this setting (change value to true) to make blocks opaque (they will no longer be invisible when using OptiFine), but blocks like glass or slime blocks lose their transparency. When set to false (default value), blocks with transparent parts will be transparent, but when using OptiFine, they will be invisible").define("opaque_blocks", false);
     }
 
     public static void loadConfig(ForgeConfigSpec spec, Path path) {
