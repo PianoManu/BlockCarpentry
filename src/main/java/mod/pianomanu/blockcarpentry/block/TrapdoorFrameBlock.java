@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 10/06/20
+ * @version 1.5 10/09/20
  */
 public class TrapdoorFrameBlock extends TrapDoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -87,14 +87,16 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
             if (!item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                 if (state.get(OPEN)) {
                     state = state.with(OPEN, false);
+                    world.playEvent(null, 1007, pos, 0);
                 } else {
                     state = state.with(OPEN, true);
+                    world.playEvent(null, 1013,pos, 0);
                 }
                 world.setBlockState(pos, state, 2);
                 if (state.get(WATERLOGGED)) {
                     world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
                 }
-                this.playSound(player, world, pos, state.get(OPEN));
+                //this.playSound(player, world, pos, state.get(OPEN));
             }
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
                 if (!player.isCreative())
