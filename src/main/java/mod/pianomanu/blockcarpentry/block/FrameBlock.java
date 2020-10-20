@@ -45,7 +45,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.6 10/06/20
+ * @version 1.7 10/20/20
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggable {
@@ -65,7 +65,8 @@ public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggabl
     private static final VoxelShape SW_PILLAR = Block.makeCuboidShape(0.0, 1.0, 14.0, 2.0, 15.0, 16.0);
     private static final VoxelShape NE_PILLAR = Block.makeCuboidShape(14.0, 1.0, 0.0, 16.0, 15.0, 2.0);
     private static final VoxelShape SE_PILLAR = Block.makeCuboidShape(14.0, 1.0, 14.0, 16.0, 15.0, 16.0);
-    private static final VoxelShape CUBE = VoxelShapes.or(MIDDLE_STRIP_EAST, MIDDLE_STRIP_SOUTH, MIDDLE_STRIP_WEST, MIDDLE_STRIP_NORTH, TOP, DOWN, NW_PILLAR, SW_PILLAR, NE_PILLAR, SE_PILLAR);
+    private static final VoxelShape MID = Block.makeCuboidShape(2.0, 1.0, 2.0, 14.0, 15.0, 14.0);
+    private static final VoxelShape CUBE = VoxelShapes.or(MIDDLE_STRIP_EAST, MIDDLE_STRIP_SOUTH, MIDDLE_STRIP_WEST, MIDDLE_STRIP_NORTH, TOP, DOWN, NW_PILLAR, SW_PILLAR, NE_PILLAR, SE_PILLAR, MID);
 
     /**
      * classic constructor, all default values are set
