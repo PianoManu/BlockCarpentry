@@ -26,7 +26,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.10 10/06/20
+ * @version 1.11 10/20/20
  */
 public class ModelHelper {
 
@@ -59,7 +59,7 @@ public class ModelHelper {
                     builder.put(j, (float) x, (float) y, (float) z, 1.0f);
                     break;
                 case COLOR:
-                    builder.put(j, r, g, b, 0.0f);
+                    builder.put(j, r, g, b, 1.0f);
                     break;
                 case UV:
                     switch (e.getIndex()) {
@@ -104,7 +104,7 @@ public class ModelHelper {
      * @param tintIndex only needed for tintable blocks like grass
      * @return Baked quad i.e. the completed face of a block
      */
-    private static BakedQuad createQuad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex) {
+    public static BakedQuad createQuad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex) {
         Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
@@ -115,6 +115,20 @@ public class ModelHelper {
         putVertex(builder, normal, v2.x, v2.y, v2.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f);
         putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f);
         putVertex(builder, normal, v4.x, v4.y, v4.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f);
+        return builder.build();
+    }
+
+    public static BakedQuad createQuadInverted(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex) {
+        Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+
+        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
+        builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
+        builder.setApplyDiffuseLighting(true);
+        builder.setQuadTint(tintIndex);
+        putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v2.x, v2.y, v2.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v4.x, v4.y, v4.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f);
         return builder.build();
     }
 
@@ -463,6 +477,83 @@ public class ModelHelper {
             }
         }
         return ModelHelper.createSixFaceCuboid(xl, xh, yl, yh, zl, zh, tintIndex, north, south, east, west, up, down, overlay, overlay, overlay, overlay, upOverlay, downOverlay, doNotMoveOverlay);
+    }
+
+    public static List<BakedQuad> createSlope(float xl, float xh, float yl, float yh, float zl, float zh, TextureAtlasSprite texture, int tintIndex, Direction direction) {
+        List<BakedQuad> quads = new ArrayList<>();
+        //Eight corners of the block
+        Vector3d NWU = v(xl, yh, zl); //North-West-Up
+        Vector3d NEU = v(xl, yh, zh); //...
+        Vector3d NWD = v(xl, yl, zl);
+        Vector3d NED = v(xl, yl, zh);
+        Vector3d SWU = v(xh, yh, zl);
+        Vector3d SEU = v(xh, yh, zh);
+        Vector3d SWD = v(xh, yl, zl);
+        Vector3d SED = v(xh, yl, zh); //South-East-Down
+        if (xh-xl>1 || yh-yl > 1 || zh-zl > 1) {
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("An error occured with this block, please report to the mod author (PianoManu)"), true);
+            }
+            return quads;
+        }
+        if (xl < 0) {
+            xl++;
+            xh++;
+        }
+        if (xh > 1) {
+            xh--;
+            xl--;
+        }
+        if (yl < 0) {
+            yl++;
+            yh++;
+        }
+        if (yh > 1) {
+            yh--;
+            yl--;
+        }
+        if (zl < 0) {
+            zl++;
+            zh++;
+        }
+        if (zh > 1) {
+            zh--;
+            zl--;
+        }
+        //bottom face
+        quads.add(ModelHelper.createQuad(NED, NWD, SWD, SED, texture, 0, 16, 0, 16, tintIndex));
+        switch (direction) {
+            case NORTH:
+                //top face
+                quads.add(ModelHelper.createQuad(NWU, NED, SED, SWU, texture, 0, 16, 0, 16, tintIndex));
+                break;
+            case WEST:
+                //back face
+                quads.add(ModelHelper.createQuad(NWU, NWD, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+
+                quads.add(ModelHelper.createQuad(SWD, SWD, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                quads.add(ModelHelper.createQuad(NEU, NED, NED, SED, texture, 0, 16, 0, 16, tintIndex));
+
+                //top face
+                quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                break;
+            case SOUTH:
+                //top face
+                quads.add(ModelHelper.createQuad(NWD, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                break;
+            case EAST:
+                //back face
+                quads.add(ModelHelper.createQuad(SEU, SED, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+
+                quads.add(ModelHelper.createQuad(SWD, SWU, NWD, NWD, texture, 0, 16, 0, 16, tintIndex));
+                quads.add(ModelHelper.createQuad(SED, NEU, NEU, NED, texture, 0, 16, 0, 16, tintIndex));
+                //top face
+                quads.add(ModelHelper.createQuad(NED, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                break;
+        }
+        //top face
+        quads.add(ModelHelper.createQuad(SWU, SEU, NEU, NWU, texture, 0, 16, 0, 16, tintIndex));
+        return quads;
     }
 }
 //========SOLI DEO GLORIA========//
