@@ -12,11 +12,12 @@ import java.nio.file.Path;
 /**
  * Config class for customizable values, values can be found and changed in the corresponding file at /config/blockcarpentry-common.toml and /config/blockcarpentry-client.toml
  * @author PianoManu
- * @version 1.2 10/20/20
+ * @version 1.3 10/21/20
  */
 @Mod.EventBusSubscriber
 public class BCModConfig {
     public static final String CATEGORY_TOOLS = "tools";
+    public static final String CATEGORY_BLOCKS = "blocks";
     //public static final String CATEGORY_CLIENT = "client_things";
 
     private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
@@ -26,11 +27,17 @@ public class BCModConfig {
     //public static ForgeConfigSpec CLIENT_CONFIG;
 
     public static ForgeConfigSpec.BooleanValue HAMMER_NEEDED;
+    public static ForgeConfigSpec.BooleanValue SNEAK_FOR_TEXTURE_WRENCH_TO_ROTATE_MIMICKED_BLOCKS;
+    public static ForgeConfigSpec.BooleanValue SNEAK_FOR_VERTICAL_SLABS;
     //public static ForgeConfigSpec.BooleanValue OPAQUE_BLOCKS;
 
     static {
         COMMON_BUILDER.comment("Tool settings").push(CATEGORY_TOOLS);
         setupToolSettings();
+        COMMON_BUILDER.pop();
+
+        COMMON_BUILDER.comment("Block settings").push(CATEGORY_BLOCKS);
+        setupBlockSettings();
         COMMON_BUILDER.pop();
 
         /*CLIENT_BUILDER.comment("Optifine Work-Around").push(CATEGORY_CLIENT);
@@ -43,6 +50,11 @@ public class BCModConfig {
 
     private static void setupToolSettings() {
         HAMMER_NEEDED = COMMON_BUILDER.comment("Determines whether you need a hammer to remove blocks from a frame, when set to false, you can remove blocks from a frame by sneaking and right-clicking the block (default: true)").define("hammer_needed",true);
+        //SNEAK_FOR_TEXTURE_WRENCH_TO_ROTATE_MIMICKED_BLOCKS = COMMON_BUILDER.comment("Determines whether you have to sneak, when rotating a mimicked block. When set to true: right-clicking on a frame block without sneaking will change its texture, right-clicking on a frame block while sneaking will rotate the")
+    }
+
+    private static void setupBlockSettings() {
+        SNEAK_FOR_VERTICAL_SLABS = COMMON_BUILDER.comment("Determines whether you have to sneak when placing vertical slabs, when set to false, frame slabs will always be placed on the side of the block; when set to true, frame slabs will be placed like vanilla slabs, and you have to sneak in order to make place vertical slabs (default: true)").define("sneak_for_vertical_slabs",true);
     }
 
     private static void setupClientSettings() {

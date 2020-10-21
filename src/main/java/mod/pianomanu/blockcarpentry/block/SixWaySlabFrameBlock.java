@@ -44,7 +44,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 10/06/20
+ * @version 1.6 10/21/20
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
@@ -91,10 +91,16 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockPos blockpos = context.getPos();
         FluidState fluidstate = context.getWorld().getFluidState(blockpos);
-        if (fluidstate.getFluid() == Fluids.WATER) {
-            return this.getDefaultState().with(FACING, context.getFace()).with(WATERLOGGED, fluidstate.isSource());
+        if (Objects.requireNonNull(context.getPlayer()).isSneaking() && BCModConfig.SNEAK_FOR_VERTICAL_SLABS.get() || !Objects.requireNonNull(context.getPlayer()).isSneaking() && !BCModConfig.SNEAK_FOR_VERTICAL_SLABS.get()) {
+            if (fluidstate.getFluid() == Fluids.WATER) {
+                return this.getDefaultState().with(FACING, context.getFace()).with(WATERLOGGED, fluidstate.isSource());
+            } else {
+                return this.getDefaultState().with(FACING, context.getFace());
+            }
         } else {
-            return this.getDefaultState().with(FACING, context.getFace());
+            BlockState blockstate1 = this.getDefaultState().with(FACING, Direction.UP).with(WATERLOGGED, Boolean.valueOf(fluidstate.getFluid() == Fluids.WATER));
+            Direction direction = context.getFace();
+            return direction != Direction.DOWN && (direction == Direction.UP || !(context.getHitVec().y - (double)blockpos.getY() > 0.5D)) ? blockstate1 : blockstate1.with(FACING, Direction.DOWN);
         }
     }
 
