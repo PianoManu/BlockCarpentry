@@ -28,7 +28,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.5 09/30/20
+ * @version 1.6 10/29/20
  */
 public class BlockAppearanceHelper {
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
@@ -156,7 +156,7 @@ public class BlockAppearanceHelper {
     }
 
     public static void setGlassColor(World world, BlockPos pos, PlayerEntity player, Hand hand) {
-        if (player.getHeldItem(hand).getItem().isIn(Tags.Items.DYES)) {
+        if (BlockSavingHelper.isDyeItem(player.getHeldItem(hand).getItem())) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
@@ -167,7 +167,7 @@ public class BlockAppearanceHelper {
     }
 
     public static void setWoolColor(World world, BlockPos pos, PlayerEntity player, Hand hand) {
-        if (player.getHeldItem(hand).getItem().isIn(Tags.Items.DYES)) {
+        if (BlockSavingHelper.isDyeItem(player.getHeldItem(hand).getItem())) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof BedFrameTile) {
                 BedFrameTile fte = (BedFrameTile) tileEntity;
@@ -192,7 +192,7 @@ public class BlockAppearanceHelper {
     }
 
     public static Integer dyeItemToInt(Item item) {
-        List<Item> colors = new ArrayList<>(Tags.Items.DYES.getAllElements());
+        List<Item> colors = new ArrayList<>(BlockSavingHelper.getDyeItems());
         if (colors.contains(item)) {
             return colors.indexOf(item);
         }
@@ -236,12 +236,12 @@ public class BlockAppearanceHelper {
         }
         if (itemStack.getItem().equals(Items.GUNPOWDER)) {
             TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof  FrameBlockTile) {
+            if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
                 if (fte.getOverlay() > 5 && fte.getOverlay() < 10) {
-                    fte.setOverlay(fte.getOverlay()+1);
+                    fte.setOverlay(fte.getOverlay() + 1);
                 } else fte.setOverlay(6);
-                player.sendStatusMessage(new TranslationTextComponent("Activated special Overlay "+(fte.getOverlay()-5)), true);
+                player.sendStatusMessage(new TranslationTextComponent("Activated special Overlay " + (fte.getOverlay() - 5)), true);
             }
         }
     }

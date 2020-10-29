@@ -1,7 +1,6 @@
 package mod.pianomanu.blockcarpentry.util;
 
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -10,7 +9,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.Random;
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
  *
  * @author PianoManu
- * @version 1.4 09/18/20
+ * @version 1.5 10/29/20
  */
 public class TextureHelper {
 
@@ -31,10 +29,23 @@ public class TextureHelper {
      */
     public static List<TextureAtlasSprite> getGlassTextures() {
         List<TextureAtlasSprite> glassTextures = new ArrayList<>();
-        for (Block block : Tags.Blocks.GLASS.getAllElements()) {
-            ResourceLocation textureLocation = loc(block.getRegistryName().getNamespace(), "block/" + block.getRegistryName().getPath());
-            glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(textureLocation));
-        }
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/white_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/orange_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/magenta_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/light_blue_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/yellow_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/lime_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/pink_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/gray_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/light_gray_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/cyan_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/purple_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/blue_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/brown_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/green_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/red_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/black_stained_glass")));
         return glassTextures;
     }
 
@@ -74,10 +85,10 @@ public class TextureHelper {
 
     public static List<TextureAtlasSprite> getMetalTextures() {
         List<TextureAtlasSprite> metalTextures = new ArrayList<>();
-        metalTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft","block/iron_block")));
-        metalTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft","block/obsidian")));
-        metalTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft","block/stone")));
-        metalTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft","block/oak_log")));
+        metalTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/iron_block")));
+        metalTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/obsidian")));
+        metalTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/stone")));
+        metalTextures.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(loc("minecraft", "block/oak_log")));
         return metalTextures;
     }
 
