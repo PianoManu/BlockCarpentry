@@ -26,7 +26,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.11 10/20/20
+ * @version 1.12 12/23/20
  */
 public class ModelHelper {
 
@@ -118,17 +118,54 @@ public class ModelHelper {
         return builder.build();
     }
 
-    public static BakedQuad createQuadInverted(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex) {
+    public static BakedQuad createQuad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex, boolean invert) {
         Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+        if (invert) {
+            normal = normal.inverse();
+        }
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
         builder.setApplyDiffuseLighting(true);
         builder.setQuadTint(tintIndex);
-        putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v2.x, v2.y, v2.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v4.x, v4.y, v4.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f);
+        if (invert) {
+            putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v2.x, v2.y, v2.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v4.x, v4.y, v4.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f);
+        } else {
+            putVertex(builder, normal, v4.x, v4.y, v4.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v2.x, v2.y, v2.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f);
+        }
+        return builder.build();
+    }
+    public static BakedQuad createQuadInverted(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex) {
+        return createQuadInverted(v1, v2, v3, v4, sprite, ulow, uhigh, vlow, vhigh, tintIndex, false);
+    }
+
+    public static BakedQuad createQuadInverted(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex, boolean invert) {
+        Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+        if (invert) {
+            normal = normal.inverse();
+        }
+
+        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
+        builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
+        builder.setApplyDiffuseLighting(true);
+        builder.setQuadTint(tintIndex);
+        if (invert) {
+            putVertex(builder, normal, v4.x, v4.y, v4.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v2.x, v2.y, v2.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f);
+        } else {
+            putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v2.x, v2.y, v2.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v4.x, v4.y, v4.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f);
+        }
         return builder.build();
     }
 
@@ -167,7 +204,7 @@ public class ModelHelper {
         Vector3d SEU = v(xh, yh, zh);
         Vector3d SWD = v(xh, yl, zl);
         Vector3d SED = v(xh, yl, zh); //South-East-Down
-        if (xh-xl>1 || yh-yl > 1 || zh-zl > 1) {
+        if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
                 Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("An error occured with this block, please report to the mod author (PianoManu)"), true);
             }
@@ -226,7 +263,7 @@ public class ModelHelper {
         Vector3d SEU = v(xh, yh, zh);
         Vector3d SWD = v(xh, yl, zl);
         Vector3d SED = v(xh, yl, zh); //South-East-Down
-        if (xh-xl>1 || yh-yl > 1 || zh-zl > 1) {
+        if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
                 Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("An error occured with this block, please report to the mod author (PianoManu)"), true);
             }
@@ -316,7 +353,7 @@ public class ModelHelper {
         Vector3d SEU = v(xh, yh, zh);
         Vector3d SWD = v(xh, yl, zl);
         Vector3d SED = v(xh, yl, zh); //South-East-Down
-        if (xh-xl>1 || yh-yl > 1 || zh-zl > 1) {
+        if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
                 Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("An error occured with this block, please report to the mod author (PianoManu)"), true);
             }
@@ -490,7 +527,7 @@ public class ModelHelper {
         Vector3d SEU = v(xh, yh, zh);
         Vector3d SWD = v(xh, yl, zl);
         Vector3d SED = v(xh, yl, zh); //South-East-Down
-        if (xh-xl>1 || yh-yl > 1 || zh-zl > 1) {
+        if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
                 Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("An error occured with this block, please report to the mod author (PianoManu)"), true);
             }
