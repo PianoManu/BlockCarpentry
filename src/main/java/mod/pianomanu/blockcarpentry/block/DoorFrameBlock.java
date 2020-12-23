@@ -37,7 +37,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 10/06/20
+ * @version 1.5 12/23/20
  */
 public class DoorFrameBlock extends DoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -93,7 +93,7 @@ public class DoorFrameBlock extends DoorBlock {
                     state = state.with(OPEN, true);
                 }
                 world.setBlockState(pos, state, 10);
-                world.playEvent(player, state.get(OPEN) ? 1006 : 1012, pos, 0);
+                world.playEvent(null, state.get(OPEN) ? 1006 : 1012, pos, 0);
             }
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
                 if (!player.isCreative())
