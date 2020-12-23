@@ -160,7 +160,7 @@ public class SlopeBakedModel implements IDynamicBakedModel {
             }
             return quads;
         }
-        if (half == Half.TOP) {
+        /*if (half == Half.TOP) {
             Vector3d tmp = NWD;
             NWD = NWU;
             NWU = tmp;
@@ -176,553 +176,596 @@ public class SlopeBakedModel implements IDynamicBakedModel {
             tmp = SED;
             SED = SEU;
             SEU = tmp;
+        }*/
+        boolean isBottom = half == Half.BOTTOM;
+        if (isBottom) {
+            //bottom face
+            quads.add(ModelHelper.createQuad(SWD, NWD, NED, SED, texture, 0, 16, 0, 16, tintIndex));
+            switch (shape) {
+                case STRAIGHT:
+                    switch (direction) {
+                        case NORTH:
+                            //back face
+                            quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                        case EAST:
+                            //back face
+                            quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                        case SOUTH:
+                            //back face
+                            quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
+                            quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                        case WEST:
+                            //back face
+                            quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                    }
+                    break;
+                case OUTER_LEFT:
+                    switch (direction) {
+                        case NORTH:
+                            //back face
+                            quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted face
+                            quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top faces
+                            quads.add(ModelHelper.createQuadInverted(SWD, SED, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(NWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                        case EAST:
+                            //back face
+                            quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted face
+                            quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
+
+                            //top faces
+                            quads.add(ModelHelper.createQuadInverted(NWD, SWD, NEU, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(SED, NEU, NEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                        case SOUTH:
+                            //back face
+                            quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //slanted face
+                            quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
+                            //top faces
+                            quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, SEU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(SEU, NWD, SWD, SEU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                        case WEST:
+                            //back face
+                            quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted face
+                            quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top faces
+                            quads.add(ModelHelper.createQuadInverted(NED, SWU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
+                            quads.add(ModelHelper.createQuad(NED, NED, NWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                    }
+                    break;
+                case OUTER_RIGHT:
+                    switch (direction) {
+                        case NORTH:
+                            //back face
+                            quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted face
+                            quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
+
+                            //top faces
+                            quads.add(ModelHelper.createQuadInverted(NWD, SWD, NEU, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(SED, NEU, NEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                        case EAST:
+                            //back face
+                            quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //slanted face
+                            quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
+                            //top faces
+                            quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, SEU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(SEU, NWD, SWD, SEU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                        case SOUTH:
+                            //back face
+                            quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted face
+                            quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top faces
+                            quads.add(ModelHelper.createQuadInverted(NED, SWU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
+                            quads.add(ModelHelper.createQuad(NED, NED, NWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                        case WEST:
+                            //back face
+                            quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted face
+                            quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top faces
+                            quads.add(ModelHelper.createQuadInverted(SWD, SED, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(NWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                    }
+                    break;
+                case INNER_LEFT:
+                    switch (direction) {
+                        case NORTH:
+                            //NORTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex));
+
+                            //WEST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                        case EAST:
+                            //EAST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex));
+
+                            //NORTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                        case SOUTH:
+                            //SOUTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
+                            quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex));
+
+                            //EAST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            //quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                        case WEST:
+                            //WEST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
+
+                            //SOUTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
+                            //quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                    }
+                    break;
+                case INNER_RIGHT:
+                    switch (direction) {
+                        case NORTH:
+                            //NORTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex));
+
+                            //EAST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                        case EAST:
+                            //EAST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            //quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex));
+
+                            //SOUTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
+                            quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                        case SOUTH:
+                            //SOUTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
+                            //quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex));
+
+                            //WEST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                        case WEST:
+                            //WEST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
+
+                            //NORTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                    }
+                    break;
+            }
         }
-        //boolean invertFace = half == Half.BOTTOM;
-        //bottom face
-        quads.add(ModelHelper.createQuad(SWD, NWD, NED, SED, texture, 0, 16, 0, 16, tintIndex));
-        switch (shape) {
-            /*case STRAIGHT:
-                switch (direction) {
-                    case NORTH:
-                        quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
+        else {
+            //top face
+            quads.add(ModelHelper.createQuad(NWU, SWU, SEU, NEU, texture, 0, 16, 0, 16, tintIndex));
+            switch (shape) {
+                case STRAIGHT:
+                    switch (direction) {
+                        case NORTH:
+                            //NORTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(SEU, NED, NEU, SEU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NED, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                        case EAST:
+                            //EAST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(SWU, SED, SEU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(NWU, NWU, NEU, NED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWU, NED, SED, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                        case SOUTH:
+                            //SOUTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(NWU, SWD, SWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                        case WEST:
+                            //WEST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(NEU, NWD, NWU, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(SEU, SEU, SWU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWD, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                    }
+                    break;
+                case OUTER_LEFT:
+                    switch (direction) {
+                        case NORTH:
+                            //NORTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuadInverted(NEU, NWD, NWU, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SEU, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(SEU, NWD, NEU, SEU, texture, 0, 16, 16, 0, tintIndex));
+                            break;
+                        case EAST:
+                            //EAST PART
+                            //back face
+                            quads.add(ModelHelper.createQuadInverted(SEU, NED, NEU, SEU, texture, 0, 16, 16, 0, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(NWU, NWU, NEU, NED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NED, texture, 16, 0, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(SWU, NED, SEU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            break;
+                        case SOUTH:
+                            //SOUTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuadInverted(SWU, SED, SEU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            //quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            quads.add(ModelHelper.createQuad(NWU, NWU, NEU, SED, texture, 16, 0, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(NWU, SED, SWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            break;
+                        case WEST:
+                            //WEST PART
+                            //back face
+                            quads.add(ModelHelper.createQuadInverted(NWU, SWD, SWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(SEU, SEU, SWU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(NEU, SWD, NWU, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            break;
+                    }
+                    break;
+                case OUTER_RIGHT:
+                    switch (direction) {
+                        case NORTH:
+                            //EAST PART
+                            //back face
+                            quads.add(ModelHelper.createQuadInverted(SEU, NED, NEU, SEU, texture, 0, 16, 16, 0, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(NWU, NWU, NEU, NED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NED, texture, 16, 0, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(SWU, NED, SEU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            break;
+                        case EAST:
+                            //SOUTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuadInverted(SWU, SED, SEU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            //quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            quads.add(ModelHelper.createQuad(NWU, NWU, NEU, SED, texture, 16, 0, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(NWU, SED, SWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            break;
+                        case SOUTH:
+                            //WEST PART
+                            //back face
+                            quads.add(ModelHelper.createQuadInverted(NWU, SWD, SWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(SEU, SEU, SWU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(NEU, SWD, NWU, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            break;
+                        case WEST:
+                            //NORTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuadInverted(NEU, NWD, NWU, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(SEU, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuadInverted(SEU, NWD, NEU, SEU, texture, 0, 16, 16, 0, tintIndex));
+                            break;
+                    }
+                    break;
+                case INNER_LEFT:
+                    switch (direction) {
+                        case NORTH:
+                            //NORTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(SEU, NED, NEU, SEU, texture, 0, 16, 16, 0, tintIndex));
+                            //quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NED, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
 
-                        quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        break;
-                    case WEST:
-                        //back face
-                        quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
+                            //WEST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuadInverted(NEU, NWD, NWU, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(SEU, SEU, SWU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWD, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                        case EAST:
+                            //EAST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(SWU, SED, SEU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            //quads.add(ModelHelper.createQuad(NWU, NWU, NEU, NED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWU, NED, SED, SWU, texture, 0, 16, 0, 16, tintIndex));
 
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
+                            //NORTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuadInverted(SEU, NED, NEU, SEU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NED, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                        case SOUTH:
+                            //SOUTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(NWU, SWD, SWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            //quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
 
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        break;
-                    case SOUTH:
-                        quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
+                            //EAST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuadInverted(SWU, SED, SEU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(NWU, NWU, NEU, NED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWU, NED, SED, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                        case WEST:
+                            //WEST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(NEU, NWD, NWU, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            //quads.add(ModelHelper.createQuad(SEU, SEU, SWU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWD, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
 
-                        quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex, invertFace));
-                        break;
-                    case EAST:
-                        //back face
-                        quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
+                            //SOUTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuadInverted(NWU, SWD, SWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                    }
+                    break;
+                case INNER_RIGHT:
+                    switch (direction) {
+                        case NORTH:
+                            //NORTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuadInverted(SEU, NED, NEU, SEU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NED, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
 
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex, invertFace));
-                        break;
-                }
-                break;
-            case INNER_RIGHT:
-                switch (direction) {
-                    case NORTH:
-                        quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
+                            //EAST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(SWU, SED, SEU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            //quads.add(ModelHelper.createQuad(NWU, NWU, NEU, NED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWU, NED, SED, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                        case EAST:
+                            //EAST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuadInverted(SWU, SED, SEU, SWU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(NWU, NWU, NEU, NED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWU, NED, SED, SWU, texture, 0, 16, 0, 16, tintIndex));
 
-                        //quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
+                            //SOUTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(NWU, SWD, SWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            //quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            break;
+                        case SOUTH:
+                            //SOUTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuadInverted(NWU, SWD, SWU, NWU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SED, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
 
-                        //back face
-                        quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
+                            //WEST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(NEU, NWD, NWU, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            //quads.add(ModelHelper.createQuad(SEU, SEU, SWU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWD, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                        case WEST:
+                            //WEST PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            //quads.add(ModelHelper.createQuadInverted(NEU, NWD, NWU, NEU, texture, 0, 16, 16, 0, tintIndex));
+                            quads.add(ModelHelper.createQuad(SEU, SEU, SWU, SWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NWD, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
 
-                        //quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex, invertFace));
-                        break;
-                    case WEST:
-                        //back face
-                        quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        //quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        //quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        break;
-                    case SOUTH:
-                        quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex, invertFace));
-                        //quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex, invertFace));
-
-                        //back face
-                        quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        //quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        break;
-                    case EAST:
-                        //back face
-                        quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        //quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        //quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex, invertFace));
-                        break;
-                }
-                break;
-            case INNER_LEFT:
-                switch (direction) {
-                    case EAST:
-                        quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        //quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        //back face
-                        quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        //quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex, invertFace));
-                        break;
-                    case NORTH:
-                        //back face
-                        quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        //quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        //quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        break;
-                    case WEST:
-                        quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex, invertFace));
-                        //quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex, invertFace));
-
-                        //back face
-                        quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        //quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        break;
-                    case SOUTH:
-                        //back face
-                        quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        //quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        //quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex, invertFace));
-                        break;
-                }
-                break;
-            case OUTER_RIGHT:
-                switch (direction) {
-                    case WEST:
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuad(NWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuadInverted(SED, NWU, SWD, SED, texture, 16, 0, 0, 16, tintIndex, invertFace));
-                        break;
-                    case SOUTH:
-                        //back face
-                        quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuad(SWU, NED, NWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-
-                        //top face
-                        quads.add(ModelHelper.createQuadInverted(NED, SWU, SED, NED, texture, 16, 0, 0, 16, tintIndex, invertFace));
-                        break;
-                    case EAST:
-                        quads.add(ModelHelper.createQuad(SEU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuad(SEU, NWD, SWD, SEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, SEU, SEU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        break;
-                    case NORTH:
-                        //back face
-                        quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuad(NEU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NEU, NEU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        break;
-                }
-                break;
-            case OUTER_LEFT:
-                switch (direction) {
-                    case NORTH:
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuad(NWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuadInverted(SED, NWU, SWD, SED, texture, 16, 0, 0, 16, tintIndex, invertFace));
-                        break;
-                    case WEST:
-                        //back face
-                        quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuad(SWU, NED, NWD, SWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-
-                        //top face
-                        quads.add(ModelHelper.createQuadInverted(NED, SWU, SED, NED, texture, 16, 0, 0, 16, tintIndex, invertFace));
-                        break;
-                    case SOUTH:
-                        quads.add(ModelHelper.createQuad(SEU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuad(SEU, NWD, SWD, SEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, SEU, SEU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        break;
-                    case EAST:
-                        //back face
-                        quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        quads.add(ModelHelper.createQuad(NEU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex, invertFace));
-                        //top face
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NEU, NEU, texture, 0, 16, 16, 0, tintIndex, invertFace));
-                        break;
-                }
-                break;*/
-            case STRAIGHT:
-                switch (direction) {
-                    case NORTH:
-                        //back face
-                        quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        break;
-                    case EAST:
-                        //back face
-                        quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
-                        quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex));
-                        break;
-                    case SOUTH:
-                        //back face
-                        quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex));
-                        break;
-                    case WEST:
-                        //back face
-                        quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        break;
-                }
-                break;
-            case OUTER_LEFT:
-                switch (direction) {
-                    case NORTH:
-                        //back face
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted face
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top faces
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
-                        quads.add(ModelHelper.createQuad(NWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        break;
-                    case EAST:
-                        //back face
-                        quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted face
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
-
-                        //top faces
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NEU, NEU, texture, 0, 16, 16, 0, tintIndex));
-                        quads.add(ModelHelper.createQuad(SED, NEU, NEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                        break;
-                    case SOUTH:
-                        //back face
-                        quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                        //slanted face
-                        quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
-                        //top faces
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, SEU, texture, 0, 16, 16, 0, tintIndex));
-                        quads.add(ModelHelper.createQuad(SEU, NWD, SWD, SEU, texture, 0, 16, 0, 16, tintIndex));
-                        break;
-                    case WEST:
-                        //back face
-                        quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted face
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top faces
-                        quads.add(ModelHelper.createQuadInverted(NED, SWU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        break;
-                }
-                break;
-            case OUTER_RIGHT:
-                switch (direction) {
-                    case NORTH:
-                        //back face
-                        quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted face
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
-
-                        //top faces
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NEU, NEU, texture, 0, 16, 16, 0, tintIndex));
-                        quads.add(ModelHelper.createQuad(SED, NEU, NEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                        break;
-                    case EAST:
-                        //back face
-                        quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                        //slanted face
-                        quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
-                        //top faces
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, SEU, texture, 0, 16, 16, 0, tintIndex));
-                        quads.add(ModelHelper.createQuad(SEU, NWD, SWD, SEU, texture, 0, 16, 0, 16, tintIndex));
-                        break;
-                    case SOUTH:
-                        //back face
-                        quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted face
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top faces
-                        quads.add(ModelHelper.createQuadInverted(NED, SWU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        break;
-                    case WEST:
-                        //back face
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted face
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top faces
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
-                        quads.add(ModelHelper.createQuad(NWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        break;
-                }
-                break;
-            case INNER_LEFT:
-                switch (direction) {
-                    case NORTH:
-                        //NORTH PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex));
-
-                        //WEST PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        break;
-                    case EAST:
-                        //EAST PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
-                        quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex));
-
-                        //NORTH PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        break;
-                    case SOUTH:
-                        //SOUTH PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex));
-
-                        //EAST PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
-                        quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex));
-                        break;
-                    case WEST:
-                        //WEST PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
-
-                        //SOUTH PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex));
-                        break;
-                }
-                break;
-            case INNER_RIGHT:
-                switch (direction) {
-                    case NORTH:
-                        //NORTH PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex));
-
-                        //EAST PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
-                        quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex));
-                        break;
-                    case EAST:
-                        //EAST PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, NEU, texture, 0, 16, 16, 0, tintIndex));
-                        quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex));
-
-                        //SOUTH PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex));
-                        break;
-                    case SOUTH:
-                        //SOUTH PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuadInverted(NED, SEU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex));
-
-                        //WEST PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        break;
-                    case WEST:
-                        //WEST PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
-
-                        //NORTH PART
-                        //back face
-                        quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                        //slanted faces
-                        quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
-                        //top face
-                        quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                        break;
-                }
-                break;
+                            //NORTH PART
+                            //back face
+                            quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+                            //slanted faces
+                            quads.add(ModelHelper.createQuadInverted(SEU, NED, NEU, SEU, texture, 0, 16, 16, 0, tintIndex));
+                            //quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            //top face
+                            quads.add(ModelHelper.createQuad(NED, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
+                            break;
+                    }
+                    break;
+            }
         }
-        //top face
-        //quads.add(ModelHelper.createQuad(NEU, SEU, SWU, NWU, texture, 0, 16, 0, 16, tintIndex, invertFace));
         return quads;
     }
 
