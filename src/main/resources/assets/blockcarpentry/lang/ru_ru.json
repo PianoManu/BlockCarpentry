@@ -1,0 +1,41 @@
+{
+  "block.blockcarpentry.frameblock": "Каркас",
+  "block.blockcarpentry.frame_slab": "Каркасная плита",
+  "block.blockcarpentry.falling_frameblock": "Каркас (affected by Gravity - WIP)",
+  "block.blockcarpentry.frame_button": "Деревянная каркасная кнопка",
+  "block.blockcarpentry.frame_stairs": "Каркасная лестница",
+  "block.blockcarpentry.frame_pressure_plate": "Деревянная каркасная нажимная пластина",
+  "block.blockcarpentry.frame_door": "Каркасная дверь",
+  "block.blockcarpentry.frame_trapdoor": "Каркасный люк",
+  "block.blockcarpentry.frame_fence": "Каркасный забор",
+  "block.blockcarpentry.frame_bed": "Каркасная кровать",
+  "block.blockcarpentry.frame_wall": "Каркасная стена",
+  "block.blockcarpentry.frame_ladder": "Каркасная лестница",
+  "block.blockcarpentry.frame_chest": "Каркасный сундук",
+  "block.blockcarpentry.frame_fence_gate": "Каркасная калитка",
+  "block.blockcarpentry.frame_slope": "Накланенный каркас (WIP)",
+  "block.blockcarpentry.frame_edged_slope": "Ступенчатый накланенный каркас (WIP)",
+
+  "block.blockcarpentry.illusion_block": "Иллюзорный блок",
+  "block.blockcarpentry.illusion_slab": "Иллюзорная плита",
+  "block.blockcarpentry.illusion_button": "Иллюзорная кнопка",
+  "block.blockcarpentry.illusion_stairs": "Иллюзорная лестница",
+  "block.blockcarpentry.illusion_pressure_plate": "Иллюзорная нажимная пластина",
+  "block.blockcarpentry.illusion_door": "Иллюзорная дверь",
+  "block.blockcarpentry.illusion_trapdoor": "Иллюзорный люк",
+  "block.blockcarpentry.illusion_fence": "Иллюзорный забор",
+  "block.blockcarpentry.illusion_bed": "Иллюзорная кровать",
+  "block.blockcarpentry.illusion_wall": "Иллюзорная стена",
+  "block.blockcarpentry.illusion_ladder": "Иллюзорная лестница",
+  "block.blockcarpentry.illusion_chest": "Иллюзорный сундук",
+  "block.blockcarpentry.illusion_fence_gate": "Иллюзорная калитка",
+
+  "container.frame_chest": "Каркасный сундук",
+
+  "item.blockcarpentry.hammer": "Молоток",
+  "item.blockcarpentry.texture_wrench": "Текстурный ключ",
+  "item.blockcarpentry.chisel": "Стамеска",
+  "item.blockcarpentry.paintbrush": "Валик",
+
+  "itemGroup.blockcarpentry": "BlockCarpentry"
+}
