@@ -37,5 +37,19 @@
   "item.blockcarpentry.chisel": "Meißel",
   "item.blockcarpentry.paintbrush": "Pinsel",
 
+  "message.blockcarpentry.light_level": "Beleuchtungsstufe: %s",
+  "message.blockcarpentry.texture": "Textur: %s",
+  "message.blockcarpentry.design": "Design: %s",
+  "message.blockcarpentry.design_texture": "Designtextur: %s",
+  "message.blockcarpentry.grass_overlay": "Grasschicht aktiviert",
+  "message.blockcarpentry.grass_overlay_large": "Große Grasschicht aktiviert",
+  "message.blockcarpentry.snow_overlay_small": "Kleine Schneeschicht aktiviert",
+  "message.blockcarpentry.snow_overlay": "Schneeschicht aktiviert",
+  "message.blockcarpentry.vine_overlay": "Rankenschicht aktiviert",
+  "message.blockcarpentry.special_overlay": "Spezialschicht %s aktiviert",
+
+  "message.blockcarpentry.block_not_available": "Dieser Block kann leider nicht dargestellt werden",
+  "message.blockcarpentry.block_error": "Mit diesem Block ist ein Fehler aufgetreten, bitte dem Autor der Mod mitteilen (PianoManu)",
+
   "itemGroup.blockcarpentry": "BlockCarpentry"
 }
