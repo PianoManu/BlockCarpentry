@@ -31,7 +31,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 09/22/20
+ * @version 1.1 04/07/21
  */
 @SuppressWarnings("deprecation")
 public class ChestBakedModel implements IDynamicBakedModel {
@@ -69,7 +69,7 @@ public class ChestBakedModel implements IDynamicBakedModel {
             List<TextureAtlasSprite> designTextureList = new ArrayList<>(TextureHelper.getMetalTextures());
             if (textureList.size() == 0) {
                 if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
+                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
                 return Collections.emptyList();
             }

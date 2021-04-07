@@ -26,7 +26,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.12 12/23/20
+ * @version 1.13 04/07/21
  */
 public class ModelHelper {
 
@@ -206,7 +206,7 @@ public class ModelHelper {
         Vector3d SED = v(xh, yl, zh); //South-East-Down
         if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("An error occured with this block, please report to the mod author (PianoManu)"), true);
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_error"), true);
             }
             return quads;
         }
@@ -265,7 +265,7 @@ public class ModelHelper {
         Vector3d SED = v(xh, yl, zh); //South-East-Down
         if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("An error occured with this block, please report to the mod author (PianoManu)"), true);
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_error"), true);
             }
             return quads;
         }
@@ -296,7 +296,7 @@ public class ModelHelper {
         List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
         if (textureList.size() == 0) {
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
             }
             return quads;
         }
@@ -355,7 +355,7 @@ public class ModelHelper {
         Vector3d SED = v(xh, yl, zh); //South-East-Down
         if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("An error occured with this block, please report to the mod author (PianoManu)"), true);
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_error"), true);
             }
             return quads;
         }
@@ -529,7 +529,7 @@ public class ModelHelper {
         Vector3d SED = v(xh, yl, zh); //South-East-Down
         if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("An error occured with this block, please report to the mod author (PianoManu)"), true);
+                Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_error"), true);
             }
             return quads;
         }

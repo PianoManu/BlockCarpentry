@@ -34,7 +34,7 @@ import java.util.Random;
  * Contains all information for the block model
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  * @author PianoManu
- * @version 1.3 09/21/20
+ * @version 1.4 04/07/21
  */
 public class EdgedSlopeBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -73,7 +73,7 @@ public class EdgedSlopeBakedModel implements IDynamicBakedModel {
             }
             if (texture.size() == 0) {
                 if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
+                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
                 return Collections.emptyList();
             }

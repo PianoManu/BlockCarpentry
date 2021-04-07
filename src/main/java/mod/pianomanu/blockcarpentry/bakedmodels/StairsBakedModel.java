@@ -31,7 +31,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.4 09/28/20
+ * @version 1.5 04/07/21
  */
 public class StairsBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -80,7 +80,7 @@ public class StairsBakedModel implements IDynamicBakedModel {
             }
             if (textureList.size() == 0) {
                 if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
+                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
                 return Collections.emptyList();
             }
