@@ -1,6 +1,8 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -12,7 +14,7 @@ import java.util.List;
  * Currently unused, may be used (or rewritten) for frame beds
  *
  * @author PianoManu
- * @version 1.3 10/29/20
+ * @version 1.4 04/09/21
  */
 public class BlockSavingHelper {
     public static List<Block> validBlocks = new ArrayList<>();
@@ -20,19 +22,22 @@ public class BlockSavingHelper {
     public static void createValidBlockList() {
         List<Block> blockList = new ArrayList<>();
         for (Block b : ForgeRegistries.BLOCKS) {
-            if (b.getDefaultState().isSolid() || b.getDefaultState().isTransparent()) {
-                blockList.add(b);
-            }
-            if (b instanceof AbstractGlassBlock) {
-                blockList.add(b);
-            }
-            if (b instanceof IceBlock) {
-                blockList.add(b);
-            }
-            if (b instanceof SlimeBlock) {
-                blockList.add(b);
-            }
-            if (b instanceof HoneyBlock) {
+            if (b.getDefaultState().getRenderType() == BlockRenderType.MODEL) {
+                /*if (b.getDefaultState().isSolid() || b.getDefaultState().isTransparent()) {
+                    blockList.add(b);
+                }
+                if (b instanceof AbstractGlassBlock) {
+                    blockList.add(b);
+                }
+                if (b instanceof IceBlock) {
+                    blockList.add(b);
+                }
+                if (b instanceof SlimeBlock) {
+                    blockList.add(b);
+                }
+                if (b instanceof HoneyBlock) {
+                    blockList.add(b);
+                }*/
                 blockList.add(b);
             }
         }
