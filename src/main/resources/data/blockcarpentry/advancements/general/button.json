@@ -1,0 +1,35 @@
+{
+  "parent": "blockcarpentry:general/root",
+  "display": {
+    "icon": {
+      "item": "blockcarpentry:frame_button"
+    },
+    "title": {
+      "translate": "advancements.blockcarpentry.button.title"
+    },
+    "description": {
+      "translate": "advancements.blockcarpentry.button.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "frame_button": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_button"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "frame_button"
+    ]
+  ]
+}
