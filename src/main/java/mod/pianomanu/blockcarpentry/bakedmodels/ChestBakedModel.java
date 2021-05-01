@@ -3,10 +3,10 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.ChestFrameTileEntity;
+import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.GrassBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
@@ -31,7 +31,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.1 04/07/21
+ * @version 1.2 05/01/21
  */
 @SuppressWarnings("deprecation")
 public class ChestBakedModel implements IDynamicBakedModel {
@@ -83,10 +83,7 @@ public class ChestBakedModel implements IDynamicBakedModel {
                 tex = 0;
             }
             texture = textureList.get(tex);
-            int tintIndex = -1;
-            if (mimic.getBlock() instanceof GrassBlock) {
-                tintIndex = 1;
-            }
+            int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             int design = extraData.getData(ChestFrameTileEntity.DESIGN);
             int desTex = extraData.getData(ChestFrameTileEntity.DESIGN_TEXTURE);
             TextureAtlasSprite designTexture = designTextureList.get(desTex);

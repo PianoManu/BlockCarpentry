@@ -1,9 +1,11 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import mod.pianomanu.blockcarpentry.block.FrameBlock;
+import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.GrassBlock;
+import net.minecraft.block.LeavesBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.tileentity.TileEntity;
@@ -20,12 +22,13 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * This class ensures that blocks of grass take on the correct color
  *
  * @author PianoManu
- * @version 1.4 09/28/20
+ * @version 1.5 05/01/21
  */
 public class BlockColorHandler implements IBlockColor {
     public static final IBlockColor INSTANCE = new BlockColorHandler();
@@ -36,7 +39,7 @@ public class BlockColorHandler implements IBlockColor {
     public static void registerBlockColorHandlers(final ColorHandlerEvent.Block event) {
         registerBlockColors();
         event.getBlockColors().register((x, reader, pos, u) -> reader != null
-                && pos != null ? BiomeColors.getGrassColor(reader, pos)
+                && pos != null ? BiomeColors.getFoliageColor(reader, pos)
                 : GrassColors.get(0.5D, 1.0D), Registration.FRAMEBLOCK.get());
     }
 
@@ -81,11 +84,15 @@ public class BlockColorHandler implements IBlockColor {
     @Override
     public int getColor(@Nonnull BlockState state, @Nullable IBlockDisplayReader lightReader, @Nullable BlockPos pos, int tintIndex) {
         //TODO does this work?
-        if (state.getBlock() instanceof FrameBlock && lightReader != null && pos != null) {
+        if (Objects.requireNonNull(state.getBlock().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID) && lightReader != null && pos != null) {
             TileEntity te = lightReader.getTileEntity(pos);
             if (te instanceof FrameBlockTile && state.get(BCBlockStateProperties.CONTAINS_BLOCK)) {
                 BlockState containedBlock = ((FrameBlockTile) te).getMimic();
-                return BiomeColors.getGrassColor(lightReader, pos);
+                if (containedBlock.getBlock() instanceof GrassBlock) {
+                    return BiomeColors.getGrassColor(lightReader, pos);
+                } else if (containedBlock.getBlock() instanceof LeavesBlock) {
+                    return BiomeColors.getFoliageColor(lightReader,pos);
+                }
 
                 //return Minecraft.getInstance().getBlockColors().getColor(containedBlock, lightReader, pos, tintIndex);
             }
