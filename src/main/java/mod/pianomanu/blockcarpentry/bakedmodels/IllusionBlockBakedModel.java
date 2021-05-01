@@ -47,7 +47,8 @@ public class IllusionBlockBakedModel implements IDynamicBakedModel {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 if (model != null) {
                     int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-                    List<BakedQuad> quads = new ArrayList<>(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                    int rotation = extraData.getData(FrameBlockTile.ROTATION);
+                    List<BakedQuad> quads = new ArrayList<>(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                     int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
                     if (overlayIndex != 0) {
                         quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex));

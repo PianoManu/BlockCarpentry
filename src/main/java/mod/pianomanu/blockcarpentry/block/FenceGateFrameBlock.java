@@ -40,7 +40,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.3 10/06/20
+ * @version 1.4 05/01/21
  */
 public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggable {
     public FenceGateFrameBlock(Properties properties) {
@@ -72,6 +72,7 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
             BlockAppearanceHelper.setDesign(world, pos, player, item);
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setRotation(world, pos, player, item);
             if ((state.get(CONTAINS_BLOCK) || !(item.getItem() instanceof BlockItem)) && !(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
                 if (state.get(OPEN)) {
                     state = state.with(OPEN, Boolean.FALSE);

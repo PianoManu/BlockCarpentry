@@ -43,7 +43,7 @@ import java.util.Objects;
  * TileEntity for {@link mod.pianomanu.blockcarpentry.block.ChestFrameBlock} and all sorts of frame/illusion chest blocks
  * Contains all information about the block and the mimicked block, as well as the inventory size and stored items
  * @author PianoManu
- * @version 1.1 04/05/21
+ * @version 1.2 05/01/21
  */
 public class ChestFrameTileEntity extends ChestTileEntity {
 
@@ -107,57 +107,8 @@ public class ChestFrameTileEntity extends ChestTileEntity {
         return new ChestFrameContainer(id, player, this);
     }
 
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        //FRAME BEGIN
-        if (mimic != null) {
-            compound.put("mimic", NBTUtil.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            compound.put("texture", writeInteger(texture));
-        }
-        if (design != null) {
-            compound.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            compound.put("design_texture", writeInteger(designTexture));
-        }
-        if (glassColor != null) {
-            compound.put("glass_color", writeInteger(glassColor));
-        }
-        //FRAME END
-        super.write(compound);
-        if (!this.checkLootAndWrite(compound)) {
-            ItemStackHelper.saveAllItems(compound, this.chestContents);
-        }
-        return compound;
-    }
-
-    @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
-        //FRAME BEGIN
-        if (compound.contains("mimic")) {
-            mimic = NBTUtil.readBlockState(compound.getCompound("mimic"));
-        }
-        if (compound.contains("texture")) {
-            texture = readInteger(compound.getCompound("texture"));
-        }
-        if (compound.contains("design")) {
-            design = readInteger(compound.getCompound("design"));
-        }
-        if (compound.contains("design_texture")) {
-            designTexture = readInteger(compound.getCompound("design_texture"));
-        }
-        if (compound.contains("glass_color")) {
-            glassColor = readInteger(compound.getCompound("glass_color"));
-        }
-        //FRAME END
-        this.chestContents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        if (!this.checkLootAndRead(compound)) {
-            ItemStackHelper.loadAllItems(compound, this.chestContents);
-        }
-    }
+    public static final ModelProperty<Integer> ROTATION = new ModelProperty<>();
+    private Integer rotation = 0;
 
     private void playSound(SoundEvent sound) {
         double dx = (double) this.pos.getX() + 0.5D;
@@ -242,6 +193,35 @@ public class ChestFrameTileEntity extends ChestTileEntity {
     //currently only for doors and trapdoors
     public static final ModelProperty<Integer> GLASS_COLOR = new ModelProperty<>();
 
+    @Override
+    public CompoundNBT write(CompoundNBT compound) {
+        //FRAME BEGIN
+        if (mimic != null) {
+            compound.put("mimic", NBTUtil.writeBlockState(mimic));
+        }
+        if (texture != null) {
+            compound.put("texture", writeInteger(texture));
+        }
+        if (design != null) {
+            compound.put("design", writeInteger(design));
+        }
+        if (designTexture != null) {
+            compound.put("design_texture", writeInteger(designTexture));
+        }
+        if (glassColor != null) {
+            compound.put("glass_color", writeInteger(glassColor));
+        }
+        if (rotation != null) {
+            compound.put("rotation", writeInteger(rotation));
+        }
+        //FRAME END
+        super.write(compound);
+        if (!this.checkLootAndWrite(compound)) {
+            ItemStackHelper.saveAllItems(compound, this.chestContents);
+        }
+        return compound;
+    }
+
     public final int maxTextures = 8;
     public final int maxDesignTextures = 4;
     public final int maxDesigns = 4;
@@ -251,6 +231,35 @@ public class ChestFrameTileEntity extends ChestTileEntity {
     private Integer design = 0;
     private Integer designTexture = 0;
     private Integer glassColor = 0;
+
+    @Override
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
+        //FRAME BEGIN
+        if (compound.contains("mimic")) {
+            mimic = NBTUtil.readBlockState(compound.getCompound("mimic"));
+        }
+        if (compound.contains("texture")) {
+            texture = readInteger(compound.getCompound("texture"));
+        }
+        if (compound.contains("design")) {
+            design = readInteger(compound.getCompound("design"));
+        }
+        if (compound.contains("design_texture")) {
+            designTexture = readInteger(compound.getCompound("design_texture"));
+        }
+        if (compound.contains("glass_color")) {
+            glassColor = readInteger(compound.getCompound("glass_color"));
+        }
+        if (compound.contains("rotation")) {
+            rotation = readInteger(compound.getCompound("rotation"));
+        }
+        //FRAME END
+        this.chestContents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        if (!this.checkLootAndRead(compound)) {
+            ItemStackHelper.loadAllItems(compound, this.chestContents);
+        }
+    }
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -300,6 +309,18 @@ public class ChestFrameTileEntity extends ChestTileEntity {
 
     public void setGlassColor(Integer colorNumber) {
         this.glassColor = colorNumber;
+        markDirty();
+        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    }
+
+    public Integer getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(Integer rotation) {
+        this.rotation = rotation;
+        markDirty();
+        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
     @Override
@@ -320,6 +341,9 @@ public class ChestFrameTileEntity extends ChestTileEntity {
         if (glassColor != null) {
             tag.put("glass_color", writeInteger(glassColor));
         }
+        if (rotation != null) {
+            tag.put("rotation", writeInteger(rotation));
+        }
         return tag;
     }
 
@@ -336,6 +360,7 @@ public class ChestFrameTileEntity extends ChestTileEntity {
         Integer oldDesign = design;
         Integer oldDesignTexture = designTexture;
         Integer oldGlassColor = glassColor;
+        Integer oldRotation = rotation;
         CompoundNBT tag = pkt.getNbtCompound();
         if (tag.contains("mimic")) {
             mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
@@ -372,6 +397,13 @@ public class ChestFrameTileEntity extends ChestTileEntity {
                 world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
+        if (tag.contains("rotation")) {
+            rotation = readInteger(tag.getCompound("rotation"));
+            if (!Objects.equals(oldRotation, rotation)) {
+                ModelDataManager.requestModelDataRefresh(this);
+                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+            }
+        }
     }
 
     @Nonnull
@@ -383,6 +415,7 @@ public class ChestFrameTileEntity extends ChestTileEntity {
                 .withInitial(DESIGN, design)
                 .withInitial(DESIGN_TEXTURE, designTexture)
                 .withInitial(GLASS_COLOR, glassColor)
+                .withInitial(ROTATION, rotation)
                 .build();
     }
 
@@ -392,6 +425,7 @@ public class ChestFrameTileEntity extends ChestTileEntity {
         this.setDesign(0);
         this.setDesign(0);
         this.setGlassColor(0);
+        this.setRotation(0);
     }
 
     private static CompoundNBT writeInteger(Integer tag) {

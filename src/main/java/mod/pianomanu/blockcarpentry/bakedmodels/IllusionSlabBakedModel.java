@@ -54,25 +54,26 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic != null && state != null) {
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
+            int rotation = extraData.getData(FrameBlockTile.ROTATION);
             List<BakedQuad> quads = new ArrayList<>();
             switch (state.get(SixWaySlabFrameBlock.FACING)) {
                 case UP:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                     break;
                 case DOWN:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                     break;
                 case WEST:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                     break;
                 case SOUTH:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex, rotation));
                     break;
                 case NORTH:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                     break;
                 case EAST:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                     break;
             }
             int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);

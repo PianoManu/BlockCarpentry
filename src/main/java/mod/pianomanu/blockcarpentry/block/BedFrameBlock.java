@@ -42,7 +42,7 @@ import java.util.List;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.3 10/06/20
+ * @version 1.4 05/01/21
  */
 public class BedFrameBlock extends BedBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -139,6 +139,7 @@ public class BedFrameBlock extends BedBlock {
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
             BlockAppearanceHelper.setWoolColor(world, pos, player, hand);
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
+            BlockAppearanceHelper.setRotation(world, pos, player, item);
         }
         return ActionResultType.SUCCESS;
     }

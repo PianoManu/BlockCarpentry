@@ -53,8 +53,9 @@ public class IllusionPressurePlatePressedBakedModel implements IDynamicBakedMode
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic != null && state != null) {
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
+            int rotation = extraData.getData(FrameBlockTile.ROTATION);
             List<BakedQuad> quads = new ArrayList<>();
-            quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 0f, 1 / 32f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex));
+            quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 0f, 1 / 32f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
             int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
                 quads.addAll(ModelHelper.createOverlay(1 / 16f, 15 / 16f, 0f, 1 / 32f, 1 / 16f, 15 / 16f, overlayIndex));

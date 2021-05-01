@@ -45,7 +45,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.7 10/20/20
+ * @version 1.8 05/01/21
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggable {
@@ -134,6 +134,7 @@ public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggabl
             BlockAppearanceHelper.setDesign(world, pos, player, item);
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
+            BlockAppearanceHelper.setRotation(world, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
                 if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                     return ActionResultType.PASS;

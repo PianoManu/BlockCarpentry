@@ -47,6 +47,7 @@
 	"message.blockcarpentry.snow_overlay": "Aktiverade snööverdrag",
 	"message.blockcarpentry.vine_overlay": "Aktiverade växtöverdrag",
 	"message.blockcarpentry.special_overlay": "Aktiverade specialöverdrag %s",
+	"message.blockcarpentry.rotation": "Rotated Texture %s",
 
 	"message.blockcarpentry.block_not_available": "Ledsen, men detta block kan inte visas.",
 	"message.blockcarpentry.block_error": "Ett fel uppstod med detta block, anmäl gärna detta till mod-kreatören, PianoManu.",

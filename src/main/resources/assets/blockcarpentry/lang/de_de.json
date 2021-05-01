@@ -47,6 +47,7 @@
   "message.blockcarpentry.snow_overlay": "Schneeschicht aktiviert",
   "message.blockcarpentry.vine_overlay": "Rankenschicht aktiviert",
   "message.blockcarpentry.special_overlay": "Spezialschicht %s aktiviert",
+  "message.blockcarpentry.rotation": "Rotierte Textur %s",
 
   "message.blockcarpentry.block_not_available": "Dieser Block kann leider nicht dargestellt werden",
   "message.blockcarpentry.block_error": "Mit diesem Block ist ein Fehler aufgetreten, bitte dem Autor der Mod mitteilen (PianoManu)",

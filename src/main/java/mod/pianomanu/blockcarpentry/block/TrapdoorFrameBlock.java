@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 10/09/20
+ * @version 1.6 05/01/21
  */
 public class TrapdoorFrameBlock extends TrapDoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -72,6 +72,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
             BlockAppearanceHelper.setGlassColor(world, pos, player, hand);
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
+            BlockAppearanceHelper.setRotation(world, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();

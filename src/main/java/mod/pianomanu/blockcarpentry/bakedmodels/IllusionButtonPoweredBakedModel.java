@@ -55,6 +55,7 @@ public class IllusionButtonPoweredBakedModel implements IDynamicBakedModel {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic != null && state != null) {
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
+            int rotation = extraData.getData(FrameBlockTile.ROTATION);
             float yl = 0f;
             float yh = 1 / 16f;
             if (state.get(WoodButtonBlock.FACE).equals(AttachFace.CEILING)) {
@@ -66,16 +67,16 @@ public class IllusionButtonPoweredBakedModel implements IDynamicBakedModel {
                 case WALL:
                     switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
                         case NORTH:
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 15 / 16f, 1f, mimic, model, extraData, rand, tintIndex));
+                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 15 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                             break;
                         case EAST:
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 1 / 16f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
+                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 1 / 16f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                             break;
                         case WEST:
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(15 / 16f, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
+                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(15 / 16f, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                             break;
                         case SOUTH:
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 0f, 1 / 16f, mimic, model, extraData, rand, tintIndex));
+                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 0f, 1 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                             break;
                     }
                     break;
@@ -84,11 +85,11 @@ public class IllusionButtonPoweredBakedModel implements IDynamicBakedModel {
                     switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
                         case EAST:
                         case WEST:
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(6 / 16f, 10 / 16f, yl, yh, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex));
+                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(6 / 16f, 10 / 16f, yl, yh, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                             break;
                         case SOUTH:
                         case NORTH:
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, yl, yh, 6 / 16f, 10 / 16f, mimic, model, extraData, rand, tintIndex));
+                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, yl, yh, 6 / 16f, 10 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                             break;
                     }
             }

@@ -25,7 +25,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.2 09/28/20
+ * @version 1.3 05/01/21
  */
 public class FrameBlockTile extends TileEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -35,6 +35,7 @@ public class FrameBlockTile extends TileEntity {
     //currently only for doors and trapdoors
     public static final ModelProperty<Integer> GLASS_COLOR = new ModelProperty<>();
     public static final ModelProperty<Integer> OVERLAY = new ModelProperty<>();
+    public static final ModelProperty<Integer> ROTATION = new ModelProperty<>();
 
     public final int maxTextures = 8;
     public final int maxDesignTextures = 4;
@@ -46,6 +47,7 @@ public class FrameBlockTile extends TileEntity {
     private Integer designTexture = 0;
     private Integer glassColor = 0;
     private Integer overlay = 0;
+    private Integer rotation = 0;
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -99,6 +101,18 @@ public class FrameBlockTile extends TileEntity {
 
     public void setGlassColor(Integer colorNumber) {
         this.glassColor = colorNumber;
+        markDirty();
+        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    }
+
+    public Integer getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(Integer rotation) {
+        this.rotation = rotation;
+        markDirty();
+        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
     private static Integer readInteger(CompoundNBT tag) {
@@ -151,6 +165,9 @@ public class FrameBlockTile extends TileEntity {
         if (overlay != null) {
             tag.put("overlay", writeInteger(overlay));
         }
+        if (rotation != null) {
+            tag.put("rotation", writeInteger(rotation));
+        }
         return tag;
     }
 
@@ -162,6 +179,7 @@ public class FrameBlockTile extends TileEntity {
         Integer oldDesignTexture = designTexture;
         Integer oldGlassColor = glassColor;
         Integer oldOverlay = overlay;
+        Integer oldRotation = rotation;
         CompoundNBT tag = pkt.getNbtCompound();
         if (tag.contains("mimic")) {
             mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
@@ -205,6 +223,13 @@ public class FrameBlockTile extends TileEntity {
                 world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
             }
         }
+        if (tag.contains("rotation")) {
+            rotation = readInteger(tag.getCompound("rotation"));
+            if (!Objects.equals(oldRotation, rotation)) {
+                ModelDataManager.requestModelDataRefresh(this);
+                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+            }
+        }
     }
 
     @Nonnull
@@ -217,6 +242,7 @@ public class FrameBlockTile extends TileEntity {
                 .withInitial(DESIGN_TEXTURE, designTexture)
                 .withInitial(GLASS_COLOR, glassColor)
                 .withInitial(OVERLAY, overlay)
+                .withInitial(ROTATION, rotation)
                 .build();
     }
 
@@ -241,6 +267,9 @@ public class FrameBlockTile extends TileEntity {
         if (tag.contains("overlay")) {
             overlay = readInteger(tag.getCompound("overlay"));
         }
+        if (tag.contains("rotation")) {
+            rotation = readInteger(tag.getCompound("rotation"));
+        }
     }
 
     @Override
@@ -263,6 +292,9 @@ public class FrameBlockTile extends TileEntity {
         if (overlay != null) {
             tag.put("overlay", writeInteger(overlay));
         }
+        if (rotation != null) {
+            tag.put("rotation", writeInteger(rotation));
+        }
         return super.write(tag);
     }
 
@@ -279,6 +311,7 @@ public class FrameBlockTile extends TileEntity {
         this.setDesign(0);
         this.setGlassColor(0);
         this.setOverlay(0);
+        this.setRotation(0);
     }
 }
 //========SOLI DEO GLORIA========//

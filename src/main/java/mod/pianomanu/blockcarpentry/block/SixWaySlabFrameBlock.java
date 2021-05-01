@@ -44,7 +44,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.6 10/21/20
+ * @version 1.7 05/01/21
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
@@ -124,6 +124,7 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
             BlockAppearanceHelper.setDesign(world, pos, player, item);
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
+            BlockAppearanceHelper.setRotation(world, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
                 if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                     return ActionResultType.PASS;

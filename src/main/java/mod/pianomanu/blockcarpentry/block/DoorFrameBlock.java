@@ -37,7 +37,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 10/09/20
+ * @version 1.6 05/01/21
  */
 public class DoorFrameBlock extends DoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -72,6 +72,7 @@ public class DoorFrameBlock extends DoorBlock {
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
             BlockAppearanceHelper.setGlassColor(world, pos, player, hand);
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
+            BlockAppearanceHelper.setRotation(world, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();

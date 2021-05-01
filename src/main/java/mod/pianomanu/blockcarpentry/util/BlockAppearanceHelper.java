@@ -256,5 +256,41 @@ public class BlockAppearanceHelper {
         }
         return -1;
     }
+
+    public static void setRotation(World world, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
+        if (itemStack.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isSneaking()) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                if (fte.getRotation() < 7) {
+                    fte.setRotation(fte.getRotation() + 1);
+                } else {
+                    fte.setRotation(0);
+                }
+                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
+                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
+            }
+            if (tileEntity instanceof BedFrameTile) {
+                BedFrameTile fte = (BedFrameTile) tileEntity;
+                if (fte.getDesignTexture() < 7) {
+                    fte.setDesignTexture(fte.getDesignTexture() + 1);
+                } else {
+                    fte.setDesignTexture(0);
+                }
+                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
+                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
+            }
+            if (tileEntity instanceof ChestFrameTileEntity) {
+                ChestFrameTileEntity fte = (ChestFrameTileEntity) tileEntity;
+                if (fte.getDesignTexture() < fte.maxDesignTextures) {
+                    fte.setDesignTexture(fte.getDesignTexture() + 1);
+                } else {
+                    fte.setDesignTexture(0);
+                }
+                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
+                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
+            }
+        }
+    }
 }
 //========SOLI DEO GLORIA========//

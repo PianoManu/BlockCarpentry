@@ -41,7 +41,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 04/05/21
+ * @version 1.5 05/01/21
  */
 public class WallFrameBlock extends WallBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -146,6 +146,7 @@ public class WallFrameBlock extends WallBlock {
             BlockAppearanceHelper.setDesign(world, pos, player, item);
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
+            BlockAppearanceHelper.setRotation(world, pos, player, item);
 
             if (item.getItem() instanceof BlockItem) {
                 if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
