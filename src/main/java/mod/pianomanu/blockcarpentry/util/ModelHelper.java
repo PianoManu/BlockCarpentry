@@ -26,7 +26,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.14 05/01/21
+ * @version 1.15 05/02/21
  */
 public class ModelHelper {
 
@@ -325,108 +325,108 @@ public class ModelHelper {
             textureDown = quad.func_187508_a();
         }
         if (rotation == 0) {
-            if (up) quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+            if (up) quads.add(ModelHelper.createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
             if (down)
-                quads.add(createQuad(NED, NWD, SWD, SED, textureDown, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(NED, NWD, SWD, SED, textureDown, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
             if (west)
-                quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(SWU, SWD, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             if (east)
-                quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(NEU, NED, SED, SEU, textureSouth, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             if (north)
-                quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(NWU, NWD, NED, NEU, textureWest, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             if (south)
-                quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(SEU, SED, SWD, SWU, textureEast, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         }
         if (rotation == 1) {
-            if (up) quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+            if (up) quads.add(ModelHelper.createQuadInverted(NWU, NEU, SEU, SWU, textureUp, xl * 16,xh * 16, zh * 16, zl * 16,  tintIndex));
             if (down)
-                quads.add(createQuad(NED, NWD, SWD, SED, textureDown, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
-            if (north)
-                quads.add(createQuad(SWU, SWD, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-            if (south)
-                quads.add(createQuad(NEU, NED, SED, SEU, textureSouth, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-            if (east)
-                quads.add(createQuad(NWU, NWD, NED, NEU, textureEast, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuadInverted(NED, NWD, SWD, SED, textureDown, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
             if (west)
-                quads.add(createQuad(SEU, SED, SWD, SWU, textureWest, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(SWU, SWD, NWD, NWU, textureWest, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (east)
+                quads.add(ModelHelper.createQuad(NEU, NED, SED, SEU, textureEast, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (north)
+                quads.add(ModelHelper.createQuad(NWU, NWD, NED, NEU, textureSouth, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (south)
+                quads.add(ModelHelper.createQuad(SEU, SED, SWD, SWU, textureNorth, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         }
         if (rotation == 2) {
-            if (up) quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+            if (up) quads.add(ModelHelper.createQuad(NWU, NEU, SEU, SWU, textureUp, xh * 16, xl * 16, zh * 16, zl * 16, tintIndex));
             if (down)
-                quads.add(createQuad(NED, NWD, SWD, SED, textureDown, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
-            if (east)
-                quads.add(createQuad(SWU, SWD, NWD, NWU, textureEast, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(NED, NWD, SWD, SED, textureDown, xh * 16, xl * 16, 16 - zl * 16, 16 - zh * 16, tintIndex));
             if (west)
-                quads.add(createQuad(NEU, NED, SED, SEU, textureWest, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-            if (south)
-                quads.add(createQuad(NWU, NWD, NED, NEU, textureSouth, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(SWU, SWD, NWD, NWU, textureSouth, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (east)
+                quads.add(ModelHelper.createQuad(NEU, NED, SED, SEU, textureNorth, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             if (north)
-                quads.add(createQuad(SEU, SED, SWD, SWU, textureNorth, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(NWU, NWD, NED, NEU, textureEast, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (south)
+                quads.add(ModelHelper.createQuad(SEU, SED, SWD, SWU, textureWest, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         }
         if (rotation == 3) {
-            if (up) quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+            if (up) quads.add(ModelHelper.createQuadInverted(NWU, NEU, SEU, SWU, textureUp, xh * 16,xl * 16, zl * 16, zh * 16,  tintIndex));
             if (down)
-                quads.add(createQuad(NED, NWD, SWD, SED, textureDown, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
-            if (south)
-                quads.add(createQuad(SWU, SWD, NWD, NWU, textureSouth, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-            if (north)
-                quads.add(createQuad(NEU, NED, SED, SEU, textureNorth, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuadInverted(NED, NWD, SWD, SED, textureDown, xh * 16, xl * 16, 16 - zl * 16, 16 - zh * 16, tintIndex));
             if (west)
-                quads.add(createQuad(NWU, NWD, NED, NEU, textureWest, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(SWU, SWD, NWD, NWU, textureEast, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             if (east)
-                quads.add(createQuad(SEU, SED, SWD, SWU, textureEast, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(NEU, NED, SED, SEU, textureWest, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (north)
+                quads.add(ModelHelper.createQuad(NWU, NWD, NED, NEU, textureNorth, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (south)
+                quads.add(ModelHelper.createQuad(SEU, SED, SWD, SWU, textureSouth, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         }
         if (rotation == 4) {
-            if (west) quads.add(createQuadInverted(NWU, NEU, SEU, SWU, textureWest, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-            if (east)
-                quads.add(createQuadInverted(NED, NWD, SWD, SED, textureEast, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
-            if (north)
-                quads.add(createQuadInverted(SWU, SWD, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
-            if (south)
-                quads.add(createQuadInverted(NEU, NED, SED, SEU, textureSouth, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-            if (up)
-                quads.add(createQuad(NWU, NWD, NED, NEU, textureUp, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (up) quads.add(ModelHelper.createQuadInverted(NWU, NEU, SEU, SWU, textureEast, zh * 16, zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             if (down)
-                quads.add(createQuad(SEU, SED, SWD, SWU, textureDown, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuadInverted(NED, NWD, SWD, SED, textureWest, xh * 16, xl * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
+            if (west)
+                quads.add(ModelHelper.createQuadInverted(SWU, SWD, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, yh * 16, yl * 16, tintIndex));
+            if (east)
+                quads.add(ModelHelper.createQuadInverted(NEU, NED, SED, SEU, textureSouth, xh * 16, xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (north)
+                quads.add(ModelHelper.createQuadInverted(NWU, NWD, NED, NEU, textureUp, zh * 16, zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (south)
+                quads.add(ModelHelper.createQuad(SEU, SED, SWD, SWU, textureDown, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         }
         if (rotation == 5) {
-            if (north) quads.add(createQuad(NWU, NEU, SEU, SWU, textureNorth, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-            if (south)
-                quads.add(createQuad(NED, NWD, SWD, SED, textureSouth, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
-            if (up)
-                quads.add(createQuad(SWU, SWD, NWD, NWU, textureUp, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (up) quads.add(ModelHelper.createQuad(NWU, NEU, SEU, SWU, textureSouth, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             if (down)
-                quads.add(createQuad(NEU, NED, SED, SEU, textureDown, xl * 16, xh * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
-            if (east)
-                quads.add(createQuadInverted(NWU, NWD, NED, NEU, textureEast, zl * 16, zh * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(NED, NWD, SWD, SED, textureNorth, xh * 16, xl * 16, zh * 16, zl * 16, tintIndex));
             if (west)
-                quads.add(createQuadInverted(SEU, SED, SWD, SWU, textureWest, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(SWU, SWD, NWD, NWU, textureUp, xh * 16, xl * 16, yh * 16, yl * 16, tintIndex));
+            if (east)
+                quads.add(ModelHelper.createQuad(NEU, NED, SED, SEU, textureDown, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (north)
+                quads.add(ModelHelper.createQuadInverted(NWU, NWD, NED, NEU, textureWest, zh * 16, zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (south)
+                quads.add(ModelHelper.createQuadInverted(SEU, SED, SWD, SWU, textureEast, 16 - zh * 16, 16 - zl * 16, yh * 16, yl * 16, tintIndex));
         }
         if (rotation == 6) {
-            if (east) quads.add(createQuadInverted(NWU, NEU, SEU, SWU, textureEast, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-            if (west)
-                quads.add(createQuadInverted(NED, NWD, SWD, SED, textureWest, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
-            if (south)
-                quads.add(createQuadInverted(SWU, SWD, NWD, NWU, textureSouth, 16 - xh * 16, 16 - xl * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
-            if (north)
-                quads.add(createQuadInverted(NEU, NED, SED, SEU, textureNorth, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (up) quads.add(ModelHelper.createQuadInverted(NWU, NEU, SEU, SWU, textureWest, zl * 16, zh * 16, yh * 16, yl * 16, tintIndex));
             if (down)
-                quads.add(createQuad(NWU, NWD, NED, NEU, textureDown, zl * 16, zh * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
-            if (up)
-                quads.add(createQuad(SEU, SED, SWD, SWU, textureUp, 16 - zh * 16, 16 - zl * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
+                quads.add(ModelHelper.createQuadInverted(NED, NWD, SWD, SED, textureEast, xl * 16, xh * 16, zh * 16, zl * 16, tintIndex));
+            if (west)
+                quads.add(ModelHelper.createQuadInverted(SWU, SWD, NWD, NWU, textureNorth, xh * 16, xl * 16, yl * 16, yh * 16, tintIndex));
+            if (east)
+                quads.add(ModelHelper.createQuadInverted(NEU, NED, SED, SEU, textureSouth, xl * 16, xh * 16, yh * 16, yl * 16, tintIndex));
+            if (north)
+                quads.add(ModelHelper.createQuadInverted(NWU, NWD, NED, NEU, textureDown, zh * 16, zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (south)
+                quads.add(ModelHelper.createQuadInverted(SEU, SED, SWD, SWU, textureUp, 16 - zh * 16, 16 - zl * 16, yh * 16, yl * 16, tintIndex));
         }
         if (rotation == 7) {
-            if (south) quads.add(createQuad(NWU, NEU, SEU, SWU, textureSouth, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-            if (north)
-                quads.add(createQuad(NED, NWD, SWD, SED, textureNorth, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
+            if (up) quads.add(ModelHelper.createQuad(NWU, NEU, SEU, SWU, textureNorth, zh * 16, zl * 16, yh * 16, yl * 16, tintIndex));
             if (down)
-                quads.add(createQuad(SWU, SWD, NWD, NWU, textureDown, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-            if (up)
-                quads.add(createQuad(NEU, NED, SED, SEU, textureUp, xl * 16, xh * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(NED, NWD, SWD, SED, textureSouth, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
             if (west)
-                quads.add(createQuadInverted(NWU, NWD, NED, NEU, textureWest, zl * 16, zh * 16, 16 - yl * 16, 16 - yh * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(SWU, SWD, NWD, NWU, textureDown, xh * 16, xl * 16, yh * 16, yl * 16, tintIndex));
             if (east)
-                quads.add(createQuadInverted(SEU, SED, SWD, SWU, textureEast, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(ModelHelper.createQuad(NEU, NED, SED, SEU, textureUp, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (north)
+                quads.add(ModelHelper.createQuadInverted(NWU, NWD, NED, NEU, textureWest, zl * 16, zh * 16, yh * 16, yl * 16, tintIndex));
+            if (south)
+                quads.add(ModelHelper.createQuadInverted(SEU, SED, SWD, SWU, textureEast, zh * 16, zl * 16, yl * 16, yh * 16, tintIndex));
         }
         return quads;
     }
