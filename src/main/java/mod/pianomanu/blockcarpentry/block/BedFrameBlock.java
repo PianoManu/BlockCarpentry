@@ -36,6 +36,7 @@ import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Main class for frame beds - all important block info can be found here
@@ -116,6 +117,9 @@ public class BedFrameBlock extends BedBlock {
                 world.setBlockState(pos, state, 2);
             } else {
                 if (item.getItem() instanceof BlockItem) {
+                    if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                        return ActionResultType.PASS;
+                    }
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
                     Block heldBlock = ((BlockItem) item.getItem()).getBlock();

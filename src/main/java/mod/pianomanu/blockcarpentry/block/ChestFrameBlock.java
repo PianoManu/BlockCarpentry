@@ -99,6 +99,9 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
         if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (item.getItem() instanceof BlockItem) {
+                if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                    return ActionResultType.PASS;
+                }
                 int count = player.getHeldItem(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
                 if (tileEntity instanceof ChestFrameTileEntity && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {

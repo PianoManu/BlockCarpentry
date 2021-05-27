@@ -83,6 +83,9 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
                 //return ActionResultType.SUCCESS;
             } else {
                 if (item.getItem() instanceof BlockItem) {
+                    if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                        return ActionResultType.PASS;
+                    }
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
                     Block heldBlock = ((BlockItem) item.getItem()).getBlock();

@@ -30,6 +30,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Main class for frame trapdoors - all important block info can be found here
@@ -67,6 +68,9 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
             if (item.getItem() instanceof BlockItem) {
+                if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                    return ActionResultType.PASS;
+                }
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
