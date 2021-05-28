@@ -2,11 +2,11 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceGateBlock;
-import net.minecraft.block.GrassBlock;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -34,7 +34,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 09/24/20
+ * @version 1.1 05/28/21
  */
 public class FenceGateBakedModel implements IDynamicBakedModel {
 
@@ -76,14 +76,11 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
             }
             if (texture.size() == 0) {
                 if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
+                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
                 return Collections.emptyList();
             }
-            int tintIndex = -1;
-            if (mimic.getBlock() instanceof GrassBlock) {
-                tintIndex = 1;
-            }
+            int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             float w = 0;
             if (state.get(FenceGateBlock.IN_WALL)) {
                 w = -3 / 16f;

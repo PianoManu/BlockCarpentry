@@ -39,13 +39,14 @@ import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Main class for frame beds - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.3 12/23/20
+ * @version 1.4 05/28/21
  */
 public class BedFrameBlock extends BedBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -124,6 +125,9 @@ public class BedFrameBlock extends BedBlock {
                 world.setBlockState(pos, state, 2);
             } else {
                 if (item.getItem() instanceof BlockItem) {
+                    if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                        return ActionResultType.PASS;
+                    }
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
                     Block heldBlock = ((BlockItem) item.getItem()).getBlock();
@@ -147,6 +151,7 @@ public class BedFrameBlock extends BedBlock {
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
             BlockAppearanceHelper.setWoolColor(world, pos, player, hand);
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
+            BlockAppearanceHelper.setRotation(world, pos, player, item);
         }
         return ActionResultType.SUCCESS;
     }
@@ -174,7 +179,7 @@ public class BedFrameBlock extends BedBlock {
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
                     double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
                     double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
+                    ItemStack itemstack1 = blockState.getBlock().asItem().getDefaultInstance();
                     ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickupDelay();
                     worldIn.addEntity(itementity);

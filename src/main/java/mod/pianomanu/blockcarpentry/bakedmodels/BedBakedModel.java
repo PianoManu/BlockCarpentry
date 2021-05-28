@@ -3,11 +3,11 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.block.BedFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.GrassBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
@@ -32,7 +32,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.1 09/21/20
+ * @version 1.2 05/28/21
  */
 @SuppressWarnings("deprecation")
 public class BedBakedModel implements IDynamicBakedModel {
@@ -75,28 +75,15 @@ public class BedBakedModel implements IDynamicBakedModel {
             }
             if (textureList.size() == 0) {
                 if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("We're sorry, but this block can't be displayed"), true);
+                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
                 return Collections.emptyList();
             }
             texture = textureList.get(tex);
-            int tintIndex = -1;
-            if (mimic.getBlock() instanceof GrassBlock) {
-                tintIndex = 1;
-            }
+            int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 5 / 16f, 0f, 1f, texture, tintIndex));
-            TextureAtlasSprite pillow;
-            TextureAtlasSprite blanket;
-            if (extraData.getData(BedFrameTile.PILLOW) > 0) {
-                pillow = TextureHelper.getWoolTextures().get(extraData.getData(BedFrameTile.PILLOW)-1);
-            } else  {
-                pillow = TextureHelper.getWoolTextures().get(0);
-            }
-            if (extraData.getData(BedFrameTile.BLANKET) > 0) {
-                blanket = TextureHelper.getWoolTextures().get(extraData.getData(BedFrameTile.BLANKET)-1);
-            } else  {
-                blanket = TextureHelper.getWoolTextures().get(0);
-            }
+            TextureAtlasSprite pillow = TextureHelper.getWoolTextures().get(extraData.getData(BedFrameTile.PILLOW));
+            TextureAtlasSprite blanket = TextureHelper.getWoolTextures().get(extraData.getData(BedFrameTile.BLANKET));
             Integer design = extraData.getData(BedFrameTile.DESIGN);
             if (design == null) {
                 return quads;

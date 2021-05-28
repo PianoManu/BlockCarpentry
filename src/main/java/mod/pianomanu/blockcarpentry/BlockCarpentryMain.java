@@ -5,6 +5,7 @@ import mod.pianomanu.blockcarpentry.setup.RenderSetup;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.util.BlockColorHandler;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
+import mod.pianomanu.blockcarpentry.util.Tags;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -29,7 +30,7 @@ import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
  * Main class of the BlockCarpentry mod
  *
  * @author PianoManu
- * @version 1.1 09/28/20
+ * @version 1.2 05/28/21
  */
 @Mod(MOD_ID)
 public class BlockCarpentryMain
@@ -90,6 +91,7 @@ public class BlockCarpentryMain
     {
         LOGGER.info("Processing InterModCommunication");
         BlockSavingHelper.createValidBlockList();
+        Tags.init();
         LOGGER.info("Processed InterModCommunication");
     }
 

@@ -35,7 +35,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 10/06/20
+ * @version 1.5 05/28/21
  */
 public class PressurePlateFrameBlock extends PressurePlateBlock {
 
@@ -71,6 +71,7 @@ public class PressurePlateFrameBlock extends PressurePlateBlock {
             BlockAppearanceHelper.setDesign(world, pos, player, item);
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
+            BlockAppearanceHelper.setRotation(world, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
                 if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                     return ActionResultType.PASS;

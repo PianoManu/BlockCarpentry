@@ -29,6 +29,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
@@ -37,7 +38,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 12/23/20
+ * @version 1.6 05/28/21
  */
 public class DoorFrameBlock extends DoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -66,13 +67,10 @@ public class DoorFrameBlock extends DoorBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setGlassColor(world, pos, player, hand);
-            BlockAppearanceHelper.setOverlay(world, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
+                if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                    return ActionResultType.PASS;
+                }
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
                 if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(((BlockItem) item.getItem()).getBlock()) && !state.get(CONTAINS_BLOCK)) {
@@ -101,6 +99,13 @@ public class DoorFrameBlock extends DoorBlock {
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
             }
+            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
+            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
+            BlockAppearanceHelper.setDesign(world, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setGlassColor(world, pos, player, hand);
+            BlockAppearanceHelper.setOverlay(world, pos, player, item);
+            BlockAppearanceHelper.setRotation(world, pos, player, item);
         }
         return ActionResultType.SUCCESS;
     }

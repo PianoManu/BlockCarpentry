@@ -30,13 +30,14 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Main class for frame trapdoors - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 12/23/20
+ * @version 1.6 05/28/21
  */
 public class TrapdoorFrameBlock extends TrapDoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -66,13 +67,10 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
         if (!world.isRemote) {
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setGlassColor(world, pos, player, hand);
-            BlockAppearanceHelper.setOverlay(world, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
+                if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                    return ActionResultType.PASS;
+                }
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
@@ -87,14 +85,16 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
             if (!item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                 if (state.get(OPEN)) {
                     state = state.with(OPEN, false);
+                    world.playEvent(null, 1007, pos, 0);
                 } else {
                     state = state.with(OPEN, true);
+                    world.playEvent(null, 1013,pos, 0);
                 }
                 world.setBlockState(pos, state, 2);
                 if (state.get(WATERLOGGED)) {
                     world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
                 }
-                this.playSound(null, world, pos, state.get(OPEN));
+                //this.playSound(player, world, pos, state.get(OPEN));
             }
             if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
                 if (!player.isCreative())
@@ -103,6 +103,13 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                 world.setBlockState(pos, state, 2);
                 return ActionResultType.SUCCESS;
             }
+            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
+            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
+            BlockAppearanceHelper.setDesign(world, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setGlassColor(world, pos, player, hand);
+            BlockAppearanceHelper.setOverlay(world, pos, player, item);
+            BlockAppearanceHelper.setRotation(world, pos, player, item);
         }
         return ActionResultType.SUCCESS;
     }
