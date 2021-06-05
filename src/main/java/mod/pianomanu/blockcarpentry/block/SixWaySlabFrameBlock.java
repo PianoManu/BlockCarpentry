@@ -3,7 +3,7 @@ package mod.pianomanu.blockcarpentry.block;
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
@@ -34,6 +34,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
@@ -44,13 +45,15 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.7 05/01/21
+ * @version 1.8 06/05/21
  */
 @SuppressWarnings("deprecation")
-public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
+public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IWaterLoggable {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
+    public static final BooleanProperty CONTAINS_2ND_BLOCK = BCBlockStateProperties.CONTAINS_2ND_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
+    public static final BooleanProperty DOUBLE_SLAB = BCBlockStateProperties.DOUBLE;
     //everything is inverted because when placing, we would need to take the opposite - I figured it out when I completed my work and I don't want to change everything again
     protected static final VoxelShape BOTTOM = Block.makeCuboidShape(0.0D, 8.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape TOP = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
@@ -58,19 +61,22 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
     protected static final VoxelShape SOUTH = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 8.0D);
     protected static final VoxelShape WEST = Block.makeCuboidShape(8.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape NORTH = Block.makeCuboidShape(0.0D, 0.0D, 8.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape CUBE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
     public SixWaySlabFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.DOWN).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(WATERLOGGED, false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.DOWN).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(WATERLOGGED, false).with(DOUBLE_SLAB, false).with(CONTAINS_2ND_BLOCK, false));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
+        super.fillStateContainer(builder);
+        builder.add(WATERLOGGED, DOUBLE_SLAB, CONTAINS_2ND_BLOCK);
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        if (state.get(DOUBLE_SLAB))
+            return CUBE;
         switch (state.get(FACING)) {
             case EAST:
                 return EAST;
@@ -91,6 +97,10 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockPos blockpos = context.getPos();
         FluidState fluidstate = context.getWorld().getFluidState(blockpos);
+        BlockState blockState = context.getWorld().getBlockState(blockpos);
+        if (blockState.getBlock() instanceof SixWaySlabFrameBlock) {
+            return blockState.with(DOUBLE_SLAB, true);
+        }
         if (Objects.requireNonNull(context.getPlayer()).isSneaking() && BCModConfig.SNEAK_FOR_VERTICAL_SLABS.get() || !Objects.requireNonNull(context.getPlayer()).isSneaking() && !BCModConfig.SNEAK_FOR_VERTICAL_SLABS.get()) {
             if (fluidstate.getFluid() == Fluids.WATER) {
                 return this.getDefaultState().with(FACING, context.getFace()).with(WATERLOGGED, fluidstate.isSource());
@@ -98,9 +108,37 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
                 return this.getDefaultState().with(FACING, context.getFace());
             }
         } else {
-            BlockState blockstate1 = this.getDefaultState().with(FACING, Direction.UP).with(WATERLOGGED, Boolean.valueOf(fluidstate.getFluid() == Fluids.WATER));
+            BlockState blockstate1 = this.getDefaultState().with(FACING, Direction.UP).with(WATERLOGGED, fluidstate.getFluid() == Fluids.WATER);
             Direction direction = context.getFace();
-            return direction != Direction.DOWN && (direction == Direction.UP || !(context.getHitVec().y - (double)blockpos.getY() > 0.5D)) ? blockstate1 : blockstate1.with(FACING, Direction.DOWN);
+            return direction != Direction.DOWN && (direction == Direction.UP || !(context.getHitVec().y - (double) blockpos.getY() > 0.5D)) ? blockstate1 : blockstate1.with(FACING, Direction.DOWN);
+        }
+    }
+
+    public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
+        ItemStack itemstack = useContext.getItem();
+        boolean isDouble = state.get(DOUBLE_SLAB);
+        if (!isDouble && itemstack.getItem() == this.asItem()) {
+            if (useContext.replacingClickedOnBlock()) {
+                Direction direction = useContext.getFace();
+                switch (state.get(FACING)) {
+                    case EAST:
+                        return direction == Direction.EAST;
+                    case SOUTH:
+                        return direction == Direction.SOUTH;
+                    case WEST:
+                        return direction == Direction.WEST;
+                    case NORTH:
+                        return direction == Direction.NORTH;
+                    case UP:
+                        return direction == Direction.UP;
+                    default:
+                        return direction == Direction.DOWN;
+                }
+            } else {
+                return true;
+            }
+        } else {
+            return false;
         }
     }
 
@@ -112,12 +150,13 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FrameBlockTile();
+        return new TwoBlocksFrameBlockTile();
     }
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
+        trace.getHitVec();
         if (!world.isRemote) {
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
@@ -126,13 +165,13 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
             BlockAppearanceHelper.setRotation(world, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
-                if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) && !state.get(DOUBLE_SLAB) || state.get(BCBlockStateProperties.CONTAINS_2ND_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                     return ActionResultType.PASS;
                 }
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
+                if (tileEntity instanceof TwoBlocksFrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_2ND_BLOCK)) {
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     insertBlock(world, pos, state, handBlockState);
                     if (!player.isCreative())
@@ -145,6 +184,7 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
                 if (!player.isCreative())
                     this.dropContainedBlock(world, pos);
                 state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
+                state = state.with(CONTAINS_2ND_BLOCK, Boolean.FALSE);
                 world.setBlockState(pos, state, 2);
             }
         }
@@ -154,12 +194,11 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
     protected void dropContainedBlock(World worldIn, BlockPos pos) {
         if (!worldIn.isRemote) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof FrameBlockTile) {
-                FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
-                BlockState blockState = frameTileEntity.getMimic();
+            if (tileentity instanceof TwoBlocksFrameBlockTile) {
+                TwoBlocksFrameBlockTile frameTileEntity = (TwoBlocksFrameBlockTile) tileentity;
+                BlockState blockState = frameTileEntity.getMimic_1();
                 if (!(blockState == null)) {
                     worldIn.playEvent(1010, pos, 0);
-                    frameTileEntity.clear();
                     float f = 0.7F;
                     double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
                     double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
@@ -168,24 +207,42 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
                     ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickupDelay();
                     worldIn.addEntity(itementity);
-                    frameTileEntity.clear();
                 }
+                blockState = frameTileEntity.getMimic_2();
+                if (!(blockState == null)) {
+                    worldIn.playEvent(1010, pos, 0);
+                    float f = 0.7F;
+                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
+                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
+                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
+                    itementity.setDefaultPickupDelay();
+                    worldIn.addEntity(itementity);
+                }
+                frameTileEntity.clear();
             }
         }
     }
 
     public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof FrameBlockTile) {
-            FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
-            frameTileEntity.clear();
-            frameTileEntity.setMimic(handBlock);
-            worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
+        if (tileentity instanceof TwoBlocksFrameBlockTile) {
+            if (!state.get(CONTAINS_BLOCK)) {
+                TwoBlocksFrameBlockTile frameTileEntity = (TwoBlocksFrameBlockTile) tileentity;
+                frameTileEntity.clear();
+                frameTileEntity.setMimic_1(handBlock);
+                worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
+            } else if (state.get(DOUBLE_SLAB)) {
+                TwoBlocksFrameBlockTile frameTileEntity = (TwoBlocksFrameBlockTile) tileentity;
+                frameTileEntity.setMimic_2(handBlock);
+                worldIn.setBlockState(pos, state.with(CONTAINS_2ND_BLOCK, Boolean.TRUE), 2);
+            }
         }
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onReplaced(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             dropContainedBlock(worldIn, pos);
 
@@ -202,13 +259,15 @@ public class SixWaySlabFrameBlock extends Block implements IWaterLoggable {
     }
 
     @Override
+    @Nonnull
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+    @Nonnull
+    public BlockState updatePostPlacement(BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull IWorld worldIn, @Nonnull BlockPos currentPos, @Nonnull BlockPos facingPos) {
         if (stateIn.get(WATERLOGGED)) {
             worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
         }

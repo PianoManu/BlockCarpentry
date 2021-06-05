@@ -1,11 +1,62 @@
 {
   "variants": {
-	"contains_block=false,facing=down": { "model": "blockcarpentry:block/frame_slab_empty_bottom" },
-	"contains_block=false,facing=up": { "model": "blockcarpentry:block/frame_slab_empty_top" },
-	"contains_block=false,facing=north": { "model": "blockcarpentry:block/frame_slab_empty_side", "y": 180, "uvlock": true },
-    "contains_block=false,facing=east": { "model": "blockcarpentry:block/frame_slab_empty_side", "y": 270, "uvlock": true },
-    "contains_block=false,facing=south": { "model": "blockcarpentry:block/frame_slab_empty_side" },
-    "contains_block=false,facing=west": { "model": "blockcarpentry:block/frame_slab_empty_side", "y": 90, "uvlock": true },
-	"contains_block=true": { "model": "blockcarpentry:block/frame_slab" }
+    "contains_block=false,facing=down,double=false": {
+      "model": "blockcarpentry:block/frame_slab_empty_bottom"
+    },
+    "contains_block=false,facing=up,double=false": {
+      "model": "blockcarpentry:block/frame_slab_empty_top"
+    },
+    "contains_block=false,facing=north,double=false": {
+      "model": "blockcarpentry:block/frame_slab_empty_side",
+      "y": 180,
+      "uvlock": true
+    },
+    "contains_block=false,facing=east,double=false": {
+      "model": "blockcarpentry:block/frame_slab_empty_side",
+      "y": 270,
+      "uvlock": true
+    },
+    "contains_block=false,facing=south,double=false": {
+      "model": "blockcarpentry:block/frame_slab_empty_side"
+    },
+    "contains_block=false,facing=west,double=false": {
+      "model": "blockcarpentry:block/frame_slab_empty_side",
+      "y": 90,
+      "uvlock": true
+    },
+    "contains_block=false,facing=down,double=true": {
+      "model": "blockcarpentry:block/frame_slab_empty_double_up_down"
+    },
+    "contains_block=false,facing=up,double=true": {
+      "model": "blockcarpentry:block/frame_slab_empty_double_up_down",
+      "x": 180,
+      "uvlock": true
+    },
+    "contains_block=false,facing=north,double=true": {
+      "model": "blockcarpentry:block/frame_slab_empty_double_up_down",
+      "x": 90,
+      "uvlock": true
+    },
+    "contains_block=false,facing=east,double=true": {
+      "model": "blockcarpentry:block/frame_slab_empty_double_up_down",
+      "x": 90,
+      "y": 90,
+      "uvlock": true
+    },
+    "contains_block=false,facing=south,double=true": {
+      "model": "blockcarpentry:block/frame_slab_empty_double_up_down",
+      "x": 90,
+      "y": 180,
+      "uvlock": true
+    },
+    "contains_block=false,facing=west,double=true": {
+      "model": "blockcarpentry:block/frame_slab_empty_double_up_down",
+      "x": 90,
+      "y": 270,
+      "uvlock": true
+    },
+    "contains_block=true": {
+      "model": "blockcarpentry:block/frame_slab"
+    }
   }
 }
