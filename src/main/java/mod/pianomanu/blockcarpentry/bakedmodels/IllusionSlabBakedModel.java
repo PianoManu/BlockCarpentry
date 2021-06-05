@@ -2,7 +2,7 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import net.minecraft.block.BlockState;
@@ -28,75 +28,126 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.5 05/01/21
+ * @version 1.6 06/05/21
  */
 public class IllusionSlabBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
+        BlockState mimic = extraData.getData(TwoBlocksFrameBlockTile.MIMIC_1);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
-            if (location != null) {
-                IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                if (model != null) {
-                    return getIllusionQuads(state, side, rand, extraData, model);
-                }
-            }
+            IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+            return getIllusionQuads(state, side, rand, extraData, model);
         }
         return Collections.emptyList();
     }
 
+    //supresses "Unboxing of "extraData..." may produce NullPointerException
+    @SuppressWarnings("all")
     private List<BakedQuad> getIllusionQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, IBakedModel model) {
         if (side != null) {
             return Collections.emptyList();
         }
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic != null && state != null) {
-            int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-            int rotation = extraData.getData(FrameBlockTile.ROTATION);
+        BlockState mimic_1 = extraData.getData(TwoBlocksFrameBlockTile.MIMIC_1);
+        BlockState mimic_2 = extraData.getData(TwoBlocksFrameBlockTile.MIMIC_2);
+        if (mimic_1 != null && state != null) {
+            int tintIndex_1 = BlockAppearanceHelper.setTintIndex(mimic_1);
+            int tintIndex_2 = mimic_2 == null ? -1 : BlockAppearanceHelper.setTintIndex(mimic_2);
+            int rotation_1 = extraData.getData(TwoBlocksFrameBlockTile.ROTATION_1);
+            int rotation_2 = extraData.getData(TwoBlocksFrameBlockTile.ROTATION_2);
+
             List<BakedQuad> quads = new ArrayList<>();
             switch (state.get(SixWaySlabFrameBlock.FACING)) {
                 case UP:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, mimic_1, model, extraData, rand, tintIndex_1, rotation_1));
                     break;
                 case DOWN:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0f, 1f, mimic_1, model, extraData, rand, tintIndex_1, rotation_1));
                     break;
                 case WEST:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 1f, 0f, 1f, mimic_1, model, extraData, rand, tintIndex_1, rotation_1));
                     break;
                 case SOUTH:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 0.5f, mimic, model, extraData, rand, tintIndex, rotation));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 0.5f, mimic_1, model, extraData, rand, tintIndex_1, rotation_1));
                     break;
                 case NORTH:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0.5f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0.5f, 1f, mimic_1, model, extraData, rand, tintIndex_1, rotation_1));
                     break;
                 case EAST:
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 1f, 0f, 1f, mimic_1, model, extraData, rand, tintIndex_1, rotation_1));
                     break;
             }
-            int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
-            if (extraData.getData(FrameBlockTile.OVERLAY) != 0) {
+            if (state.get(SixWaySlabFrameBlock.DOUBLE_SLAB) && mimic_2 != null) {
+                ModelResourceLocation location_2 = BlockModelShapes.getModelLocation(mimic_2);
+                IBakedModel model_2 = Minecraft.getInstance().getModelManager().getModel(location_2);
                 switch (state.get(SixWaySlabFrameBlock.FACING)) {
                     case UP:
-                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 0.5f, 0f, 1f, overlayIndex));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0.5f, 1f, 0f, 1f, mimic_2, model_2, extraData, rand, tintIndex_2, rotation_2));
                         break;
                     case DOWN:
-                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0.5f, 1f, 0f, 1f, overlayIndex));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, mimic_2, model_2, extraData, rand, tintIndex_2, rotation_2));
                         break;
                     case WEST:
-                        quads.addAll(ModelHelper.createOverlay(0.5f, 1f, 0f, 1f, 0f, 1f, overlayIndex));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 1f, 0f, 1f, mimic_2, model_2, extraData, rand, tintIndex_2, rotation_2));
                         break;
                     case SOUTH:
-                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 0.5f, overlayIndex));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0.5f, 1f, mimic_2, model_2, extraData, rand, tintIndex_2, rotation_2));
                         break;
                     case NORTH:
-                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0.5f, 1f, overlayIndex));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 0.5f, mimic_2, model_2, extraData, rand, tintIndex_2, rotation_2));
                         break;
                     case EAST:
-                        quads.addAll(ModelHelper.createOverlay(0f, 0.5f, 0f, 1f, 0f, 1f, overlayIndex));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 1f, 0f, 1f, mimic_2, model_2, extraData, rand, tintIndex_2, rotation_2));
                         break;
+                }
+            }
+            int overlayIndex_1 = extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_1);
+            if (extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_1) != 0) {
+                switch (state.get(SixWaySlabFrameBlock.FACING)) {
+                    case UP:
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 0.5f, 0f, 1f, overlayIndex_1));
+                        break;
+                    case DOWN:
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0.5f, 1f, 0f, 1f, overlayIndex_1));
+                        break;
+                    case WEST:
+                        quads.addAll(ModelHelper.createOverlay(0.5f, 1f, 0f, 1f, 0f, 1f, overlayIndex_1));
+                        break;
+                    case SOUTH:
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 0.5f, overlayIndex_1));
+                        break;
+                    case NORTH:
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0.5f, 1f, overlayIndex_1));
+                        break;
+                    case EAST:
+                        quads.addAll(ModelHelper.createOverlay(0f, 0.5f, 0f, 1f, 0f, 1f, overlayIndex_1));
+                        break;
+                }
+            }
+            if (state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                int overlayIndex_2 = extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_2);
+                if (extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_2) != 0) {
+                    switch (state.get(SixWaySlabFrameBlock.FACING)) {
+                        case UP:
+                            quads.addAll(ModelHelper.createOverlay(0f, 1f, 0.5f, 1f, 0f, 1f, overlayIndex_2));
+                            break;
+                        case DOWN:
+                            quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 0.5f, 0f, 1f, overlayIndex_2));
+                            break;
+                        case WEST:
+                            quads.addAll(ModelHelper.createOverlay(0f, 0.5f, 0f, 1f, 0f, 1f, overlayIndex_2));
+                            break;
+                        case SOUTH:
+                            quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0.5f, 1f, overlayIndex_2));
+                            break;
+                        case NORTH:
+                            quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 0.5f, overlayIndex_2));
+                            break;
+                        case EAST:
+                            quads.addAll(ModelHelper.createOverlay(0.5f, 1f, 0f, 1f, 0f, 1f, overlayIndex_2));
+                            break;
+                    }
                 }
             }
             return quads;
@@ -125,16 +176,21 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
     }
 
     @Override
+    @Nonnull
+    @SuppressWarnings("deprecation")
     public TextureAtlasSprite getParticleTexture() {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/oak_planks"));
     }
 
     @Override
+    @Nonnull
     public ItemOverrideList getOverrides() {
         return ItemOverrideList.EMPTY;
     }
 
     @Override
+    @Nonnull
+    @SuppressWarnings("deprecation")
     public ItemCameraTransforms getItemCameraTransforms() {
         return ItemCameraTransforms.DEFAULT;
     }

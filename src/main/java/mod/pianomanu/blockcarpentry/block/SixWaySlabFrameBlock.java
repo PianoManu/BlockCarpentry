@@ -156,7 +156,6 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         ItemStack item = player.getHeldItem(hand);
-        trace.getHitVec();
         if (!world.isRemote) {
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
