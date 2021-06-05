@@ -10,6 +10,7 @@ import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LadderBlock;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -23,8 +24,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
@@ -43,7 +46,7 @@ public class LadderFrameBlock extends LadderBlock {
 
     public LadderFrameBlock(Properties builder) {
         super(builder);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(WATERLOGGED, Boolean.valueOf(false)).with(CONTAINS_BLOCK, false).with(LIGHT_LEVEL, 0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(WATERLOGGED, Boolean.FALSE).with(CONTAINS_BLOCK, false).with(LIGHT_LEVEL, 0));
     }
 
     @Override
@@ -63,10 +66,11 @@ public class LadderFrameBlock extends LadderBlock {
     }
 
     @Override
+    @Nonnull
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        ItemStack item = player.getHeldItem(hand);
-        if (!world.isRemote) {
+    public ActionResultType onBlockActivated(@Nullable BlockState state, World world, @Nullable BlockPos pos, PlayerEntity player, @Nullable Hand hand, @Nullable BlockRayTraceResult trace) {
+        ItemStack item = player.getHeldItem(Objects.requireNonNull(hand));
+        if (!world.isRemote && state != null && pos != null) {
             BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
             BlockAppearanceHelper.setDesign(world, pos, player, item);
@@ -133,11 +137,11 @@ public class LadderFrameBlock extends LadderBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onReplaced(BlockState state, @Nullable World worldIn, @Nullable BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            dropContainedBlock(worldIn, pos);
+            dropContainedBlock(Objects.requireNonNull(worldIn), pos);
 
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onReplaced(state, worldIn, Objects.requireNonNull(pos), newState, isMoving);
         }
     }
 
@@ -147,6 +151,11 @@ public class LadderFrameBlock extends LadderBlock {
             return 15;
         }
         return state.get(LIGHT_LEVEL);
+    }
+
+    @Override
+    public boolean isLadder(@Nullable BlockState state, @Nullable IWorldReader world, @Nullable BlockPos pos, @Nullable LivingEntity entity) {
+        return true;
     }
 }
 //========SOLI DEO GLORIA========//
