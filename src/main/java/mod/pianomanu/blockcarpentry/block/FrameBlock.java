@@ -31,12 +31,13 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeBlockState;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 
 
@@ -45,10 +46,10 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.8 05/01/21
+ * @version 1.9 06/06/21
  */
 @SuppressWarnings("deprecation")
-public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggable {
+public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, IWaterLoggable {
     /**
      * Block property (can be seed when pressing F3 in-game)
      * This is needed, because we need to detect whether the blockstate has changed
@@ -147,6 +148,7 @@ public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggabl
                     insertBlock(world, pos, state, handBlockState);
                     if (!player.isCreative())
                         player.getHeldItem(hand).setCount(count - 1);
+                    checkForVisibility(state, world, pos, (FrameBlockTile) tileEntity);
                 }
             }
             //hammer is needed to remove the block from the frame - you can change it in the config
@@ -238,7 +240,7 @@ public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggabl
         return state.get(LIGHT_LEVEL);
     }
 
-    //unused
+    //unused //TODO might cause OptiFine issues
     public boolean isTransparent(BlockState state) {
         //return this.isTransparent;
         return true;
@@ -293,6 +295,20 @@ public class FrameBlock extends Block implements IForgeBlockState, IWaterLoggabl
             return CUBE;
         }
         return VoxelShapes.fullCube();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
+        return adjacentBlockState.isIn(this) || super.isSideInvisible(state, adjacentBlockState, side);
+    }
+
+    private void checkForVisibility(BlockState state, World world, BlockPos pos, FrameBlockTile tileEntity) {
+        for (Direction d : Direction.values()) {
+            BlockPos.Mutable mutablePos = pos.toMutable();
+            BlockState adjacentBlockState = world.getBlockState(mutablePos.move(d));
+            tileEntity.setVisibileSides(d, !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
+            System.out.println(d + " " + !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
+        }
     }
 }
 //========SOLI DEO GLORIA========//

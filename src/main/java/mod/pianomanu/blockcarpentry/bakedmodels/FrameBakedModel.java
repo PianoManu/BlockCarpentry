@@ -29,11 +29,12 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.7 05/01/21
+ * @version 1.8 06/06/21
  */
 public class FrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
+    @SuppressWarnings("deprecation")
     private TextureAtlasSprite getTexture() {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
     }
@@ -45,37 +46,40 @@ public class FrameBakedModel implements IDynamicBakedModel {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         Integer design = extraData.getData(FrameBlockTile.DESIGN);
         Integer desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE);
-        if (side != null) {
+        if (side == null) {
             return Collections.emptyList();
         }
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
-            if (location != null && state != null) {
+            if (state != null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                if (model != null) {
-                    //TODO what about full blocks with different side textures -> IllusionBlock
-                    List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
-                    TextureAtlasSprite texture;
-                    Integer tex = extraData.getData(FrameBlockTile.TEXTURE);
-                    if (textureList.size() <= tex) {
-                        extraData.setData(FrameBlockTile.TEXTURE, 0);
-                        tex = 0;
-                    }
-                    if (textureList.size() == 0) {
-                        if (Minecraft.getInstance().player != null) {
-                            Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
-                        }
-                        return Collections.emptyList();
-                    }
-                    texture = textureList.get(tex);
-                    int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-                    List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex));
-                    int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
-                    if (overlayIndex != 0) {
-                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex));
-                    }
-                    return quads;
+                List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
+                TextureAtlasSprite texture;
+                Integer tex = extraData.getData(FrameBlockTile.TEXTURE);
+                if (textureList.size() <= tex) {
+                    extraData.setData(FrameBlockTile.TEXTURE, 0);
+                    tex = 0;
                 }
+                if (textureList.size() == 0) {
+                    if (Minecraft.getInstance().player != null) {
+                        Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
+                    }
+                    return Collections.emptyList();
+                }
+                texture = textureList.get(tex);
+                boolean renderNorth = side == Direction.NORTH && extraData.getData(FrameBlockTile.NORTH_VISIBLE);
+                boolean renderEast = side == Direction.EAST && extraData.getData(FrameBlockTile.EAST_VISIBLE);
+                boolean renderSouth = side == Direction.SOUTH && extraData.getData(FrameBlockTile.SOUTH_VISIBLE);
+                boolean renderWest = side == Direction.WEST && extraData.getData(FrameBlockTile.WEST_VISIBLE);
+                boolean renderUp = side == Direction.UP && extraData.getData(FrameBlockTile.UP_VISIBLE);
+                boolean renderDown = side == Direction.DOWN && extraData.getData(FrameBlockTile.DOWN_VISIBLE);
+                int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
+                List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown));
+                int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+                if (overlayIndex != 0) {
+                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex));
+                }
+                return quads;
             }
         }
         return Collections.emptyList();
@@ -102,16 +106,20 @@ public class FrameBakedModel implements IDynamicBakedModel {
     }
 
     @Override
+    @Nonnull
     public TextureAtlasSprite getParticleTexture() {
         return getTexture();
     }
 
     @Override
+    @Nonnull
     public ItemOverrideList getOverrides() {
         return ItemOverrideList.EMPTY;
     }
 
     @Override
+    @Nonnull
+    @SuppressWarnings("deprecation")
     public ItemCameraTransforms getItemCameraTransforms() {
         return ItemCameraTransforms.DEFAULT;
     }

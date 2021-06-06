@@ -26,7 +26,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.15 05/02/21
+ * @version 1.16 06/06/21
  */
 public class ModelHelper {
 
@@ -237,13 +237,13 @@ public class ModelHelper {
         if (up) quads.add(createQuad(NWU, NEU, SEU, SWU, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
         if (down)
             quads.add(createQuad(NED, NWD, SWD, SED, texture, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
-        if (west)
-            quads.add(createQuad(SWU, SWD, NWD, NWU, texture, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-        if (east)
-            quads.add(createQuad(NEU, NED, SED, SEU, texture, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         if (north)
-            quads.add(createQuad(NWU, NWD, NED, NEU, texture, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            quads.add(createQuad(SWU, SWD, NWD, NWU, texture, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         if (south)
+            quads.add(createQuad(NEU, NED, SED, SEU, texture, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (west)
+            quads.add(createQuad(NWU, NWD, NED, NEU, texture, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (east)
             quads.add(createQuad(SEU, SED, SWD, SWU, texture, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         return quads;
     }
