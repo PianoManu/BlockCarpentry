@@ -299,7 +299,7 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
 
     @OnlyIn(Dist.CLIENT)
     public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
-        return adjacentBlockState.isIn(this) || super.isSideInvisible(state, adjacentBlockState, side);
+        return adjacentBlockState.isIn(this) || super.isSideInvisible(state, adjacentBlockState, side);// || BlockCullingHelper.skipSideRendering(adjacentBlockState);
     }
 
     private void checkForVisibility(BlockState state, World world, BlockPos pos, FrameBlockTile tileEntity) {
