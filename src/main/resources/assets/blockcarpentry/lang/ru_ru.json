@@ -1,0 +1,19 @@
+{
+  "block.blockcarpentry.frameblock": "Каркас",
+  "block.blockcarpentry.frame_slab": "Каркасная плита",
+  "block.blockcarpentry.falling_frameblock": "Каркас (подвержен гравитации)",
+  "block.blockcarpentry.frame_button": "Деревянная каркасная кнопка",
+  "block.blockcarpentry.frame_stairs": "Каркасная лестница",
+  "block.blockcarpentry.frame_pressure_plate": "Деревянная каркасная нажимная пластина",
+  "block.blockcarpentry.frame_door": "Каркасная дверь",
+  "block.blockcarpentry.frame_trapdoor": "Каркасный люк",
+  "block.blockcarpentry.frame_fence": "Каркасный забор",
+  "block.blockcarpentry.illusion_block": "Иллюзорный блок",
+  
+  "item.blockcarpentry.hammer": "Молоток",
+  "item.blockcarpentry.texture_wrench": "Текстурный ключ",
+  "item.blockcarpentry.chisel": "Стамеска",
+  "item.blockcarpentry.paintbrush": "Валик",
+
+  "itemGroup.blockcarpentry": "BlockCarpentry"
+}
