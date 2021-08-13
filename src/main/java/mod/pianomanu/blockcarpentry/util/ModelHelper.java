@@ -26,7 +26,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.16 06/06/21
+ * @version 1.17 08/13/21
  */
 public class ModelHelper {
 
@@ -197,12 +197,12 @@ public class ModelHelper {
         List<BakedQuad> quads = new ArrayList<>();
         //Eight corners of the block
         Vector3d NWU = v(xl, yh, zl); //North-West-Up
-        Vector3d NEU = v(xl, yh, zh); //...
+        Vector3d SWU = v(xl, yh, zh); //...
         Vector3d NWD = v(xl, yl, zl);
-        Vector3d NED = v(xl, yl, zh);
-        Vector3d SWU = v(xh, yh, zl);
+        Vector3d SWD = v(xl, yl, zh);
+        Vector3d NEU = v(xh, yh, zl);
         Vector3d SEU = v(xh, yh, zh);
-        Vector3d SWD = v(xh, yl, zl);
+        Vector3d NED = v(xh, yl, zl);
         Vector3d SED = v(xh, yl, zh); //South-East-Down
         if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
@@ -234,17 +234,17 @@ public class ModelHelper {
             zh--;
             zl--;
         }
-        if (up) quads.add(createQuad(NWU, NEU, SEU, SWU, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+        if (up) quads.add(createQuad(NWU, SWU, SEU, NEU, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
         if (down)
-            quads.add(createQuad(NED, NWD, SWD, SED, texture, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
-        if (north)
-            quads.add(createQuad(SWU, SWD, NWD, NWU, texture, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-        if (south)
-            quads.add(createQuad(NEU, NED, SED, SEU, texture, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            quads.add(createQuad(NED, SED, SWD, NWD, texture, 16 - xl * 16, 16 - xh * 16, zh * 16, zl * 16, tintIndex));
         if (west)
-            quads.add(createQuad(NWU, NWD, NED, NEU, texture, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            quads.add(createQuad(NWU, NWD, SWD, SWU, texture, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         if (east)
-            quads.add(createQuad(SEU, SED, SWD, SWU, texture, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            quads.add(createQuad(SEU, SED, NED, NEU, texture, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (north)
+            quads.add(createQuad(NEU, NED, NWD, NWU, texture, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (south)
+            quads.add(createQuad(SWU, SWD, SED, SEU, texture, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         return quads;
     }
 
@@ -256,12 +256,12 @@ public class ModelHelper {
         List<BakedQuad> quads = new ArrayList<>();
         //Eight corners of the block
         Vector3d NWU = v(xl, yh, zl); //North-West-Up
-        Vector3d NEU = v(xl, yh, zh); //...
+        Vector3d SWU = v(xl, yh, zh); //...
         Vector3d NWD = v(xl, yl, zl);
-        Vector3d NED = v(xl, yl, zh);
-        Vector3d SWU = v(xh, yh, zl);
+        Vector3d SWD = v(xl, yl, zh);
+        Vector3d NEU = v(xh, yh, zl);
         Vector3d SEU = v(xh, yh, zh);
-        Vector3d SWD = v(xh, yl, zl);
+        Vector3d NED = v(xh, yl, zl);
         Vector3d SED = v(xh, yl, zh); //South-East-Down
         if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
@@ -325,17 +325,17 @@ public class ModelHelper {
             textureDown = quad.func_187508_a();
         }
         if (rotation == 0) {
-            if (up) quads.add(ModelHelper.createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+            if (up) quads.add(createQuad(NWU, SWU, SEU, NEU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
             if (down)
-                quads.add(ModelHelper.createQuad(NED, NWD, SWD, SED, textureDown, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
+                quads.add(createQuad(NED, SED, SWD, NWD, textureDown, 16 - xl * 16, 16 - xh * 16, zh * 16, zl * 16, tintIndex));
             if (west)
-                quads.add(ModelHelper.createQuad(SWU, SWD, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(createQuad(NWU, NWD, SWD, SWU, textureWest, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             if (east)
-                quads.add(ModelHelper.createQuad(NEU, NED, SED, SEU, textureSouth, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(createQuad(SEU, SED, NED, NEU, textureEast, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             if (north)
-                quads.add(ModelHelper.createQuad(NWU, NWD, NED, NEU, textureWest, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(createQuad(NEU, NED, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             if (south)
-                quads.add(ModelHelper.createQuad(SEU, SED, SWD, SWU, textureEast, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(createQuad(SWU, SWD, SED, SEU, textureSouth, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         }
         if (rotation == 1) {
             if (up) quads.add(ModelHelper.createQuadInverted(NWU, NEU, SEU, SWU, textureUp, xl * 16,xh * 16, zh * 16, zl * 16,  tintIndex));

@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -16,6 +17,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static mod.pianomanu.blockcarpentry.setup.Registration.SLAB_FRAME_TILE;
@@ -25,7 +28,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.SLAB_FRAME_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.0 06/05/21
+ * @version 1.0 08/13/21
  */
 public class TwoBlocksFrameBlockTile extends TileEntity {
     public static final ModelProperty<BlockState> MIMIC_1 = new ModelProperty<>();
@@ -41,6 +44,14 @@ public class TwoBlocksFrameBlockTile extends TileEntity {
     public static final ModelProperty<Integer> DESIGN_TEXTURE_2 = new ModelProperty<>();
     public static final ModelProperty<Integer> OVERLAY_2 = new ModelProperty<>();
     public static final ModelProperty<Integer> ROTATION_2 = new ModelProperty<>();
+
+    public static final ModelProperty<Boolean> NORTH_VISIBLE = new ModelProperty<>();
+    public static final ModelProperty<Boolean> EAST_VISIBLE = new ModelProperty<>();
+    public static final ModelProperty<Boolean> SOUTH_VISIBLE = new ModelProperty<>();
+    public static final ModelProperty<Boolean> WEST_VISIBLE = new ModelProperty<>();
+    public static final ModelProperty<Boolean> UP_VISIBLE = new ModelProperty<>();
+    public static final ModelProperty<Boolean> DOWN_VISIBLE = new ModelProperty<>();
+
     private static final Logger LOGGER = LogManager.getLogger();
     public final int maxTextures = 8;
     public final int maxDesignTextures = 4;
@@ -57,6 +68,55 @@ public class TwoBlocksFrameBlockTile extends TileEntity {
     private Integer designTexture_2 = 0;
     private Integer overlay_2 = 0;
     private Integer rotation_2 = 0;
+
+    private Boolean northVisible = true;
+    private Boolean eastVisible = true;
+    private Boolean southVisible = true;
+    private Boolean westVisible = true;
+    private Boolean upVisible = true;
+    private Boolean downVisible = true;
+
+    public void setVisibileSides(Direction dir, boolean isVisible) {
+        switch (dir) {
+            case DOWN:
+                downVisible = isVisible;
+                break;
+            case UP:
+                upVisible = isVisible;
+                break;
+            case NORTH:
+                northVisible = isVisible;
+                break;
+            case WEST:
+                westVisible = isVisible;
+                break;
+            case SOUTH:
+                southVisible = isVisible;
+                break;
+            case EAST:
+                eastVisible = isVisible;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public List<Direction> getVisibleSides() {
+        List<Direction> dir = new ArrayList<>();
+        if (northVisible)
+            dir.add(Direction.NORTH);
+        if (eastVisible)
+            dir.add(Direction.EAST);
+        if (southVisible)
+            dir.add(Direction.SOUTH);
+        if (westVisible)
+            dir.add(Direction.WEST);
+        if (upVisible)
+            dir.add(Direction.UP);
+        if (downVisible)
+            dir.add(Direction.DOWN);
+        return dir;
+    }
 
     public TwoBlocksFrameBlockTile() {
         super(SLAB_FRAME_TILE.get());
@@ -370,6 +430,13 @@ public class TwoBlocksFrameBlockTile extends TileEntity {
                 .withInitial(DESIGN_TEXTURE_2, designTexture_2)
                 .withInitial(OVERLAY_2, overlay_2)
                 .withInitial(ROTATION_2, rotation_2)
+
+                .withInitial(NORTH_VISIBLE, northVisible)
+                .withInitial(EAST_VISIBLE, eastVisible)
+                .withInitial(SOUTH_VISIBLE, southVisible)
+                .withInitial(WEST_VISIBLE, westVisible)
+                .withInitial(UP_VISIBLE, upVisible)
+                .withInitial(DOWN_VISIBLE, downVisible)
                 .build();
     }
 

@@ -33,6 +33,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +47,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.8 06/05/21
+ * @version 1.9 08/13/21
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IWaterLoggable {
@@ -175,7 +177,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
                     insertBlock(world, pos, state, handBlockState);
                     if (!player.isCreative())
                         player.getHeldItem(hand).setCount(count - 1);
-
+                    checkForVisibility(state, world, pos, (TwoBlocksFrameBlockTile) tileEntity);
                 }
 
             }
@@ -272,6 +274,19 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
         }
 
         return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
+        return adjacentBlockState.isIn(this) || super.isSideInvisible(state, adjacentBlockState, side);// || BlockCullingHelper.skipSideRendering(adjacentBlockState);
+    }
+
+    private void checkForVisibility(BlockState state, World world, BlockPos pos, TwoBlocksFrameBlockTile tileEntity) {
+        for (Direction d : Direction.values()) {
+            BlockPos.Mutable mutablePos = pos.toMutable();
+            BlockState adjacentBlockState = world.getBlockState(mutablePos.move(d));
+            tileEntity.setVisibileSides(d, !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
+        }
     }
 }
 //========SOLI DEO GLORIA========//
