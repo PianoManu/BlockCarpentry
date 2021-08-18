@@ -36,7 +36,6 @@
   "item.blockcarpentry.texture_wrench": "Texturwerkzeug",
   "item.blockcarpentry.chisel": "Meißel",
   "item.blockcarpentry.paintbrush": "Pinsel",
-
   "message.blockcarpentry.light_level": "Beleuchtungsstufe: %s",
   "message.blockcarpentry.texture": "Textur: %s",
   "message.blockcarpentry.design": "Design: %s",
@@ -47,13 +46,12 @@
   "message.blockcarpentry.snow_overlay": "Schneeschicht aktiviert",
   "message.blockcarpentry.vine_overlay": "Rankenschicht aktiviert",
   "message.blockcarpentry.special_overlay": "Spezialschicht %s aktiviert",
+  "message.blockcarpentry.crimson_overlay": "Karmesinschicht aktiviert",
+  "message.blockcarpentry.warped_overlay": "Wirrschicht aktiviert",
   "message.blockcarpentry.rotation": "Rotierte Textur %s",
-
   "message.blockcarpentry.block_not_available": "Dieser Block kann leider nicht dargestellt werden",
   "message.blockcarpentry.block_error": "Mit diesem Block ist ein Fehler aufgetreten, bitte dem Autor der Mod mitteilen (PianoManu)",
-
   "itemGroup.blockcarpentry": "BlockCarpentry",
-
   "advancements.blockcarpentry.root.description": "Klick diesen Block mit der rechten Maustaste mit einem anderen Block an und erfreue dich",
   "advancements.blockcarpentry.illusion_blocks.title": "wO iSt dEr uNtErScHiEd??????",
   "advancements.blockcarpentry.illusion_blocks.description": "Tipp: Nutze eine Werkbank oder einen Ofen und verkleide jeweils einen Rahmenblock und einen Illusionsblock, dann siehst du es",

@@ -36,7 +36,6 @@
   "item.blockcarpentry.texture_wrench": "Textursskiftnyckel",
   "item.blockcarpentry.chisel": "Mejsel",
   "item.blockcarpentry.paintbrush": "Pensel",
-
   "message.blockcarpentry.light_level": "Ljusnivå: %s",
   "message.blockcarpentry.texture": "Textur: %s",
   "message.blockcarpentry.design": "Design: %s",
@@ -47,13 +46,12 @@
   "message.blockcarpentry.snow_overlay": "Aktiverade snööverdrag",
   "message.blockcarpentry.vine_overlay": "Aktiverade växtöverdrag",
   "message.blockcarpentry.special_overlay": "Aktiverade specialöverdrag %s",
+  "message.blockcarpentry.crimson_overlay": "Activated Crimson Overlay",
+  "message.blockcarpentry.warped_overlay": "Activated Warped Overlay",
   "message.blockcarpentry.rotation": "Rotated Texture %s",
-
   "message.blockcarpentry.block_not_available": "Ledsen, men detta block kan inte visas.",
   "message.blockcarpentry.block_error": "Ett fel uppstod med detta block, anmäl gärna detta till mod-kreatören, PianoManu.",
-
   "itemGroup.blockcarpentry": "BlockCarpentry",
-
   "advancements.blockcarpentry.root.description": "Högerklicka med valfritt block, och bevittna magi",
   "advancements.blockcarpentry.illusion_blocks.title": "vAfAn E sKiLlNaDeN??????",
   "advancements.blockcarpentry.illusion_blocks.description": "Ledtråd: Lägg in ett ramblock i en arbetsbänk. Simpelt.",
