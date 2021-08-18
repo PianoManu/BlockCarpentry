@@ -9,6 +9,7 @@ import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -35,7 +36,6 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.Objects;
 
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 
@@ -44,7 +44,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.6 05/27/21
+ * @version 1.7 08/18/21
  */
 public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
     private static final VoxelShape INNER_CUBE = Block.makeCuboidShape(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
@@ -90,6 +90,18 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return Registration.CHEST_FRAME_TILE.get().create();
+    }
+
+    /**
+     * Called by ItemBlocks after a block is set in the world, to allow post-place logic
+     */
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if (stack.hasDisplayName()) {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+            if (tileentity instanceof ChestFrameTileEntity) {
+                ((ChestFrameTileEntity) tileentity).setCustomName(stack.getDisplayName());
+            }
+        }
     }
 
     @Override
