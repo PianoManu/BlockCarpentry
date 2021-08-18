@@ -34,7 +34,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.5 05/01/21
+ * @version 1.6 08/18/21
  */
 public class WallBakedModel implements IDynamicBakedModel {
 
@@ -78,7 +78,9 @@ public class WallBakedModel implements IDynamicBakedModel {
                 if (Minecraft.getInstance().player != null) {
                     Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
-                return Collections.emptyList();
+                for (int i = 0; i < 6; i++) {
+                    texture.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing")));
+                }
             }
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             List<BakedQuad> quads = new ArrayList<>();

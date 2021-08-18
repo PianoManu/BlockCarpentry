@@ -27,7 +27,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.5 05/01/21
+ * @version 1.6 08/18/21
  */
 public class IllusionBlockBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -57,7 +57,8 @@ public class IllusionBlockBakedModel implements IDynamicBakedModel {
                     List<BakedQuad> quads = new ArrayList<>(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown, rotation));
                     int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
                     if (overlayIndex != 0) {
-                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown, true));
+                        //TODO fix overlay for transparent blocks - then also use transparent overlay
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex, true, true, renderEast, renderWest, renderUp, renderDown, true));
                     }
                     return quads;
                 }

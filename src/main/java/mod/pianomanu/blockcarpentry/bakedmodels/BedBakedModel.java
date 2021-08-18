@@ -32,7 +32,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.3 05/01/21
+ * @version 1.4 08/18/21
  */
 @SuppressWarnings("deprecation")
 public class BedBakedModel implements IDynamicBakedModel {
@@ -77,9 +77,11 @@ public class BedBakedModel implements IDynamicBakedModel {
                 if (Minecraft.getInstance().player != null) {
                     Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
-                return Collections.emptyList();
+                texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing"));
+                //return Collections.emptyList();
+            } else {
+                texture = textureList.get(tex);
             }
-            texture = textureList.get(tex);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 5 / 16f, 0f, 1f, texture, tintIndex));
             TextureAtlasSprite pillow = TextureHelper.getWoolTextures().get(extraData.getData(BedFrameTile.PILLOW));

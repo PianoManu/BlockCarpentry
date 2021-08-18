@@ -82,9 +82,11 @@ public class StairsBakedModel implements IDynamicBakedModel {
                 if (Minecraft.getInstance().player != null) {
                     Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
-                return Collections.emptyList();
+                texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing"));
+                //return Collections.emptyList();
+            } else {
+                texture = textureList.get(tex);
             }
-            texture = textureList.get(tex);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             List<BakedQuad> quads = new ArrayList<>();
             float yl = 0f;

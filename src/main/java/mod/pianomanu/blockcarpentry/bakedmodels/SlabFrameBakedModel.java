@@ -30,7 +30,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.8 08/13/21
+ * @version 1.9 08/18/21
  */
 @SuppressWarnings("deprecation")
 public class SlabFrameBakedModel implements IDynamicBakedModel {
@@ -90,7 +90,9 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
                 if (Minecraft.getInstance().player != null) {
                     Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
-                return Collections.emptyList();
+                for (int i = 0; i < 6; i++) {
+                    textureList_1.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing")));
+                }
             }
             texture_1 = textureList_1.get(tex_1);
             if (textureList_2.size() > 0)

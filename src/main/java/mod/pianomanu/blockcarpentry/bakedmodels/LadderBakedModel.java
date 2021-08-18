@@ -30,7 +30,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.4 05/01/21
+ * @version 1.5 08/18/21
  */
 @SuppressWarnings("deprecation")
 public class LadderBakedModel implements IDynamicBakedModel {
@@ -71,7 +71,10 @@ public class LadderBakedModel implements IDynamicBakedModel {
                 if (Minecraft.getInstance().player != null) {
                     Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
-                return Collections.emptyList();
+                for (int i = 0; i < 6; i++) {
+                    textureList.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing")));
+                }
+                //return Collections.emptyList();
             }
             designTextureList.add(textureList.get(0));
             designTextureList.addAll(TextureHelper.getMetalTextures());

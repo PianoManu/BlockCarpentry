@@ -31,7 +31,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 05/01/21
+ * @version 1.3 08/18/21
  */
 @SuppressWarnings("deprecation")
 public class ChestBakedModel implements IDynamicBakedModel {
@@ -71,7 +71,10 @@ public class ChestBakedModel implements IDynamicBakedModel {
                 if (Minecraft.getInstance().player != null) {
                     Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
-                return Collections.emptyList();
+                for (int i = 0; i < 6; i++) {
+                    textureList.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing")));
+                }
+                //return Collections.emptyList();
             }
             designTextureList.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/shulker_box")));
             TextureAtlasSprite chestFront = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chest_front"));

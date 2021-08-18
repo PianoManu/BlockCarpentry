@@ -33,7 +33,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.6 05/01/21
+ * @version 1.7 08/18/21
  */
 public class SlopeBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -71,7 +71,9 @@ public class SlopeBakedModel implements IDynamicBakedModel {
             if (Minecraft.getInstance().player != null) {
                 Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
             }
-            return Collections.emptyList();
+            for (int i = 0; i < 6; i++) {
+                texture.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing")));
+            }
         }
         //TODO Remove when slopes are fixed
         /*if (Minecraft.getInstance().player != null) {

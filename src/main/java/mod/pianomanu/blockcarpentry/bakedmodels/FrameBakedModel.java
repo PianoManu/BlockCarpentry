@@ -29,7 +29,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.8 06/06/21
+ * @version 1.9 08/18/21
  */
 public class FrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -64,7 +64,10 @@ public class FrameBakedModel implements IDynamicBakedModel {
                     if (Minecraft.getInstance().player != null) {
                         Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                     }
-                    return Collections.emptyList();
+                    for (int i = 0; i < 6; i++) {
+                        textureList.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing")));
+                    }
+                    //return Collections.emptyList();
                 }
                 texture = textureList.get(tex);
                 boolean renderNorth = side == Direction.NORTH && extraData.getData(FrameBlockTile.NORTH_VISIBLE);
@@ -77,7 +80,8 @@ public class FrameBakedModel implements IDynamicBakedModel {
                 List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown));
                 int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
                 if (overlayIndex != 0) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown, true));
+                    //TODO fix overlay for transparent blocks - then also use transparent overlay
+                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex, true, true, renderEast, renderWest, renderUp, renderDown, true));
                 }
                 return quads;
             }

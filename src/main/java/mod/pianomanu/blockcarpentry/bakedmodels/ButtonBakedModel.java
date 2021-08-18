@@ -31,7 +31,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.6 05/01/21
+ * @version 1.7 08/18/21
  */
 public class ButtonBakedModel implements IDynamicBakedModel {
 
@@ -68,9 +68,11 @@ public class ButtonBakedModel implements IDynamicBakedModel {
                 if (Minecraft.getInstance().player != null) {
                     Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
-                return Collections.emptyList();
+                texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing"));
+                //return Collections.emptyList();
+            } else {
+                texture = textureList.get(tex);
             }
-            texture = textureList.get(tex);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             float yl = 0f;
             float yh = 2 / 16f;

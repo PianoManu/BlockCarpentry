@@ -357,6 +357,46 @@ public class BlockAppearanceHelper {
                 }
             }
         }
+        if (itemStack.getItem().equals(Items.CRIMSON_ROOTS)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                fte.setOverlay(11);
+                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.crimson_overlay"), true);
+            }
+            if (tileEntity instanceof TwoBlocksFrameBlockTile) {
+                BlockState state = world.getBlockState(pos);
+                if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                    TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
+                    fte.setOverlay_1(11);
+                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.crimson_overlay"), true);
+                } else {
+                    TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
+                    fte.setOverlay_2(11);
+                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.crimson_overlay"), true);
+                }
+            }
+        }
+        if (itemStack.getItem().equals(Items.WARPED_ROOTS)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                fte.setOverlay(12);
+                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.warped_overlay"), true);
+            }
+            if (tileEntity instanceof TwoBlocksFrameBlockTile) {
+                BlockState state = world.getBlockState(pos);
+                if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+                    TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
+                    fte.setOverlay_1(12);
+                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.warped_overlay"), true);
+                } else {
+                    TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
+                    fte.setOverlay_2(12);
+                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.warped_overlay"), true);
+                }
+            }
+        }
     }
 
     public static int setTintIndex(BlockState state) {
