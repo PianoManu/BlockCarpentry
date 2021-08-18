@@ -282,10 +282,12 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
     }
 
     private void checkForVisibility(BlockState state, World world, BlockPos pos, TwoBlocksFrameBlockTile tileEntity) {
-        for (Direction d : Direction.values()) {
-            BlockPos.Mutable mutablePos = pos.toMutable();
-            BlockState adjacentBlockState = world.getBlockState(mutablePos.move(d));
-            tileEntity.setVisibileSides(d, !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
+        if (!world.isRemote) {
+            for (Direction d : Direction.values()) {
+                BlockPos.Mutable mutablePos = pos.toMutable();
+                BlockState adjacentBlockState = world.getBlockState(mutablePos.move(d));
+                tileEntity.setVisibileSides(d, !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
+            }
         }
     }
 }
