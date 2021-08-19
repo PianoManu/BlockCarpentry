@@ -47,7 +47,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.10 08/18/21
+ * @version 1.11 08/19/21
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IWaterLoggable {
@@ -278,7 +278,15 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
 
     @OnlyIn(Dist.CLIENT)
     public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
-        return adjacentBlockState.isIn(this) || super.isSideInvisible(state, adjacentBlockState, side);// || BlockCullingHelper.skipSideRendering(adjacentBlockState);
+        boolean similarState = false;
+        if (adjacentBlockState.isIn(this)) {
+            similarState = state.get(FACING) == adjacentBlockState.get(FACING);
+            if (similarState && state.get(DOUBLE_SLAB) != adjacentBlockState.get(DOUBLE_SLAB)) {
+                similarState = false;
+
+            }
+        }
+        return similarState || super.isSideInvisible(state, adjacentBlockState, side);// || BlockCullingHelper.skipSideRendering(adjacentBlockState);
     }
 
     private void checkForVisibility(BlockState state, World world, BlockPos pos, TwoBlocksFrameBlockTile tileEntity) {
@@ -286,7 +294,8 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
             for (Direction d : Direction.values()) {
                 BlockPos.Mutable mutablePos = pos.toMutable();
                 BlockState adjacentBlockState = world.getBlockState(mutablePos.move(d));
-                tileEntity.setVisibileSides(d, !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
+                if (!state.get(DOUBLE_SLAB))
+                    tileEntity.setVisibileSides(d, !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
             }
         }
     }
