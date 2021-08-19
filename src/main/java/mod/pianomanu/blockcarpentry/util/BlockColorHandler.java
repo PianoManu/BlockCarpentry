@@ -28,7 +28,7 @@ import java.util.Objects;
  * This class ensures that blocks of grass take on the correct color
  *
  * @author PianoManu
- * @version 1.6 06/05/21
+ * @version 1.7 08/19/21
  */
 public class BlockColorHandler implements IBlockColor {
     public static final IBlockColor INSTANCE = new BlockColorHandler();
@@ -88,16 +88,13 @@ public class BlockColorHandler implements IBlockColor {
             TileEntity te = lightReader.getTileEntity(pos);
             if (te instanceof FrameBlockTile && state.get(BCBlockStateProperties.CONTAINS_BLOCK)) {
                 BlockState containedBlock = ((FrameBlockTile) te).getMimic();
-                try {
+                if (containedBlock != null) {
                     if (containedBlock.getBlock() instanceof GrassBlock) {
                         return BiomeColors.getGrassColor(lightReader, pos);
                     } else if (containedBlock.getBlock() instanceof LeavesBlock) {
                         return BiomeColors.getFoliageColor(lightReader, pos);
                     }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
                 }
-
                 //return Minecraft.getInstance().getBlockColors().getColor(containedBlock, lightReader, pos, tintIndex);
             }
         }
