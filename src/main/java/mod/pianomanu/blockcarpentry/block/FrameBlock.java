@@ -307,7 +307,6 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
             BlockPos.Mutable mutablePos = pos.toMutable();
             BlockState adjacentBlockState = world.getBlockState(mutablePos.move(d));
             tileEntity.setVisibileSides(d, !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
-            System.out.println(d + " " + !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
         }
     }
 }

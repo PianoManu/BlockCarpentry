@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
  * Just a normal registering class. See Forge-Documentation on how to register objects
  *
  * @author PianoManu
- * @version 1.9 06/05/21
+ * @version 1.10 08/19/21
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("all") //only warning: datafixer for build()-method is null, but method is annotated as "NotNull"
@@ -124,6 +124,10 @@ public class Registration {
     //public static final RegistryObject<Item> SIGN_FRAME_ITEM = ITEMS.register("frame_sign", () -> new FrameSignItem((new Item.Properties()).maxStackSize(16).group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY), Registration.STANDING_SIGN_FRAMEBLOCK.get(), Registration.WALL_SIGN_FRAMEBLOCK.get()));
     //public static final RegistryObject<TileEntityType<SignFrameTile>> SIGN_FRAME_TILE = TILES.register("frame_sign", () -> TileEntityType.Builder.create(SignFrameTile::new, STANDING_SIGN_FRAMEBLOCK.get(), WALL_SIGN_FRAMEBLOCK.get()).build(null));
 
+    public static final RegistryObject<CarpetFrameBlock> CARPET_FRAMEBLOCK = BLOCKS.register("frame_carpet", () -> new CarpetFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> CARPET_FRAME_ITEM = ITEMS.register("frame_carpet", () -> new BlockItem(CARPET_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<TileEntityType<FrameBlockTile>> CARPET_FRAME_TILE = TILES.register("frame_carpet", () -> TileEntityType.Builder.create(FrameBlockTile::new, CARPET_FRAMEBLOCK.get()).build(null));
+
     //TODO WIP - may be removed or rewritten in the future
     public static final RegistryObject<SlopeFrameBlock> SLOPE_FRAMEBLOCK = BLOCKS.register("frame_slope", () -> new SlopeFrameBlock(() -> FRAMEBLOCK.get().getDefaultState(), Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> SLOPE_FRAME_ITEM = ITEMS.register("frame_slope", () -> new BlockItem(SLOPE_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
@@ -182,6 +186,10 @@ public class Registration {
     public static final RegistryObject<FenceGateFrameBlock> FENCE_GATE_ILLUSIONBLOCK = BLOCKS.register("illusion_fence_gate", () -> new FenceGateFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> FENCE_GATE_ILLUSION_ITEM = ITEMS.register("illusion_fence_gate", () -> new BlockItem(FENCE_GATE_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> FENCE_GATE_ILLUSION_TILE = TILES.register("illusion_fence_gate", () -> TileEntityType.Builder.create(FrameBlockTile::new, FENCE_GATE_ILLUSIONBLOCK.get()).build(null));
+
+    public static final RegistryObject<CarpetFrameBlock> CARPET_ILLUSION_BLOCK = BLOCKS.register("illusion_carpet", () -> new CarpetFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> CARPET_ILLUSION_ITEM = ITEMS.register("illusion_carpet", () -> new BlockItem(CARPET_ILLUSION_BLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<TileEntityType<FrameBlockTile>> CARPET_ILLUSION_TILE = TILES.register("illusion_carpet", () -> TileEntityType.Builder.create(FrameBlockTile::new, CARPET_ILLUSION_BLOCK.get()).build(null));
 
     public static void init() {
         LOGGER.info("Registering blocks from BlockCarpentry");
