@@ -10,13 +10,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GrassColors;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.biome.BiomeColors;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,15 +28,6 @@ import java.util.Objects;
 public class BlockColorHandler implements IBlockColor {
     public static final IBlockColor INSTANCE = new BlockColorHandler();
     private static final Logger LOGGER = LogManager.getLogger();
-
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public static void registerBlockColorHandlers(final ColorHandlerEvent.Block event) {
-        registerBlockColors();
-        event.getBlockColors().register((x, reader, pos, u) -> reader != null
-                && pos != null ? BiomeColors.getFoliageColor(reader, pos)
-                : GrassColors.get(0.5D, 1.0D), Registration.FRAMEBLOCK.get());
-    }
 
     public static void registerBlockColors() {
         // DEBUG
