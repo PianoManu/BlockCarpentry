@@ -29,7 +29,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 08/19/21
+ * @version 1.1 08/20/21
  */
 public class CarpetBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -46,7 +46,7 @@ public class CarpetBakedModel implements IDynamicBakedModel {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         Integer design = extraData.getData(FrameBlockTile.DESIGN);
         Integer desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE);
-        if (side == null) {
+        if (side != null) {
             return Collections.emptyList();
         }
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
@@ -55,6 +55,11 @@ public class CarpetBakedModel implements IDynamicBakedModel {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
                 TextureAtlasSprite texture;
+                TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.getData(FrameBlockTile.GLASS_COLOR));
+                int woolInt = extraData.getData(FrameBlockTile.GLASS_COLOR) - 1;
+                if (woolInt < 0)
+                    woolInt = 0;
+                TextureAtlasSprite wool = TextureHelper.getWoolTextures().get(woolInt);
                 Integer tex = extraData.getData(FrameBlockTile.TEXTURE);
                 if (textureList.size() <= tex) {
                     extraData.setData(FrameBlockTile.TEXTURE, 0);
@@ -70,12 +75,43 @@ public class CarpetBakedModel implements IDynamicBakedModel {
                     //return Collections.emptyList();
                 }
                 texture = textureList.get(tex);
-                boolean renderNorth = side == Direction.NORTH && extraData.getData(FrameBlockTile.NORTH_VISIBLE);
-                boolean renderEast = side == Direction.EAST && extraData.getData(FrameBlockTile.EAST_VISIBLE);
-                boolean renderSouth = side == Direction.SOUTH && extraData.getData(FrameBlockTile.SOUTH_VISIBLE);
-                boolean renderWest = side == Direction.WEST && extraData.getData(FrameBlockTile.WEST_VISIBLE);
+                boolean renderNorth = extraData.getData(FrameBlockTile.NORTH_VISIBLE);
+                boolean renderEast = extraData.getData(FrameBlockTile.EAST_VISIBLE);
+                boolean renderSouth = extraData.getData(FrameBlockTile.SOUTH_VISIBLE);
+                boolean renderWest = extraData.getData(FrameBlockTile.WEST_VISIBLE);
                 int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-                List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 1 / 16f, 0f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                List<BakedQuad> quads = new ArrayList<>();
+                if (design == 0) {
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1 / 16f, 0f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                } else if (design == 1) {
+                    quads.addAll(ModelHelper.createCuboid(0f, 1 / 16f, 0f, 1 / 16f, 0f, 15 / 16f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                    quads.addAll(ModelHelper.createCuboid(1 / 16f, 1, 0f, 1 / 16f, 0f, 1 / 16f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                    quads.addAll(ModelHelper.createCuboid(15 / 16f, 1f, 0f, 1 / 16f, 1 / 16f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                    quads.addAll(ModelHelper.createCuboid(0f, 15 / 16f, 0f, 1 / 16f, 15 / 16f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+
+                    quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 0f, 1 / 16f, 1 / 16f, 15 / 16f, glass, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                } else if (design == 2) {
+                    quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1 / 16f, 0f, 14 / 16f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                    quads.addAll(ModelHelper.createCuboid(2 / 16f, 1, 0f, 1 / 16f, 0f, 2 / 16f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                    quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1 / 16f, 2 / 16f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                    quads.addAll(ModelHelper.createCuboid(0f, 14 / 16f, 0f, 1 / 16f, 14 / 16f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+
+                    quads.addAll(ModelHelper.createCuboid(2 / 16f, 14 / 16f, 0f, 1 / 16f, 2 / 16f, 14 / 16f, glass, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                } else if (design == 3) {
+                    quads.addAll(ModelHelper.createCuboid(0f, 1 / 16f, 0f, 1 / 16f, 0f, 15 / 16f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                    quads.addAll(ModelHelper.createCuboid(1 / 16f, 1, 0f, 1 / 16f, 0f, 1 / 16f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                    quads.addAll(ModelHelper.createCuboid(15 / 16f, 1f, 0f, 1 / 16f, 1 / 16f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                    quads.addAll(ModelHelper.createCuboid(0f, 15 / 16f, 0f, 1 / 16f, 15 / 16f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+
+                    quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 0f, 1 / 16f, 1 / 16f, 15 / 16f, wool, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                } else if (design == 4) {
+                    quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1 / 16f, 0f, 14 / 16f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                    quads.addAll(ModelHelper.createCuboid(2 / 16f, 1, 0f, 1 / 16f, 0f, 2 / 16f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                    quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1 / 16f, 2 / 16f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                    quads.addAll(ModelHelper.createCuboid(0f, 14 / 16f, 0f, 1 / 16f, 14 / 16f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+
+                    quads.addAll(ModelHelper.createCuboid(2 / 16f, 14 / 16f, 0f, 1 / 16f, 2 / 16f, 14 / 16f, wool, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true));
+                }
                 int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
                 if (overlayIndex != 0) {
                     quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));

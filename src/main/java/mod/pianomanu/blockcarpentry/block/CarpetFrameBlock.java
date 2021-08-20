@@ -1,16 +1,22 @@
 package mod.pianomanu.blockcarpentry.block;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
@@ -19,7 +25,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 08/19/21
+ * @version 1.1 08/20/21
  */
 public class CarpetFrameBlock extends FrameBlock {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
@@ -31,6 +37,13 @@ public class CarpetFrameBlock extends FrameBlock {
      */
     public CarpetFrameBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+        if (!world.isRemote)
+            BlockAppearanceHelper.setGlassColor(world, pos, player, hand);
+        return super.onBlockActivated(state, world, pos, player, hand, trace);
     }
 
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
