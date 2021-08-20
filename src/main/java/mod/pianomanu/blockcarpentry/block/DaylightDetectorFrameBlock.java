@@ -69,6 +69,7 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
             BlockAppearanceHelper.setTexture(item, state, world, player, pos);
             BlockAppearanceHelper.setDesign(world, pos, player, item);
             BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
+            BlockAppearanceHelper.setGlassColor(world, pos, player, hand);
             BlockAppearanceHelper.setOverlay(world, pos, player, item);
             BlockAppearanceHelper.setRotation(world, pos, player, item);
             if (item.getItem() instanceof BlockItem) {

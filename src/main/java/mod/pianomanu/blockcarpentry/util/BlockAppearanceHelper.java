@@ -3,10 +3,7 @@ package mod.pianomanu.blockcarpentry.util;
 import mod.pianomanu.blockcarpentry.block.BedFrameBlock;
 import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
 import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
-import mod.pianomanu.blockcarpentry.tileentity.ChestFrameTileEntity;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GrassBlock;
@@ -33,7 +30,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.10 06/05/21
+ * @version 1.11 08/20/21
  */
 public class BlockAppearanceHelper {
     public static int setLightLevel(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
@@ -106,6 +103,15 @@ public class BlockAppearanceHelper {
                     player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture_2()), true);
                 }
             }
+            if (tileEntity instanceof DaylightDetectorFrameTileEntity) {
+                DaylightDetectorFrameTileEntity fte = (DaylightDetectorFrameTileEntity) tileEntity;
+                if (fte.getTexture() < 5) { //six sides possible
+                    fte.setTexture(fte.getTexture() + 1);
+                } else {
+                    fte.setTexture(0);
+                }
+                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
+            }
         }
     }
 
@@ -158,6 +164,15 @@ public class BlockAppearanceHelper {
                     player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign_2()), true);
                 }
             }
+            if (tileEntity instanceof DaylightDetectorFrameTileEntity) {
+                DaylightDetectorFrameTileEntity fte = (DaylightDetectorFrameTileEntity) tileEntity;
+                if (fte.getDesign() < fte.maxDesigns) {
+                    fte.setDesign(fte.getDesign() + 1);
+                } else {
+                    fte.setDesign(0);
+                }
+                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign()), true);
+            }
         }
     }
 
@@ -202,6 +217,11 @@ public class BlockAppearanceHelper {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
+                fte.setGlassColor(dyeItemToInt(player.getHeldItem(hand).getItem()) + 1); //plus 1, because 0 is undyed glass
+                //player.sendStatusMessage(new TranslationTextComponent("Glass Color: " + glassColorToString(fte.getGlassColor()-1)), true);
+            }
+            if (tileEntity instanceof DaylightDetectorFrameTileEntity) {
+                DaylightDetectorFrameTileEntity fte = (DaylightDetectorFrameTileEntity) tileEntity;
                 fte.setGlassColor(dyeItemToInt(player.getHeldItem(hand).getItem()) + 1); //plus 1, because 0 is undyed glass
                 //player.sendStatusMessage(new TranslationTextComponent("Glass Color: " + glassColorToString(fte.getGlassColor()-1)), true);
             }
@@ -458,6 +478,16 @@ public class BlockAppearanceHelper {
                     }
                     player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation_2()), true);
                 }
+            }
+            if (tileEntity instanceof DaylightDetectorFrameTileEntity) {
+                DaylightDetectorFrameTileEntity fte = (DaylightDetectorFrameTileEntity) tileEntity;
+                if (fte.getRotation() < 7) {
+                    fte.setRotation(fte.getRotation() + 1);
+                } else {
+                    fte.setRotation(0);
+                }
+                //player.sendMessage(new TranslationTextComponent("message.frame.design_texture"));
+                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
             }
         }
     }

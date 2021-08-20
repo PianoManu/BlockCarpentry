@@ -1,9 +1,11 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
+import mod.pianomanu.blockcarpentry.block.DaylightDetectorFrameBlock;
 import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.DaylightDetectorFrameTileEntity;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
+import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -41,18 +43,64 @@ public class IllusionDaylightDetectorBakedModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 
         BlockState mimic = extraData.getData(DaylightDetectorFrameTileEntity.MIMIC);
+        Integer design = extraData.getData(DaylightDetectorFrameTileEntity.DESIGN);
         if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (location != null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 if (model != null) {
                     int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-                    boolean renderNorth = side == Direction.NORTH && extraData.getData(DaylightDetectorFrameTileEntity.NORTH_VISIBLE);
-                    boolean renderEast = side == Direction.EAST && extraData.getData(DaylightDetectorFrameTileEntity.EAST_VISIBLE);
-                    boolean renderSouth = side == Direction.SOUTH && extraData.getData(DaylightDetectorFrameTileEntity.SOUTH_VISIBLE);
-                    boolean renderWest = side == Direction.WEST && extraData.getData(DaylightDetectorFrameTileEntity.WEST_VISIBLE);
                     int rotation = extraData.getData(DaylightDetectorFrameTileEntity.ROTATION);
-                    List<BakedQuad> quads = new ArrayList<>(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 6 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, renderNorth, renderSouth, renderEast, renderWest, true, true, rotation));
+
+                    TextureAtlasSprite sensor;
+                    TextureAtlasSprite sensor_side = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/daylight_detector_side"));
+                    TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.getData(DaylightDetectorFrameTileEntity.GLASS_COLOR));
+                    if (state.get(DaylightDetectorFrameBlock.INVERTED)) {
+                        sensor = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/daylight_detector_inverted_top"));
+                    } else {
+                        sensor = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/daylight_detector_top"));
+                    }
+                    List<BakedQuad> quads = new ArrayList<>();
+                    if (design == 0) {
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 6 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    } else if (design == 1) {
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1 / 16f, 6 / 16f, 0f, 1 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(15 / 16f, 1f, 1 / 16f, 6 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1 / 16f, 6 / 16f, 15 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1 / 16f, 1 / 16f, 6 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+
+                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 1 / 16f, 6 / 16f, 1 / 16f, 15 / 16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
+                    } else if (design == 2) {
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 6 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 6 / 16f, 7 / 16f, 1 / 16f, 15 / 16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
+                    } else if (design == 3) {
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1 / 16f, 6 / 16f, 0f, 1 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(15 / 16f, 1f, 1 / 16f, 6 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1 / 16f, 6 / 16f, 15 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1 / 16f, 1 / 16f, 6 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+
+                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 1 / 16f, 4 / 16f, 1 / 16f, 15 / 16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
+
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 4 / 16f, 6 / 16f, 1 / 16f, 15 / 16f, glass, tintIndex));
+                    } else if (design == 4) {
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1 / 16f, 6 / 16f, 0f, 1 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(15 / 16f, 1f, 1 / 16f, 6 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1 / 16f, 6 / 16f, 15 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1 / 16f, 1 / 16f, 6 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+
+                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 1 / 16f, 5 / 16f, 1 / 16f, 15 / 16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
+
+                        quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 6 / 16f, 5 / 16f, 6 / 16f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(10 / 16f, 11 / 16f, 5 / 16f, 6 / 16f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 5 / 16f, 6 / 16f, 5 / 16f, 6 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 5 / 16f, 6 / 16f, 10 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                    }
                     int overlayIndex = extraData.getData(DaylightDetectorFrameTileEntity.OVERLAY);
                     if (overlayIndex != 0) {
                         quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 6 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));
