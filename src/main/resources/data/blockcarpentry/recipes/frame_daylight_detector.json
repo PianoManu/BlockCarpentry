@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#",
+    "-",
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "blockcarpentry:frame_slab"
+    },
+    "-": {
+      "item": "minecraft:daylight_detector"
+    }
+  },
+  "result": {
+    "item": "blockcarpentry:frame_daylight_detector",
+    "count": 1
+  }
+}
