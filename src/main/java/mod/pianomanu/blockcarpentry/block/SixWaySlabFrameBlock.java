@@ -47,7 +47,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.11 08/19/21
+ * @version 1.12 08/23/21
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IWaterLoggable {
@@ -290,7 +290,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
     }
 
     private void checkForVisibility(BlockState state, World world, BlockPos pos, TwoBlocksFrameBlockTile tileEntity) {
-        if (!world.isRemote) {
+        if (world.isRemote) {
             for (Direction d : Direction.values()) {
                 BlockPos.Mutable mutablePos = pos.toMutable();
                 BlockState adjacentBlockState = world.getBlockState(mutablePos.move(d));
