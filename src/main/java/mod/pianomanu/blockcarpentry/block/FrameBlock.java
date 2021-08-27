@@ -46,7 +46,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.9 06/06/21
+ * @version 1.10 08/27/21
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, IWaterLoggable {
@@ -303,10 +303,12 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
     }
 
     private void checkForVisibility(BlockState state, World world, BlockPos pos, FrameBlockTile tileEntity) {
-        for (Direction d : Direction.values()) {
-            BlockPos.Mutable mutablePos = pos.toMutable();
-            BlockState adjacentBlockState = world.getBlockState(mutablePos.move(d));
-            tileEntity.setVisibileSides(d, !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
+        if (world.isRemote) {
+            for (Direction d : Direction.values()) {
+                BlockPos.Mutable mutablePos = pos.toMutable();
+                BlockState adjacentBlockState = world.getBlockState(mutablePos.move(d));
+                tileEntity.setVisibileSides(d, !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
+            }
         }
     }
 }
