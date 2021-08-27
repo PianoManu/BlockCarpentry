@@ -13,9 +13,11 @@
   "block.blockcarpentry.frame_ladder": "Ramstege",
   "block.blockcarpentry.frame_chest": "Ramkista",
   "block.blockcarpentry.frame_fence_gate": "Ramgrind",
+  "block.blockcarpentry.frame_carpet": "Frame Carpet",
+  "block.blockcarpentry.frame_pane": "Frame Pane",
+  "block.blockcarpentry.frame_daylight_detector": "Frame Daylight Detector",
   "block.blockcarpentry.frame_slope": "Ramslänt (WIP)",
   "block.blockcarpentry.frame_edged_slope": "Kantad Ramslänt (WIP)",
-
   "block.blockcarpentry.illusion_block": "Illusionsblock",
   "block.blockcarpentry.illusion_slab": "Illusionsplatta",
   "block.blockcarpentry.illusion_button": "Illusionsknapp",
@@ -29,9 +31,10 @@
   "block.blockcarpentry.illusion_ladder": "Illusionsstege",
   "block.blockcarpentry.illusion_chest": "Illusionskista",
   "block.blockcarpentry.illusion_fence_gate": "Illusionsgrind",
-
+  "block.blockcarpentry.illusion_carpet": "Illusion Carpet",
+  "block.blockcarpentry.illusion_pane": "Illusion Pane",
+  "block.blockcarpentry.illusion_daylight_detector": "Illusion Daylight Detector",
   "container.frame_chest": "Kista",
-
   "item.blockcarpentry.hammer": "Hammare",
   "item.blockcarpentry.texture_wrench": "Textursskiftnyckel",
   "item.blockcarpentry.chisel": "Mejsel",

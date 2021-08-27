@@ -13,9 +13,11 @@
   "block.blockcarpentry.frame_ladder": "Каркасная лестница",
   "block.blockcarpentry.frame_chest": "Каркасный сундук",
   "block.blockcarpentry.frame_fence_gate": "Каркасная калитка",
+  "block.blockcarpentry.frame_carpet": "Frame Carpet",
+  "block.blockcarpentry.frame_pane": "Frame Pane",
+  "block.blockcarpentry.frame_daylight_detector": "Frame Daylight Detector",
   "block.blockcarpentry.frame_slope": "Накланенный каркас (WIP)",
   "block.blockcarpentry.frame_edged_slope": "Ступенчатый накланенный каркас (WIP)",
-
   "block.blockcarpentry.illusion_block": "Иллюзорный блок",
   "block.blockcarpentry.illusion_slab": "Иллюзорная плита",
   "block.blockcarpentry.illusion_button": "Иллюзорная кнопка",
@@ -29,9 +31,10 @@
   "block.blockcarpentry.illusion_ladder": "Иллюзорная лестница",
   "block.blockcarpentry.illusion_chest": "Иллюзорный сундук",
   "block.blockcarpentry.illusion_fence_gate": "Иллюзорная калитка",
-
+  "block.blockcarpentry.illusion_carpet": "Illusion Carpet",
+  "block.blockcarpentry.illusion_pane": "Illusion Pane",
+  "block.blockcarpentry.illusion_daylight_detector": "Illusion Daylight Detector",
   "container.frame_chest": "Каркасный сундук",
-
   "item.blockcarpentry.hammer": "Молоток",
   "item.blockcarpentry.texture_wrench": "Текстурный ключ",
   "item.blockcarpentry.chisel": "Стамеска",
