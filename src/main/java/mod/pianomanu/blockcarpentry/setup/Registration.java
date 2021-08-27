@@ -4,10 +4,7 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.*;
 import mod.pianomanu.blockcarpentry.container.ChestFrameContainer;
 import mod.pianomanu.blockcarpentry.container.IllusionChestContainer;
-import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
-import mod.pianomanu.blockcarpentry.tileentity.ChestFrameTileEntity;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.SoundType;
@@ -128,6 +125,17 @@ public class Registration {
     public static final RegistryObject<Item> CARPET_FRAME_ITEM = ITEMS.register("frame_carpet", () -> new BlockItem(CARPET_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> CARPET_FRAME_TILE = TILES.register("frame_carpet", () -> TileEntityType.Builder.create(FrameBlockTile::new, CARPET_FRAMEBLOCK.get()).build(null));
 
+    public static final RegistryObject<PaneFrameBlock> PANE_FRAMEBLOCK = BLOCKS.register("frame_pane", () -> new PaneFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> PANE_FRAME_ITEM = ITEMS.register("frame_pane", () -> new BlockItem(PANE_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<TileEntityType<FrameBlockTile>> PANE_FRAME_TILE = TILES.register("frame_pane", () -> TileEntityType.Builder.create(FrameBlockTile::new, PANE_FRAMEBLOCK.get()).build(null));
+
+    public static final RegistryObject<DaylightDetectorFrameBlock> DAYLIGHT_DETECTOR_FRAMEBLOCK = BLOCKS.register("frame_daylight_detector", () -> new DaylightDetectorFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> DAYLIGHT_DETECTOR_FRAME_ITEM = ITEMS.register("frame_daylight_detector", () -> new BlockItem(DAYLIGHT_DETECTOR_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+
+    //public static final RegistryObject<FlowerPotFrameBlock> FLOWER_POT_FRAMEBLOCK = BLOCKS.register("frame_flower_pot", () -> new FlowerPotFrameBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT.delegate.get(), () -> Blocks.AIR.delegate.get(), Block.Properties.from(FRAMEBLOCK.get())));
+    //public static final RegistryObject<Item> FLOWER_POT_FRAME_ITEM = ITEMS.register("frame_flower_pot", () -> new BlockItem(FLOWER_POT_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    //public static final RegistryObject<TileEntityType<FrameBlockTile>> FLOWER_POT_FRAME_TILE = TILES.register("frame_flower_pot", () -> TileEntityType.Builder.create(FrameBlockTile::new, FLOWER_POT_FRAMEBLOCK.get()).build(null));
+
     //TODO WIP - may be removed or rewritten in the future
     public static final RegistryObject<SlopeFrameBlock> SLOPE_FRAMEBLOCK = BLOCKS.register("frame_slope", () -> new SlopeFrameBlock(() -> FRAMEBLOCK.get().getDefaultState(), Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> SLOPE_FRAME_ITEM = ITEMS.register("frame_slope", () -> new BlockItem(SLOPE_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
@@ -190,6 +198,15 @@ public class Registration {
     public static final RegistryObject<CarpetFrameBlock> CARPET_ILLUSION_BLOCK = BLOCKS.register("illusion_carpet", () -> new CarpetFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> CARPET_ILLUSION_ITEM = ITEMS.register("illusion_carpet", () -> new BlockItem(CARPET_ILLUSION_BLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> CARPET_ILLUSION_TILE = TILES.register("illusion_carpet", () -> TileEntityType.Builder.create(FrameBlockTile::new, CARPET_ILLUSION_BLOCK.get()).build(null));
+
+    public static final RegistryObject<PaneFrameBlock> PANE_ILLUSION_BLOCK = BLOCKS.register("illusion_pane", () -> new PaneFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> PANE_ILLUSION_ITEM = ITEMS.register("illusion_pane", () -> new BlockItem(PANE_ILLUSION_BLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<TileEntityType<FrameBlockTile>> PANE_ILLUSION_TILE = TILES.register("illusion_pane", () -> TileEntityType.Builder.create(FrameBlockTile::new, PANE_ILLUSION_BLOCK.get()).build(null));
+
+    public static final RegistryObject<DaylightDetectorFrameBlock> DAYLIGHT_DETECTOR_ILLUSIONBLOCK = BLOCKS.register("illusion_daylight_detector", () -> new DaylightDetectorFrameBlock(Block.Properties.from(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> DAYLIGHT_DETECTOR_ILLUSION_ITEM = ITEMS.register("illusion_daylight_detector", () -> new BlockItem(DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    //public static final RegistryObject<TileEntityType<DaylightDetectorFrameTileEntity>> DAYLIGHT_DETECTOR_ILLUSION_TILE = TILES.register("illusion_daylight_detector", () -> TileEntityType.Builder.create(DaylightDetectorFrameTileEntity::new, DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<DaylightDetectorFrameTileEntity>> DAYLIGHT_DETECTOR_FRAME_TILE = TILES.register("frame_daylight_detector", () -> TileEntityType.Builder.create(DaylightDetectorFrameTileEntity::new, DAYLIGHT_DETECTOR_FRAMEBLOCK.get(), DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get()).build(null));
 
     public static void init() {
         LOGGER.info("Registering blocks from BlockCarpentry");

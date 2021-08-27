@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "contains_block=true": {
+      "model": "blockcarpentry:block/frame_pane"
+    },
+    "contains_block=false": {
+      "model": "blockcarpentry:block/frame_pane_empty"
+    }
+  }
+}

@@ -37,6 +37,8 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_chest_loader"), new ChestFrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_fence_gate_loader"), new FenceGateFrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_carpet_loader"), new CarpetFrameModelLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_pane_loader"), new PaneFrameModelLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_daylight_detector_loader"), new DaylightDetectorFrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_slope_loader"), new SlopeFrameModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "frame_edged_slope_loader"), new EdgedSlopeFrameModelLoader());
 
@@ -56,6 +58,8 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "illusion_chest_loader"), new IllusionChestModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "illusion_fence_gate_loader"), new IllusionFenceGateModelLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "illusion_carpet_loader"), new IllusionCarpetModelLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "illusion_pane_loader"), new IllusionPaneFrameModelLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(BlockCarpentryMain.MOD_ID, "illusion_daylight_detector_loader"), new IllusionDaylightDetectorFrameModelLoader());
     }
 }
 //========SOLI DEO GLORIA========//

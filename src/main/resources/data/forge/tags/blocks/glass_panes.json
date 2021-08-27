@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "blockcarpentry:frame_pane",
+    "blockcarpentry:illusion_pane"
+  ]
+}

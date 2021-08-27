@@ -28,6 +28,8 @@ public class RenderSetup {
         RenderTypeLookup.setRenderLayer(Registration.CHEST_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.FENCE_GATE_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.CARPET_FRAMEBLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.PANE_FRAMEBLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.EDGED_SLOPE_FRAMEBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.SLOPE_FRAMEBLOCK.get(), RenderType.getTranslucent());
 
@@ -45,6 +47,8 @@ public class RenderSetup {
         RenderTypeLookup.setRenderLayer(Registration.CHEST_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.FENCE_GATE_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(Registration.CARPET_ILLUSION_BLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.PANE_ILLUSION_BLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get(), RenderType.getTranslucent());
 
 
         ScreenManager.registerFactory(Registration.CHEST_FRAME_CONTAINER.get(), ChestFrameScreen::new);

@@ -47,6 +47,9 @@ public class BlockColorHandler implements IBlockColor {
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.LADDER_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CHEST_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.FENCE_GATE_FRAMEBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CARPET_FRAMEBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.PANE_FRAMEBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.SLOPE_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.EDGED_SLOPE_FRAMEBLOCK.get());
 
@@ -63,6 +66,9 @@ public class BlockColorHandler implements IBlockColor {
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.LADDER_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CHEST_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.FENCE_GATE_ILLUSIONBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CARPET_ILLUSION_BLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.PANE_ILLUSION_BLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get());
 
         LOGGER.info("Registered block color handler");
     }
