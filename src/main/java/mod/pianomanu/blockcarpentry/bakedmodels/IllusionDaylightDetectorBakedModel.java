@@ -29,7 +29,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.1 08/27/21
+ * @version 1.2 08/28/21
  */
 public class IllusionDaylightDetectorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -41,6 +41,9 @@ public class IllusionDaylightDetectorBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
+        if (side != null) {
+            return Collections.emptyList();
+        }
 
         BlockState mimic = extraData.getData(DaylightDetectorFrameTileEntity.MIMIC);
         Integer design = extraData.getData(DaylightDetectorFrameTileEntity.DESIGN);
