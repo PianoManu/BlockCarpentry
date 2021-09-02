@@ -45,7 +45,7 @@ public class BlockColorHandler implements IBlockColor {
             TileEntity te = lightReader.getTileEntity(pos);
             if (te instanceof FrameBlockTile) {
                 BlockState containedBlock = ((FrameBlockTile) te).getMimic();
-                if (containedBlock.getBlock() instanceof GrassBlock) {
+                if (containedBlock != null && containedBlock.getBlock() instanceof GrassBlock) {
                     return BiomeColors.getGrassColor(lightReader,pos);
                 }
                 return Minecraft.getInstance().getBlockColors().getColor(containedBlock, lightReader, pos, tintIndex);
