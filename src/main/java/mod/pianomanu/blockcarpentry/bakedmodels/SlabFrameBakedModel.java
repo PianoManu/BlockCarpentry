@@ -30,7 +30,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.11 08/28/21
+ * @version 1.12 09/06/21
  */
 @SuppressWarnings("deprecation")
 public class SlabFrameBakedModel implements IDynamicBakedModel {
@@ -67,13 +67,13 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
         int tex_1 = extraData.getData(TwoBlocksFrameBlockTile.TEXTURE_1);
         int tex_2 = extraData.getData(TwoBlocksFrameBlockTile.TEXTURE_2);
         if (mimic_1 != null && state != null) {
-            List<TextureAtlasSprite> textureList_1 = TextureHelper.getTextureFromModel(model, extraData, rand);
+            List<TextureAtlasSprite> textureList_1 = TextureHelper.getSlabTextureFromModel1(model, extraData, rand);
             List<TextureAtlasSprite> textureList_2 = new ArrayList<>();
 
             if (mimic_2 != null) {
                 ModelResourceLocation location_2 = BlockModelShapes.getModelLocation(mimic_2);
                 IBakedModel model_2 = Minecraft.getInstance().getModelManager().getModel(location_2);
-                textureList_2 = TextureHelper.getTextureFromModel(model_2, extraData, rand);
+                textureList_2 = TextureHelper.getSlabTextureFromModel2(model_2, extraData, rand);
             }
 
             TextureAtlasSprite texture_1;

@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.util;
 
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -18,7 +19,7 @@ import java.util.Random;
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
  *
  * @author PianoManu
- * @version 1.5 10/29/20
+ * @version 1.6 09/06/21
  */
 public class TextureHelper {
 
@@ -120,6 +121,76 @@ public class TextureHelper {
             }
         }
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.WEST, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        return textureList;
+    }
+
+    public static List<TextureAtlasSprite> getSlabTextureFromModel1(IBakedModel model, IModelData extraData, Random rand) {
+        List<TextureAtlasSprite> textureList = new ArrayList<>();
+        for (BakedQuad quad : model.getQuads(extraData.getData(TwoBlocksFrameBlockTile.MIMIC_1), Direction.UP, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad : model.getQuads(extraData.getData(TwoBlocksFrameBlockTile.MIMIC_1), Direction.DOWN, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad : model.getQuads(extraData.getData(TwoBlocksFrameBlockTile.MIMIC_1), Direction.NORTH, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad : model.getQuads(extraData.getData(TwoBlocksFrameBlockTile.MIMIC_1), Direction.EAST, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad : model.getQuads(extraData.getData(TwoBlocksFrameBlockTile.MIMIC_1), Direction.SOUTH, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad : model.getQuads(extraData.getData(TwoBlocksFrameBlockTile.MIMIC_1), Direction.WEST, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        return textureList;
+    }
+
+    public static List<TextureAtlasSprite> getSlabTextureFromModel2(IBakedModel model, IModelData extraData, Random rand) {
+        List<TextureAtlasSprite> textureList = new ArrayList<>();
+        for (BakedQuad quad : model.getQuads(extraData.getData(TwoBlocksFrameBlockTile.MIMIC_2), Direction.UP, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad : model.getQuads(extraData.getData(TwoBlocksFrameBlockTile.MIMIC_2), Direction.DOWN, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad : model.getQuads(extraData.getData(TwoBlocksFrameBlockTile.MIMIC_2), Direction.NORTH, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad : model.getQuads(extraData.getData(TwoBlocksFrameBlockTile.MIMIC_2), Direction.EAST, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad : model.getQuads(extraData.getData(TwoBlocksFrameBlockTile.MIMIC_2), Direction.SOUTH, rand, extraData)) {
+            if (!textureList.contains(quad.func_187508_a())) {
+                textureList.add(quad.func_187508_a());
+            }
+        }
+        for (BakedQuad quad : model.getQuads(extraData.getData(TwoBlocksFrameBlockTile.MIMIC_2), Direction.WEST, rand, extraData)) {
             if (!textureList.contains(quad.func_187508_a())) {
                 textureList.add(quad.func_187508_a());
             }
