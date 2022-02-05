@@ -1,5 +1,8 @@
 package mod.pianomanu.blockcarpentry.setup;
 
+import mod.pianomanu.blockcarpentry.client.ChestFrameScreen;
+import mod.pianomanu.blockcarpentry.client.IllusionChestScreen;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 
@@ -7,7 +10,7 @@ import net.minecraft.client.renderer.RenderType;
  * Registering standard rendering layers for all frame blocks - need to be translucent to work with glass and similar blocks
  *
  * @author PianoManu
- * @version 1.0 08/15/21
+ * @version 1.1 02/05/22
  */
 public class RenderSetup {
     public static void setup() {
@@ -42,10 +45,9 @@ public class RenderSetup {
         ItemBlockRenderTypes.setRenderLayer(Registration.FENCE_GATE_ILLUSIONBLOCK.get(), RenderType.translucent());
 
 
-        //MenuScreens.register(MenuType.GENERIC_9x3, ContainerScreen::new);
-        //ScreenManager.registerFactory(Registration.CHEST_FRAME_CONTAINER.get(), ChestFrameScreen::new);
-        //ScreenManager.registerFactory(Registration.CHEST_ILLUSION_CONTAINER.get(), IllusionChestScreen::new);
         //ScreenManager.registerFactory(Registration.STANDING_SIGN_FRAME_CONTAINER.get(), EditSignScreen::new);
+        MenuScreens.register(Registration.CHEST_FRAME_CONTAINER.get(), ChestFrameScreen::new);
+        MenuScreens.register(Registration.CHEST_ILLUSION_CONTAINER.get(), IllusionChestScreen::new);
     }
 }
 //========SOLI DEO GLORIA========//

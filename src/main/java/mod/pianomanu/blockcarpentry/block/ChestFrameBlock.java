@@ -8,11 +8,13 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +33,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import java.util.Objects;
 
@@ -42,7 +43,7 @@ import static mod.pianomanu.blockcarpentry.block.AbstractSixWayFrameBlock.FACING
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 08/15/21
+ * @version 1.1 02/05/22
  */
 public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBlock {
     private static final VoxelShape INNER_CUBE = Block.box(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
@@ -123,8 +124,14 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
             BlockAppearanceHelper.setRotation(level, pos, player, item);
             if (tileEntity instanceof ChestFrameBlockEntity && state.getValue(CONTAINS_BLOCK)) {
                 if (!(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
-                    NetworkHooks.openGui((ServerPlayer) player, (ChestFrameBlockEntity) tileEntity, pos);
-                    return InteractionResult.SUCCESS;
+                    MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
+                    if (menuprovider != null) {
+                        player.openMenu(menuprovider);
+                        player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
+                        PiglinAi.angerNearbyPiglins(player, true);
+                    }
+
+                    return InteractionResult.CONSUME;
                 }
             }
         }
