@@ -3,9 +3,11 @@ package mod.pianomanu.blockcarpentry;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.RenderSetup;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
+import mod.pianomanu.blockcarpentry.util.BlockColorHandler;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import mod.pianomanu.blockcarpentry.util.Tags;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -15,8 +17,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +30,7 @@ import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
  * Main class of the BlockCarpentry mod
  *
  * @author PianoManu
- * @version 1.0
+ * @version 1.4 05/02/21
  */
 @Mod(MOD_ID)
 public class BlockCarpentryMain
@@ -40,6 +42,7 @@ public class BlockCarpentryMain
 
     public BlockCarpentryMain() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BCModConfig.COMMON_CONFIG);
+        //ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, BCModConfig.CLIENT_CONFIG);
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -69,7 +72,12 @@ public class BlockCarpentryMain
      * client stuff, i.e. things that can only be done client-side, like rendering
      */
     private void doClientStuff(final FMLClientSetupEvent event) {
+        /*if (!BCModConfig.OPAQUE_BLOCKS.get()) {
+            LOGGER.warn("Config value \"Opaque Blocks\" is set to false. When using OptiFine, frame and illusion blocks may appear invisible. If that is the case, change the value of \"Opaque Blocks\" to \"true\" in the mod config");
+            RenderSetup.setup();
+        }*/
         RenderSetup.setup();
+        BlockColorHandler.registerBlockColors();
         LOGGER.info("Setting up client things for BlockCarpentry");
     }
 
@@ -88,6 +96,7 @@ public class BlockCarpentryMain
     {
         LOGGER.info("Processing InterModCommunication");
         BlockSavingHelper.createValidBlockList();
+        Tags.init();
         LOGGER.info("Processed InterModCommunication");
     }
 
@@ -101,17 +110,19 @@ public class BlockCarpentryMain
     /**
      * Registering my ItemGroup for all blocks and items from BlockCarpentry
      */
-    public static class BlockCarpentryItemGroup extends ItemGroup {
+    public static class BlockCarpentryItemGroup extends CreativeModeTab {
 
-        public static final BlockCarpentryItemGroup BLOCK_CARPENTRY = new BlockCarpentryItemGroup(ItemGroup.GROUPS.length,"blockcarpentry");
+        public static final BlockCarpentryItemGroup BLOCK_CARPENTRY = new BlockCarpentryItemGroup(CreativeModeTab.TABS.length,"blockcarpentry");
         private BlockCarpentryItemGroup(int index, String label) {
             super(index, label);
         }
 
         @Override
         @Nonnull
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return new ItemStack(Registration.FRAMEBLOCK.get());
         }
     }
 }
+//This mod is dedicated to the living God and His son, Jesus. Without His support, I would never have had enough strength and perseverance to get this project working and publish it. Learn to hear His voice, it will transform your life. (Based on a quote from Covert_Jaguar, creator of RailCraft)
+//========SOLI DEO GLORIA========//

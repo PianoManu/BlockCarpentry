@@ -1,177 +1,155 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import net.minecraft.block.*;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.LeadItem;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.LeadItem;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
-public class FenceFrameBlock extends FenceBlock {
-    //private boolean isTransparent = true;
+/**
+ * Main class for frame fences - all important block info can be found here
+ * Visit {@link FrameBlock} for a better documentation
+ *
+ * @author PianoManu
+ * @version 1.0 08/15/21
+ */
+public class FenceFrameBlock extends FenceBlock implements EntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
 
     public FenceFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(NORTH, Boolean.valueOf(false)).with(EAST, Boolean.valueOf(false)).with(SOUTH, Boolean.valueOf(false)).with(WEST, Boolean.valueOf(false)).with(WATERLOGGED, Boolean.valueOf(false)).with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(NORTH, Boolean.valueOf(false)).setValue(EAST, Boolean.valueOf(false)).setValue(SOUTH, Boolean.valueOf(false)).setValue(WEST, Boolean.valueOf(false)).setValue(WATERLOGGED, Boolean.valueOf(false)).setValue(CONTAINS_BLOCK, Boolean.FALSE).setValue(LIGHT_LEVEL, 0));
     }
 
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
+    /*@Override
+    public boolean hasBlockEntity(BlockState state) {
         return true;
-    }
+    }*/
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FrameBlockTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new FrameBlockTile(pos, state);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        ItemStack item = player.getHeldItem(hand);
-        if (!world.isRemote) {
-            if(item.getItem()==Items.LEAD) {
-                return LeadItem.bindPlayerMobs(player, world, pos);
-            }
-            /*if(state.get(CONTAINS_BLOCK) && player.isSneaking()) {
-                this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos,state,2);
-            }*/ else {
-                if(item.getItem() instanceof BlockItem) {
-                    TileEntity tileEntity = world.getTileEntity(pos);
-                    int count = player.getHeldItem(hand).getCount();
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
+        ItemStack item = player.getItemInHand(hand);
+        if (!level.isClientSide) {
+            BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand);
+            BlockAppearanceHelper.setTexture(item, state, level, player, pos);
+            BlockAppearanceHelper.setDesign(level, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(level, pos, player, item);
+            BlockAppearanceHelper.setOverlay(level, pos, player, item);
+            BlockAppearanceHelper.setRotation(level, pos, player, item);
+            if (item.getItem() == Items.LEAD) {
+                return LeadItem.bindPlayerMobs(player, level, pos);
+            } else {
+                if (item.getItem() instanceof BlockItem) {
+                    if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                        return InteractionResult.PASS;
+                    }
+                    BlockEntity tileEntity = level.getBlockEntity(pos);
+                    int count = player.getItemInHand(hand).getCount();
                     Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                    //TODO fix for non-solid blocks
-                    //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
-                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
-                        ((FrameBlockTile) tileEntity).clear();
-                        BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                        ((FrameBlockTile) tileEntity).setMimic(handBlockState);
-                        insertBlock(world,pos, state,handBlockState);
-                        player.getHeldItem(hand).setCount(count-1);
-                    }
-                    if (heldBlock instanceof GlassBlock || heldBlock instanceof IceBlock) {
-                        //TODO
-                        //System.out.println("is Transparent");
-                        //this.isTransparent = true;
-                    } else {
-                        //TODO
-                        //System.out.println("is not Transparent");
-                        //this.isTransparent = false;
+                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
+                        BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
+                        insertBlock(level, pos, state, handBlockState);
+                        if (!player.isCreative())
+                            player.getItemInHand(hand).setCount(count - 1);
+
                     }
                 }
             }
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
-                this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos,state,2);
-            }
-            BlockAppearanceHelper.setLightLevel(item,state,world,pos,player,hand);
-            BlockAppearanceHelper.setTexture(item,state,world,player,pos);
-            if (item.getItem() == Registration.TEXTURE_WRENCH.get() && player.isSneaking()) {
-                //System.out.println("You should rotate now!");
-            }
-            if (item.getItem() == Registration.CHISEL.get() && !player.isSneaking()) {
-                TileEntity tileEntity = world.getTileEntity(pos);
-                if (tileEntity instanceof FrameBlockTile) {
-                    FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                    if (fte.getDesign() < fte.maxDesigns) {
-                        fte.setDesign(fte.getDesign()+1);
-                    } else {
-                        fte.setDesign(0);
-                    }
-                }
-            }
-            if (item.getItem() == Registration.PAINTBRUSH.get() && !player.isSneaking()) {
-                TileEntity tileEntity = world.getTileEntity(pos);
-                if (tileEntity instanceof FrameBlockTile) {
-                    FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                    if (fte.getDesignTexture() < fte.maxDesignTextures) {
-                        fte.setDesignTexture(fte.getDesignTexture()+1);
-                    } else {
-                        fte.setDesignTexture(0);
-                    }
-                }
+            if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
+                if (!player.isCreative())
+                    this.dropContainedBlock(level, pos);
+                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
+                level.setBlock(pos, state, 2);
             }
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    protected void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isRemote) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+    protected void dropContainedBlock(Level levelIn, BlockPos pos) {
+        if (!levelIn.isClientSide) {
+            BlockEntity tileentity = levelIn.getBlockEntity(pos);
             if (tileentity instanceof FrameBlockTile) {
-                FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
-                BlockState blockState = frameTileEntity.getMimic();
-                if (!(blockState==null)) {
-                    worldIn.playEvent(1010, pos, 0);
-                    frameTileEntity.clear();
+                FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
+                BlockState blockState = frameBlockEntity.getMimic();
+                if (!(blockState == null)) {
+                    levelIn.levelEvent(1010, pos, 0);
+                    frameBlockEntity.clear();
                     float f = 0.7F;
-                    double d0 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
-                    double d1 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.060000002F + 0.6D;
-                    double d2 = (double)(worldIn.rand.nextFloat() * 0.7F) + (double)0.15F;
-                    ItemStack itemstack1 = blockState.getBlock().asItem().getDefaultInstance();
-                    ItemEntity itementity = new ItemEntity(worldIn, (double)pos.getX() + d0, (double)pos.getY() + d1, (double)pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
-                    frameTileEntity.clear();
+                    double d0 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d1 = (levelIn.random.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d2 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
+                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
+                    ItemEntity itementity = new ItemEntity(levelIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
+                    itementity.setDefaultPickUpDelay();
+                    levelIn.addFreshEntity(itementity);
+                    frameBlockEntity.clear();
                 }
             }
         }
     }
 
-    public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+    public void insertBlock(Level levelIn, BlockPos pos, BlockState state, BlockState handBlock) {
+        BlockEntity tileentity = levelIn.getBlockEntity(pos);
         if (tileentity instanceof FrameBlockTile) {
-            FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
-            frameTileEntity.clear();
-            frameTileEntity.setMimic(handBlock);
-            worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
+            FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
+            frameBlockEntity.clear();
+            frameBlockEntity.setMimic(handBlock);
+            levelIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
         }
     }
 
-    //TODO add everywhere AND FIX!!! - is it fixed?? -> testing!
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onRemove(BlockState state, Level levelIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            dropContainedBlock(levelIn, pos);
+
+            super.onRemove(state, levelIn, pos, newState, isMoving);
+        }
+    }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
-            dropContainedBlock(worldIn, pos);
-
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
-        }
-    }
-
-    public int getLightValue(BlockState state) {
-        if (state.get(LIGHT_LEVEL)>15) {
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }
-        return state.get(LIGHT_LEVEL);
+        return state.getValue(LIGHT_LEVEL);
     }
 }
+//========SOLI DEO GLORIA========//

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "blockcarpentry:chisel"
+    ]
+  },
+  "criteria": {
+    "has_scaffolding": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:scaffolding"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "blockcarpentry:chisel"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_scaffolding",
+      "has_the_recipe"
+    ]
+  ]
+}

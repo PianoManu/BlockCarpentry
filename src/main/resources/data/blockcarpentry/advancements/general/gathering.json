@@ -1,0 +1,40 @@
+{
+  "parent": "blockcarpentry:general/root",
+  "display": {
+    "icon": {
+      "item": "minecraft:scaffolding"
+    },
+    "title": {
+      "translate": "advancements.blockcarpentry.gathering.title"
+    },
+    "description": {
+      "translate": "advancements.blockcarpentry.gathering.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "has_lots_of_scaffoldings": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "slots": {
+          "full": {
+            "min": 6
+          }
+        },
+        "items": [
+          {
+            "item": "minecraft:scaffolding"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_lots_of_scaffoldings"
+    ]
+  ]
+}

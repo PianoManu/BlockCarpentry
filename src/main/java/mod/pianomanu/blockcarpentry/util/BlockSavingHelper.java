@@ -1,31 +1,46 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraftforge.common.Tags;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Currently unused, may be used (or rewritten) for frame beds
+ *
+ * @author PianoManu
+ * @version 1.4 04/09/21
  */
 public class BlockSavingHelper {
     public static List<Block> validBlocks = new ArrayList<>();
+
     public static void createValidBlockList() {
         List<Block> blockList = new ArrayList<>();
-        for(Block b : ForgeRegistries.BLOCKS) {
-            if (b.isSolid(b.getDefaultState())) {
+        for (Block b : ForgeRegistries.BLOCKS) {
+            if (b.defaultBlockState().getRenderShape() == RenderShape.MODEL) {
+                /*if (b.defaultBlockState().isSolid() || b.defaultBlockState().isTransparent()) {
+                    blockList.add(b);
+                }
+                if (b instanceof AbstractGlassBlock) {
+                    blockList.add(b);
+                }
+                if (b instanceof IceBlock) {
+                    blockList.add(b);
+                }
+                if (b instanceof SlimeBlock) {
+                    blockList.add(b);
+                }
+                if (b instanceof HoneyBlock) {
+                    blockList.add(b);
+                }*/
                 blockList.add(b);
             }
         }
-        blockList.add(Blocks.GLASS);
-        Collection<Block> glass = Tags.Blocks.GLASS.getAllElements();
-        blockList.addAll(glass);
-        blockList.add(Blocks.ICE);
         validBlocks = blockList;
     }
 
@@ -34,7 +49,46 @@ public class BlockSavingHelper {
     }
 
     public static boolean isDyeItem(Item item) {
-        return Tags.Items.DYES.contains(item);
+        //return Tags.Items.DYES.contains(item);
+        List<Item> dye_items = new ArrayList<>();
+        dye_items.add(Items.WHITE_DYE);
+        dye_items.add(Items.RED_DYE);
+        dye_items.add(Items.MAGENTA_DYE);
+        dye_items.add(Items.YELLOW_DYE);
+        dye_items.add(Items.PURPLE_DYE);
+        dye_items.add(Items.LIME_DYE);
+        dye_items.add(Items.GREEN_DYE);
+        dye_items.add(Items.LIGHT_BLUE_DYE);
+        dye_items.add(Items.BLUE_DYE);
+        dye_items.add(Items.PINK_DYE);
+        dye_items.add(Items.ORANGE_DYE);
+        dye_items.add(Items.LIGHT_GRAY_DYE);
+        dye_items.add(Items.GRAY_DYE);
+        dye_items.add(Items.CYAN_DYE);
+        dye_items.add(Items.BROWN_DYE);
+        dye_items.add(Items.BLACK_DYE);
+        return dye_items.contains(item);
+    }
+
+    public static List<Item> getDyeItems() {
+        List<Item> dye_items = new ArrayList<>();
+        dye_items.add(Items.WHITE_DYE);
+        dye_items.add(Items.ORANGE_DYE);
+        dye_items.add(Items.MAGENTA_DYE);
+        dye_items.add(Items.LIGHT_BLUE_DYE);
+        dye_items.add(Items.YELLOW_DYE);
+        dye_items.add(Items.LIME_DYE);
+        dye_items.add(Items.PINK_DYE);
+        dye_items.add(Items.GRAY_DYE);
+        dye_items.add(Items.LIGHT_GRAY_DYE);
+        dye_items.add(Items.CYAN_DYE);
+        dye_items.add(Items.PURPLE_DYE);
+        dye_items.add(Items.BLUE_DYE);
+        dye_items.add(Items.BROWN_DYE);
+        dye_items.add(Items.GREEN_DYE);
+        dye_items.add(Items.RED_DYE);
+        dye_items.add(Items.BLACK_DYE);
+        return dye_items;
     }
 
     public static boolean isWoolBlock(Block block) {
@@ -58,3 +112,4 @@ public class BlockSavingHelper {
         return wool_blocks.contains(block);
     }
 }
+//========SOLI DEO GLORIA========//

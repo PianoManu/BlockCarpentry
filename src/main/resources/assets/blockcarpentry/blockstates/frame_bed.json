@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "contains_block=false,facing=east,part=foot":  { "model": "blockcarpentry:block/frame_bed_empty_foot", "uvlock": true, "y": 270 },
+    "contains_block=false,facing=west,part=foot":  { "model": "blockcarpentry:block/frame_bed_empty_foot", "uvlock": true, "y": 90 },
+    "contains_block=false,facing=south,part=foot": { "model": "blockcarpentry:block/frame_bed_empty_foot" },
+    "contains_block=false,facing=north,part=foot": { "model": "blockcarpentry:block/frame_bed_empty_foot", "uvlock": true, "y": 180 },
+    "contains_block=false,facing=east,part=head":  { "model": "blockcarpentry:block/frame_bed_empty_head", "uvlock": true, "y": 90 },
+    "contains_block=false,facing=west,part=head":  { "model": "blockcarpentry:block/frame_bed_empty_head", "uvlock": true, "y": 270 },
+    "contains_block=false,facing=south,part=head": { "model": "blockcarpentry:block/frame_bed_empty_head", "uvlock": true, "y": 180 },
+    "contains_block=false,facing=north,part=head": { "model": "blockcarpentry:block/frame_bed_empty_head", "uvlock": true },
+	"contains_block=true":  { "model": "blockcarpentry:block/frame_bed" }
+  }
+}

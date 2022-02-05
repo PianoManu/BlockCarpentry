@@ -1,244 +1,134 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import net.minecraft.block.*;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.model.data.IModelData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
  *
  * @author PianoManu
- * @version 1.0
+ * @version 1.5 10/29/20
  */
 public class TextureHelper {
-    //unused... do we need this?
-    public static TextureAtlasSprite getTextureFromBlock(Block blockIn) {
-        ResourceLocation location;
-        List<ResourceLocation> locationList = new ArrayList<>();
-        String m = "minecraft";
-        String n = blockIn.getRegistryName().getNamespace();
-        String p = blockIn.getRegistryName().getPath();
-        String b = "block/";
-        locationList.add(loc(n,b+p));
-        if(blockIn instanceof GrassBlock) {
-            locationList.set(0,loc(m,b+"dirt"));
-            locationList.add(loc(m,b+"grass_block_top"));
+
+    /**
+     * Used for dyed glass doors, trapdoors etc
+     *
+     * @return list of all glass textures
+     */
+    public static List<TextureAtlasSprite> getGlassTextures() {
+        List<TextureAtlasSprite> glassTextures = new ArrayList<>();
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/white_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/orange_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/magenta_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/light_blue_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/yellow_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/lime_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/pink_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/gray_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/light_gray_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/cyan_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/purple_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/blue_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/brown_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/green_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/red_stained_glass")));
+        glassTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/black_stained_glass")));
+        return glassTextures;
+    }
+
+    public static List<TextureAtlasSprite> getWoolTextures() {
+        List<TextureAtlasSprite> woolTextures = new ArrayList<>();
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/white_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/orange_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/magenta_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/light_blue_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/yellow_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/lime_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/pink_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/gray_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/light_gray_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/cyan_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/purple_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/blue_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/brown_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/green_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/red_wool")));
+        woolTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/black_wool")));
+        return woolTextures;
+    }
+
+    public static List<TextureAtlasSprite> getPlanksTextures() {
+        List<TextureAtlasSprite> planksTextures = new ArrayList<>();
+        planksTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/oak_planks")));
+        planksTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/birch_planks")));
+        planksTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/spruce_planks")));
+        planksTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/jungle_planks")));
+        planksTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/acacia_planks")));
+        planksTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/dark_oak_planks")));
+        planksTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/crimson_planks")));
+        planksTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/warped_planks")));
+        return planksTextures;
+    }
+
+    public static List<TextureAtlasSprite> getMetalTextures() {
+        List<TextureAtlasSprite> metalTextures = new ArrayList<>();
+        metalTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/iron_block")));
+        metalTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/obsidian")));
+        metalTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/stone")));
+        metalTextures.add(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(loc("minecraft", "block/oak_log")));
+        return metalTextures;
+    }
+
+    public static List<TextureAtlasSprite> getTextureFromModel(BakedModel model, IModelData extraData, Random rand) {
+        List<TextureAtlasSprite> textureList = new ArrayList<>();
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.UP, rand, extraData)) {
+            if (!textureList.contains(quad.getSprite())) {
+                textureList.add(quad.getSprite());
+            }
         }
-        if(blockIn instanceof RotatedPillarBlock) {
-            locationList.set(0,loc(n, b+p));
-            locationList.add(loc(n, b+p+"_top"));
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.DOWN, rand, extraData)) {
+            if (!textureList.contains(quad.getSprite())) {
+                textureList.add(quad.getSprite());
+            }
         }
-        if(blockIn instanceof CraftingTableBlock) {
-            locationList.set(0,loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side"));
-            locationList.add(loc(m,b+p+"_front"));
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.NORTH, rand, extraData)) {
+            if (!textureList.contains(quad.getSprite())) {
+                textureList.add(quad.getSprite());
+            }
         }
-        System.out.println(locationList.toString());
-        location=locationList.get(0);
-        return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(location);
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.EAST, rand, extraData)) {
+            if (!textureList.contains(quad.getSprite())) {
+                textureList.add(quad.getSprite());
+            }
+        }
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.SOUTH, rand, extraData)) {
+            if (!textureList.contains(quad.getSprite())) {
+                textureList.add(quad.getSprite());
+            }
+        }
+        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.WEST, rand, extraData)) {
+            if (!textureList.contains(quad.getSprite())) {
+                textureList.add(quad.getSprite());
+            }
+        }
+        return textureList;
     }
 
     private static ResourceLocation loc(String nameSpace, String path) {
         return new ResourceLocation(nameSpace, path);
     }
-
-    /**
-     * creates ResourceLocations and gets TextureAtlasSprites for blocks with different textures on each side (e.g. grass block with dirt sides/bottom, grass overlay on sides and grass_top texture on top
-     * A typical ResourceLocation for textures looks like this: <namespace>:block/<registry blockname>, e.g. for oak planks: "minecraft:block/oak_planks"
-     * @param blockIn Block in frame, to get the texture from
-     * @return TextureAtlasSprite from Atlas with the texture of the given block (hopefully)
-     */
-    public static List<TextureAtlasSprite> getTextureListFromBlock(Block blockIn) {
-        List<ResourceLocation> locationList = new ArrayList<>();
-        String m = "minecraft";
-        String n = blockIn.getRegistryName().getNamespace();
-        String p = blockIn.getRegistryName().getPath();
-        String b = "block/";
-        locationList.add(loc(n,b+p));
-        if(blockIn instanceof GrassBlock) {
-            locationList.set(0,loc(m,b+"dirt"));
-            locationList.add(loc(m,b+"grass_block_top"));
-        }
-        if(blockIn instanceof RotatedPillarBlock) {
-            locationList.set(0,loc(n, b+p));
-            locationList.add(loc(n, b+p+"_top"));
-        }
-        if(blockIn instanceof BarrelBlock) {
-            locationList.set(0,loc(n, b+p+"_side"));
-            locationList.add(loc(n, b+p+"_bottom"));
-            locationList.add(loc(n, b+p+"_top"));
-            locationList.add(loc(n, b+p+"_top_open"));
-        }
-        if(blockIn==Blocks.SANDSTONE) {
-            locationList.set(0,loc(n,b+p));
-            locationList.add(loc(n,b+"cut_sandstone"));
-            locationList.add(loc(n,b+"sandstone_top"));
-        }
-        if(blockIn==Blocks.SMOOTH_SANDSTONE) {
-            locationList.set(0,loc(n,b+"sandstone_top"));
-            locationList.add(loc(n,b+"cut_sandstone"));
-        }
-        if(blockIn==Blocks.CUT_SANDSTONE) {
-            locationList.set(0,loc(n,b+"sandstone_top"));
-        }
-        if(blockIn==Blocks.CHISELED_SANDSTONE) {
-            locationList.set(0,loc(n,b+"sandstone_top"));
-            locationList.add(loc(n,b+"chiseled_sandstone"));
-        }
-        if(blockIn==Blocks.CARVED_PUMPKIN) {
-            locationList.set(0,loc(n,b+p));
-            locationList.add(loc(n,b+"pumpkin_side"));
-            locationList.add(loc(n,b+"pumpkin_top"));
-        }
-        if(blockIn==Blocks.PUMPKIN || blockIn==Blocks.MELON) {
-            locationList.set(0,loc(n,b+p+"_side"));
-            locationList.add(loc(n,b+p+"_top"));
-        }
-        if(blockIn==Blocks.JACK_O_LANTERN) {
-            locationList.set(0,loc(n,b+"jack_o_lantern"));
-            locationList.add(loc(n,b+"pumpkin_side"));
-            locationList.add(loc(n,b+"pumpkin_top"));
-        }
-        if(blockIn==Blocks.MYCELIUM) {
-            locationList.set(0,loc(n,b+"dirt"));
-            locationList.add(loc(n,b+"mycelium_top"));
-        }
-        if(blockIn==Blocks.DRIED_KELP_BLOCK) {
-            locationList.set(0,loc(n,b+"dried_kelp_bottom"));
-            locationList.add(loc(n,b+"dried_kelp_side"));
-            locationList.add(loc(n,b+"dried_kelp_top"));
-        }
-        if(blockIn instanceof HayBlock) {
-            locationList.set(0,loc(n,b+p+"_side"));
-            //locationList.add(loc(n,b+p+"_top"));
-        }
-        if(blockIn==Blocks.CRAFTING_TABLE) {
-            locationList.set(0,loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side"));
-            locationList.add(loc(m,b+p+"_front"));
-        }
-        if(blockIn instanceof JukeboxBlock) {
-            locationList.set(0,loc(m,b+p+"_side"));
-            locationList.add(loc(m,b+p+"_top"));
-        }
-        if(blockIn instanceof FurnaceBlock) {
-            locationList.set(0,loc(m,b+p+"_front"));
-            locationList.add(loc(m,b+p+"_front_on"));
-            locationList.add(loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side"));
-        }
-        if(blockIn instanceof EnchantingTableBlock) {
-            locationList.set(0,loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_bottom"));
-            locationList.add(loc(m,b+p+"_side"));
-        }
-        if(blockIn instanceof EndPortalFrameBlock) {
-            locationList.set(0,loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side"));
-            locationList.add(loc(m,b+"end_stone"));
-        }
-        if(blockIn instanceof GrassPathBlock) {
-            locationList.set(0,loc(m,b+"dirt"));
-            locationList.add(loc(m,b+p+"_top"));
-        }
-        if(blockIn instanceof LoomBlock) {
-            locationList.set(0,loc(m,b+p+"_front"));
-            locationList.add(loc(m,b+p+"_bottom"));
-            locationList.add(loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side"));
-        }
-        if(blockIn instanceof SmokerBlock) {
-            locationList.set(0,loc(m,b+p+"_front"));
-            locationList.add(loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side"));
-            locationList.add(loc(m,b+p+"_bottom"));
-        }
-        if(blockIn instanceof BlastFurnaceBlock) {
-            locationList.set(0,loc(m,b+p+"_front"));
-            locationList.add(loc(m,b+p+"_front_on"));
-            locationList.add(loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side"));
-        }
-        if(blockIn instanceof CartographyTableBlock) {
-            locationList.set(0,loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side1"));
-            locationList.add(loc(m,b+p+"_side2"));
-            locationList.add(loc(m,b+p+"_side3"));
-        }
-        if(blockIn instanceof FletchingTableBlock) {
-            locationList.set(0,loc(m,b+p+"_front"));
-            locationList.add(loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side"));
-        }
-        if(blockIn instanceof SmithingTableBlock) {
-            locationList.set(0,loc(m,b+p+"_front"));
-            locationList.add(loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side"));
-            locationList.add(loc(m,b+p+"_bottom"));
-        }
-        if(blockIn==Blocks.BEEHIVE) {
-            locationList.set(0,loc(m,b+p+"_front"));
-            locationList.add(loc(m,b+p+"_front_honey"));
-            locationList.add(loc(m,b+p+"_side"));
-            locationList.add(loc(m,b+p+"_end"));
-        }
-        if(blockIn==Blocks.BEE_NEST) {
-            locationList.set(0,loc(m,b+p+"_front"));
-            locationList.add(loc(m,b+p+"_front_honey"));
-            locationList.add(loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side"));
-        }
-        if(blockIn instanceof DispenserBlock) {
-            locationList.set(0,loc(m,b+p+"_front"));
-            locationList.add(loc(m,b+p+"_front_vertical"));
-            locationList.add(loc(m,b+"furnace_top"));
-        }
-        if(blockIn==Blocks.PISTON) {
-            locationList.set(0,loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_inner"));
-            locationList.add(loc(m,b+p+"_bottom"));
-            locationList.add(loc(m,b+p+"_side"));
-        }
-        if(blockIn==Blocks.STICKY_PISTON) {
-            locationList.set(0,loc(m,b+"piston_top_sticky"));
-            locationList.add(loc(m,b+"piston_inner"));
-            locationList.add(loc(m,b+"piston_bottom"));
-            locationList.add(loc(m,b+"piston_side"));
-        }
-        if(blockIn instanceof TNTBlock) {
-            locationList.set(0,loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_bottom"));
-            locationList.add(loc(m,b+p+"_side"));
-        }
-        if(blockIn instanceof RedstoneLampBlock) {
-            locationList.set(0,loc(m,b+p));
-            locationList.add(loc(m,b+p+"_on"));
-        }
-        if(blockIn instanceof ObserverBlock) {
-            locationList.set(0,loc(m,b+p+"_front"));
-            locationList.add(loc(m,b+p+"_top"));
-            locationList.add(loc(m,b+p+"_side"));
-            locationList.add(loc(m,b+p+"_back"));
-            locationList.add(loc(m,b+p+"_back_on"));
-        }
-        return getTextureFromLocation(locationList);
-    }
-
-    /**
-     * Method needed to get the correct textures for a given block
-     * @param locationList list of ResourceLocations for the texture of the block
-     * @return list of TextureAtlasSprites
-     */
-    private static List<TextureAtlasSprite> getTextureFromLocation(List<ResourceLocation> locationList) {
-        List<TextureAtlasSprite> textureList = new ArrayList<>();
-        for(ResourceLocation location:locationList) {
-            textureList.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(location));
-        }
-        return textureList;
-    }
 }
+//========SOLI DEO GLORIA========//

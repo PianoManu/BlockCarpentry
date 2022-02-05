@@ -1,0 +1,11 @@
+{
+  "variants": {
+	"contains_block=false,facing=down": { "model": "blockcarpentry:block/illusion_slab_empty_bottom" },
+	"contains_block=false,facing=up": { "model": "blockcarpentry:block/illusion_slab_empty_top" },
+	"contains_block=false,facing=north": { "model": "blockcarpentry:block/illusion_slab_empty_side", "y": 180, "uvlock": true },
+    "contains_block=false,facing=east": { "model": "blockcarpentry:block/illusion_slab_empty_side", "y": 270, "uvlock": true },
+    "contains_block=false,facing=south": { "model": "blockcarpentry:block/illusion_slab_empty_side" },
+    "contains_block=false,facing=west": { "model": "blockcarpentry:block/illusion_slab_empty_side", "y": 90, "uvlock": true },
+	"contains_block=true": { "model": "blockcarpentry:block/illusion_slab" }
+  }
+}

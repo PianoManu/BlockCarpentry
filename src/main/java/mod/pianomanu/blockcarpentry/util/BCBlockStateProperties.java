@@ -1,12 +1,13 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 /**
  * Some properties needed for frame blocks
+ *
  * @author PianoManu
- * @version 1.0
+ * @version 1.2 06/05/21
  */
 public class BCBlockStateProperties {
     /**
@@ -15,15 +16,21 @@ public class BCBlockStateProperties {
     public static final BooleanProperty CONTAINS_BLOCK = BooleanProperty.create("contains_block");
 
     /**
-     * Whether a block emits light
-     *      0  : no light
-     *      ...
-     *      15 : full light
+     * Whether a frame block holds a second block, only needed for slabs and slopes
      */
-    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light_level",0,15);
+    public static final BooleanProperty CONTAINS_2ND_BLOCK = BooleanProperty.create("contains_2nd_block");
 
     /**
-     * For beds, currently unused (May be removed in the future and saved in the block-tile-entity)
+     * Whether a block emits light
+     * 0  : no light
+     * ...
+     * 15 : full light
      */
-    public static final IntegerProperty PILLOW_COLOR = IntegerProperty.create("pillow_color",0,15);
+    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light_level", 0, 15);
+
+    /**
+     * Whether a frame slab or slope block contains of two slabs or slopes
+     */
+    public static final BooleanProperty DOUBLE = BooleanProperty.create("double");
 }
+//========SOLI DEO GLORIA========//

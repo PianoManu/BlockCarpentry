@@ -1,0 +1,35 @@
+{
+  "parent": "blockcarpentry:general/root",
+  "display": {
+    "icon": {
+      "item": "blockcarpentry:frame_pressure_plate"
+    },
+    "title": {
+      "translate": "advancements.blockcarpentry.pressure_plate.title"
+    },
+    "description": {
+      "translate": "advancements.blockcarpentry.pressure_plate.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "frame_pressure_plate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_pressure_plate"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "frame_pressure_plate"
+    ]
+  ]
+}

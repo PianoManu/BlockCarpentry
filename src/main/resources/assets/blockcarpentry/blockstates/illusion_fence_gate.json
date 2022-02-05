@@ -1,0 +1,83 @@
+{
+  "variants": {
+    "facing=east,in_wall=false,open=false,contains_block=false": {
+      "uvlock": true,
+      "y": 270,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty"
+    },
+    "facing=east,in_wall=false,open=true,contains_block=false": {
+      "uvlock": true,
+      "y": 270,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty_open"
+    },
+    "facing=east,in_wall=true,open=false,contains_block=false": {
+      "uvlock": true,
+      "y": 270,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty_wall"
+    },
+    "facing=east,in_wall=true,open=true,contains_block=false": {
+      "uvlock": true,
+      "y": 270,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty_wall_open"
+    },
+    "facing=north,in_wall=false,open=false,contains_block=false": {
+      "uvlock": true,
+      "y": 180,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty"
+    },
+    "facing=north,in_wall=false,open=true,contains_block=false": {
+      "uvlock": true,
+      "y": 180,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty_open"
+    },
+    "facing=north,in_wall=true,open=false,contains_block=false": {
+      "uvlock": true,
+      "y": 180,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty_wall"
+    },
+    "facing=north,in_wall=true,open=true,contains_block=false": {
+      "uvlock": true,
+      "y": 180,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty_wall_open"
+    },
+    "facing=south,in_wall=false,open=false,contains_block=false": {
+      "uvlock": true,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty"
+    },
+    "facing=south,in_wall=false,open=true,contains_block=false": {
+      "uvlock": true,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty_open"
+    },
+    "facing=south,in_wall=true,open=false,contains_block=false": {
+      "uvlock": true,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty_wall"
+    },
+    "facing=south,in_wall=true,open=true,contains_block=false": {
+      "uvlock": true,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty_wall_open"
+    },
+    "facing=west,in_wall=false,open=false,contains_block=false": {
+      "uvlock": true,
+      "y": 90,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty"
+    },
+    "facing=west,in_wall=false,open=true,contains_block=false": {
+      "uvlock": true,
+      "y": 90,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty_open"
+    },
+    "facing=west,in_wall=true,open=false,contains_block=false": {
+      "uvlock": true,
+      "y": 90,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty_wall"
+    },
+    "facing=west,in_wall=true,open=true,contains_block=false": {
+      "uvlock": true,
+      "y": 90,
+      "model": "blockcarpentry:block/illusion_fence_gate_empty_wall_open"
+    },
+    "contains_block=true": {
+      "model": "blockcarpentry:block/illusion_fence_gate"
+    }
+  }
+}

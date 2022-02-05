@@ -1,0 +1,156 @@
+{
+  "parent": "blockcarpentry:general/root",
+  "display": {
+    "icon": {
+      "item": "blockcarpentry:frameblock"
+    },
+    "title": {
+      "translate": "advancements.blockcarpentry.all.title"
+    },
+    "description": {
+      "translate": "advancements.blockcarpentry.all.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "bed": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_bed"
+          }
+        ]
+      }
+    },
+    "button": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_button"
+          }
+        ]
+      }
+    },
+    "chest": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_chest"
+          }
+        ]
+      }
+    },
+    "door": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_door"
+          }
+        ]
+      }
+    },
+    "fence": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_fence"
+          }
+        ]
+      }
+    },
+    "fence_gate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_fence_gate"
+          }
+        ]
+      }
+    },
+    "ladder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_ladder"
+          }
+        ]
+      }
+    },
+    "pressure_plate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_pressure_plate"
+          }
+        ]
+      }
+    },
+    "slab": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_slab"
+          }
+        ]
+      }
+    },
+    "stairs": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_stairs"
+          }
+        ]
+      }
+    },
+    "trapdoor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_trapdoor"
+          }
+        ]
+      }
+    },
+    "wall": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "blockcarpentry:frame_wall"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "bed",
+      "button",
+      "chest",
+      "door",
+      "fence",
+      "fence_gate",
+      "ladder",
+      "pressure_plate",
+      "slab",
+      "stairs",
+      "trapdoor",
+      "wall"
+    ]
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "contains_block=true": { "model": "blockcarpentry:block/illusion_fence" },
+    "contains_block=false": { "model": "blockcarpentry:block/illusion_fence_empty" }
+  }
+}

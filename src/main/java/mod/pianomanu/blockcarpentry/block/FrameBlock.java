@@ -1,153 +1,323 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.GlassBlock;
-import net.minecraft.block.IceBlock;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.extensions.IForgeBlockState;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 
+/**
+ * Main class for frameblocks - all important block info can be found here
+ * This class is the most basic one for all frame blocks, so you can find most of the documentation here
+ *
+ * @author PianoManu
+ * @version 1.0 08/15/21
+ */
 @SuppressWarnings("deprecation")
-public class FrameBlock extends Block {
-    private boolean isTransparent = true;
+public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, SimpleWaterloggedBlock {
+    /**
+     * Block property (can be seed when pressing F3 in-game)
+     * This is needed, because we need to detect whether the blockstate has changed
+     */
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
-    public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
-    //public static final IntegerProperty TEXTURE = BCBlockStateProperties.TEXTURE;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public FrameBlock(Properties properties) {
-        super(properties.variableOpacity());
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0));//.with(TEXTURE,0));
+    private static final VoxelShape MIDDLE_STRIP_NORTH = Block.box(0.0, 8.0, 1.0, 16.0, 9.0, 2.0);
+    private static final VoxelShape MIDDLE_STRIP_EAST = Block.box(14.0, 8.0, 2.0, 15.0, 9.0, 14.0);
+    private static final VoxelShape MIDDLE_STRIP_SOUTH = Block.box(0.0, 8.0, 14.0, 16.0, 9.0, 15.0);
+    private static final VoxelShape MIDDLE_STRIP_WEST = Block.box(1.0, 8.0, 2.0, 2.0, 9.0, 14.0);
+    private static final VoxelShape TOP = Block.box(0.0, 15.0, 0.0, 16.0, 16.0, 16.0);
+    private static final VoxelShape DOWN = Block.box(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
+    private static final VoxelShape NW_PILLAR = Block.box(0.0, 1.0, 0.0, 2.0, 15.0, 2.0);
+    private static final VoxelShape SW_PILLAR = Block.box(0.0, 1.0, 14.0, 2.0, 15.0, 16.0);
+    private static final VoxelShape NE_PILLAR = Block.box(14.0, 1.0, 0.0, 16.0, 15.0, 2.0);
+    private static final VoxelShape SE_PILLAR = Block.box(14.0, 1.0, 14.0, 16.0, 15.0, 16.0);
+    private static final VoxelShape MID = Block.box(2.0, 1.0, 2.0, 14.0, 15.0, 14.0);
+    private static final VoxelShape CUBE = Shapes.or(MIDDLE_STRIP_EAST, MIDDLE_STRIP_SOUTH, MIDDLE_STRIP_WEST, MIDDLE_STRIP_NORTH, TOP, DOWN, NW_PILLAR, SW_PILLAR, NE_PILLAR, SE_PILLAR, MID);
+
+    /**
+     * classic constructor, all default values are set
+     *
+     * @param properties determined when registering the block (see {@link Registration}
+     */
+    public FrameBlock(BlockBehaviour.Properties properties) {
+        super(properties);
+        this.registerDefaultState(this.stateDefinition.any().setValue(CONTAINS_BLOCK, Boolean.FALSE).setValue(LIGHT_LEVEL, 0).setValue(WATERLOGGED, false));//.setValue(TEXTURE,0));
     }
 
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK).add(LIGHT_LEVEL);//.add(TEXTURE);
+    /**
+     * Assign needed blockstates to frame block - we need "contains_block" and "light_level", both because we have to check for blockstate changes
+     */
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
+    /**
+     * Yep, it's a complex block structure, so we need a tile entity
+     *
+     * @param state regardless of its state, it always has a BlockEntity
+     * @return regardless of its state, it always has a BlockEntity -> returns true every time
+     */
+    /*@Override
+    public boolean hasBlockEntity(BlockState state) {
         return true;
-    }
+    }*/
 
+    /**
+     * When placed, this method is called and a new FrameBlockTile is created
+     * This is needed to store a block inside the frame, change its light value etc.
+     *
+     * @param pos   regardless of the position, we always create the BlockEntity
+     * @param state regardless of its state, we always create the BlockEntity
+     * @return the new empty FrameBlock-BlockEntity
+     */
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FrameBlockTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new FrameBlockTile(pos, state);
     }
 
+    /**
+     * Is called, whenever the block is right-clicked:
+     * First it is checked, whether the world is remote (this has to be done client-side only).
+     * Afterwards, we check, whether the held item is some sort of block item (e.g. logs, but not torches)
+     * If that's the case, we ask for the tile entity of the frame and if the frame is empty, we fill it with the held block and remove the item from the player's inventory
+     * If the frame is not empty and the player holds the hammer, the contained block is dropped into the world
+     *
+     * @param state     state of the block that is clicked
+     * @param level     world the block is placed in
+     * @param pos       position (x,y,z) of block
+     * @param player    entity of the player that includes all important information (health, armor, inventory,
+     * @param hand      which hand is used (e.g. you have a sword in your main hand and an axe in your off-hand and right click a log -> you use the off-hand, not the main hand)
+     * @param hitresult to determine which part of the block is clicked (upper half, lower half, right side, left side, corners...)
+     * @return see {@link InteractionResult}
+     */
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        ItemStack item = player.getHeldItem(hand);
-        if (!world.isRemote) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
+        ItemStack item = player.getItemInHand(hand);
+        if (!level.isClientSide) {
+            BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand);
+            BlockAppearanceHelper.setTexture(item, state, level, player, pos);
+            BlockAppearanceHelper.setDesign(level, pos, player, item);
+            BlockAppearanceHelper.setDesignTexture(level, pos, player, item);
+            BlockAppearanceHelper.setOverlay(level, pos, player, item);
+            BlockAppearanceHelper.setRotation(level, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
-                TileEntity tileEntity = world.getTileEntity(pos);
-                int count = player.getHeldItem(hand).getCount();
+                if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                    return InteractionResult.PASS;
+                }
+                BlockEntity tileEntity = level.getBlockEntity(pos);
+                int count = player.getItemInHand(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                //TODO fix for non-solid blocks
-                //heldBlock.getShape(heldBlock.getDefaultState(),world,pos, ISelectionContext.dummy());
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
-                    ((FrameBlockTile) tileEntity).clear();
-                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                    ((FrameBlockTile) tileEntity).setMimic(handBlockState);
-                    insertBlock(world, pos, state, handBlockState);
-                    player.getHeldItem(hand).setCount(count - 1);
-                }
-                if (heldBlock instanceof GlassBlock || heldBlock instanceof IceBlock) {
+                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
+                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
+                    insertBlock(level, pos, state, handBlockState);
+                    if (!player.isCreative())
+                        player.getItemInHand(hand).setCount(count - 1);
                     //TODO
-                    this.isTransparent = true;
-                } else {
-                    //TODO
-                    //this.isTransparent = false;
+                    //checkForVisibility(state, level, pos, (FrameBlockTile) tileEntity);
                 }
-
             }
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
-                this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos, state, 2);
+            //hammer is needed to remove the block from the frame - you can change it in the config
+            if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
+                if (!player.isCreative())
+                    this.dropContainedBlock(level, pos);
+                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
+                level.setBlock(pos, state, 2);
             }
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world,pos,player,item);
-            BlockAppearanceHelper.setDesignTexture(world,pos,player,item);
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    protected void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isRemote) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+    /**
+     * Used to drop the contained block
+     * We check the tile entity, get the block from the tile entity and drop it at the block pos plus some small random coords in the level
+     *
+     * @param levelIn the level where we drop the block
+     * @param pos     the block position where we drop the block
+     */
+    protected void dropContainedBlock(Level levelIn, BlockPos pos) {
+        if (!levelIn.isClientSide) {
+            BlockEntity tileentity = levelIn.getBlockEntity(pos);
             if (tileentity instanceof FrameBlockTile) {
-                FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
-                BlockState blockState = frameTileEntity.getMimic();
+                FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
+                BlockState blockState = frameBlockEntity.getMimic();
                 if (!(blockState == null)) {
-                    worldIn.playEvent(1010, pos, 0);
-                    frameTileEntity.clear();
+                    levelIn.levelEvent(1010, pos, 0);
+                    frameBlockEntity.clear();
                     float f = 0.7F;
-                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    ItemStack itemstack1 = blockState.getBlock().asItem().getDefaultInstance();
-                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
-                    frameTileEntity.clear();
+                    double d0 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d1 = (levelIn.random.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d2 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
+                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
+                    ItemEntity itementity = new ItemEntity(levelIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
+                    itementity.setDefaultPickUpDelay();
+                    levelIn.addFreshEntity(itementity);
+                    frameBlockEntity.clear();
                 }
             }
         }
     }
 
-    public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+    /**
+     * Used to place a block in a frame. Therefor we need the tile entity of the block and set its mimic to the given block state.
+     * Lastly, we update the block state (useful for observers or something, idk)
+     *
+     * @param levelIn   the level where we drop the block
+     * @param pos       the block position where we drop the block
+     * @param state     the old block state
+     * @param handBlock the block state of the held block - the block we want to insert into the frame
+     */
+    public void insertBlock(Level levelIn, BlockPos pos, BlockState state, BlockState handBlock) {
+        BlockEntity tileentity = levelIn.getBlockEntity(pos);
         if (tileentity instanceof FrameBlockTile) {
-            FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
-            frameTileEntity.clear();
-            frameTileEntity.setMimic(handBlock);
-            worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
+            FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
+            frameBlockEntity.clear();
+            frameBlockEntity.setMimic(handBlock);
+            levelIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
         }
     }
 
-    //TODO add everywhere AND FIX!!! - is it fixed?? -> testing!
-
+    /**
+     * This method is called, whenever the state of the block changes (e.g. the block is harvested)
+     *
+     * @param state    old blockstate
+     * @param levelIn  level of the block
+     * @param pos      block position
+     * @param newState new blockstate
+     * @param isMoving whether the block has some sort of motion (should never be moving - false)
+     */
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level levelIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            dropContainedBlock(worldIn, pos);
+            dropContainedBlock(levelIn, pos);
 
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onRemove(state, levelIn, pos, newState, isMoving);
+        }
+        if (state.getValue(WATERLOGGED)) {
+            levelIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
         }
     }
 
-    public int getLightValue(BlockState state) {
-        if (state.get(LIGHT_LEVEL) > 15) {
+    //unused
+    public int setLightValue(BlockState state, int amount) {
+        if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }
-        return state.get(LIGHT_LEVEL);
+        return state.getValue(LIGHT_LEVEL);
     }
 
+    //unused //TODO might cause OptiFine issues
     public boolean isTransparent(BlockState state) {
         //return this.isTransparent;
         return true;
     }
+
+    /**
+     * This method returns the light value of the block, i.e. the emitted light level
+     *
+     * @param state state of the block
+     * @param level level the block is in
+     * @param pos   block position
+     * @return new amount of light that is emitted by the block
+     */
+    @Override
+    public int getLightEmission(BlockState state, Level level, BlockPos pos) {
+        if (state.getValue(LIGHT_LEVEL) > 15) {
+            return 15;
+        }
+        return state.getValue(LIGHT_LEVEL);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockPos blockpos = context.getClickedPos();
+        FluidState fluidstate = context.getLevel().getFluidState(blockpos);
+        if (fluidstate.getType() == Fluids.WATER) {
+            return this.defaultBlockState().setValue(WATERLOGGED, fluidstate.isSource());
+        } else {
+            return this.defaultBlockState();
+        }
+    }
+
+    @Override
+    public VoxelShape getVisualShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
+        if (!state.getValue(CONTAINS_BLOCK)) {
+            return CUBE;
+        }
+        return Shapes.block();
+    }
+
+    @Override
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor levelIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.getValue(WATERLOGGED)) {
+            levelIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
+        }
+
+        return super.updateShape(stateIn, facing, facingState, levelIn, currentPos, facingPos);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
+        if (!state.getValue(CONTAINS_BLOCK)) {
+            return CUBE;
+        }
+        return Shapes.block();
+    }
+
+    //TODO
+    /*@OnlyIn(Dist.CLIENT)
+    public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
+        return adjacentBlockState.is(this) || super.isSideInvisible(state, adjacentBlockState, side);// || BlockCullingHelper.skipSideRendering(adjacentBlockState);
+    }
+
+    private void checkForVisibility(BlockState state, Level level, BlockPos pos, FrameBlockTile tileEntity) {
+        for (Direction d : Direction.values()) {
+            BlockPos.MutableBlockPos mutablePos = pos.mutable();
+            BlockState adjacentBlockState = level.getBlockState(mutablePos.move(d));
+            tileEntity.setVisibileSides(d, !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
+            System.out.println(d + " " + !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
+        }
+    }*/
 }
+//========SOLI DEO GLORIA========//

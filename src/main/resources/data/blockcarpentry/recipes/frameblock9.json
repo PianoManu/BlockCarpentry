@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "blockcarpentry:frame_wall",
+	  "count": 1
+    }
+  ],
+  "result": {
+    "item": "blockcarpentry:frameblock",
+    "count": 1
+  }
+}

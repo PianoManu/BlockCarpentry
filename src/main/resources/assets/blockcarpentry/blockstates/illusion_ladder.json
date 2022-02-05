@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "contains_block=false,facing=north": { "model": "blockcarpentry:block/illusion_ladder_empty", "y": 180 },
+    "contains_block=false,facing=east": { "model": "blockcarpentry:block/illusion_ladder_empty", "y": 270 },
+    "contains_block=false,facing=south": { "model": "blockcarpentry:block/illusion_ladder_empty" },
+    "contains_block=false,facing=west": { "model": "blockcarpentry:block/illusion_ladder_empty", "y": 90 },
+    "contains_block=true": { "model": "blockcarpentry:block/illusion_ladder" }
+  }
+}

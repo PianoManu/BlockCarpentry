@@ -6,55 +6,63 @@
 # The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
 modLoader="javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
-loaderVersion="[30,)" #mandatory (28 is current forge version)
+loaderVersion="[37,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+# The license for you mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
+# Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
+license="All rights reserved"
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/PianoManu/BlockCarpentry/issues" #optional
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
-modId="blockcarpentry" #mandatory
+modId = "blockcarpentry" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-version="${version}" #mandatory
- # A display name for the mod
-displayName="BlockCarpentry" #mandatory
-# A URL to query for updates for this mod. See the JSON update specification <here>
-#updateJSONURL="" #optional
+# ${file.jarVersion} will substitute the value of the Implementation-Version as read from the mod's JAR file metadata
+# see the associated build.gradle script for how to populate this completely automatically during a build
+version = "${file.jarVersion}" #mandatory
+# A display name for the mod
+displayName = "BlockCarpentry" #mandatory
+# A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
+#updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="No webpage, but you can look at my code in my github repository at https://github.com/PianoManu/BlockCarpentry" #optional
+displayURL = "No webpage, but you can look at my code in my github repository at https://github.com/PianoManu/BlockCarpentry" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="bc_logo.png" #optional
+logoFile = "bc_logo.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for many help goes to McJty and the Forge Forum Team" #optional
+credits = "Thanks for many help goes to McJty and the Forge Forum Team" #optional
 # A text field displayed in the mod UI
-authors="PianoManu" #optional
+authors = "PianoManu" #optional
 # The description text for the mod (multi line!) (#mandatory)
-description='''
+description = '''
 Fork Mod of Carpenter's Blocks Mod created by Mineshopper (owner of the idea) for older versions of Minecraft.
 I created this fork because friends of mine would like to play this mod on 1.15 (and me too).
 
-Right now there is no guide for this mod, so here is one in small form (ONLY WORKS WITH SOLID BLOCKS BY NOW):
+Right now there is no guide for this mod, so here is one in small form:
 - Rightclick on a frame block to give it the texture of the block you clicked it with
-- Shift-Rightclick with an empty hand, to get the block back out of the frame
-- (Not yet implemented) for blocks with different textures on each side, you later will be able to select the texture you want
+- Right-Click with the hammer to get the block back out of the frame (you can change this feature in the config file, so that you only need an empty hand and Sneak-Rightclick)
+- For blocks with different textures on each side, you can select the texture you want using the texture wrench
+- Let the blocks glow by right-clicking them with glowstone dust or coal/charcoal
+- You can also change the appearance of a block by right-clicking it with the chisel and the paintbrush
 
 Have fun!
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.examplemod]] #optional
+[[dependencies.blockcarpentry]] #optional
     # the modid of the dependency
     modId="forge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[30,)" #mandatory
+    versionRange="[37,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 # Here's another dependency
-[[dependencies.examplemod]]
+[[dependencies.blockcarpentry]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.1]"
+# This version range declares a minimum of the current minecraft version up to but not including the next major version
+    versionRange="[1.17.1,1.18)"
     ordering="NONE"
     side="BOTH"
