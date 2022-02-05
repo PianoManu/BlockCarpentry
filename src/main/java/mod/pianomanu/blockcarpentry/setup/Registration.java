@@ -48,7 +48,8 @@ public class Registration {
 
     public static final RegistryObject<FrameBlock> FRAMEBLOCK = BLOCKS.register("frameblock", () -> new FrameBlock(Block.Properties.of(Material.WOOD)
             .sound(SoundType.WOOD)
-            .strength(0.4f)));
+            .strength(0.4f)
+            .noOcclusion()));
     public static final RegistryObject<Item> FRAMEBLOCK_ITEM = ITEMS.register("frameblock", () -> new BlockItem(FRAMEBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> FRAMEBLOCK_TILE = TILES.register("frameblock", () -> BlockEntityType.Builder.of(FrameBlockTile::new, FRAMEBLOCK.get()).build(null));
 
