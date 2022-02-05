@@ -45,7 +45,6 @@ public class FrameBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        System.out.println("Getting Quads");
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         Integer design = extraData.getData(FrameBlockTile.DESIGN);
         Integer desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE);
