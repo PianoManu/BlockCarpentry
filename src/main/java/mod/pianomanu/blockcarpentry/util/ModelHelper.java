@@ -243,7 +243,7 @@ public class ModelHelper {
         if (east)
             quads.add(createQuad(SEU, SED, NED, NEU, texture, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         if (north)
-            quads.add(createQuad(NEU, NED, NWD, NWU, texture, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            quads.add(createQuad(NEU, NED, NWD, NWU, texture, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         if (south)
             quads.add(createQuad(SWU, SWD, SED, SEU, texture, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
         return quads;

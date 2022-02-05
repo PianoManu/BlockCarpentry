@@ -102,23 +102,23 @@ public class StairsBakedModel implements IDynamicBakedModel {
                 case STRAIGHT:
                     switch (state.getValue(StairBlock.FACING)) {
                         case NORTH:
-                            quads.addAll(ModelHelper.createCuboid(0f, 1f, yl, yh, 0f, 0.5f, texture, tintIndex, true, true, false, true, cullUpDown, !cullUpDown));
-                            quads.addAll(ModelHelper.createCuboid(0f, 1f, yl, yh, 0.5f, 1f, texture, tintIndex, true, true, true, false, true, true));
+                            quads.addAll(ModelHelper.createCuboid(0f, 1f, yl, yh, 0f, 0.5f, texture, tintIndex, true, false, true, true, cullUpDown, !cullUpDown));
+                            quads.addAll(ModelHelper.createCuboid(0f, 1f, yl, yh, 0.5f, 1f, texture, tintIndex, false, true, true, true, true, true));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 1 - yh, 1 - yl, 0f, 0.5f, texture, tintIndex, true, true, true, true, !cullUpDown, cullUpDown));
                             break;
                         case SOUTH:
-                            quads.addAll(ModelHelper.createCuboid(0f, 1f, yl, yh, 0f, 0.5f, texture, tintIndex, true, true, false, true, true, true));
-                            quads.addAll(ModelHelper.createCuboid(0f, 1f, yl, yh, 0.5f, 1f, texture, tintIndex, true, true, true, false, cullUpDown, !cullUpDown));
+                            quads.addAll(ModelHelper.createCuboid(0f, 1f, yl, yh, 0f, 0.5f, texture, tintIndex, true, false, true, true, true, true));
+                            quads.addAll(ModelHelper.createCuboid(0f, 1f, yl, yh, 0.5f, 1f, texture, tintIndex, false, true, true, true, cullUpDown, !cullUpDown));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 1 - yh, 1 - yl, 0.5f, 1f, texture, tintIndex, true, true, true, true, !cullUpDown, cullUpDown));
                             break;
                         case WEST:
-                            quads.addAll(ModelHelper.createCuboid(0f, 0.5f, yl, yh, 0f, 1f, texture, tintIndex, true, false, true, true, cullUpDown, !cullUpDown));
-                            quads.addAll(ModelHelper.createCuboid(0.5f, 1f, yl, yh, 0f, 1f, texture, tintIndex, false, true, true, true, true, true));
+                            quads.addAll(ModelHelper.createCuboid(0f, 0.5f, yl, yh, 0f, 1f, texture, tintIndex, true, true, false, true, cullUpDown, !cullUpDown));
+                            quads.addAll(ModelHelper.createCuboid(0.5f, 1f, yl, yh, 0f, 1f, texture, tintIndex, true, true, true, false, true, true));
                             quads.addAll(ModelHelper.createCuboid(0f, 0.5f, 1 - yh, 1 - yl, 0f, 1f, texture, tintIndex, true, true, true, true, !cullUpDown, cullUpDown));
                             break;
                         case EAST:
-                            quads.addAll(ModelHelper.createCuboid(0f, 0.5f, yl, yh, 0f, 1f, texture, tintIndex, true, false, true, true, true, true));
-                            quads.addAll(ModelHelper.createCuboid(0.5f, 1f, yl, yh, 0f, 1f, texture, tintIndex, false, true, true, true, cullUpDown, !cullUpDown));
+                            quads.addAll(ModelHelper.createCuboid(0f, 0.5f, yl, yh, 0f, 1f, texture, tintIndex, true, true, false, true, true, true));
+                            quads.addAll(ModelHelper.createCuboid(0.5f, 1f, yl, yh, 0f, 1f, texture, tintIndex, true, true, true, false, cullUpDown, !cullUpDown));
                             quads.addAll(ModelHelper.createCuboid(0.5f, 1f, 1 - yh, 1 - yl, 0f, 1f, texture, tintIndex, true, true, true, true, !cullUpDown, cullUpDown));
                             break;
                     }
@@ -224,9 +224,9 @@ public class StairsBakedModel implements IDynamicBakedModel {
                         case NORTH:
                             //bottom part
                             quads.addAll(ModelHelper.createCuboid(0f, 0.5f, yl, yh, 0f, 0.5f, texture, tintIndex, true, false, false, true, cullUpDown, !cullUpDown));
-                            quads.addAll(ModelHelper.createCuboid(0f, 0.5f, yl, yh, 0.5f, 1f, texture, tintIndex, true, false, true, false, true, true));
+                            quads.addAll(ModelHelper.createCuboid(0f, 0.5f, yl, yh, 0.5f, 1f, texture, tintIndex, false, true, false, true, true, true));
                             quads.addAll(ModelHelper.createCuboid(0.5f, 1f, yl, yh, 0.5f, 1f, texture, tintIndex, false, true, true, false, true, true));
-                            quads.addAll(ModelHelper.createCuboid(0.5f, 1f, yl, yh, 0f, 0.5f, texture, tintIndex, false, true, false, true, true, true));
+                            quads.addAll(ModelHelper.createCuboid(0.5f, 1f, yl, yh, 0f, 0.5f, texture, tintIndex, true, false, true, false, true, true));
                             //upper part
                             quads.addAll(ModelHelper.createCuboid(0f, 0.5f, 1 - yh, 1 - yl, 0f, 0.5f, texture, tintIndex, true, true, true, true, !cullUpDown, cullUpDown));
                             break;
