@@ -48,7 +48,7 @@ import static mod.pianomanu.blockcarpentry.block.FrameBlock.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 08/15/21
+ * @version 1.1 02/05/22
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements SimpleWaterloggedBlock, EntityBlock {
@@ -95,18 +95,18 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
         BlockPos blockpos = context.getClickedPos();
         FluidState fluidstate = context.getLevel().getFluidState(blockpos);
         BlockState blockState = context.getLevel().getBlockState(blockpos);
-        if (blockState.getBlock() instanceof SixWaySlabFrameBlock) {
-            return blockState.setValue(DOUBLE_SLAB, true);
+        if (blockState.is(this)) {
+            return blockState.setValue(DOUBLE_SLAB, true).setValue(WATERLOGGED, false);
         }
         if (Objects.requireNonNull(context.getPlayer()).isCrouching() && BCModConfig.SNEAK_FOR_VERTICAL_SLABS.get() || !Objects.requireNonNull(context.getPlayer()).isCrouching() && !BCModConfig.SNEAK_FOR_VERTICAL_SLABS.get()) {
             if (fluidstate.getType() == Fluids.WATER) {
-                return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection()).setValue(WATERLOGGED, fluidstate.isSource());
+                return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite()).setValue(WATERLOGGED, fluidstate.isSource());
             } else {
-                return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection());
+                return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
             }
         } else {
             BlockState blockstate1 = this.defaultBlockState().setValue(FACING, Direction.UP).setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
-            Direction direction = context.getNearestLookingDirection();
+            Direction direction = context.getClickedFace();
             return direction != Direction.DOWN && (direction == Direction.UP || !(context.getClickLocation().y - (double) blockpos.getY() > 0.5D)) ? blockstate1 : blockstate1.setValue(FACING, Direction.DOWN);
         }
     }
@@ -116,26 +116,21 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
         return getShape(state, getter, pos, context);
     }
 
-    public boolean isReplaceable(BlockState state, BlockPlaceContext useContext) {
+    @Override
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
         ItemStack itemstack = useContext.getItemInHand();
-        boolean isDouble = state.getValue(DOUBLE_SLAB);
-        if (!isDouble && itemstack.getItem() == this.asItem()) {
+        boolean slabType = state.getValue(DOUBLE_SLAB);
+        if (!slabType && itemstack.is(this.asItem())) {
             if (useContext.replacingClickedOnBlock()) {
-                Direction direction = useContext.getNearestLookingDirection();
-                switch (state.getValue(FACING)) {
-                    case EAST:
-                        return direction == Direction.EAST;
-                    case SOUTH:
-                        return direction == Direction.SOUTH;
-                    case WEST:
-                        return direction == Direction.WEST;
-                    case NORTH:
-                        return direction == Direction.NORTH;
-                    case UP:
-                        return direction == Direction.UP;
-                    default:
-                        return direction == Direction.DOWN;
-                }
+                Direction direction = useContext.getClickedFace();
+                return switch (state.getValue(FACING)) {
+                    case EAST -> direction == Direction.EAST;
+                    case SOUTH -> direction == Direction.SOUTH;
+                    case WEST -> direction == Direction.WEST;
+                    case NORTH -> direction == Direction.NORTH;
+                    case UP -> direction == Direction.UP;
+                    default -> direction == Direction.DOWN;
+                };
             } else {
                 return true;
             }
@@ -143,11 +138,6 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
             return false;
         }
     }
-
-    /*@Override
-    public boolean hasBlockEntity(BlockState state) {
-        return true;
-    }*/
 
     @Nullable
     @Override
