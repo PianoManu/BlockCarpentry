@@ -23,5 +23,13 @@ run
 
 # Files from Forge MDK
 forge*changelog.txt
+<<<<<<< HEAD
 /build.gradle
 /local things/
+=======
+<<<<<<< HEAD
+/build.gradle
+/local things/
+=======
+>>>>>>> 243d4f3 (Started porting the mod to 1.17)
+>>>>>>> 3d9c0b1 (Started porting the mod to 1.17)
