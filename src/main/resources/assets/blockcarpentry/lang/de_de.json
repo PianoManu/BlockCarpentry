@@ -13,9 +13,11 @@
   "block.blockcarpentry.frame_ladder": "Leiterrahmen",
   "block.blockcarpentry.frame_chest": "Truhenrahmen",
   "block.blockcarpentry.frame_fence_gate": "Zauntorrahmen",
+  "block.blockcarpentry.frame_carpet": "Teppichrahmen",
+  "block.blockcarpentry.frame_pane": "Scheibenrahmen",
+  "block.blockcarpentry.frame_daylight_detector": "Tageslichtsensorrahmen",
   "block.blockcarpentry.frame_slope": "Rahmenschräge (WIP)",
   "block.blockcarpentry.frame_edged_slope": "Eckige Rahmenschräge (WIP)",
-
   "block.blockcarpentry.illusion_block": "Illusionsblock",
   "block.blockcarpentry.illusion_slab": "Illusionsstufe",
   "block.blockcarpentry.illusion_button": "Illusionsknopf",
@@ -29,14 +31,14 @@
   "block.blockcarpentry.illusion_ladder": "Illusionsleiter",
   "block.blockcarpentry.illusion_chest": "Illusionstruhe",
   "block.blockcarpentry.illusion_fence_gate": "Illusionszauntor",
-
+  "block.blockcarpentry.illusion_carpet": "Illusionsteppich",
+  "block.blockcarpentry.illusion_pane": "Illusionsscheibe",
+  "block.blockcarpentry.illusion_daylight_detector": "Illusionstageslichtsensor",
   "container.frame_chest": "Truhe",
-
   "item.blockcarpentry.hammer": "Hammer",
   "item.blockcarpentry.texture_wrench": "Texturwerkzeug",
   "item.blockcarpentry.chisel": "Meißel",
   "item.blockcarpentry.paintbrush": "Pinsel",
-
   "message.blockcarpentry.light_level": "Beleuchtungsstufe: %s",
   "message.blockcarpentry.texture": "Textur: %s",
   "message.blockcarpentry.design": "Design: %s",

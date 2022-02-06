@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#O#",
+    "O0O",
+    "#O#"
+  ],
+  "key": {
+    "#": {
+      "item": "blockcarpentry:frame_carpet"
+    },
+    "0": {
+      "item": "minecraft:egg"
+    },
+    "O": {
+      "item": "minecraft:slime_ball"
+    }
+  },
+  "result": {
+    "item": "blockcarpentry:illusion_carpet",
+    "count": 4
+  }
+}

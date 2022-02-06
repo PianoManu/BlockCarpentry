@@ -13,9 +13,11 @@
 	"block.blockcarpentry.frame_ladder": "Frame Ladder",
 	"block.blockcarpentry.frame_chest": "Frame Chest",
 	"block.blockcarpentry.frame_fence_gate": "Frame Fence Gate",
+	"block.blockcarpentry.frame_carpet": "Frame Carpet",
+	"block.blockcarpentry.frame_pane": "Frame Pane",
+	"block.blockcarpentry.frame_daylight_detector": "Frame Daylight Detector",
 	"block.blockcarpentry.frame_slope": "Châssis de rampe (WIP)",
 	"block.blockcarpentry.frame_edged_slope": "Châssis de rampe (WIP)",
-
 	"block.blockcarpentry.illusion_block": "Bloc illusion",
 	"block.blockcarpentry.illusion_slab": "Dalle illusion",
 	"block.blockcarpentry.illusion_button": "Bouton illusion",
@@ -29,14 +31,14 @@
 	"block.blockcarpentry.illusion_ladder": "Illusion Ladder",
 	"block.blockcarpentry.illusion_chest": "Illusion Chest",
 	"block.blockcarpentry.illusion_fence_gate": "Illusion Fence Gate",
-
+	"block.blockcarpentry.illusion_carpet": "Illusion Carpet",
+	"block.blockcarpentry.illusion_pane": "Illusion Pane",
+	"block.blockcarpentry.illusion_daylight_detector": "Illusion Daylight Detector",
 	"container.frame_chest": "Frame Chest",
-
 	"item.blockcarpentry.hammer": "Marteau",
 	"item.blockcarpentry.texture_wrench": "Clé à texture",
 	"item.blockcarpentry.chisel": "Ciseau",
 	"item.blockcarpentry.paintbrush": "Pinceau",
-
 	"message.blockcarpentry.light_level": "Light Level: %s",
 	"message.blockcarpentry.texture": "Texture: %s",
 	"message.blockcarpentry.design": "Design: %s",

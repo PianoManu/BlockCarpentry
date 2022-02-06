@@ -13,9 +13,11 @@
 	"block.blockcarpentry.frame_ladder": "Marco de escalera",
 	"block.blockcarpentry.frame_chest": "Marco de cofre",
 	"block.blockcarpentry.frame_fence_gate": "Marco de puerta de valla",
+	"block.blockcarpentry.frame_carpet": "Frame Carpet",
+	"block.blockcarpentry.frame_pane": "Frame Pane",
+	"block.blockcarpentry.frame_daylight_detector": "Frame Daylight Detector",
 	"block.blockcarpentry.frame_slope": "Marco de pendiente (WIP)",
 	"block.blockcarpentry.frame_edged_slope": "Marco de pendiente escalonada (WIP)",
-
 	"block.blockcarpentry.illusion_block": "Bloque de ilusión",
 	"block.blockcarpentry.illusion_slab": "Baldosa de ilusión",
 	"block.blockcarpentry.illusion_button": "Botón de ilusión",
@@ -29,14 +31,14 @@
 	"block.blockcarpentry.illusion_ladder": "Escalera de ilusión",
 	"block.blockcarpentry.illusion_chest": "Cofre de ilusión",
 	"block.blockcarpentry.illusion_fence_gate": "Puerta de valla de ilusión",
-
+	"block.blockcarpentry.illusion_carpet": "Illusion Carpet",
+	"block.blockcarpentry.illusion_pane": "Illusion Pane",
+	"block.blockcarpentry.illusion_daylight_detector": "Illusion Daylight Detector",
 	"container.frame_chest": "Marco de cofre",
-
 	"item.blockcarpentry.hammer": "Martillo",
 	"item.blockcarpentry.texture_wrench": "Llave de textura",
 	"item.blockcarpentry.chisel": "Cincel",
 	"item.blockcarpentry.paintbrush": "Rodillo",
-
 	"message.blockcarpentry.light_level": "Light Level: %s",
 	"message.blockcarpentry.texture": "Texture: %s",
 	"message.blockcarpentry.design": "Design: %s",

@@ -4,10 +4,7 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.*;
 import mod.pianomanu.blockcarpentry.container.ChestFrameContainer;
 import mod.pianomanu.blockcarpentry.container.IllusionChestContainer;
-import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
-import mod.pianomanu.blockcarpentry.tileentity.ChestFrameBlockEntity;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.*;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -31,7 +28,7 @@ import org.apache.logging.log4j.Logger;
  * Just a normal registering class. See Forge-Documentation on how to register objects
  *
  * @author PianoManu
- * @version 1.1 02/05/22
+ * @version 1.2 02/06/22
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("all") //only warning: datafixer for build()-method is null, but method is annotated as "NotNull"
@@ -115,6 +112,19 @@ public class Registration {
     public static final RegistryObject<Item> FENCE_GATE_FRAME_ITEM = ITEMS.register("frame_fence_gate", () -> new BlockItem(FENCE_GATE_FRAMEBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> FENCE_GATE_FRAME_TILE = TILES.register("frame_fence_gate", () -> BlockEntityType.Builder.of(FrameBlockTile::new, FENCE_GATE_FRAMEBLOCK.get()).build(null));
 
+    public static final RegistryObject<CarpetFrameBlock> CARPET_FRAMEBLOCK = BLOCKS.register("frame_carpet", () -> new CarpetFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> CARPET_FRAME_ITEM = ITEMS.register("frame_carpet", () -> new BlockItem(CARPET_FRAMEBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<BlockEntityType<FrameBlockTile>> CARPET_FRAME_TILE = TILES.register("frame_carpet", () -> BlockEntityType.Builder.of(FrameBlockTile::new, CARPET_FRAMEBLOCK.get()).build(null));
+
+    public static final RegistryObject<PaneFrameBlock> PANE_FRAMEBLOCK = BLOCKS.register("frame_pane", () -> new PaneFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> PANE_FRAME_ITEM = ITEMS.register("frame_pane", () -> new BlockItem(PANE_FRAMEBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<BlockEntityType<FrameBlockTile>> PANE_FRAME_TILE = TILES.register("frame_pane", () -> BlockEntityType.Builder.of(FrameBlockTile::new, PANE_FRAMEBLOCK.get()).build(null));
+
+    public static final RegistryObject<DaylightDetectorFrameBlock> DAYLIGHT_DETECTOR_FRAMEBLOCK = BLOCKS.register("frame_daylight_detector", () -> new DaylightDetectorFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> DAYLIGHT_DETECTOR_FRAME_ITEM = ITEMS.register("frame_daylight_detector", () -> new BlockItem(DAYLIGHT_DETECTOR_FRAMEBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<CarpetFrameBlock> CARPET_ILLUSIONBLOCK = BLOCKS.register("illusion_carpet", () -> new CarpetFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<BlockEntityType<DaylightDetectorFrameTileEntity>> DAYLIGHT_DETECTOR_FRAME_TILE = TILES.register("frame_daylight_detector", () -> BlockEntityType.Builder.of(DaylightDetectorFrameTileEntity::new, DAYLIGHT_DETECTOR_FRAMEBLOCK.get()).build(null));
+
     //disabled signs - TODO fix signs
     //public static final RegistryObject<StandingSignFrameBlock> STANDING_SIGN_FRAMEBLOCK = BLOCKS.register("standing_frame_sign", () -> new StandingSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
     //public static final RegistryObject<WallSignFrameBlock> WALL_SIGN_FRAMEBLOCK = BLOCKS.register("wall_frame_sign", () -> new WallSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
@@ -176,6 +186,15 @@ public class Registration {
     public static final RegistryObject<FenceGateFrameBlock> FENCE_GATE_ILLUSIONBLOCK = BLOCKS.register("illusion_fence_gate", () -> new FenceGateFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> FENCE_GATE_ILLUSION_ITEM = ITEMS.register("illusion_fence_gate", () -> new BlockItem(FENCE_GATE_ILLUSIONBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> FENCE_GATE_ILLUSION_TILE = TILES.register("illusion_fence_gate", () -> BlockEntityType.Builder.of(FrameBlockTile::new, FENCE_GATE_ILLUSIONBLOCK.get()).build(null));
+    public static final RegistryObject<Item> CARPET_ILLUSION_ITEM = ITEMS.register("illusion_carpet", () -> new BlockItem(CARPET_ILLUSIONBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<BlockEntityType<FrameBlockTile>> CARPET_ILLUSION_TILE = TILES.register("illusion_carpet", () -> BlockEntityType.Builder.of(FrameBlockTile::new, CARPET_ILLUSIONBLOCK.get()).build(null));
+    public static final RegistryObject<PaneFrameBlock> PANE_ILLUSIONBLOCK = BLOCKS.register("illusion_pane", () -> new PaneFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> PANE_ILLUSION_ITEM = ITEMS.register("illusion_pane", () -> new BlockItem(PANE_ILLUSIONBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<BlockEntityType<FrameBlockTile>> PANE_ILLUSION_TILE = TILES.register("illusion_pane", () -> BlockEntityType.Builder.of(FrameBlockTile::new, PANE_ILLUSIONBLOCK.get()).build(null));
+    public static final RegistryObject<DaylightDetectorFrameBlock> DAYLIGHT_DETECTOR_ILLUSIONBLOCK = BLOCKS.register("illusion_daylight_detector", () -> new DaylightDetectorFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> DAYLIGHT_DETECTOR_ILLUSION_ITEM = ITEMS.register("illusion_daylight_detector", () -> new BlockItem(DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+
+    public static final RegistryObject<BlockEntityType<DaylightDetectorFrameTileEntity>> DAYLIGHT_DETECTOR_ILLUSION_TILE = TILES.register("illusion_daylight_detector", () -> BlockEntityType.Builder.of(DaylightDetectorFrameTileEntity::new, DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get()).build(null));
 
     public static void init() {
         LOGGER.info("Registering blocks copy BlockCarpentry");
