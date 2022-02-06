@@ -60,6 +60,9 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
+            if (state.getValue(CONTAINS_BLOCK) && !Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                super.use(state, level, pos, player, hand, hitresult);
+            }
             BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand);
             BlockAppearanceHelper.setTexture(item, state, level, player, pos);
             BlockAppearanceHelper.setDesign(level, pos, player, item);
@@ -89,10 +92,6 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
                     level.setBlock(pos, state, 2);
                     return InteractionResult.SUCCESS;
                 }
-            }
-            if (state.getValue(CONTAINS_BLOCK) && !Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                super.use(state, level, pos, player, hand, hitresult);
-                return InteractionResult.PASS;
             }
         }
         return InteractionResult.SUCCESS;
