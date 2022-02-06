@@ -6,13 +6,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.SLAB_FRAME_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.0 08/15/21
+ * @version 1.1 02/06/22
  */
 public class TwoBlocksFrameBlockTile extends BlockEntity {
     public static final ModelProperty<BlockState> MIMIC_1 = new ModelProperty<>();
@@ -149,7 +149,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public void setMimic_1(BlockState mimic_1) {
         this.mimic_1 = mimic_1;
         setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
     }
 
     public Integer getTexture_1() {
@@ -159,7 +159,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public void setTexture_1(int texture_1) {
         this.texture_1 = texture_1;
         setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
     }
 
     public Integer getDesign_1() {
@@ -169,7 +169,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public void setDesign_1(int design_1) {
         this.design_1 = design_1;
         setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
     }
 
     public Integer getDesignTexture_1() {
@@ -179,7 +179,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public void setDesignTexture_1(int designTexture_1) {
         this.designTexture_1 = designTexture_1;
         setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
     }
 
     public Integer getOverlay_1() {
@@ -189,7 +189,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public void setOverlay_1(int overlay_1) {
         this.overlay_1 = overlay_1;
         setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
     }
 
     public Integer getRotation_1() {
@@ -199,7 +199,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public void setRotation_1(int rotation_1) {
         this.rotation_1 = rotation_1;
         setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
     }
 
     public BlockState getMimic_2() {
@@ -209,7 +209,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public void setMimic_2(BlockState mimic_2) {
         this.mimic_2 = mimic_2;
         setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
     }
 
     public Integer getTexture_2() {
@@ -219,7 +219,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public void setTexture_2(int texture_2) {
         this.texture_2 = texture_2;
         setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
     }
 
     public Integer getDesign_2() {
@@ -229,7 +229,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public void setDesign_2(int design_2) {
         this.design_2 = design_2;
         setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
     }
 
     public Integer getDesignTexture_2() {
@@ -239,7 +239,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public void setDesignTexture_2(int designTexture_2) {
         this.designTexture_2 = designTexture_2;
         setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
     }
 
     public Integer getOverlay_2() {
@@ -249,7 +249,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public void setOverlay_2(int overlay_2) {
         this.overlay_2 = overlay_2;
         setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
     }
 
     public Integer getRotation_2() {
@@ -259,7 +259,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public void setRotation_2(int rotation_2) {
         this.rotation_2 = rotation_2;
         setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
     }
 
     @Nullable
@@ -332,42 +332,42 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
             mimic_1 = NbtUtils.readBlockState(tag.getCompound("mimic_1"));
             if (!Objects.equals(oldMimic_1, mimic_1)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("texture_1")) {
             texture_1 = readInteger(tag.getCompound("texture_1"));
             if (!Objects.equals(oldTexture_1, texture_1)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("design_1")) {
             design_1 = readInteger(tag.getCompound("design_1"));
             if (!Objects.equals(oldDesign_1, design_1)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("design_texture_1")) {
             designTexture_1 = readInteger(tag.getCompound("design_texture_1"));
             if (!Objects.equals(oldDesignTexture_1, designTexture_1)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("overlay_1")) {
             overlay_1 = readInteger(tag.getCompound("overlay_1"));
             if (!Objects.equals(oldOverlay_1, overlay_1)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("rotation_1")) {
             rotation_1 = readInteger(tag.getCompound("rotation_1"));
             if (!Objects.equals(oldRotation_1, rotation_1)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
 
@@ -375,42 +375,42 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
             mimic_2 = NbtUtils.readBlockState(tag.getCompound("mimic_2"));
             if (!Objects.equals(oldMimic_2, mimic_2)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("texture_2")) {
             texture_2 = readInteger(tag.getCompound("texture_2"));
             if (!Objects.equals(oldTexture_2, texture_2)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("design_2")) {
             design_2 = readInteger(tag.getCompound("design_2"));
             if (!Objects.equals(oldDesign_2, design_2)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("design_texture_2")) {
             designTexture_2 = readInteger(tag.getCompound("design_texture_2"));
             if (!Objects.equals(oldDesignTexture_2, designTexture_2)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("overlay_2")) {
             overlay_2 = readInteger(tag.getCompound("overlay_2"));
             if (!Objects.equals(oldOverlay_2, overlay_2)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("rotation_2")) {
             rotation_2 = readInteger(tag.getCompound("rotation_2"));
             if (!Objects.equals(oldRotation_2, rotation_2)) {
                 ModelDataManager.requestModelDataRefresh(this);
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
     }
