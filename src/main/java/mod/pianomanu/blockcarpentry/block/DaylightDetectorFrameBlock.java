@@ -69,7 +69,6 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
             BlockAppearanceHelper.setRotation(level, pos, player, item);
             if (item.getItem() instanceof BlockItem) {
                 if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                    super.use(state, level, pos, player, hand, hitresult);
                     return InteractionResult.PASS;
                 }
                 BlockEntity tileEntity = level.getBlockEntity(pos);
@@ -90,6 +89,8 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
                     level.setBlock(pos, state, 2);
                     return InteractionResult.SUCCESS;
                 }
+            }
+            if (state.getValue(CONTAINS_BLOCK) && !Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                 super.use(state, level, pos, player, hand, hitresult);
                 return InteractionResult.PASS;
             }
