@@ -33,7 +33,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.10 06/05/21
+ * @version 1.11 02/06/22
  */
 public class BlockAppearanceHelper {
     public static int setLightLevel(ItemStack item, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand) {
@@ -372,7 +372,7 @@ public class BlockAppearanceHelper {
             BlockEntity tileEntity = world.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                if (fte.getRotation() < 7) {
+                if (fte.getRotation() < 11) {
                     fte.setRotation(fte.getRotation() + 1);
                 } else {
                     fte.setRotation(0);
@@ -382,7 +382,7 @@ public class BlockAppearanceHelper {
             }
             if (tileEntity instanceof BedFrameTile) {
                 BedFrameTile fte = (BedFrameTile) tileEntity;
-                if (fte.getRotation() < 7) {
+                if (fte.getRotation() < 11) {
                     fte.setRotation(fte.getRotation() + 1);
                 } else {
                     fte.setRotation(0);
@@ -392,7 +392,7 @@ public class BlockAppearanceHelper {
             }
             if (tileEntity instanceof ChestFrameBlockEntity) {
                 ChestFrameBlockEntity fte = (ChestFrameBlockEntity) tileEntity;
-                if (fte.getRotation() < 7) {
+                if (fte.getRotation() < 11) {
                     fte.setRotation(fte.getRotation() + 1);
                 } else {
                     fte.setRotation(0);
@@ -404,14 +404,14 @@ public class BlockAppearanceHelper {
                 TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                 BlockState state = world.getBlockState(pos);
                 if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    if (fte.getRotation_1() < 7) {
+                    if (fte.getRotation_1() < 11) {
                         fte.setRotation_1(fte.getRotation_1() + 1);
                     } else {
                         fte.setRotation_1(0);
                     }
                     player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.rotation", fte.getRotation_1()), true);
                 } else {
-                    if (fte.getRotation_2() < 7) {
+                    if (fte.getRotation_2() < 11) {
                         fte.setRotation_2(fte.getRotation_2() + 1);
                     } else {
                         fte.setRotation_2(0);
