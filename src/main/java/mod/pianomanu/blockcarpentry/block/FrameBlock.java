@@ -44,7 +44,7 @@ import java.util.Objects;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.0 08/15/21
+ * @version 1.1 02/06/22
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, SimpleWaterloggedBlock {
@@ -232,20 +232,6 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
         }
     }
 
-    //unused
-    public int setLightValue(BlockState state, int amount) {
-        if (state.getValue(LIGHT_LEVEL) > 15) {
-            return 15;
-        }
-        return state.getValue(LIGHT_LEVEL);
-    }
-
-    //unused //TODO might cause OptiFine issues
-    public boolean isTransparent(BlockState state) {
-        //return this.isTransparent;
-        return true;
-    }
-
     /**
      * This method returns the light value of the block, i.e. the emitted light level
      *
@@ -255,7 +241,7 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
      * @return new amount of light that is emitted by the block
      */
     @Override
-    public int getLightEmission(BlockState state, Level level, BlockPos pos) {
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }

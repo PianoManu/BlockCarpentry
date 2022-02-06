@@ -36,7 +36,7 @@ import java.util.Objects;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.0 08/15/21
+ * @version 1.1 02/06/22
  */
 public abstract class AbstractFrameBlock extends BaseEntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -122,7 +122,8 @@ public abstract class AbstractFrameBlock extends BaseEntityBlock {
     }
 
 
-    public int getLightEmission(BlockState state, Level level, BlockPos pos) {
+    @Override
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         if (state.getValue(LIGHT_LEVEL) > 15) {
             return 15;
         }
