@@ -39,7 +39,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 08/15/21
+ * @version 1.1 02/07/22
  */
 public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -97,6 +97,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock {
                     level.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
                 }
                 //this.playSound(player, level, pos, state.getValue(OPEN));
+                return InteractionResult.PASS;
             }
             if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
                 if (!player.isCreative())

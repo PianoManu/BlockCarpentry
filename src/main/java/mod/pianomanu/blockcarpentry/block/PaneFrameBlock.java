@@ -41,7 +41,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 02/06/22
+ * @version 1.1 02/07/22
  */
 public class PaneFrameBlock extends IronBarsBlock implements EntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -98,7 +98,7 @@ public class PaneFrameBlock extends IronBarsBlock implements EntityBlock {
                 level.setBlock(pos, state, 2);
             }
         }
-        return InteractionResult.SUCCESS;
+        return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
     protected void dropContainedBlock(Level level, BlockPos pos) {

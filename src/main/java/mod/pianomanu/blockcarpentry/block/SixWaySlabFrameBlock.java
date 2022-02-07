@@ -48,7 +48,7 @@ import static mod.pianomanu.blockcarpentry.block.FrameBlock.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 02/05/22
+ * @version 1.2 02/07/22
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements SimpleWaterloggedBlock, EntityBlock {
@@ -179,7 +179,8 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
                 level.setBlock(pos, state, 2);
             }
         }
-        return InteractionResult.SUCCESS;
+        //TODO check if useful
+        return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
     protected void dropContainedBlock(Level levelIn, BlockPos pos) {

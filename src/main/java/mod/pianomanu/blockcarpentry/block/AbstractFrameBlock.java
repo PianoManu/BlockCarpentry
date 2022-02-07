@@ -36,7 +36,7 @@ import java.util.Objects;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.1 02/06/22
+ * @version 1.2 02/07/22
  */
 public abstract class AbstractFrameBlock extends BaseEntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -85,7 +85,7 @@ public abstract class AbstractFrameBlock extends BaseEntityBlock {
                 level.setBlock(pos, state, 2);
             }
         }
-        return InteractionResult.SUCCESS;
+        return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
     protected void dropContainedBlock(Level levelIn, BlockPos pos) {

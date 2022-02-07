@@ -44,7 +44,7 @@ import java.util.Objects;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.1 02/06/22
+ * @version 1.2 02/07/22
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, SimpleWaterloggedBlock {
@@ -159,7 +159,7 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
                 level.setBlock(pos, state, 2);
             }
         }
-        return InteractionResult.SUCCESS;
+        return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
     /**

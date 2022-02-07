@@ -43,7 +43,7 @@ import static mod.pianomanu.blockcarpentry.block.AbstractSixWayFrameBlock.FACING
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 02/05/22
+ * @version 1.2 02/07/22
  */
 public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBlock {
     private static final VoxelShape INNER_CUBE = Block.box(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
@@ -135,7 +135,7 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
                 }
             }
         }
-        return InteractionResult.SUCCESS;
+        return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
     @Override

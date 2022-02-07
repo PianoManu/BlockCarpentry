@@ -36,7 +36,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 08/15/21
+ * @version 1.1 02/07/22
  */
 public class FenceFrameBlock extends FenceBlock implements EntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -98,7 +98,7 @@ public class FenceFrameBlock extends FenceBlock implements EntityBlock {
                 level.setBlock(pos, state, 2);
             }
         }
-        return InteractionResult.SUCCESS;
+        return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
     protected void dropContainedBlock(Level levelIn, BlockPos pos) {

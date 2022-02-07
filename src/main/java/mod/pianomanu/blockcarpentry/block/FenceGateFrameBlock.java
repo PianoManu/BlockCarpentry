@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -42,7 +43,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 08/15/21
+ * @version 1.1 02/07/22
  */
 public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterloggedBlock, EntityBlock {
     public FenceGateFrameBlock(Properties properties) {
@@ -72,17 +73,21 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
         if (!level.isClientSide) {
             if ((state.getValue(CONTAINS_BLOCK) || !(item.getItem() instanceof BlockItem)) && !(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
                 if (state.getValue(OPEN)) {
-                    state = state.setValue(OPEN, Boolean.FALSE);
+                    state = state.setValue(OPEN, false);
                 } else {
                     Direction direction = player.getDirection();
-                    if (state.getValue(HORIZONTAL_FACING) == direction.getOpposite()) {
-                        state = state.setValue(HORIZONTAL_FACING, direction);
+                    if (state.getValue(FACING) == direction.getOpposite()) {
+                        state = state.setValue(FACING, direction);
                     }
-                    state = state.setValue(OPEN, Boolean.TRUE);
+
+                    state = state.setValue(OPEN, true);
                 }
                 level.setBlock(pos, state, 10);
-                level.levelEvent(player, state.getValue(OPEN) ? 1008 : 1014, pos, 0);
-                //return InteractionResult.SUCCESS;
+
+                boolean flag = state.getValue(OPEN);
+                level.levelEvent(null, flag ? 1008 : 1014, pos, 0);
+                level.gameEvent(player, flag ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
+                return InteractionResult.CONSUME;
             } else {
                 if (item.getItem() instanceof BlockItem) {
                     if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
