@@ -1,14 +1,31 @@
 {
+	"parent": "block/block",
 	"display": {
-        "gui": {
-            "rotation": [ 30, 45, 0 ],
-            "scale":[ 0.625, 0.625, 0.625 ]
-        },
-        "fixed": {
-            "rotation": [ 0, 90, 0 ],
-            "scale":[ 0.5, 0.5, 0.5 ]
-        }
-    },
+		"gui": {
+			"rotation": [
+				30,
+				45,
+				0
+			],
+			"scale": [
+				0.625,
+				0.625,
+				0.625
+			]
+		},
+		"fixed": {
+			"rotation": [
+				0,
+				90,
+				0
+			],
+			"scale": [
+				0.5,
+				0.5,
+				0.5
+			]
+		}
+	},
 	"textures": {
 		"0": "block/oak_planks",
 		"1": "block/spruce_trapdoor",
