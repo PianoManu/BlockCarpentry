@@ -28,7 +28,7 @@ import org.apache.logging.log4j.Logger;
  * Just a normal registering class. See Forge-Documentation on how to register objects
  *
  * @author PianoManu
- * @version 1.2 02/06/22
+ * @version 1.3 02/07/22
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("all") //only warning: datafixer for build()-method is null, but method is annotated as "NotNull"
@@ -125,6 +125,10 @@ public class Registration {
     public static final RegistryObject<CarpetFrameBlock> CARPET_ILLUSIONBLOCK = BLOCKS.register("illusion_carpet", () -> new CarpetFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<BlockEntityType<DaylightDetectorFrameTileEntity>> DAYLIGHT_DETECTOR_FRAME_TILE = TILES.register("frame_daylight_detector", () -> BlockEntityType.Builder.of(DaylightDetectorFrameTileEntity::new, DAYLIGHT_DETECTOR_FRAMEBLOCK.get()).build(null));
 
+    public static final RegistryObject<LayeredBlock> LAYERED_FRAMEBLOCK = BLOCKS.register("frame_layered_block", () -> new LayeredBlock(Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> LAYERED_FRAME_ITEM = ITEMS.register("frame_layered_block", () -> new BlockItem(LAYERED_FRAMEBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<BlockEntityType<FrameBlockTile>> LAYERED_FRAME_TILE = TILES.register("frame_layered_block", () -> BlockEntityType.Builder.of(FrameBlockTile::new, LAYERED_FRAMEBLOCK.get()).build(null));
+
     //disabled signs - TODO fix signs
     //public static final RegistryObject<StandingSignFrameBlock> STANDING_SIGN_FRAMEBLOCK = BLOCKS.register("standing_frame_sign", () -> new StandingSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
     //public static final RegistryObject<WallSignFrameBlock> WALL_SIGN_FRAMEBLOCK = BLOCKS.register("wall_frame_sign", () -> new WallSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
@@ -195,6 +199,10 @@ public class Registration {
     public static final RegistryObject<Item> DAYLIGHT_DETECTOR_ILLUSION_ITEM = ITEMS.register("illusion_daylight_detector", () -> new BlockItem(DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
 
     public static final RegistryObject<BlockEntityType<DaylightDetectorFrameTileEntity>> DAYLIGHT_DETECTOR_ILLUSION_TILE = TILES.register("illusion_daylight_detector", () -> BlockEntityType.Builder.of(DaylightDetectorFrameTileEntity::new, DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get()).build(null));
+
+    public static final RegistryObject<LayeredBlock> LAYERED_ILLUSIONBLOCK = BLOCKS.register("illusion_layered_block", () -> new LayeredBlock(Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> LAYERED_ILLUSION_ITEM = ITEMS.register("illusion_layered_block", () -> new BlockItem(LAYERED_ILLUSIONBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
+    public static final RegistryObject<BlockEntityType<FrameBlockTile>> LAYERED_ILLUSION_TILE = TILES.register("illusion_layered_block", () -> BlockEntityType.Builder.of(FrameBlockTile::new, LAYERED_ILLUSIONBLOCK.get()).build(null));
 
     public static void init() {
         LOGGER.info("Registering blocks copy BlockCarpentry");

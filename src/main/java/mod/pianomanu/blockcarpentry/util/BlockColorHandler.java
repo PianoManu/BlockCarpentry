@@ -50,6 +50,7 @@ public class BlockColorHandler implements BlockColor {
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CARPET_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.PANE_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.LAYERED_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.SLOPE_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.EDGED_SLOPE_FRAMEBLOCK.get());
 
@@ -69,6 +70,7 @@ public class BlockColorHandler implements BlockColor {
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CARPET_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.PANE_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.LAYERED_ILLUSIONBLOCK.get());
 
         LOGGER.info("Registered block color handler");
     }

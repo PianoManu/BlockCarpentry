@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.RenderType;
  * Registering standard rendering layers for all frame blocks - need to be translucent to work with glass and similar blocks
  *
  * @author PianoManu
- * @version 1.2 02/06/22
+ * @version 1.3 02/07/22
  */
 public class RenderSetup {
     public static void setup() {
@@ -30,6 +30,7 @@ public class RenderSetup {
         ItemBlockRenderTypes.setRenderLayer(Registration.CARPET_FRAMEBLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(Registration.PANE_FRAMEBLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(Registration.LAYERED_FRAMEBLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(Registration.EDGED_SLOPE_FRAMEBLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(Registration.SLOPE_FRAMEBLOCK.get(), RenderType.translucent());
 
@@ -49,6 +50,7 @@ public class RenderSetup {
         ItemBlockRenderTypes.setRenderLayer(Registration.CARPET_ILLUSIONBLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(Registration.PANE_ILLUSIONBLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(Registration.LAYERED_ILLUSIONBLOCK.get(), RenderType.translucent());
 
 
         //ScreenManager.registerFactory(Registration.STANDING_SIGN_FRAME_CONTAINER.get(), EditSignScreen::new);
