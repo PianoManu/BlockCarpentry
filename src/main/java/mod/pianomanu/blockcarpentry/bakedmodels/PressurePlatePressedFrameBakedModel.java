@@ -1,6 +1,5 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
-import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
@@ -9,13 +8,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
@@ -32,35 +31,28 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.5 05/01/21
+ * @version 1.6 02/07/22
  */
 public class PressurePlatePressedFrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
     private TextureAtlasSprite getTexture() {
-        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(TEXTURE);
+        return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(TEXTURE);
     }
 
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-
-        //Block in Slab
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
+        if (mimic != null) {
             ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
-            if (location != null) {
-                BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                //model.getBakedModel().getQuads(mimic, side, rand, extraData);
-                if (model != null) {
-                    return getMimicQuads(state, side, rand, extraData, model);
-                }
-            }
+            BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+            return getMimicQuads(side, rand, extraData, model);
         }
         return Collections.emptyList();
     }
 
-    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, BakedModel model) {
+    public List<BakedQuad> getMimicQuads(@Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, BakedModel model) {
         if (side != null) {
             return Collections.emptyList();
         }
@@ -81,8 +73,7 @@ public class PressurePlatePressedFrameBakedModel implements IDynamicBakedModel {
             }
             texture = textureList.get(tex);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-            List<BakedQuad> quads = new ArrayList<>();
-            quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 0f, 1 / 32f, 1 / 16f, 15 / 16f, texture, tintIndex));
+            List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 0f, 1 / 32f, 1 / 16f, 15 / 16f, texture, tintIndex));
             int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
                 quads.addAll(ModelHelper.createOverlay(1 / 16f, 15 / 16f, 0f, 1 / 32f, 1 / 16f, 15 / 16f, overlayIndex));
@@ -113,11 +104,13 @@ public class PressurePlatePressedFrameBakedModel implements IDynamicBakedModel {
     }
 
     @Override
+    @Nonnull
     public TextureAtlasSprite getParticleIcon() {
         return getTexture();
     }
 
     @Override
+    @Nonnull
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
     }

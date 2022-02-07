@@ -1,8 +1,8 @@
 package mod.pianomanu.blockcarpentry.setup;
 
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,7 +23,7 @@ public class TextureSetup {
     @SubscribeEvent
     public static void onStitchEvent(TextureStitchEvent.Pre event) {
         ResourceLocation stitching = event.getMap().location();
-        if (stitching.equals(TextureAtlas.LOCATION_BLOCKS)) {
+        if (stitching.equals(InventoryMenu.BLOCK_ATLAS)) {
             LOGGER.info("Stitching textures from BlockCarpentry");
             event.addSprite(loc("block/chest_front"));
             event.addSprite(loc("block/chest_side"));

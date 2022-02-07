@@ -1,6 +1,5 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
-import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
@@ -9,13 +8,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
@@ -33,27 +32,25 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 05/01/21
+ * @version 1.3 02/07/22
  */
 public class FenceGateBakedModel implements IDynamicBakedModel {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
     private TextureAtlasSprite getTexture() {
-        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(TEXTURE);
+        return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(TEXTURE);
     }
 
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
+        if (mimic != null) {
             ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
-            if (location != null && state != null) {
+            if (state != null) {
                 BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                if (model != null) {
-                    return getMimicQuads(state, side, rand, extraData, model);
-                }
+                return getMimicQuads(state, side, rand, extraData, model);
             }
         }
         return Collections.emptyList();
@@ -88,7 +85,7 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
             if (design == 0 || design == 3) {
                 if (state.getValue(FenceGateBlock.OPEN)) {
                     switch (state.getValue(FenceGateBlock.FACING)) {
-                        case NORTH:
+                        case NORTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             //0-0 post
@@ -100,8 +97,8 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 12 / 16f + w, 15 / 16f + w, 3 / 16f, 7 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 6 / 16f + w, 9 / 16f + w, 3 / 16f, 7 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 12 / 16f + w, 15 / 16f + w, 3 / 16f, 7 / 16f, texture.get(index), tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             //0-1 post
@@ -113,8 +110,8 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 12 / 16f + w, 15 / 16f + w, 9 / 16f, 15 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 6 / 16f + w, 9 / 16f + w, 9 / 16f, 15 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 12 / 16f + w, 15 / 16f + w, 9 / 16f, 15 / 16f, texture.get(index), tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             //1-0 post
@@ -126,8 +123,8 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(9 / 16f, 15 / 16f, 12 / 16f + w, 15 / 16f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(9 / 16f, 15 / 16f, 6 / 16f + w, 9 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(9 / 16f, 15 / 16f, 12 / 16f + w, 15 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             //0-0 post
@@ -139,33 +136,31 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 7 / 16f, 12 / 16f + w, 15 / 16f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 7 / 16f, 6 / 16f + w, 9 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 7 / 16f, 12 / 16f + w, 15 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
-                            break;
+                        }
                     }
                 } else {
                     switch (state.getValue(FenceGateBlock.FACING)) {
-                        case NORTH:
-                        case SOUTH:
+                        case NORTH, SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 14 / 16f, 6 / 16f + w, 9 / 16f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 14 / 16f, 12 / 16f + w, 15 / 16f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(6 / 16f, 10 / 16f, 9 / 16f + w, 12 / 16f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
-                            break;
-                        case EAST:
-                        case WEST:
+                        }
+                        case EAST, WEST -> {
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 6 / 16f + w, 9 / 16f + w, 2 / 16f, 14 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 12 / 16f + w, 15 / 16f + w, 2 / 16f, 14 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 9 / 16f + w, 12 / 16f + w, 6 / 16f, 10 / 16f, texture.get(index), tintIndex));
-                            break;
+                        }
                     }
                 }
             }
             if (design == 1) {
                 if (state.getValue(FenceGateBlock.OPEN)) {
                     switch (state.getValue(FenceGateBlock.FACING)) {
-                        case NORTH:
+                        case NORTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             //4 Crossbars
@@ -173,8 +168,8 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 12 / 16f + w, 15 / 16f + w, 1 / 16f, 7 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 6 / 16f + w, 9 / 16f + w, 1 / 16f, 7 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 12 / 16f + w, 15 / 16f + w, 1 / 16f, 7 / 16f, texture.get(index), tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             //4 Crossbars
@@ -182,8 +177,8 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 12 / 16f + w, 15 / 16f + w, 9 / 16f, 15 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 6 / 16f + w, 9 / 16f + w, 9 / 16f, 15 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 12 / 16f + w, 15 / 16f + w, 9 / 16f, 15 / 16f, texture.get(index), tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             //4 Crossbars
@@ -191,8 +186,8 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(9 / 16f, 15 / 16f, 12 / 16f + w, 15 / 16f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(9 / 16f, 15 / 16f, 6 / 16f + w, 9 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(9 / 16f, 15 / 16f, 12 / 16f + w, 15 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             //4 Crossbars
@@ -200,31 +195,29 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 7 / 16f, 12 / 16f + w, 15 / 16f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 7 / 16f, 6 / 16f + w, 9 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 7 / 16f, 12 / 16f + w, 15 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
-                            break;
+                        }
                     }
                 } else {
                     switch (state.getValue(FenceGateBlock.FACING)) {
-                        case NORTH:
-                        case SOUTH:
+                        case NORTH, SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 14 / 16f, 6 / 16f + w, 9 / 16f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 14 / 16f, 12 / 16f + w, 15 / 16f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
-                            break;
-                        case EAST:
-                        case WEST:
+                        }
+                        case EAST, WEST -> {
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 6 / 16f + w, 9 / 16f + w, 2 / 16f, 14 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 12 / 16f + w, 15 / 16f + w, 2 / 16f, 14 / 16f, texture.get(index), tintIndex));
-                            break;
+                        }
                     }
                 }
             }
             if (design == 2) {
                 if (state.getValue(FenceGateBlock.OPEN)) {
                     switch (state.getValue(FenceGateBlock.FACING)) {
-                        case NORTH:
+                        case NORTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             //0-0 post
@@ -234,8 +227,8 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             //2 Crossbars
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 6 / 16f + w, 15 / 16f + w, 3 / 16f, 7 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 6 / 16f + w, 15 / 16f + w, 3 / 16f, 7 / 16f, texture.get(index), tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             //0-1 post
@@ -245,8 +238,8 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             //2 Crossbars
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 6 / 16f + w, 15 / 16f + w, 9 / 16f, 13 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 6 / 16f + w, 15 / 16f + w, 9 / 16f, 13 / 16f, texture.get(index), tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             //1-0 post
@@ -256,8 +249,8 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             //2 Crossbars
                             quads.addAll(ModelHelper.createCuboid(9 / 16f, 13 / 16f, 6 / 16f + w, 15 / 16f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(9 / 16f, 13 / 16f, 6 / 16f + w, 15 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             //0-0 post
@@ -267,41 +260,37 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             //2 Crossbars
                             quads.addAll(ModelHelper.createCuboid(3 / 16f, 7 / 16f, 6 / 16f + w, 15 / 16f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(3 / 16f, 7 / 16f, 6 / 16f + w, 15 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
-                            break;
+                        }
                     }
                 } else {
                     switch (state.getValue(FenceGateBlock.FACING)) {
-                        case NORTH:
-                        case SOUTH:
+                        case NORTH, SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 6 / 16f, 6 / 16f + w, 15 / 16f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(10 / 16f, 14 / 16f, 6 / 16f + w, 15 / 16f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(6 / 16f, 10 / 16f, 6 / 16f + w, 13 / 16f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
-                            break;
-                        case EAST:
-                        case WEST:
+                        }
+                        case EAST, WEST -> {
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 6 / 16f + w, 15 / 16f + w, 2 / 16f, 6 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 6 / 16f + w, 15 / 16f + w, 10 / 16f, 14 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 6 / 16f + w, 13 / 16f + w, 6 / 16f, 10 / 16f, texture.get(index), tintIndex));
-                            break;
+                        }
                     }
                 }
             }
             if (design == 3) {
                 switch (state.getValue(FenceGateBlock.FACING)) {
-                    case NORTH:
-                    case SOUTH:
+                    case NORTH, SOUTH -> {
                         quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 6 / 16f, 10 / 16f, texture.get(index), tintIndex));
                         quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 6 / 16f, 10 / 16f, texture.get(index), tintIndex));
-                        break;
-                    case EAST:
-                    case WEST:
+                    }
+                    case EAST, WEST -> {
                         quads.addAll(ModelHelper.createCuboid(6 / 16f, 10 / 16f, 0f, 1f, 0f, 2 / 16f, texture.get(index), tintIndex));
                         quads.addAll(ModelHelper.createCuboid(6 / 16f, 10 / 16f, 0f, 1f, 14 / 16f, 1f, texture.get(index), tintIndex));
-                        break;
+                    }
                 }
             }
             if (design == 4) {
@@ -312,7 +301,7 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                 }
                 if (state.getValue(FenceGateBlock.OPEN)) {
                     switch (state.getValue(FenceGateBlock.FACING)) {
-                        case NORTH:
+                        case NORTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             //0-0 post
@@ -324,8 +313,8 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 12 / 16f + w, 15 / 16f + w, 3 / 16f, 7 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 6 / 16f + w, 9 / 16f + w, 3 / 16f, 7 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 12 / 16f + w, 15 / 16f + w, 3 / 16f, 7 / 16f, texture.get(index), tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             //0-1 post
@@ -337,8 +326,8 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 12 / 16f + w, 15 / 16f + w, 9 / 16f, 15 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 6 / 16f + w, 9 / 16f + w, 9 / 16f, 15 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 12 / 16f + w, 15 / 16f + w, 9 / 16f, 15 / 16f, texture.get(index), tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             //1-0 post
@@ -350,8 +339,8 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(9 / 16f, 15 / 16f, 12 / 16f + w, 15 / 16f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(9 / 16f, 15 / 16f, 6 / 16f + w, 9 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(9 / 16f, 15 / 16f, 12 / 16f + w, 15 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             //0-0 post
@@ -363,26 +352,24 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 7 / 16f, 12 / 16f + w, 15 / 16f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 7 / 16f, 6 / 16f + w, 9 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 7 / 16f, 12 / 16f + w, 15 / 16f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
-                            break;
+                        }
                     }
                 } else {
                     switch (state.getValue(FenceGateBlock.FACING)) {
-                        case NORTH:
-                        case SOUTH:
+                        case NORTH, SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f + w, 1f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 14 / 16f, 6 / 16f + w, 9 / 16f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 14 / 16f, 12 / 16f + w, 15 / 16f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(6 / 16f, 10 / 16f, 9 / 16f + w, 12 / 16f + w, 7 / 16f, 9 / 16f, texture.get(index), tintIndex));
-                            break;
-                        case EAST:
-                        case WEST:
+                        }
+                        case EAST, WEST -> {
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 0f, 2 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 5 / 16f + w, 1f + w, 14 / 16f, 1f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 6 / 16f + w, 9 / 16f + w, 2 / 16f, 14 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 12 / 16f + w, 15 / 16f + w, 2 / 16f, 14 / 16f, texture.get(index), tintIndex));
                             quads.addAll(ModelHelper.createCuboid(7 / 16f, 9 / 16f, 9 / 16f + w, 12 / 16f + w, 6 / 16f, 10 / 16f, texture.get(index), tintIndex));
-                            break;
+                        }
                     }
                 }
             }
@@ -412,11 +399,13 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
     }
 
     @Override
+    @Nonnull
     public TextureAtlasSprite getParticleIcon() {
         return getTexture();
     }
 
     @Override
+    @Nonnull
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
     }

@@ -1,6 +1,5 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
-import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
@@ -9,12 +8,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Half;
@@ -35,7 +34,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.6 05/01/21
+ * @version 1.7 02/07/22
  */
 public class SlopeBakedModel implements IDynamicBakedModel {
     private static Vec3 v(double x, double y, double z) {
@@ -47,16 +46,12 @@ public class SlopeBakedModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         //get block saved in frame tile
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
+        if (mimic != null) {
             net.minecraft.client.resources.model.ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
-            if (location != null) {
-                BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                //model.getBakedModel().getQuads(mimic, side, rand, extraData);
-                if (model != null) {
-                    //only if model (from block saved in tile entity) exists:
-                    return getMimicQuads(state, side, rand, extraData, model);
-                }
-            }
+            BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+            //model.getBakedModel().getQuads(mimic, side, rand, extraData);
+            //only if model (from block saved in tile entity) exists:
+            return getMimicQuads(state, side, rand, extraData, model);
         }
         return Collections.emptyList();
     }
@@ -183,7 +178,7 @@ public class SlopeBakedModel implements IDynamicBakedModel {
             switch (shape) {
                 case STRAIGHT:
                     switch (direction) {
-                        case NORTH:
+                        case NORTH -> {
                             //back face
                             quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
                             //slanted faces
@@ -191,8 +186,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             //back face
                             quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
                             //slanted faces
@@ -200,8 +195,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             //back face
                             quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
                             //slanted faces
@@ -209,8 +204,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             //back face
                             quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
                             //slanted faces
@@ -218,12 +213,12 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
+                        }
                     }
                     break;
                 case OUTER_LEFT:
                     switch (direction) {
-                        case NORTH:
+                        case NORTH -> {
                             //back face
                             quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
                             //slanted face
@@ -231,8 +226,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top faces
                             quads.add(ModelHelper.createQuadInverted(SWD, SED, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuad(NWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             //back face
                             quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
                             //slanted face
@@ -241,8 +236,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top faces
                             quads.add(ModelHelper.createQuadInverted(NWD, SWD, NEU, NEU, texture, 0, 16, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuad(SED, NEU, NEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             //back face
                             quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
                             //slanted face
@@ -250,8 +245,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top faces
                             quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, SEU, texture, 0, 16, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuad(SEU, NWD, SWD, SEU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             //back face
                             quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
                             //slanted face
@@ -259,12 +254,12 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top faces
                             quads.add(ModelHelper.createQuadInverted(NED, SWU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
                             quads.add(ModelHelper.createQuad(NED, NED, NWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
+                        }
                     }
                     break;
                 case OUTER_RIGHT:
                     switch (direction) {
-                        case NORTH:
+                        case NORTH -> {
                             //back face
                             quads.add(ModelHelper.createQuad(NEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
                             //slanted face
@@ -273,8 +268,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top faces
                             quads.add(ModelHelper.createQuadInverted(NWD, SWD, NEU, NEU, texture, 0, 16, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuad(SED, NEU, NEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             //back face
                             quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
                             //slanted face
@@ -282,8 +277,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top faces
                             quads.add(ModelHelper.createQuadInverted(NED, NWD, NWD, SEU, texture, 0, 16, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuad(SEU, NWD, SWD, SEU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             //back face
                             quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
                             //slanted face
@@ -291,8 +286,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top faces
                             quads.add(ModelHelper.createQuadInverted(NED, SWU, SED, NED, texture, 16, 0, 0, 16, tintIndex));
                             quads.add(ModelHelper.createQuad(NED, NED, NWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             //back face
                             quads.add(ModelHelper.createQuad(NED, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
                             //slanted face
@@ -300,12 +295,12 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top faces
                             quads.add(ModelHelper.createQuadInverted(SWD, SED, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuad(NWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
+                        }
                     }
                     break;
                 case INNER_LEFT:
                     switch (direction) {
-                        case NORTH:
+                        case NORTH -> {
                             //NORTH PART
                             //back face
                             quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
@@ -323,8 +318,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             //EAST PART
                             //back face
                             quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
@@ -342,8 +337,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             //SOUTH PART
                             //back face
                             quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
@@ -361,8 +356,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             //WEST PART
                             //back face
                             quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
@@ -380,12 +375,12 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex));
-                            break;
+                        }
                     }
                     break;
                 case INNER_RIGHT:
                     switch (direction) {
-                        case NORTH:
+                        case NORTH -> {
                             //NORTH PART
                             //back face
                             quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
@@ -403,8 +398,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuad(SED, SEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(SWD, SEU, NEU, NWD, texture, 16, 0, 16, 0, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             //EAST PART
                             //back face
                             quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
@@ -422,8 +417,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuad(SWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NWD, SWU, SEU, NED, texture, 16, 0, 16, 0, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             //SOUTH PART
                             //back face
                             quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
@@ -441,8 +436,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //quads.add(ModelHelper.createQuadInverted(SWD, SED, SWU, SWU, texture, 0, 16, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(SWU, SED, NED, NWU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             //WEST PART
                             //back face
                             quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
@@ -460,7 +455,7 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //quads.add(ModelHelper.createQuadInverted(NWD, SWD, NWU, NWU, texture, 0, 16, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NWU, SWD, SED, NEU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
+                        }
                     }
                     break;
             }
@@ -471,7 +466,7 @@ public class SlopeBakedModel implements IDynamicBakedModel {
             switch (shape) {
                 case STRAIGHT:
                     switch (direction) {
-                        case NORTH:
+                        case NORTH -> {
                             //NORTH PART
                             //back face
                             quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
@@ -480,8 +475,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NWD, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NED, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             //EAST PART
                             //back face
                             quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
@@ -490,8 +485,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuad(NWU, NWU, NEU, NED, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NWU, NED, SED, SWU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             //SOUTH PART
                             //back face
                             quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
@@ -500,8 +495,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SED, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             //WEST PART
                             //back face
                             quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
@@ -510,12 +505,12 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuad(SEU, SEU, SWU, SWD, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NWD, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                            break;
+                        }
                     }
                     break;
                 case OUTER_LEFT:
                     switch (direction) {
-                        case NORTH:
+                        case NORTH -> {
                             //NORTH PART
                             //back face
                             quads.add(ModelHelper.createQuadInverted(NEU, NWD, NWU, NEU, texture, 0, 16, 16, 0, tintIndex));
@@ -524,8 +519,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top face
                             quads.add(ModelHelper.createQuad(SEU, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuadInverted(SEU, NWD, NEU, SEU, texture, 0, 16, 16, 0, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             //EAST PART
                             //back face
                             quads.add(ModelHelper.createQuadInverted(SEU, NED, NEU, SEU, texture, 0, 16, 16, 0, tintIndex));
@@ -534,8 +529,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top face
                             quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NED, texture, 16, 0, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuadInverted(SWU, NED, SEU, SWU, texture, 0, 16, 16, 0, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             //SOUTH PART
                             //back face
                             quads.add(ModelHelper.createQuadInverted(SWU, SED, SEU, SWU, texture, 0, 16, 16, 0, tintIndex));
@@ -545,8 +540,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
                             quads.add(ModelHelper.createQuad(NWU, NWU, NEU, SED, texture, 16, 0, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuadInverted(NWU, SED, SWU, NWU, texture, 0, 16, 16, 0, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             //WEST PART
                             //back face
                             quads.add(ModelHelper.createQuadInverted(NWU, SWD, SWU, NWU, texture, 0, 16, 16, 0, tintIndex));
@@ -555,12 +550,12 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top face
                             quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuadInverted(NEU, SWD, NWU, NEU, texture, 0, 16, 16, 0, tintIndex));
-                            break;
+                        }
                     }
                     break;
                 case OUTER_RIGHT:
                     switch (direction) {
-                        case NORTH:
+                        case NORTH -> {
                             //EAST PART
                             //back face
                             quads.add(ModelHelper.createQuadInverted(SEU, NED, NEU, SEU, texture, 0, 16, 16, 0, tintIndex));
@@ -569,8 +564,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top face
                             quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NED, texture, 16, 0, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuadInverted(SWU, NED, SEU, SWU, texture, 0, 16, 16, 0, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             //SOUTH PART
                             //back face
                             quads.add(ModelHelper.createQuadInverted(SWU, SED, SEU, SWU, texture, 0, 16, 16, 0, tintIndex));
@@ -580,8 +575,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
                             quads.add(ModelHelper.createQuad(NWU, NWU, NEU, SED, texture, 16, 0, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuadInverted(NWU, SED, SWU, NWU, texture, 0, 16, 16, 0, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             //WEST PART
                             //back face
                             quads.add(ModelHelper.createQuadInverted(NWU, SWD, SWU, NWU, texture, 0, 16, 16, 0, tintIndex));
@@ -590,8 +585,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top face
                             quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuadInverted(NEU, SWD, NWU, NEU, texture, 0, 16, 16, 0, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             //NORTH PART
                             //back face
                             quads.add(ModelHelper.createQuadInverted(NEU, NWD, NWU, NEU, texture, 0, 16, 16, 0, tintIndex));
@@ -600,12 +595,12 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //top face
                             quads.add(ModelHelper.createQuad(SEU, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
                             quads.add(ModelHelper.createQuadInverted(SEU, NWD, NEU, SEU, texture, 0, 16, 16, 0, tintIndex));
-                            break;
+                        }
                     }
                     break;
                 case INNER_LEFT:
                     switch (direction) {
-                        case NORTH:
+                        case NORTH -> {
                             //NORTH PART
                             //back face
                             quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
@@ -623,8 +618,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuad(SEU, SEU, SWU, SWD, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NWD, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             //EAST PART
                             //back face
                             quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
@@ -642,8 +637,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NWD, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NED, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             //SOUTH PART
                             //back face
                             quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
@@ -661,8 +656,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuad(NWU, NWU, NEU, NED, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NWU, NED, SED, SWU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             //WEST PART
                             //back face
                             quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
@@ -680,12 +675,12 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SED, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
+                        }
                     }
                     break;
                 case INNER_RIGHT:
                     switch (direction) {
-                        case NORTH:
+                        case NORTH -> {
                             //NORTH PART
                             //back face
                             quads.add(ModelHelper.createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
@@ -703,8 +698,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //quads.add(ModelHelper.createQuad(NWU, NWU, NEU, NED, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NWU, NED, SED, SWU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             //EAST PART
                             //back face
                             quads.add(ModelHelper.createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
@@ -722,8 +717,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //quads.add(ModelHelper.createQuad(NEU, NEU, SEU, SED, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             //SOUTH PART
                             //back face
                             quads.add(ModelHelper.createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));
@@ -741,8 +736,8 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //quads.add(ModelHelper.createQuad(SEU, SEU, SWU, SWD, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NWD, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             //WEST PART
                             //back face
                             quads.add(ModelHelper.createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
@@ -760,7 +755,7 @@ public class SlopeBakedModel implements IDynamicBakedModel {
                             //quads.add(ModelHelper.createQuad(SWU, SWU, NWU, NWD, texture, 16, 0, 16, 0, tintIndex));
                             //top face
                             quads.add(ModelHelper.createQuad(NED, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
-                            break;
+                        }
                     }
                     break;
             }
@@ -789,11 +784,13 @@ public class SlopeBakedModel implements IDynamicBakedModel {
     }
 
     @Override
+    @Nonnull
     public TextureAtlasSprite getParticleIcon() {
-        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation("minecraft", "block/oak_planks"));
+        return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/oak_planks"));
     }
 
     @Override
+    @Nonnull
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
     }

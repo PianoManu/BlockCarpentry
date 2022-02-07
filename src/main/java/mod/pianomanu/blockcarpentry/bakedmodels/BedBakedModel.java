@@ -10,13 +10,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
@@ -35,14 +35,13 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.3 05/01/21
+ * @version 1.4 02/07/22
  */
-@SuppressWarnings("deprecation")
 public class BedBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
     private TextureAtlasSprite getTexture() {
-        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(TEXTURE);
+        return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(TEXTURE);
     }
 
     @Nonnull
@@ -51,12 +50,8 @@ public class BedBakedModel implements IDynamicBakedModel {
         BlockState mimic = extraData.getData(BedFrameTile.MIMIC);
         if (mimic != null) {
             ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
-            if (location != null) {
-                BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                if (model != null) {
-                    return getMimicQuads(state, side, rand, extraData, model);
-                }
-            }
+            BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+            return getMimicQuads(state, side, rand, extraData, model);
         }
 
         return Collections.emptyList();
@@ -102,262 +97,254 @@ public class BedBakedModel implements IDynamicBakedModel {
             //four bed support cubes (bed feet)
             if (state.getValue(BedFrameBlock.PART) == BedPart.FOOT) {
                 switch (state.getValue(BedBlock.FACING)) {
-                    case NORTH:
+                    case NORTH -> {
                         quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
-                        break;
-                    case EAST:
+                    }
+                    case EAST -> {
                         quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
-                        break;
-                    case SOUTH:
+                    }
+                    case SOUTH -> {
                         quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
-                        break;
-                    case WEST:
+                    }
+                    case WEST -> {
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
-                        break;
+                    }
                 }
 
             }
             if (state.getValue(BedFrameBlock.PART) == BedPart.HEAD) {
                 switch (state.getValue(BedBlock.FACING)) {
-                    case SOUTH:
+                    case SOUTH -> {
                         quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
-                        break;
-                    case WEST:
+                    }
+                    case WEST -> {
                         quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
-                        break;
-                    case NORTH:
+                    }
+                    case NORTH -> {
                         quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
-                        break;
-                    case EAST:
+                    }
+                    case EAST -> {
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
-                        break;
+                    }
                 }
             }
             if (design == 0 || design == 1) {
                 if (state.getValue(BedFrameBlock.PART) == BedPart.FOOT) {
                     switch (state.getValue(BedBlock.FACING)) {
-                        case NORTH:
+                        case NORTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 9 / 16f, 0f, 1f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 9 / 16f, -8 / 16f, 0f, blanket, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 9 / 16f, 0f, 1f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1f, 24 / 16f, 5 / 16f, 9 / 16f, 0f, 1f, blanket, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 9 / 16f, 0f, 1f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 9 / 16f, 1f, 24 / 16f, blanket, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 9 / 16f, 0f, 1f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(-8 / 16f, 0f, 5 / 16f, 9 / 16f, 0f, 1f, blanket, tintIndex));
-                            break;
+                        }
                     }
                 }
                 if (state.getValue(BedFrameBlock.PART) == BedPart.HEAD) {
                     switch (state.getValue(BedBlock.FACING)) {
-                        case SOUTH:
-                            quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, 8 / 16f, 1f, pillow, tintIndex));
-                            break;
-                        case WEST:
-                            quads.addAll(ModelHelper.createCuboid(0f, 8 / 16f, 5 / 16f, 10 / 16f, 0f, 1f, pillow, tintIndex));
-                            break;
-                        case NORTH:
-                            quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, 0f, 8 / 16f, pillow, tintIndex));
-                            break;
-                        case EAST:
-                            quads.addAll(ModelHelper.createCuboid(8 / 16f, 1f, 5 / 16f, 10 / 16f, 0f, 1f, pillow, tintIndex));
-                            break;
+                        case SOUTH -> quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, 8 / 16f, 1f, pillow, tintIndex));
+                        case WEST -> quads.addAll(ModelHelper.createCuboid(0f, 8 / 16f, 5 / 16f, 10 / 16f, 0f, 1f, pillow, tintIndex));
+                        case NORTH -> quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, 0f, 8 / 16f, pillow, tintIndex));
+                        case EAST -> quads.addAll(ModelHelper.createCuboid(8 / 16f, 1f, 5 / 16f, 10 / 16f, 0f, 1f, pillow, tintIndex));
                     }
                 }
             }
             if (design == 1) {
                 if (state.getValue(BedFrameBlock.PART) == BedPart.FOOT) {
                     switch (state.getValue(BedBlock.FACING)) {
-                        case NORTH:
+                        case NORTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, 1f, 17 / 16f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(-1 / 16f, 0f, 3 / 16f, 9 / 16f, 0f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1f, 17 / 16f, 3 / 16f, 9 / 16f, 0f, 1f, texture, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             quads.addAll(ModelHelper.createCuboid(-1 / 16f, 0f, 3 / 16f, 9 / 16f, 0f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, -1 / 16f, 0f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, 1f, 17 / 16f, texture, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, -1 / 16f, 0f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(-1 / 16f, 0f, 3 / 16f, 9 / 16f, 0f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1f, 17 / 16f, 3 / 16f, 9 / 16f, 0f, 1f, texture, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             quads.addAll(ModelHelper.createCuboid(1f, 17 / 16f, 3 / 16f, 9 / 16f, 0f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, -1 / 16f, 0f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, 1f, 17 / 16f, texture, tintIndex));
-                            break;
+                        }
                     }
 
                 }
                 if (state.getValue(BedFrameBlock.PART) == BedPart.HEAD) {
                     switch (state.getValue(BedBlock.FACING)) {
-                        case SOUTH:
+                        case SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, 1f, 17 / 16f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(-1 / 16f, 0f, 3 / 16f, 9 / 16f, 0f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1f, 17 / 16f, 3 / 16f, 9 / 16f, 0f, 1f, texture, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             quads.addAll(ModelHelper.createCuboid(-1 / 16f, 0f, 3 / 16f, 9 / 16f, 0f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, -1 / 16f, 0f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, 1f, 17 / 16f, texture, tintIndex));
-                            break;
-                        case NORTH:
+                        }
+                        case NORTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, -1 / 16f, 0f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(-1 / 16f, 0f, 3 / 16f, 9 / 16f, 0f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1f, 17 / 16f, 3 / 16f, 9 / 16f, 0f, 1f, texture, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             quads.addAll(ModelHelper.createCuboid(1f, 17 / 16f, 3 / 16f, 9 / 16f, 0f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, -1 / 16f, 0f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, 1f, 17 / 16f, texture, tintIndex));
-                            break;
+                        }
                     }
                 }
             }
             if (design == 2) {
                 if (state.getValue(BedFrameBlock.PART) == BedPart.FOOT) {
                     switch (state.getValue(BedBlock.FACING)) {
-                        case NORTH:
+                        case NORTH -> {
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 9 / 16f, 0f, 14 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 9 / 16f, -8 / 16f, 0f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1 / 16f, 5 / 16f, 10 / 16f, 0f, 14 / 16f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(15 / 16f, 1f, 5 / 16f, 10 / 16f, 0f, 14 / 16f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 12 / 16f, 14 / 16f, 1f, texture, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 1f, 5 / 16f, 9 / 16f, 1 / 16f, 15 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1f, 24 / 16f, 5 / 16f, 9 / 16f, 1 / 16f, 15 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 1f, 5 / 16f, 10 / 16f, 0f, 1 / 16f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 1f, 5 / 16f, 10 / 16f, 15 / 16f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f, 12 / 16f, 0f, 1f, texture, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 9 / 16f, 2 / 16f, 1f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 9 / 16f, 1f, 24 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1 / 16f, 5 / 16f, 10 / 16f, 2 / 16f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(15 / 16f, 1f, 5 / 16f, 10 / 16f, 2 / 16f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 12 / 16f, 0f, 2 / 16f, texture, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 14 / 16f, 5 / 16f, 9 / 16f, 1 / 16f, 15 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(-8 / 16f, 0f, 5 / 16f, 9 / 16f, 1 / 16f, 15 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 14 / 16f, 5 / 16f, 10 / 16f, 0f, 1 / 16f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 14 / 16f, 5 / 16f, 10 / 16f, 15 / 16f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f, 12 / 16f, 0f, 1f, texture, tintIndex));
-                            break;
+                        }
                     }
                 }
                 if (state.getValue(BedFrameBlock.PART) == BedPart.HEAD) {
                     switch (state.getValue(BedBlock.FACING)) {
-                        case SOUTH:
+                        case SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 10 / 16f, 8 / 16f, 14 / 16f, pillow, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1 / 16f, 5 / 16f, 10 / 16f, 0f, 14 / 16f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(15 / 16f, 1f, 5 / 16f, 10 / 16f, 0f, 14 / 16f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 12 / 16f, 14 / 16f, 1f, texture, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 8 / 16f, 5 / 16f, 10 / 16f, 1 / 16f, 15 / 16f, pillow, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 1f, 5 / 16f, 10 / 16f, 0f, 1 / 16f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 1f, 5 / 16f, 10 / 16f, 15 / 16f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f, 12 / 16f, 0f, 1f, texture, tintIndex));
-                            break;
-                        case NORTH:
+                        }
+                        case NORTH -> {
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 10 / 16f, 2 / 16f, 8 / 16f, pillow, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1 / 16f, 5 / 16f, 10 / 16f, 2 / 16f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(15 / 16f, 1f, 5 / 16f, 10 / 16f, 2 / 16f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 12 / 16f, 0f, 2 / 16f, texture, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             quads.addAll(ModelHelper.createCuboid(8 / 16f, 14 / 16f, 5 / 16f, 10 / 16f, 1 / 16f, 15 / 16f, pillow, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 14 / 16f, 5 / 16f, 10 / 16f, 0f, 1 / 16f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 14 / 16f, 5 / 16f, 10 / 16f, 15 / 16f, 1f, texture, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f, 12 / 16f, 0f, 1f, texture, tintIndex));
-                            break;
+                        }
                     }
                 }
             }
             if (design == 3) {
                 if (state.getValue(BedFrameBlock.PART) == BedPart.FOOT) {
                     switch (state.getValue(BedBlock.FACING)) {
-                        case NORTH:
+                        case NORTH -> {
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 9 / 16f, 0f, 14 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 9 / 16f, -8 / 16f, 0f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1 / 16f, 5 / 16f, 10 / 16f, 0f, 14 / 16f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(15 / 16f, 1f, 5 / 16f, 10 / 16f, 0f, 14 / 16f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 12 / 16f, 14 / 16f, 1f, planks, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 1f, 5 / 16f, 9 / 16f, 1 / 16f, 15 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1f, 24 / 16f, 5 / 16f, 9 / 16f, 1 / 16f, 15 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 1f, 5 / 16f, 10 / 16f, 0f, 1 / 16f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 1f, 5 / 16f, 10 / 16f, 15 / 16f, 1f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f, 12 / 16f, 0f, 1f, planks, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 9 / 16f, 2 / 16f, 1f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 9 / 16f, 1f, 24 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1 / 16f, 5 / 16f, 10 / 16f, 2 / 16f, 1f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(15 / 16f, 1f, 5 / 16f, 10 / 16f, 2 / 16f, 1f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 12 / 16f, 0f, 2 / 16f, planks, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 14 / 16f, 5 / 16f, 9 / 16f, 1 / 16f, 15 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(-8 / 16f, 0f, 5 / 16f, 9 / 16f, 1 / 16f, 15 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 14 / 16f, 5 / 16f, 10 / 16f, 0f, 1 / 16f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 14 / 16f, 5 / 16f, 10 / 16f, 15 / 16f, 1f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f, 12 / 16f, 0f, 1f, planks, tintIndex));
-                            break;
+                        }
                     }
                 }
                 if (state.getValue(BedFrameBlock.PART) == BedPart.HEAD) {
                     switch (state.getValue(BedBlock.FACING)) {
-                        case SOUTH:
+                        case SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 10 / 16f, 8 / 16f, 14 / 16f, pillow, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1 / 16f, 5 / 16f, 10 / 16f, 0f, 14 / 16f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(15 / 16f, 1f, 5 / 16f, 10 / 16f, 0f, 14 / 16f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 12 / 16f, 14 / 16f, 1f, planks, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 8 / 16f, 5 / 16f, 10 / 16f, 1 / 16f, 15 / 16f, pillow, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 1f, 5 / 16f, 10 / 16f, 0f, 1 / 16f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(2 / 16f, 1f, 5 / 16f, 10 / 16f, 15 / 16f, 1f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 5 / 16f, 12 / 16f, 0f, 1f, planks, tintIndex));
-                            break;
-                        case NORTH:
+                        }
+                        case NORTH -> {
                             quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 10 / 16f, 2 / 16f, 8 / 16f, pillow, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1 / 16f, 5 / 16f, 10 / 16f, 2 / 16f, 1f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(15 / 16f, 1f, 5 / 16f, 10 / 16f, 2 / 16f, 1f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 12 / 16f, 0f, 2 / 16f, planks, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             quads.addAll(ModelHelper.createCuboid(8 / 16f, 14 / 16f, 5 / 16f, 10 / 16f, 1 / 16f, 15 / 16f, pillow, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 14 / 16f, 5 / 16f, 10 / 16f, 0f, 1 / 16f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 14 / 16f, 5 / 16f, 10 / 16f, 15 / 16f, 1f, planks, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 5 / 16f, 12 / 16f, 0f, 1f, planks, tintIndex));
-                            break;
+                        }
                     }
                 }
             }
             if (design == 4) {
                 if (state.getValue(BedFrameBlock.PART) == BedPart.FOOT) {
                     switch (state.getValue(BedBlock.FACING)) {
-                        case NORTH:
+                        case NORTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, 0f, 1f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, -8 / 16f, 0f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, 1f, 17 / 16f, blanket, tintIndex));
@@ -366,8 +353,8 @@ public class BedBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(-1 / 16f, 0f, 3 / 16f, 9 / 16f, -8 / 16f, 0f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1f, 17 / 16f, 3 / 16f, 9 / 16f, -8 / 16f, 0f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 9 / 16f, -9 / 16f, -8 / 16f, blanket, tintIndex));
-                            break;
-                        case EAST:
+                        }
+                        case EAST -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, 0f, 1f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1f, 24 / 16f, 5 / 16f, 10 / 16f, 0f, 1f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(-1 / 16f, 0f, 3 / 16f, 9 / 16f, 0f, 1f, blanket, tintIndex));
@@ -376,8 +363,8 @@ public class BedBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(1f, 24 / 16f, 3 / 16f, 9 / 16f, -1 / 16f, 0f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1f, 24 / 16f, 3 / 16f, 9 / 16f, 1f, 17 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(24 / 16f, 25 / 16f, 5 / 16f, 9 / 16f, 0f, 1f, blanket, tintIndex));
-                            break;
-                        case SOUTH:
+                        }
+                        case SOUTH -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, 0f, 1f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, 1f, 24 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 9 / 16f, -1 / 16f, 0f, blanket, tintIndex));
@@ -386,8 +373,8 @@ public class BedBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(-1 / 16f, 0f, 3 / 16f, 9 / 16f, 1f, 24 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1f, 17 / 16f, 3 / 16f, 9 / 16f, 1f, 24 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 9 / 16f, 24 / 16f, 25 / 16f, blanket, tintIndex));
-                            break;
-                        case WEST:
+                        }
+                        case WEST -> {
                             quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, 0f, 1f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(-8 / 16f, 0f, 5 / 16f, 10 / 16f, 0f, 1f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(1f, 17 / 16f, 3 / 16f, 9 / 16f, 0f, 1f, blanket, tintIndex));
@@ -396,23 +383,15 @@ public class BedBakedModel implements IDynamicBakedModel {
                             quads.addAll(ModelHelper.createCuboid(-8 / 16f, 0f, 3 / 16f, 9 / 16f, -1 / 16f, 0f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(-8 / 16f, 0f, 3 / 16f, 9 / 16f, 1f, 17 / 16f, blanket, tintIndex));
                             quads.addAll(ModelHelper.createCuboid(-9 / 16f, -8 / 16f, 5 / 16f, 9 / 16f, 0f, 1f, blanket, tintIndex));
-                            break;
+                        }
                     }
                 }
                 if (state.getValue(BedFrameBlock.PART) == BedPart.HEAD) {
                     switch (state.getValue(BedBlock.FACING)) {
-                        case SOUTH:
-                            quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, 9 / 16f, 1f, pillow, tintIndex));
-                            break;
-                        case WEST:
-                            quads.addAll(ModelHelper.createCuboid(0f, 7 / 16f, 5 / 16f, 10 / 16f, 0f, 1f, pillow, tintIndex));
-                            break;
-                        case NORTH:
-                            quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, 0f, 7 / 16f, pillow, tintIndex));
-                            break;
-                        case EAST:
-                            quads.addAll(ModelHelper.createCuboid(9 / 16f, 1f, 5 / 16f, 10 / 16f, 0f, 1f, pillow, tintIndex));
-                            break;
+                        case SOUTH -> quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, 9 / 16f, 1f, pillow, tintIndex));
+                        case WEST -> quads.addAll(ModelHelper.createCuboid(0f, 7 / 16f, 5 / 16f, 10 / 16f, 0f, 1f, pillow, tintIndex));
+                        case NORTH -> quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 10 / 16f, 0f, 7 / 16f, pillow, tintIndex));
+                        case EAST -> quads.addAll(ModelHelper.createCuboid(9 / 16f, 1f, 5 / 16f, 10 / 16f, 0f, 1f, pillow, tintIndex));
                     }
                 }
             }
@@ -443,11 +422,13 @@ public class BedBakedModel implements IDynamicBakedModel {
     }
 
     @Override
+    @Nonnull
     public TextureAtlasSprite getParticleIcon() {
         return getTexture();
     }
 
     @Override
+    @Nonnull
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
     }

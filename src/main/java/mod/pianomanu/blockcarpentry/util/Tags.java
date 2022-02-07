@@ -29,7 +29,7 @@ public class Tags {
         createIllusionBlockList();
     }
 
-    public static List<Block> createFrameBlockList() {
+    public static void createFrameBlockList() {
         frameBlocks.clear();
         frameBlocks.add(Registration.FRAMEBLOCK.get());
         frameBlocks.add(Registration.SLAB_FRAMEBLOCK.get());
@@ -49,10 +49,9 @@ public class Tags {
         frameBlocks.add(Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get());
         frameBlocks.add(Registration.SLOPE_FRAMEBLOCK.get());
         frameBlocks.add(Registration.EDGED_SLOPE_FRAMEBLOCK.get());
-        return frameBlocks;
     }
 
-    public static List<Block> createIllusionBlockList() {
+    public static void createIllusionBlockList() {
         illusionBlocks.clear();
         illusionBlocks.add(Registration.ILLUSION_BLOCK.get());
         illusionBlocks.add(Registration.SLAB_ILLUSIONBLOCK.get());
@@ -70,6 +69,5 @@ public class Tags {
         illusionBlocks.add(Registration.CARPET_ILLUSIONBLOCK.get());
         illusionBlocks.add(Registration.PANE_ILLUSIONBLOCK.get());
         illusionBlocks.add(Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get());
-        return illusionBlocks;
     }
 }

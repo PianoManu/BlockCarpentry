@@ -6,12 +6,12 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.data.IModelData;
@@ -63,17 +63,13 @@ public class ModelHelper {
                     break;
                 case UV:
                     switch (e.getIndex()) {
-                        case 0:
+                        case 0 -> {
                             float iu = sprite.getU(u);
                             float iv = sprite.getV(v);
                             builder.put(j, iu, iv);
-                            break;
-                        case 2:
-                            builder.put(j, (short) 0, (short) 0);
-                            break;
-                        default:
-                            builder.put(j);
-                            break;
+                        }
+                        case 2 -> builder.put(j, (short) 0, (short) 0);
+                        default -> builder.put(j);
                     }
                     break;
                 case NORMAL:
@@ -648,133 +644,53 @@ public class ModelHelper {
         TextureAtlasSprite downOverlay = null;
         if (overlayIndex == 1) {
             tintIndex = 1;
-            overlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation("minecraft", "block/grass_block_side_overlay"));
-            upOverlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation("minecraft", "block/grass_block_top"));
+            overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/grass_block_side_overlay"));
+            upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/grass_block_top"));
         }
         if (overlayIndex == 2) {
             tintIndex = 1;
-            overlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_side_overlay_large"));
-            upOverlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation("minecraft", "block/grass_block_top"));
+            overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_side_overlay_large"));
+            upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/grass_block_top"));
         }
         if (overlayIndex == 3) {
-            tintIndex = -1;
-            overlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay"));
-            upOverlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation("minecraft", "block/snow"));
+            overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay"));
+            upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/snow"));
         }
         if (overlayIndex == 4) {
-            tintIndex = -1;
-            overlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay_small"));
-            upOverlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation("minecraft", "block/snow"));
+            overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay_small"));
+            upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/snow"));
         }
         if (overlayIndex == 5) {
             tintIndex = 1;
-            overlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation("minecraft", "block/vine"));
+            overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/vine"));
         }
         if (overlayIndex >= 6 && overlayIndex <= 10) {
-            tintIndex = -1;
             doNotMoveOverlay = false;
             if (overlayIndex == 6) {
-                overlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
-                upOverlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
-                downOverlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
+                overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
+                upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
+                downOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
             }
             if (overlayIndex == 7) {
-                overlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/brick_overlay"));
-                upOverlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/brick_overlay"));
-                downOverlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/brick_overlay"));
+                overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/brick_overlay"));
+                upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/brick_overlay"));
+                downOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/brick_overlay"));
             }
             if (overlayIndex == 8) {
-                overlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_sandstone_overlay"));
+                overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_sandstone_overlay"));
             }
             if (overlayIndex == 9) {
-                overlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/boundary_overlay"));
-                upOverlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/boundary_overlay"));
-                downOverlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/boundary_overlay"));
+                overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/boundary_overlay"));
+                upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/boundary_overlay"));
+                downOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/boundary_overlay"));
             }
             if (overlayIndex == 10) {
-                overlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
-                upOverlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
-                downOverlay = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
+                overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
+                upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
+                downOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
             }
         }
         return ModelHelper.createSixFaceCuboid(xl, xh, yl, yh, zl, zh, tintIndex, north, south, east, west, up, down, overlay, overlay, overlay, overlay, upOverlay, downOverlay, doNotMoveOverlay, 0);
-    }
-
-    public static List<BakedQuad> createSlope(float xl, float xh, float yl, float yh, float zl, float zh, TextureAtlasSprite texture, int tintIndex, Direction direction) {
-        List<BakedQuad> quads = new ArrayList<>();
-        //Eight corners of the block
-        Vec3 NWU = v(xl, yh, zl); //North-West-Up
-        Vec3 NEU = v(xl, yh, zh); //...
-        Vec3 NWD = v(xl, yl, zl);
-        Vec3 NED = v(xl, yl, zh);
-        Vec3 SWU = v(xh, yh, zl);
-        Vec3 SEU = v(xh, yh, zh);
-        Vec3 SWD = v(xh, yl, zl);
-        Vec3 SED = v(xh, yl, zh); //South-East-Down
-        if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
-            if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_error"), true);
-            }
-            return quads;
-        }
-        if (xl < 0) {
-            xl++;
-            xh++;
-        }
-        if (xh > 1) {
-            xh--;
-            xl--;
-        }
-        if (yl < 0) {
-            yl++;
-            yh++;
-        }
-        if (yh > 1) {
-            yh--;
-            yl--;
-        }
-        if (zl < 0) {
-            zl++;
-            zh++;
-        }
-        if (zh > 1) {
-            zh--;
-            zl--;
-        }
-        //bottom face
-        quads.add(ModelHelper.createQuad(NED, NWD, SWD, SED, texture, 0, 16, 0, 16, tintIndex));
-        switch (direction) {
-            case NORTH:
-                //top face
-                quads.add(ModelHelper.createQuad(NWU, NED, SED, SWU, texture, 0, 16, 0, 16, tintIndex));
-                break;
-            case WEST:
-                //back face
-                quads.add(ModelHelper.createQuad(NWU, NWD, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
-
-                quads.add(ModelHelper.createQuad(SWD, SWD, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                quads.add(ModelHelper.createQuad(NEU, NED, NED, SED, texture, 0, 16, 0, 16, tintIndex));
-
-                //top face
-                quads.add(ModelHelper.createQuad(NEU, SED, SWD, NWU, texture, 0, 16, 0, 16, tintIndex));
-                break;
-            case SOUTH:
-                //top face
-                quads.add(ModelHelper.createQuad(NWD, NEU, SEU, SWD, texture, 16, 0, 16, 0, tintIndex));
-                break;
-            case EAST:
-                //back face
-                quads.add(ModelHelper.createQuad(SEU, SED, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
-
-                quads.add(ModelHelper.createQuad(SWD, SWU, NWD, NWD, texture, 0, 16, 0, 16, tintIndex));
-                quads.add(ModelHelper.createQuad(SED, NEU, NEU, NED, texture, 0, 16, 0, 16, tintIndex));
-                //top face
-                quads.add(ModelHelper.createQuad(NED, SEU, SWU, NWD, texture, 16, 0, 16, 0, tintIndex));
-                break;
-        }
-        //top face
-        quads.add(ModelHelper.createQuad(SWU, SEU, NEU, NWU, texture, 0, 16, 0, 16, tintIndex));
-        return quads;
     }
 }
 //========SOLI DEO GLORIA========//
