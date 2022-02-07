@@ -32,7 +32,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 02/06/22
+ * @version 1.1 02/07/22
  */
 public class IllusionDaylightDetectorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -77,10 +77,10 @@ public class IllusionDaylightDetectorBakedModel implements IDynamicBakedModel {
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1 / 16f, 6 / 16f, 15 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1 / 16f, 1 / 16f, 6 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
 
-                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 1 / 16f, 6 / 16f, 1 / 16f, 15 / 16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 1 / 16f, 6 / 16f, 1 / 16f, 15 / 16f, -1, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
                     } else if (design == 2) {
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 6 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 6 / 16f, 7 / 16f, 1 / 16f, 15 / 16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 6 / 16f, 7 / 16f, 1 / 16f, 15 / 16f, -1, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
                     } else if (design == 3) {
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
 
@@ -89,7 +89,7 @@ public class IllusionDaylightDetectorBakedModel implements IDynamicBakedModel {
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1 / 16f, 6 / 16f, 15 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1 / 16f, 1 / 16f, 6 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
 
-                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 1 / 16f, 4 / 16f, 1 / 16f, 15 / 16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 1 / 16f, 4 / 16f, 1 / 16f, 15 / 16f, -1, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
 
                         quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 4 / 16f, 6 / 16f, 1 / 16f, 15 / 16f, glass, -1));
                     } else if (design == 4) {
@@ -100,7 +100,7 @@ public class IllusionDaylightDetectorBakedModel implements IDynamicBakedModel {
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1 / 16f, 6 / 16f, 15 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1 / 16f, 1 / 16f, 6 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
 
-                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 1 / 16f, 5 / 16f, 1 / 16f, 15 / 16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
+                        quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 1 / 16f, 5 / 16f, 1 / 16f, 15 / 16f, -1, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
 
                         quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 6 / 16f, 5 / 16f, 6 / 16f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(10 / 16f, 11 / 16f, 5 / 16f, 6 / 16f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));

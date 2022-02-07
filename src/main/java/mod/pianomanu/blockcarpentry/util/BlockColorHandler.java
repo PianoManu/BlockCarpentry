@@ -23,20 +23,11 @@ import java.util.Objects;
  * This class ensures that blocks of grass take on the correct color
  *
  * @author PianoManu
- * @version 1.6 06/05/21
+ * @version 1.7 02/07/22
  */
 public class BlockColorHandler implements BlockColor {
     public static final BlockColor INSTANCE = new BlockColorHandler();
     private static final Logger LOGGER = LogManager.getLogger();
-
-    /*@OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public static void registerBlockColorHandlers(final ColorHandlerEvent.Block event) {
-        registerBlockColors();
-        event.getBlockColors().register((x, reader, pos, u) -> reader != null
-                && pos != null ? BiomeColors.getAverageFoliageColor(reader, pos)
-                : GrassColors.get(0.5D, 1.0D), Registration.FRAMEBLOCK.get());
-    }*/
 
     public static void registerBlockColors() {
         // DEBUG
@@ -56,6 +47,9 @@ public class BlockColorHandler implements BlockColor {
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.LADDER_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CHEST_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.FENCE_GATE_FRAMEBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CARPET_FRAMEBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.PANE_FRAMEBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.SLOPE_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.EDGED_SLOPE_FRAMEBLOCK.get());
 
@@ -72,6 +66,9 @@ public class BlockColorHandler implements BlockColor {
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.LADDER_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CHEST_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.FENCE_GATE_ILLUSIONBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CARPET_ILLUSIONBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.PANE_ILLUSIONBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get());
 
         LOGGER.info("Registered block color handler");
     }
@@ -92,8 +89,6 @@ public class BlockColorHandler implements BlockColor {
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-
-                //return Minecraft.getInstance().getBlockColors().getColor(containedBlock, blockAndTint, pos, tintIndex);
             }
         }
         return BiomeColors.getAverageGrassColor(Objects.requireNonNull(blockAndTint), Objects.requireNonNull(pos));
