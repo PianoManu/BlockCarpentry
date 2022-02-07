@@ -43,7 +43,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 08/15/21
+ * @version 1.1 02/07/22
  */
 public class BedFrameBlock extends BedBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -76,6 +76,14 @@ public class BedFrameBlock extends BedBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
+            if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
+                    BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
+                    BlockAppearanceHelper.setDesign(level, pos, player, item) ||
+                    BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
+                    BlockAppearanceHelper.setWoolColor(level, pos, player, hand) ||
+                    BlockAppearanceHelper.setOverlay(level, pos, player, item) ||
+                    BlockAppearanceHelper.setRotation(level, pos, player, item))
+                return InteractionResult.CONSUME;
             if ((state.getValue(CONTAINS_BLOCK) && !item.is(Tags.Items.DYES) && !item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) || item.isEmpty()) {
                 //Taken from BedBlock, should work similar to vanilla beds
                 if (state.getValue(PART) != BedPart.HEAD) {
@@ -137,13 +145,6 @@ public class BedFrameBlock extends BedBlock {
                 state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
                 level.setBlock(pos, state, 2);
             }
-            BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, level, player, pos);
-            BlockAppearanceHelper.setDesign(level, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(level, pos, player, item);
-            BlockAppearanceHelper.setWoolColor(level, pos, player, hand);
-            BlockAppearanceHelper.setOverlay(level, pos, player, item);
-            BlockAppearanceHelper.setRotation(level, pos, player, item);
         }
         return InteractionResult.SUCCESS;
     }

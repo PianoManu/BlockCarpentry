@@ -37,7 +37,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 08/15/21
+ * @version 1.1 02/07/22
  */
 public class ButtonFrameBlock extends WoodButtonBlock implements EntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -68,6 +68,13 @@ public class ButtonFrameBlock extends WoodButtonBlock implements EntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
+            if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
+                    BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
+                    BlockAppearanceHelper.setDesign(level, pos, player, item) ||
+                    BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
+                    BlockAppearanceHelper.setOverlay(level, pos, player, item) ||
+                    BlockAppearanceHelper.setRotation(level, pos, player, item))
+                return InteractionResult.CONSUME;
             //TODO clean up
             if (!state.getValue(CONTAINS_BLOCK)) {
                 if (item.getItem() instanceof BlockItem) {
@@ -101,12 +108,6 @@ public class ButtonFrameBlock extends WoodButtonBlock implements EntityBlock {
                 level.gameEvent(player, GameEvent.BLOCK_PRESS, pos);
                 //return InteractionResult.sidedSuccess(level.isClientSide);
             }
-            BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, level, player, pos);
-            BlockAppearanceHelper.setDesign(level, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(level, pos, player, item);
-            BlockAppearanceHelper.setOverlay(level, pos, player, item);
-            BlockAppearanceHelper.setRotation(level, pos, player, item);
         }
         return InteractionResult.SUCCESS;
     }

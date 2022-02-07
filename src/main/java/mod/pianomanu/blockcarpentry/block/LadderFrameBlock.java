@@ -71,12 +71,13 @@ public class LadderFrameBlock extends LadderBlock implements EntityBlock {
     public InteractionResult use(@Nullable BlockState state, Level level, @Nullable BlockPos pos, Player player, @Nullable InteractionHand hand, @Nullable BlockHitResult hitResult) {
         ItemStack item = player.getItemInHand(Objects.requireNonNull(hand));
         if (!level.isClientSide && state != null && pos != null) {
-            BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, level, player, pos);
-            BlockAppearanceHelper.setDesign(level, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(level, pos, player, item);
-            BlockAppearanceHelper.setOverlay(level, pos, player, item);
-            BlockAppearanceHelper.setRotation(level, pos, player, item);
+            if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
+                    BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
+                    BlockAppearanceHelper.setDesign(level, pos, player, item) ||
+                    BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
+                    BlockAppearanceHelper.setOverlay(level, pos, player, item) ||
+                    BlockAppearanceHelper.setRotation(level, pos, player, item))
+                return InteractionResult.CONSUME;
             if (item.getItem() instanceof BlockItem) {
                 if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                     return InteractionResult.PASS;

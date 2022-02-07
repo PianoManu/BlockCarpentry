@@ -35,7 +35,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 02/06/22
+ * @version 1.1 02/07/22
  */
 public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -63,13 +63,14 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
             if (state.getValue(CONTAINS_BLOCK) && !Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                 super.use(state, level, pos, player, hand, hitresult);
             }
-            BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, level, player, pos);
-            BlockAppearanceHelper.setDesign(level, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(level, pos, player, item);
-            BlockAppearanceHelper.setGlassColor(level, pos, player, hand);
-            BlockAppearanceHelper.setOverlay(level, pos, player, item);
-            BlockAppearanceHelper.setRotation(level, pos, player, item);
+            if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
+                    BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
+                    BlockAppearanceHelper.setDesign(level, pos, player, item) ||
+                    BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
+                    BlockAppearanceHelper.setGlassColor(level, pos, player, hand) ||
+                    BlockAppearanceHelper.setOverlay(level, pos, player, item) ||
+                    BlockAppearanceHelper.setRotation(level, pos, player, item))
+                return InteractionResult.CONSUME;
             if (item.getItem() instanceof BlockItem) {
                 if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                     return InteractionResult.PASS;

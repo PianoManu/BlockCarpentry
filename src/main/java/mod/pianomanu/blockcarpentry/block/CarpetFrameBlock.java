@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 02/06/22
+ * @version 1.1 02/07/22
  */
 public class CarpetFrameBlock extends FrameBlock {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
@@ -42,7 +42,8 @@ public class CarpetFrameBlock extends FrameBlock {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         if (!level.isClientSide)
-            BlockAppearanceHelper.setGlassColor(level, pos, player, hand);
+            if (BlockAppearanceHelper.setGlassColor(level, pos, player, hand))
+                return InteractionResult.CONSUME;
         return super.use(state, level, pos, player, hand, hitresult);
     }
 

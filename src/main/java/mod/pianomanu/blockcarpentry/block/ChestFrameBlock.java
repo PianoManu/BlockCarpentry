@@ -96,6 +96,12 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
+            if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
+                    BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
+                    BlockAppearanceHelper.setDesign(level, pos, player, item) ||
+                    BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
+                    BlockAppearanceHelper.setRotation(level, pos, player, item))
+                return InteractionResult.CONSUME;
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (item.getItem() instanceof BlockItem) {
                 if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
@@ -117,11 +123,6 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
                 state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
                 level.setBlock(pos, state, 2);
             }
-            BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, level, player, pos);
-            BlockAppearanceHelper.setDesign(level, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(level, pos, player, item);
-            BlockAppearanceHelper.setRotation(level, pos, player, item);
             if (tileEntity instanceof ChestFrameBlockEntity && state.getValue(CONTAINS_BLOCK)) {
                 if (!(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
                     MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
