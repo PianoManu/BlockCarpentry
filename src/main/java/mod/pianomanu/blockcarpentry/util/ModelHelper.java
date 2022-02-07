@@ -26,7 +26,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.18 02/06/22
+ * @version 1.19 02/07/22
  */
 public class ModelHelper {
 
@@ -503,12 +503,12 @@ public class ModelHelper {
         List<BakedQuad> quads = new ArrayList<>();
         //Eight corners of the block
         Vec3 NWU = v(xl, yh, zl); //North-West-Up
-        Vec3 NEU = v(xl, yh, zh); //...
+        Vec3 SWU = v(xl, yh, zh); //...
         Vec3 NWD = v(xl, yl, zl);
-        Vec3 NED = v(xl, yl, zh);
-        Vec3 SWU = v(xh, yh, zl);
+        Vec3 SWD = v(xl, yl, zh);
+        Vec3 NEU = v(xh, yh, zl);
         Vec3 SEU = v(xh, yh, zh);
-        Vec3 SWD = v(xh, yl, zl);
+        Vec3 NED = v(xh, yl, zl);
         Vec3 SED = v(xh, yl, zh); //South-East-Down
         if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
@@ -542,27 +542,27 @@ public class ModelHelper {
         }
         if (rotation == 0) {
             if (up && textureUp != null)
-                quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+                quads.add(createQuad(NWU, SWU, SEU, NEU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
             if (down && textureDown != null)
-                quads.add(createQuad(NED, NWD, SWD, SED, textureDown, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
+                quads.add(createQuad(NED, SED, SWD, NWD, textureDown, xh * 16, xl * 16, 16 - zl * 16, 16 - zh * 16, tintIndex));
             //not moved overlay - texture starts from y=1
             if (west && textureWest != null && !moveOverlay)
-                quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(createQuad(NWU, NWD, SWD, SWU, textureWest, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             if (east && textureEast != null && !moveOverlay)
-                quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(createQuad(SEU, SED, NED, NEU, textureEast, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             if (north && textureNorth != null && !moveOverlay)
-                quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(createQuad(NEU, NED, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             if (south && textureSouth != null && !moveOverlay)
-                quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+                quads.add(createQuad(SWU, SWD, SED, SEU, textureSouth, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
             //moved overlay - texture starts from height of block
             if (west && textureWest != null && moveOverlay)
-                quads.add(createQuad(SWU, SWD, NWD, NWU, textureWest, 16 - xh * 16, 16 - xl * 16, yl * 16, yh * 16, tintIndex));
+                quads.add(createQuad(NWU, NWD, SWD, SWU, textureWest, zl * 16, zh * 16, yl * 16, yh * 16, tintIndex));
             if (east && textureEast != null && moveOverlay)
-                quads.add(createQuad(NEU, NED, SED, SEU, textureEast, xl * 16, xh * 16, yl * 16, yh * 16, tintIndex));
+                quads.add(createQuad(SEU, SED, NED, NEU, textureEast, 16 - zh * 16, 16 - zl * 16, yl * 16, yh * 16, tintIndex));
             if (north && textureNorth != null && moveOverlay)
-                quads.add(createQuad(NWU, NWD, NED, NEU, textureNorth, zl * 16, zh * 16, yl * 16, yh * 16, tintIndex));
+                quads.add(createQuad(NEU, NED, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, yl * 16, yh * 16, tintIndex));
             if (south && textureSouth != null && moveOverlay)
-                quads.add(createQuad(SEU, SED, SWD, SWU, textureSouth, 16 - zh * 16, 16 - zl * 16, yl * 16, yh * 16, tintIndex));
+                quads.add(createQuad(SWU, SWD, SED, SEU, textureSouth, xl * 16, xh * 16, yl * 16, yh * 16, tintIndex));
         }
         if (rotation == 1) {
             //rotated
