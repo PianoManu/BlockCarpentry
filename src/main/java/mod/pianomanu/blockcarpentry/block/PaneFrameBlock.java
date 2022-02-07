@@ -191,7 +191,7 @@ public class PaneFrameBlock extends IronBarsBlock implements EntityBlock {
             for (Direction d : Direction.values()) {
                 BlockPos.MutableBlockPos mutablePos = pos.mutable();
                 BlockState adjacentBlockState = level.getBlockState(mutablePos.move(d));
-                tileEntity.setVisibileSides(d, skipRendering(state, adjacentBlockState, d));
+                tileEntity.setVisibleSides(d, skipRendering(state, adjacentBlockState, d));
             }
         }
     }

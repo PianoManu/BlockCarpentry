@@ -30,7 +30,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.1 02/06/22
+ * @version 1.2 02/07/22
  */
 public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -140,7 +140,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
         level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
     }
 
-    public void setVisibileSides(Direction dir, boolean isVisible) {
+    public void setVisibleSides(Direction dir, boolean isVisible) {
         switch (dir) {
             case DOWN:
                 downVisible = isVisible;
