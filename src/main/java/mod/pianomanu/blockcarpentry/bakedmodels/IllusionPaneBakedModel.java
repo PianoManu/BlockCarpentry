@@ -33,7 +33,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 02/06/22
+ * @version 1.1 02/07/22
  */
 public class IllusionPaneBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -276,7 +276,15 @@ public class IllusionPaneBakedModel implements IDynamicBakedModel {
                 int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
                 if (overlayIndex != 0) {
                     //TODO fix overlay for transparent blocks - then also use transparent overlay
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex, true, true, renderEast, renderWest, renderUp, renderDown, true));
+                    quads.addAll(ModelHelper.createOverlay(7 / 16f, 9 / 16f, 0f, 1f, 7 / 16f, 9 / 16f, overlayIndex, !north, !south, !east, !west, renderUp, renderDown, true));
+                    if (north)
+                        quads.addAll(ModelHelper.createOverlay(7 / 16f, 9 / 16f, 0f, 1f, 0f, 7 / 16f, overlayIndex, renderNorth, false, true, true, renderUp, renderDown, true));
+                    if (east)
+                        quads.addAll(ModelHelper.createOverlay(9 / 16f, 1f, 0f, 1f, 7 / 16f, 9 / 16f, overlayIndex, true, true, renderEast, false, renderUp, renderDown, true));
+                    if (south)
+                        quads.addAll(ModelHelper.createOverlay(7 / 16f, 9 / 16f, 0f, 1f, 9 / 16f, 1f, overlayIndex, false, renderSouth, true, true, renderUp, renderDown, true));
+                    if (west)
+                        quads.addAll(ModelHelper.createOverlay(0f, 7 / 16f, 0f, 1f, 7 / 16f, 9 / 16f, overlayIndex, true, true, false, renderWest, renderUp, renderDown, true));
                 }
                 return quads;
             }
