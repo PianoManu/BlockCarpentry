@@ -6,8 +6,8 @@ import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TrapDoorBlock;
 import net.minecraft.entity.item.ItemEntity;
@@ -37,7 +37,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.7 05/27/21
+ * @version 1.8 02/08/22
  */
 public class TrapdoorFrameBlock extends TrapDoorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -74,7 +74,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
+                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && heldBlock.getRenderType(heldBlock.getDefaultState()).equals(BlockRenderType.MODEL) && !state.get(CONTAINS_BLOCK)) {
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     insertBlock(world, pos, state, handBlockState);
                     if (!player.isCreative())

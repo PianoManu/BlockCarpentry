@@ -6,8 +6,8 @@ import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WoodButtonBlock;
 import net.minecraft.entity.item.ItemEntity;
@@ -40,7 +40,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 05/27/21
+ * @version 1.6 02/08/22
  */
 public class ButtonFrameBlock extends WoodButtonBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -78,8 +78,9 @@ public class ButtonFrameBlock extends WoodButtonBlock {
                         return ActionResultType.PASS;
                     }
                     TileEntity tileEntity = world.getTileEntity(pos);
-                    int count = player.getHeldItem(hand).getCount();
-                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(((BlockItem) item.getItem()).getBlock()) && !state.get(CONTAINS_BLOCK)) {
+                    Block heldBlock = ((BlockItem) item.getItem()).getBlock();
+                    int count = item.getCount();
+                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && heldBlock.getRenderType(heldBlock.getDefaultState()).equals(BlockRenderType.MODEL) && !state.get(CONTAINS_BLOCK)) {
                         ((FrameBlockTile) tileEntity).clear();
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                         ((FrameBlockTile) tileEntity).setMimic(handBlockState);

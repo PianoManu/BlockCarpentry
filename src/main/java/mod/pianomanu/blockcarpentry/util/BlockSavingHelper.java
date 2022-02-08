@@ -1,55 +1,23 @@
 package mod.pianomanu.blockcarpentry.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Currently unused, may be used (or rewritten) for frame beds
+ * Used for frame beds, doors, trapdoors, etc. to help
+ * coloring transparent or wool-like parts
  *
  * @author PianoManu
- * @version 1.4 04/09/21
+ * @version 1.5 02/08/22
  */
 public class BlockSavingHelper {
-    public static List<Block> validBlocks = new ArrayList<>();
-
-    public static void createValidBlockList() {
-        List<Block> blockList = new ArrayList<>();
-        for (Block b : ForgeRegistries.BLOCKS) {
-            if (b.getDefaultState().getRenderType() == BlockRenderType.MODEL) {
-                /*if (b.getDefaultState().isSolid() || b.getDefaultState().isTransparent()) {
-                    blockList.add(b);
-                }
-                if (b instanceof AbstractGlassBlock) {
-                    blockList.add(b);
-                }
-                if (b instanceof IceBlock) {
-                    blockList.add(b);
-                }
-                if (b instanceof SlimeBlock) {
-                    blockList.add(b);
-                }
-                if (b instanceof HoneyBlock) {
-                    blockList.add(b);
-                }*/
-                blockList.add(b);
-            }
-        }
-        validBlocks = blockList;
-    }
-
-    public static boolean isValidBlock(Block block) {
-        return validBlocks.contains(block);
-    }
 
     public static boolean isDyeItem(Item item) {
-        //return Tags.Items.DYES.contains(item);
         List<Item> dye_items = new ArrayList<>();
         dye_items.add(Items.WHITE_DYE);
         dye_items.add(Items.RED_DYE);

@@ -6,12 +6,10 @@ import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -31,7 +29,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.*;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
@@ -43,7 +44,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 05/27/21
+ * @version 1.6 02/08/22
  */
 public class BedFrameBlock extends BedBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -93,7 +94,7 @@ public class BedFrameBlock extends BedBlock {
                         world.removeBlock(blockpos, false);
                     }
 
-                    world.createExplosion((Entity) null, DamageSource.func_233546_a_(), (ExplosionContext) null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+                    world.createExplosion(null, DamageSource.func_233546_a_(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
                     return ActionResultType.SUCCESS;
                 } else if (state.get(OCCUPIED)) {
                     if (!this.func_226861_a_(world, pos)) {
@@ -123,7 +124,7 @@ public class BedFrameBlock extends BedBlock {
                     TileEntity tileEntity = world.getTileEntity(pos);
                     int count = player.getHeldItem(hand).getCount();
                     Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                    if (tileEntity instanceof BedFrameTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
+                    if (tileEntity instanceof BedFrameTile && !item.isEmpty() && heldBlock.getRenderType(heldBlock.getDefaultState()).equals(BlockRenderType.MODEL) && !state.get(CONTAINS_BLOCK)) {
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                         insertBlock(world, pos, state, handBlockState);
                         if (!player.isCreative())

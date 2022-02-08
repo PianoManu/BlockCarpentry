@@ -7,11 +7,7 @@ import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.WallBlock;
-import net.minecraft.block.WallHeight;
+import net.minecraft.block.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -41,7 +37,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 05/01/21
+ * @version 1.6 02/08/22
  */
 public class WallFrameBlock extends WallBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -70,15 +66,15 @@ public class WallFrameBlock extends WallBlock {
         float f1 = 8.0F + p_235624_1_;
         float f2 = 8.0F - p_235624_2_;
         float f3 = 8.0F + p_235624_2_;
-        VoxelShape voxelshape = Block.makeCuboidShape((double) f, 0.0D, (double) f, (double) f1, (double) p_235624_3_, (double) f1);
-        VoxelShape voxelshape1 = Block.makeCuboidShape((double) f2, (double) p_235624_4_, 0.0D, (double) f3, (double) p_235624_5_, (double) f3);
-        VoxelShape voxelshape2 = Block.makeCuboidShape((double) f2, (double) p_235624_4_, (double) f2, (double) f3, (double) p_235624_5_, 16.0D);
-        VoxelShape voxelshape3 = Block.makeCuboidShape(0.0D, (double) p_235624_4_, (double) f2, (double) f3, (double) p_235624_5_, (double) f3);
-        VoxelShape voxelshape4 = Block.makeCuboidShape((double) f2, (double) p_235624_4_, (double) f2, 16.0D, (double) p_235624_5_, (double) f3);
-        VoxelShape voxelshape5 = Block.makeCuboidShape((double) f2, (double) p_235624_4_, 0.0D, (double) f3, (double) p_235624_6_, (double) f3);
-        VoxelShape voxelshape6 = Block.makeCuboidShape((double) f2, (double) p_235624_4_, (double) f2, (double) f3, (double) p_235624_6_, 16.0D);
-        VoxelShape voxelshape7 = Block.makeCuboidShape(0.0D, (double) p_235624_4_, (double) f2, (double) f3, (double) p_235624_6_, (double) f3);
-        VoxelShape voxelshape8 = Block.makeCuboidShape((double) f2, (double) p_235624_4_, (double) f2, 16.0D, (double) p_235624_6_, (double) f3);
+        VoxelShape voxelshape = Block.makeCuboidShape(f, 0.0D, f, f1, p_235624_3_, f1);
+        VoxelShape voxelshape1 = Block.makeCuboidShape(f2, p_235624_4_, 0.0D, f3, p_235624_5_, f3);
+        VoxelShape voxelshape2 = Block.makeCuboidShape(f2, p_235624_4_, f2, f3, p_235624_5_, 16.0D);
+        VoxelShape voxelshape3 = Block.makeCuboidShape(0.0D, p_235624_4_, f2, f3, p_235624_5_, f3);
+        VoxelShape voxelshape4 = Block.makeCuboidShape(f2, p_235624_4_, f2, 16.0D, p_235624_5_, f3);
+        VoxelShape voxelshape5 = Block.makeCuboidShape(f2, p_235624_4_, 0.0D, f3, p_235624_6_, f3);
+        VoxelShape voxelshape6 = Block.makeCuboidShape(f2, p_235624_4_, f2, f3, p_235624_6_, 16.0D);
+        VoxelShape voxelshape7 = Block.makeCuboidShape(0.0D, p_235624_4_, f2, f3, p_235624_6_, f3);
+        VoxelShape voxelshape8 = Block.makeCuboidShape(f2, p_235624_4_, f2, 16.0D, p_235624_6_, f3);
         ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
 
         for (int lightlevel = 0; lightlevel < 16; lightlevel++) {
@@ -155,7 +151,7 @@ public class WallFrameBlock extends WallBlock {
                 TileEntity tileEntity = world.getTileEntity(pos);
                 int count = player.getHeldItem(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
+                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && heldBlock.getRenderType(heldBlock.getDefaultState()).equals(BlockRenderType.MODEL) && !state.get(CONTAINS_BLOCK)) {
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     insertBlock(world, pos, state, handBlockState);
                     if (!player.isCreative())

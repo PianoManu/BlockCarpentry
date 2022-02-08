@@ -5,8 +5,8 @@ import mod.pianomanu.blockcarpentry.tileentity.FallingFrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FallingBlock;
 import net.minecraft.entity.item.FallingBlockEntity;
@@ -35,7 +35,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Nothing important to see here, this class is currently unused, visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 10/06/20
+ * @version 1.2 02/08/22
  */
 public class FallingFrameBlock extends FallingBlock {
 
@@ -76,8 +76,9 @@ public class FallingFrameBlock extends FallingBlock {
             } else {
                 if (item.getItem() instanceof BlockItem) {
                     TileEntity tileEntity = world.getTileEntity(pos);
-                    int count = player.getHeldItem(hand).getCount();
-                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(((BlockItem) item.getItem()).getBlock()) && !state.get(CONTAINS_BLOCK)) {
+                    Block heldBlock = ((BlockItem) item.getItem()).getBlock();
+                    int count = item.getCount();
+                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && heldBlock.getRenderType(heldBlock.getDefaultState()).equals(BlockRenderType.MODEL) && !state.get(CONTAINS_BLOCK)) {
                         ((FrameBlockTile) tileEntity).clear();
                         BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                         ((FrameBlockTile) tileEntity).setMimic(handBlockState);

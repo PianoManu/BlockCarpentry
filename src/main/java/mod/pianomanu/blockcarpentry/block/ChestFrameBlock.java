@@ -5,8 +5,8 @@ import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.ChestFrameTileEntity;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.LivingEntity;
@@ -44,7 +44,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.7 08/18/21
+ * @version 1.8 02/08/22
  */
 public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
     private static final VoxelShape INNER_CUBE = Block.makeCuboidShape(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
@@ -116,7 +116,7 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
                 }
                 int count = player.getHeldItem(hand).getCount();
                 Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof ChestFrameTileEntity && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
+                if (tileEntity instanceof ChestFrameTileEntity && !item.isEmpty() && heldBlock.getRenderType(heldBlock.getDefaultState()).equals(BlockRenderType.MODEL) && !state.get(CONTAINS_BLOCK)) {
                     BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
                     insertBlock(world, pos, state, handBlockState);
                     if (!player.isCreative())
