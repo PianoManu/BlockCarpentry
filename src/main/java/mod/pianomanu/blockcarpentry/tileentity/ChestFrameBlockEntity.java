@@ -40,7 +40,7 @@ import java.util.Objects;
  * Contains all information about the block and the mimicked block, as well as the inventory size and stored items
  *
  * @author PianoManu
- * @version 1.1 02/06/22
+ * @version 1.0 05/23/22
  */
 public class ChestFrameBlockEntity extends ChestBlockEntity {
 
@@ -215,32 +215,31 @@ public class ChestFrameBlockEntity extends ChestBlockEntity {
     private Integer glassColor = 0;
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         //FRAME BEGIN
         if (mimic != null) {
-            compound.put("mimic", NbtUtils.writeBlockState(mimic));
+            tag.put("mimic", NbtUtils.writeBlockState(mimic));
         }
         if (texture != null) {
-            compound.put("texture", writeInteger(texture));
+            tag.put("texture", writeInteger(texture));
         }
         if (design != null) {
-            compound.put("design", writeInteger(design));
+            tag.put("design", writeInteger(design));
         }
         if (designTexture != null) {
-            compound.put("design_texture", writeInteger(designTexture));
+            tag.put("design_texture", writeInteger(designTexture));
         }
         if (glassColor != null) {
-            compound.put("glass_color", writeInteger(glassColor));
+            tag.put("glass_color", writeInteger(glassColor));
         }
         if (rotation != null) {
-            compound.put("rotation", writeInteger(rotation));
+            tag.put("rotation", writeInteger(rotation));
         }
         //FRAME END
-        super.save(compound);
-        if (!this.trySaveLootTable(compound)) {
-            ContainerHelper.saveAllItems(compound, this.chestContents);
+        if (!this.trySaveLootTable(tag)) {
+            ContainerHelper.saveAllItems(tag, this.chestContents);
         }
-        return compound;
     }
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -436,15 +435,7 @@ public class ChestFrameBlockEntity extends ChestBlockEntity {
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 1, getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
-
-    /*@Override
-    public void remove() {
-        super.remove();
-        if(itemHandler != null) {
-            itemHandler.invalidate();
-        }
-    }*/
 }
 //========SOLI DEO GLORIA========//

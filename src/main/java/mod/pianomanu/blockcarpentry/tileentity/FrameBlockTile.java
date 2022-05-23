@@ -30,7 +30,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.2 02/07/22
+ * @version 1.0 05/23/22
  */
 public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -207,7 +207,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 1, getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     //TODO
@@ -346,7 +346,8 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if (mimic != null) {
             tag.put("mimic", NbtUtils.writeBlockState(mimic));
         }
@@ -368,7 +369,6 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
         if (rotation != null) {
             tag.put("rotation", writeInteger(rotation));
         }
-        return super.save(tag);
     }
 
     public void clear() {

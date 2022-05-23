@@ -25,7 +25,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
  * BlockEntity for frame beds, you can customize both pillow and blanket
  *
  * @author PianoManu
- * @version 1.1 02/06/22
+ * @version 1.0 05/23/22
  */
 public class BedFrameTile extends BlockEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -140,8 +140,8 @@ public class BedFrameTile extends BlockEntity {
 
     @Nullable
     @Override
-    public net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket(this.worldPosition, 1, getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     //TODO
@@ -274,8 +274,8 @@ public class BedFrameTile extends BlockEntity {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        super.save(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if (mimic != null) {
             tag.put("mimic", NbtUtils.writeBlockState(mimic));
         }
@@ -297,7 +297,6 @@ public class BedFrameTile extends BlockEntity {
         if (rotation != null) {
             tag.put("rotation", writeInteger(rotation));
         }
-        return tag;
     }
 
     public void clear() {

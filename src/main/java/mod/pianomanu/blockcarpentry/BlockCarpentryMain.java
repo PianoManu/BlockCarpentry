@@ -9,6 +9,7 @@ import mod.pianomanu.blockcarpentry.util.Tags;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -18,7 +19,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,7 +30,7 @@ import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
  * Main class of the BlockCarpentry mod
  *
  * @author PianoManu
- * @version 1.4 05/02/21
+ * @version 1.0 05/23/22
  */
 @Mod(MOD_ID)
 public class BlockCarpentryMain
@@ -104,7 +104,7 @@ public class BlockCarpentryMain
      * Server stuff (currently unused)
      */
     @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent event) {
+    public void onServerStarting(ServerStartingEvent event) {
     }
 
     /**

@@ -48,7 +48,7 @@ import static mod.pianomanu.blockcarpentry.block.FrameBlock.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.2 02/07/22
+ * @version 1.0 05/23/22
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements SimpleWaterloggedBlock, EntityBlock {
@@ -262,7 +262,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
     @Nonnull
     public BlockState updateShape(BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor levelIn, @Nonnull BlockPos currentPos, @Nonnull BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
-            levelIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
+            levelIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
         }
 
         return super.updateShape(stateIn, facing, facingState, levelIn, currentPos, facingPos);

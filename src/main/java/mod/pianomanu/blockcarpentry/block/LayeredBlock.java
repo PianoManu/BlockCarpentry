@@ -27,7 +27,7 @@ import static mod.pianomanu.blockcarpentry.block.FrameBlock.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 02/07/22
+ * @version 1.0 05/23/22
  */
 public class LayeredBlock extends AbstractSixWayFrameBlock implements SimpleWaterloggedBlock {
     public static final IntegerProperty LAYERS = BCBlockStateProperties.LAYERS;
@@ -126,7 +126,7 @@ public class LayeredBlock extends AbstractSixWayFrameBlock implements SimpleWate
             super.onRemove(state, levelIn, pos, newState, isMoving);
         }
         if (state.getValue(WATERLOGGED)) {
-            levelIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
+            levelIn.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
         }
     }
 

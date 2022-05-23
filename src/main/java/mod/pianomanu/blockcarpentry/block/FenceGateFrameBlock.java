@@ -43,7 +43,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 02/07/22
+ * @version 1.0 05/23/22
  */
 public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterloggedBlock, EntityBlock {
     public FenceGateFrameBlock(Properties properties) {
@@ -183,7 +183,7 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor levelIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
-            levelIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
+            levelIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
         }
 
         return super.updateShape(stateIn, facing, facingState, levelIn, currentPos, facingPos);

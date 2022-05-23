@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
-import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.12 02/07/22
+ * @version 1.0 05/23/22
  */
 public class BlockAppearanceHelper {
     public static boolean setLightLevel(ItemStack item, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand) {
@@ -236,13 +235,13 @@ public class BlockAppearanceHelper {
     }
 
     //reminder to myself: DO NOT USE, CAUSES SERVER CRASHES, fix or remove
-    private static String glassColorToString(int glassColor) {
+    /*private static String glassColorToString(int glassColor) {
         List<String> colors = new ArrayList<>();
-        for (Item item : Tags.Items.DYES.getValues()) {
+        for (Item item : Tags.Items.DYES) {
             colors.add(item.getDescription().getString());
         }
         return colors.get(glassColor);
-    }
+    }*/
 
     public static Integer dyeItemToInt(Item item) {
         List<Item> colors = new ArrayList<>(BlockSavingHelper.getDyeItems());

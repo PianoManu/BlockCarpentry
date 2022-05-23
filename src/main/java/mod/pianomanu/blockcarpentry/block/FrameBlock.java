@@ -44,7 +44,7 @@ import java.util.Objects;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.2 02/07/22
+ * @version 1.0 05/23/22
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, SimpleWaterloggedBlock {
@@ -229,7 +229,7 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
             super.onRemove(state, levelIn, pos, newState, isMoving);
         }
         if (state.getValue(WATERLOGGED)) {
-            levelIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
+            levelIn.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
         }
     }
 
@@ -271,7 +271,7 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor levelIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
-            levelIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
+            levelIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
         }
 
         return super.updateShape(stateIn, facing, facingState, levelIn, currentPos, facingPos);

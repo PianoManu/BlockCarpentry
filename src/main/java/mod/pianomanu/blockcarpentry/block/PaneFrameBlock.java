@@ -41,7 +41,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 02/07/22
+ * @version 1.0 05/23/22
  */
 public class PaneFrameBlock extends IronBarsBlock implements EntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -142,7 +142,7 @@ public class PaneFrameBlock extends IronBarsBlock implements EntityBlock {
             super.onRemove(state, worldIn, pos, newState, isMoving);
         }
         if (state.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            worldIn.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
     }
 
@@ -169,7 +169,7 @@ public class PaneFrameBlock extends IronBarsBlock implements EntityBlock {
     @Nonnull
     public BlockState updateShape(BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor levelIn, @Nonnull BlockPos currentPos, @Nonnull BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
-            levelIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
+            levelIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
         }
 
         return facing.getAxis().isHorizontal() ? stateIn.setValue(PROPERTY_BY_DIRECTION.get(facing), this.attachsTo(facingState, facingState.isFaceSturdy(levelIn, facingPos, facing.getOpposite()))) : super.updateShape(stateIn, facing, facingState, levelIn, currentPos, facingPos);

@@ -29,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.SLAB_FRAME_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.1 02/06/22
+ * @version 1.0 05/23/22
  */
 public class TwoBlocksFrameBlockTile extends BlockEntity {
     public static final ModelProperty<BlockState> MIMIC_1 = new ModelProperty<>();
@@ -265,7 +265,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 1, getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
@@ -486,7 +486,8 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
 
     @Override
     @Nonnull
-    public CompoundTag save(@Nonnull CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if (mimic_1 != null) {
             tag.put("mimic_1", NbtUtils.writeBlockState(mimic_1));
         }
@@ -524,7 +525,6 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
         if (rotation_2 != null) {
             tag.put("rotation_2", writeInteger(rotation_2));
         }
-        return super.save(tag);
     }
 
     public void clear() {
