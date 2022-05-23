@@ -199,32 +199,32 @@ public class IllusionLadderBakedModel implements IDynamicBakedModel {
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 5 / 16f, 7 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 9 / 16f, 11 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 13 / 16f, 15 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, -1));
                     }
                     case SOUTH -> {
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1 / 16f, 3 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 5 / 16f, 7 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 9 / 16f, 11 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 13 / 16f, 15 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, -1));
                     }
                     case NORTH -> {
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1 / 16f, 3 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 5 / 16f, 7 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 9 / 16f, 11 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 13 / 16f, 15 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, -1));
                     }
                     case EAST -> {
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 1 / 16f, 3 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 5 / 16f, 7 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 9 / 16f, 11 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 13 / 16f, 15 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, -1));
                     }
                 }
             }
@@ -235,32 +235,32 @@ public class IllusionLadderBakedModel implements IDynamicBakedModel {
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 14 / 16f, 5 / 16f, 7 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 14 / 16f, 9 / 16f, 11 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 14 / 16f, 13 / 16f, 15 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, -1));
                     }
                     case SOUTH -> {
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1 / 16f, 3 / 16f, 2 / 16f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 5 / 16f, 7 / 16f, 2 / 16f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 9 / 16f, 11 / 16f, 2 / 16f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 13 / 16f, 15 / 16f, 2 / 16f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, -1));
                     }
                     case NORTH -> {
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1 / 16f, 3 / 16f, 13 / 16f, 14 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 5 / 16f, 7 / 16f, 13 / 16f, 14 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 9 / 16f, 11 / 16f, 13 / 16f, 14 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 13 / 16f, 15 / 16f, 13 / 16f, 14 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, -1));
                     }
                     case EAST -> {
                         quads.addAll(ModelHelper.createSixFaceCuboid(2 / 16f, 3 / 16f, 1 / 16f, 3 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(2 / 16f, 3 / 16f, 5 / 16f, 7 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(2 / 16f, 3 / 16f, 9 / 16f, 11 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(2 / 16f, 3 / 16f, 13 / 16f, 15 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, -1));
                     }
                 }
             }
