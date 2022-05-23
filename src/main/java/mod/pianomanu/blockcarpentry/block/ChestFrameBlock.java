@@ -101,7 +101,7 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
                     BlockAppearanceHelper.setDesign(level, pos, player, item) ||
                     BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
                     BlockAppearanceHelper.setRotation(level, pos, player, item))
-                return InteractionResult.CONSUME;
+                return InteractionResult.SUCCESS;
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (item.getItem() instanceof BlockItem) {
                 if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
@@ -130,6 +130,7 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
                         player.openMenu(menuprovider);
                         player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
                         PiglinAi.angerNearbyPiglins(player, true);
+                        return InteractionResult.SUCCESS;
                     }
 
                     return InteractionResult.CONSUME;

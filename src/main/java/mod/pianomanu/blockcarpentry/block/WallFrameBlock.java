@@ -147,7 +147,7 @@ public class WallFrameBlock extends WallBlock implements EntityBlock {
                     BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
                     BlockAppearanceHelper.setOverlay(level, pos, player, item) ||
                     BlockAppearanceHelper.setRotation(level, pos, player, item))
-                return InteractionResult.CONSUME;
+                return InteractionResult.SUCCESS;
 
             if (item.getItem() instanceof BlockItem) {
                 if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {

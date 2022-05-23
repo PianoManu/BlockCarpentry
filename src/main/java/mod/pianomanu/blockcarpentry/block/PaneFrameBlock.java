@@ -75,7 +75,7 @@ public class PaneFrameBlock extends IronBarsBlock implements EntityBlock {
                     BlockAppearanceHelper.setOverlay(level, pos, player, item) ||
                     BlockAppearanceHelper.setRotation(level, pos, player, item) ||
                     BlockAppearanceHelper.setGlassColor(level, pos, player, hand))
-                return InteractionResult.CONSUME;
+                return InteractionResult.SUCCESS;
             if (item.getItem() instanceof BlockItem) {
                 if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
                     return InteractionResult.PASS;

@@ -83,7 +83,7 @@ public class BedFrameBlock extends BedBlock {
                     BlockAppearanceHelper.setWoolColor(level, pos, player, hand) ||
                     BlockAppearanceHelper.setOverlay(level, pos, player, item) ||
                     BlockAppearanceHelper.setRotation(level, pos, player, item))
-                return InteractionResult.CONSUME;
+                return InteractionResult.SUCCESS;
             if ((state.getValue(CONTAINS_BLOCK) && !item.is(Tags.Items.DYES) && !item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) || item.isEmpty()) {
                 //Taken from BedBlock, should work similar to vanilla beds
                 if (state.getValue(PART) != BedPart.HEAD) {

@@ -72,7 +72,7 @@ public class FenceFrameBlock extends FenceBlock implements EntityBlock {
                     BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
                     BlockAppearanceHelper.setOverlay(level, pos, player, item) ||
                     BlockAppearanceHelper.setRotation(level, pos, player, item))
-                return InteractionResult.CONSUME;
+                return InteractionResult.SUCCESS;
             if (item.getItem() == Items.LEAD) {
                 return LeadItem.bindPlayerMobs(player, level, pos);
             } else {
