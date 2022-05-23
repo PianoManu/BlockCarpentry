@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.RenderType;
  * Registering standard rendering layers for all frame blocks - need to be translucent to work with glass and similar blocks
  *
  * @author PianoManu
- * @version 1.3 02/07/22
+ * @version 1.0 05/23/22
  */
 public class RenderSetup {
     public static void setup() {

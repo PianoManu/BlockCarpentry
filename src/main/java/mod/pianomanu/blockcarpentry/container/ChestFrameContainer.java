@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  * Here you can find all information about the Chest Frame Container, like number of slots and stored itemStacks
  *
  * @author PianoManu
- * @version 1.1 02/05/22
+ * @version 1.0 05/23/22
  */
 public class ChestFrameContainer extends AbstractContainerMenu {
     private final Container container;

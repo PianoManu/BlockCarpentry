@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
  * Nothing special here right now...
  *
  * @author PianoManu
- * @version 1.0 08/15/21
+ * @version 1.0 05/23/22
  */
 public abstract class AbstractSixWayFrameBlock extends AbstractFrameBlock {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;

@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  * Here you can find all information about the Chest Illusion Container, like number of slots and stored itemStacks
  *
  * @author PianoManu
- * @version 1.1 02/05/22
+ * @version 1.0 05/23/22
  */
 public class IllusionChestContainer extends AbstractContainerMenu {
     private final Container container;

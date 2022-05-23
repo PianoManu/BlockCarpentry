@@ -5,7 +5,7 @@ package mod.pianomanu.blockcarpentry.block;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 08/15/21
+ * @version 1.0 05/23/22
  */
 public class StandingSignFrameBlock {//extends StandingSignBlock {
     /*public StandingSignFrameBlock(Properties properties) {

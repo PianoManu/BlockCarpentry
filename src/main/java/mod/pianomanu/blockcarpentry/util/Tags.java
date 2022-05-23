@@ -10,7 +10,7 @@ import java.util.List;
  * Just some tag stuff, might be migrated to another class later on...
  *
  * @author PianoManu
- * @version 1.1 02/06/22
+ * @version 1.0 05/23/22
  */
 public class Tags {
     private static final List<Block> frameBlocks = new ArrayList<>();

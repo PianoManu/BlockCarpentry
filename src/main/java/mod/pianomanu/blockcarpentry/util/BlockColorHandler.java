@@ -23,7 +23,7 @@ import java.util.Objects;
  * This class ensures that blocks of grass take on the correct color
  *
  * @author PianoManu
- * @version 1.7 02/07/22
+ * @version 1.0 05/23/22
  */
 public class BlockColorHandler implements BlockColor {
     public static final BlockColor INSTANCE = new BlockColorHandler();

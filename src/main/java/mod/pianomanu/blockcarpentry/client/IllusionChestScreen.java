@@ -18,7 +18,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * The constructor sets values like the vertical size, rows of the chest and where to put the title
  *
  * @author PianoManu
- * @version 1.1 02/05/22
+ * @version 1.0 05/23/22
  */
 @OnlyIn(Dist.CLIENT)
 public class IllusionChestScreen extends AbstractContainerScreen<IllusionChestContainer> implements MenuAccess<IllusionChestContainer> {

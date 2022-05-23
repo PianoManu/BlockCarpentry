@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.Mod;
  * Things like model loaders are registered here
  *
  * @author PianoManu
- * @version 1.9 02/07/22
+ * @version 1.0 05/23/22
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {

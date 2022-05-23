@@ -26,7 +26,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.19 02/07/22
+ * @version 1.0 05/23/22
  */
 public class ModelHelper {
 

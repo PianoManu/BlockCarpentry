@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.0 09/24/20
+ * @version 1.0 05/23/22
  */
 public class SignFrameTile extends SignBlockEntity {
     //TODO delete later

@@ -18,7 +18,7 @@ import java.util.Random;
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
  *
  * @author PianoManu
- * @version 1.5 10/29/20
+ * @version 1.0 05/23/22
  */
 public class TextureHelper {
 

@@ -35,7 +35,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 02/07/22
+ * @version 1.0 05/23/22
  */
 public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
