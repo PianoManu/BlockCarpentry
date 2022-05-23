@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "blockcarpentry:frame_trapdoor"
+    }
+  ],
+  "result": {
+    "item": "blockcarpentry:frameblock",
+    "count": 3
+  }
+}

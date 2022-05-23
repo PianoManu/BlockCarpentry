@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "name": "frame_daylight_detector",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "blockcarpentry:frame_daylight_detector"
+        }
+      ]
+    }
+  ]
+}

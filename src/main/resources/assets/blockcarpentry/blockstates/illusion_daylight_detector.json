@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "contains_block=false": {
+      "model": "blockcarpentry:block/illusion_daylight_detector_empty"
+    },
+    "contains_block=true": {
+      "model": "blockcarpentry:block/illusion_daylight_detector"
+    }
+  }
+}

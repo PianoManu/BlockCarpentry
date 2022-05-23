@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "blockcarpentry:frame_edged_slope"
+    }
+  },
+  "result": {
+    "item": "blockcarpentry:frame_slope",
+    "count": 6
+  }
+}

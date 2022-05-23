@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "blockcarpentry:frame_fence",
+	"blockcarpentry:illusion_fence",
+	"blockcarpentry:frame_wall",
+	"blockcarpentry:illusion_wall"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "contains_block=true": { "model": "blockcarpentry:block/illusion_block" },
+    "contains_block=false": { "model": "blockcarpentry:block/illusion_block_empty" }
+  }
+}

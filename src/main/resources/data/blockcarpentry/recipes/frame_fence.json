@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#i#",
+    "#i#"
+  ],
+  "key": {
+    "#": {
+      "item": "blockcarpentry:frameblock"
+    },
+	"i": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "blockcarpentry:frame_fence",
+    "count": 4
+  }
+}
