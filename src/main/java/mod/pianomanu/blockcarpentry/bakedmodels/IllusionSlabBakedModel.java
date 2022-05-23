@@ -30,7 +30,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.9 02/07/22
+ * @version 1.0 05/23/22
  */
 public class IllusionSlabBakedModel implements IDynamicBakedModel {
     @Nonnull
