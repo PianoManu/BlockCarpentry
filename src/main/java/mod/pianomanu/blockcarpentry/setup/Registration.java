@@ -148,13 +148,10 @@ public class Registration {
     public static final RegistryObject<BedFrameBlock> BED_FRAMEBLOCK = BLOCKS.register("frame_bed", () -> new BedFrameBlock(DyeColor.BROWN, Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> BED_FRAME_ITEM = ITEMS.register("frame_bed", () -> new BlockItem(BED_FRAMEBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<BlockEntityType<BedFrameTile>> BED_FRAME_TILE = TILES.register("frame_bed", () -> BlockEntityType.Builder.of(BedFrameTile::new, BED_FRAMEBLOCK.get()).build(null));
-    //TODO this does not work...
-    public static final RegistryObject<PoiType> BED_FRAME_POI = POI_TYPES.register("frame_bed", () -> new PoiType("frame_bed_poit", PoiType.getBlockStates(Registration.BED_FRAMEBLOCK.get()), 1, 1));
 
     public static final RegistryObject<BedFrameBlock> BED_ILLUSIONBLOCK = BLOCKS.register("illusion_bed", () -> new BedFrameBlock(DyeColor.BROWN, Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> BED_ILLUSION_ITEM = ITEMS.register("illusion_bed", () -> new BlockItem(BED_ILLUSIONBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<BlockEntityType<BedFrameTile>> BED_ILLUSION_TILE = TILES.register("illusion_bed", () -> BlockEntityType.Builder.of(BedFrameTile::new, BED_FRAMEBLOCK.get()).build(null));
-    public static final RegistryObject<PoiType> BED_ILLUSION_POI = POI_TYPES.register("illusion_bed", () -> new PoiType("illusion_bed", PoiType.getBlockStates(Registration.BED_ILLUSIONBLOCK.get()), 1, PoiType.ALL, 1));
 
 
     public static final RegistryObject<ChestFrameBlock> CHEST_FRAMEBLOCK = BLOCKS.register("frame_chest", () -> new ChestFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
