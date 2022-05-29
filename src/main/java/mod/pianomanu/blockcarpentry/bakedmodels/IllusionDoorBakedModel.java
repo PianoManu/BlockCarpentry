@@ -35,7 +35,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 05/28/22
  */
 public class IllusionDoorBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -81,134 +81,130 @@ public class IllusionDoorBakedModel implements IDynamicBakedModel {
             if (design == 0) {
                 if (northSide) {
                     if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 4 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 4 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, true, false, true, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, false, false, true, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 1f, 14 / 16f, 15 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, false, true, true, rotation));
                     }
                     if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, true, true, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, false, true, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 12 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 12 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 12 / 16f, 14 / 16f, 15 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, false, true, true, rotation));
                     }
                 } else if (westSide) {
                     if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 4 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 4 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 4 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, false, true, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 4 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, false, true, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 4 / 16f, 1f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, true, rotation));
                     }
                     if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 12 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 12 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, true, rotation));
                     }
                 } else if (eastSide) {
                     if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 4 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 4 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 4 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, false, true, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 4 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, false, true, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 4 / 16f, 1f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, true, rotation));
                     }
                     if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 12 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 12 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, true, rotation));
                     }
                 } else {
                     if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 4 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 4 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, true, false, true, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, false, false, true, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 1f, 1 / 16f, 2 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, false, true, true, rotation));
                     }
                     if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, true, true, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, false, true, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 12 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 12 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 12 / 16f, 1 / 16f, 2 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, false, true, true, rotation));
                     }
                 }
             }
             if (design == 3) {
                 if (northSide) {
-                    if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 14 / 16f, 15 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    }
-                    if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 14 / 16f, 15 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    }
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, true, false, half == lower, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 4 / 16f, 12 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, true, half == upper, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, false, false, half == lower, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 4 / 16f, 12 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, false, half == upper, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 14 / 16f, 15 / 16f, glass, -1));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, false, true, half == lower, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, false, half == upper, true, rotation));
                 } else if (westSide) {
-                    if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    }
-                    if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    }
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 4 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, false, half == lower, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 4 / 16f, 12 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, half == upper, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 4 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, false, half == lower, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 4 / 16f, 12 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, half == upper, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, half == lower, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, half == upper, true, rotation));
                 } else if (eastSide) {
-                    if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    }
-                    if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    }
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 4 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, false, half == lower, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 4 / 16f, 12 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, half == upper, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 4 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, false, half == lower, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 4 / 16f, 12 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, half == upper, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, half == lower, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, half == upper, true, rotation));
                 } else {
-                    if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 1 / 16f, 2 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    }
-                    if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 1 / 16f, 2 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    }
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, true, false, half == lower, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 4 / 16f, 12 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, true, half == upper, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, false, false, half == lower, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 4 / 16f, 12 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, false, half == upper, false, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 1 / 16f, 2 / 16f, glass, -1));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, false, true, half == lower, rotation));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, false, half == upper, true, rotation));
                 }
             }
             if (design == 1 || design == 2) {
                 int flag = 0;
                 if (northSide) {
                     flag = 1;
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, half == upper, half == lower, rotation));
                 } else if (westSide) {
                     flag = 2;
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, half == upper, half == lower, rotation));
                 } else if (eastSide) {
                     flag = 3;
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, half == upper, half == lower, rotation));
                 } else {
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, half == upper, half == lower, rotation));
                 }
                 if (design == 1) {
                     if (half == lower) {
