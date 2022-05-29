@@ -2,13 +2,13 @@
   "parent": "blockcarpentry:general/root",
   "display": {
     "icon": {
-      "item": "blockcarpentry:frame_trapdoor"
+      "item": "blockcarpentry:frame_fence"
     },
     "title": {
-      "translate": "advancements.blockcarpentry.trapdoor.title"
+      "translate": "advancements.blockcarpentry.fence.title"
     },
     "description": {
-      "translate": "advancements.blockcarpentry.trapdoor.description"
+      "translate": "advancements.blockcarpentry.fence.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,20 +16,17 @@
     "hidden": false
   },
   "criteria": {
-    "frame_trapdoor": {
+    "requirement": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "blockcarpentry:frame_trapdoor"
+            "items": [
+              "blockcarpentry:frame_fence"
+            ]
           }
         ]
       }
     }
-  },
-  "requirements": [
-    [
-      "frame_trapdoor"
-    ]
-  ]
+  }
 }

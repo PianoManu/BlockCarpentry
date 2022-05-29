@@ -2,13 +2,13 @@
   "parent": "blockcarpentry:general/root",
   "display": {
     "icon": {
-      "item": "blockcarpentry:frame_slab"
+      "item": "blockcarpentry:frame_pressure_plate"
     },
     "title": {
-      "translate": "advancements.blockcarpentry.slab.title"
+      "translate": "advancements.blockcarpentry.pressure_plate.title"
     },
     "description": {
-      "translate": "advancements.blockcarpentry.slab.description"
+      "translate": "advancements.blockcarpentry.pressure_plate.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,20 +16,17 @@
     "hidden": false
   },
   "criteria": {
-    "frame_slab": {
+    "requirement": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "blockcarpentry:frame_slab"
+            "items": [
+              "blockcarpentry:frame_pressure_plate"
+            ]
           }
         ]
       }
     }
-  },
-  "requirements": [
-    [
-      "frame_slab"
-    ]
-  ]
+  }
 }

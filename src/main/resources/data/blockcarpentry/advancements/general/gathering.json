@@ -16,25 +16,18 @@
     "hidden": false
   },
   "criteria": {
-    "has_lots_of_scaffoldings": {
+    "requirement": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "slots": {
-          "full": {
-            "min": 6
-          }
-        },
         "items": [
           {
-            "item": "minecraft:scaffolding"
+            "items": [
+              "minecraft:scaffolding"
+            ],
+            "count": 64
           }
         ]
       }
     }
-  },
-  "requirements": [
-    [
-      "has_lots_of_scaffoldings"
-    ]
-  ]
+  }
 }

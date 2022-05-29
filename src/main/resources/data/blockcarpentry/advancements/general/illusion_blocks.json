@@ -2,13 +2,13 @@
   "parent": "blockcarpentry:general/root",
   "display": {
     "icon": {
-      "item": "blockcarpentry:frame_pressure_plate"
+      "item": "blockcarpentry:illusion_block"
     },
     "title": {
-      "translate": "advancements.blockcarpentry.pressure_plate.title"
+      "translate": "advancements.blockcarpentry.illusion_blocks.title"
     },
     "description": {
-      "translate": "advancements.blockcarpentry.pressure_plate.description"
+      "translate": "advancements.blockcarpentry.illusion_blocks.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,20 +16,17 @@
     "hidden": false
   },
   "criteria": {
-    "frame_pressure_plate": {
+    "requirement": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "blockcarpentry:frame_pressure_plate"
+            "items": [
+              "blockcarpentry:illusion_block"
+            ]
           }
         ]
       }
     }
-  },
-  "requirements": [
-    [
-      "frame_pressure_plate"
-    ]
-  ]
+  }
 }

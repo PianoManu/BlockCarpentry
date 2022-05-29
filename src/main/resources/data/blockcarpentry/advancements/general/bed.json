@@ -2,13 +2,13 @@
   "parent": "blockcarpentry:general/root",
   "display": {
     "icon": {
-      "item": "blockcarpentry:frame_fence_gate"
+      "item": "blockcarpentry:frame_bed"
     },
     "title": {
-      "translate": "advancements.blockcarpentry.gate.title"
+      "translate": "advancements.blockcarpentry.bed.title"
     },
     "description": {
-      "translate": "advancements.blockcarpentry.gate.description"
+      "translate": "advancements.blockcarpentry.bed.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,20 +16,17 @@
     "hidden": false
   },
   "criteria": {
-    "frame_fence_gate": {
+    "requirement": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "blockcarpentry:frame_fence_gate"
+            "items": [
+              "blockcarpentry:frame_bed"
+            ]
           }
         ]
       }
     }
-  },
-  "requirements": [
-    [
-      "frame_fence_gate"
-    ]
-  ]
+  }
 }

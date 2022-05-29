@@ -2,13 +2,13 @@
   "parent": "blockcarpentry:general/root",
   "display": {
     "icon": {
-      "item": "blockcarpentry:illusion_block"
+      "item": "blockcarpentry:frame_button"
     },
     "title": {
-      "translate": "advancements.blockcarpentry.illusion_blocks.title"
+      "translate": "advancements.blockcarpentry.button.title"
     },
     "description": {
-      "translate": "advancements.blockcarpentry.illusion_blocks.description"
+      "translate": "advancements.blockcarpentry.button.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,20 +16,17 @@
     "hidden": false
   },
   "criteria": {
-    "illusion_block": {
+    "requirement": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "blockcarpentry:illusion_block"
+            "items": [
+              "blockcarpentry:frame_button"
+            ]
           }
         ]
       }
     }
-  },
-  "requirements": [
-    [
-      "illusion_block"
-    ]
-  ]
+  }
 }

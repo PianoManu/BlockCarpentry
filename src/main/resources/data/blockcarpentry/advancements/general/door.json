@@ -2,13 +2,13 @@
   "parent": "blockcarpentry:general/root",
   "display": {
     "icon": {
-      "item": "blockcarpentry:frame_stairs"
+      "item": "blockcarpentry:frame_door"
     },
     "title": {
-      "translate": "advancements.blockcarpentry.stairs.title"
+      "translate": "advancements.blockcarpentry.door.title"
     },
     "description": {
-      "translate": "advancements.blockcarpentry.stairs.description"
+      "translate": "advancements.blockcarpentry.door.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,20 +16,17 @@
     "hidden": false
   },
   "criteria": {
-    "frame_stairs": {
+    "requirement": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "blockcarpentry:frame_stairs"
+            "items": [
+              "blockcarpentry:frame_door"
+            ]
           }
         ]
       }
     }
-  },
-  "requirements": [
-    [
-      "frame_stairs"
-    ]
-  ]
+  }
 }
