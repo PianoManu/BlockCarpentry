@@ -26,7 +26,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.1 05/28/22
+ * @version 1.1 05/29/22
  */
 public class ModelHelper {
 
@@ -641,6 +641,10 @@ public class ModelHelper {
         return createCuboid(x / 16f, (x + 1) / 16f, y / 16f, (y + 1) / 16f, z / 16f, (z + 1) / 16f, texture, tintIndex, north, south, east, west, up, down);
     }
 
+    public static List<BakedQuad> createSixFaceVoxel(int x, int y, int z, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, TextureAtlasSprite textureNorth, TextureAtlasSprite textureSouth, TextureAtlasSprite textureEast, TextureAtlasSprite textureWest, TextureAtlasSprite textureUp, TextureAtlasSprite textureDown, Boolean moveOverlay, int rotation) {
+        return createSixFaceCuboid(x / 16f, (x + 1) / 16f, y / 16f, (y + 1) / 16f, z / 16f, (z + 1) / 16f, tintIndex, north, south, east, west, up, down, textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, moveOverlay, 0);
+    }
+
     /**
      * This just builds vectors and is useful for clean code
      *
@@ -710,7 +714,26 @@ public class ModelHelper {
                 downOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
             }
         }
+        /*int xStartInt = (int) xl*16;
+        int xEndInt = (int) xh*16;
+        int yStartInt = (int) yl*16;
+        int yEndInt = (int) yh*16;
+        int zStartInt = (int) zl*16;
+        int zEndInt = (int) zh*16;
+        return ModelHelper.createSixFaceCuboidAsVoxels(xStartInt, xEndInt, yStartInt, yEndInt, zStartInt, zEndInt, tintIndex, north, south, east, west, up, down, overlay, overlay, overlay, overlay, upOverlay, downOverlay, doNotMoveOverlay);*/
         return ModelHelper.createSixFaceCuboid(xl, xh, yl, yh, zl, zh, tintIndex, north, south, east, west, up, down, overlay, overlay, overlay, overlay, upOverlay, downOverlay, doNotMoveOverlay, 0);
+    }
+
+    public static List<BakedQuad> createSixFaceCuboidAsVoxels(int xl, int xh, int yl, int yh, int zl, int zh, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, TextureAtlasSprite textureNorth, TextureAtlasSprite textureSouth, TextureAtlasSprite textureEast, TextureAtlasSprite textureWest, TextureAtlasSprite textureUp, TextureAtlasSprite textureDown, Boolean moveOverlay) {
+        List<BakedQuad> quads = new ArrayList<>();
+        for (int x = xl; x < xh; x++) {
+            for (int y = yl; y < yh; y++) {
+                for (int z = zl; z < zh; z++) {
+                    quads.addAll(createSixFaceVoxel(x, y, z, tintIndex, z == zl, z == zh - 1, x == xh - 1, x == xl, y == yh - 1, y == yl, textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, moveOverlay, 0));
+                }
+            }
+        }
+        return quads;
     }
 }
 //========SOLI DEO GLORIA========//
