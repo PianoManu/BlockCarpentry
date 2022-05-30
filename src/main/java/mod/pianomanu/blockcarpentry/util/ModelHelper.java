@@ -26,7 +26,7 @@ import java.util.Random;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.18 08/18/21
+ * @version 1.19 05/30/22
  */
 public class ModelHelper {
 
@@ -559,6 +559,26 @@ public class ModelHelper {
         if (west)
             quads.add(createQuad(SWU, SWD, NWD, NWU, texture, ulow[5], uhigh[5], vlow[5], vhigh[5], tintIndex));
         return quads;
+    }
+
+    /**
+     * Creates a single voxel starting at {x, y, z} to {x+1, y+1, z+1}
+     *
+     * @param x         start value in x-direction
+     * @param y         start value in y-direction
+     * @param z         start value in z-direction
+     * @param texture   texture for the voxel
+     * @param tintIndex set to value > 0, if you want to enable tinting
+     * @param north     whether the north face of the voxel is visible
+     * @param south     whether the south face of the voxel is visible
+     * @param east      whether the east face of the voxel is visible
+     * @param west      whether the west face of the voxel is visible
+     * @param up        whether the top face of the voxel is visible
+     * @param down      whether the bottom face of the voxel is visible
+     * @return list of {@link BakedQuad} representing the voxel
+     */
+    public static List<BakedQuad> createVoxel(int x, int y, int z, TextureAtlasSprite texture, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down) {
+        return createCuboid(x / 16f, (x + 1) / 16f, y / 16f, (y + 1) / 16f, z / 16f, (z + 1) / 16f, texture, tintIndex, north, south, east, west, up, down);
     }
 
     /**

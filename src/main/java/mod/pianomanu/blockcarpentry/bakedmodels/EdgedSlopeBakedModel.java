@@ -1,6 +1,5 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
-import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
@@ -35,7 +34,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.6 08/18/21
+ * @version 1.7 05/30/22
  */
 public class EdgedSlopeBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -48,13 +47,11 @@ public class EdgedSlopeBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
+        if (mimic != null) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
-            if (location != null && state!=null) {
+            if (state != null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                if (model != null) {
-                    return getMimicQuads(state, side, rand, extraData, model);
-                }
+                return getMimicQuads(state, side, rand, extraData, model);
             }
         }
         return Collections.emptyList();
@@ -65,7 +62,6 @@ public class EdgedSlopeBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        Integer design = extraData.getData(FrameBlockTile.DESIGN);
         if (mimic != null && state != null) {
             List<TextureAtlasSprite> texture = TextureHelper.getTextureFromModel(model, extraData, rand);
             int index = extraData.getData(FrameBlockTile.TEXTURE);
@@ -76,9 +72,7 @@ public class EdgedSlopeBakedModel implements IDynamicBakedModel {
                 if (Minecraft.getInstance().player != null) {
                     Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
-                for (int i = 0; i < 6; i++) {
-                    texture.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing")));
-                }
+                return Collections.emptyList();
             }
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             List<BakedQuad> quads = new ArrayList<>();
@@ -97,584 +91,140 @@ public class EdgedSlopeBakedModel implements IDynamicBakedModel {
             StairsShape outerLeft = StairsShape.OUTER_LEFT;
             StairsShape outerRight = StairsShape.OUTER_RIGHT;
 
-            if (half==lower) {
-                quads.addAll(ModelHelper.createCuboid(0f,1f,0f,1/16f, 0f, 1f, texture.get(index),tintIndex));
-                if(shape == straight) {
-                    if (direction == north) {
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,1/16f,2/16f,0f,15/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,2/16f,3/16f,0f,14/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,3/16f,4/16f,0f,13/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,4/16f,5/16f,0f,12/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,5/16f,6/16f,0f,11/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,6/16f,7/16f,0f,10/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,7/16f,8/16f,0f,9/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,8/16f,9/16f,0f,8/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,9/16f,10/16f,0f,7/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,10/16f,11/16f,0f,6/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,11/16f,12/16f,0f,5/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,12/16f,13/16f,0f,4/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,13/16f,14/16f,0f,3/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,14/16f,15/16f,0f,2/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,15/16f,1f,0f,1/16f, texture.get(index), tintIndex));
-                    }
-                    if (direction == east) {
-                        quads.addAll(ModelHelper.createCuboid(1/16f,1f,1/16f,2/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(2/16f,1f,2/16f,3/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(3/16f,1f,3/16f,4/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(4/16f,1f,4/16f,5/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(5/16f,1f,5/16f,6/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(6/16f,1f,6/16f,7/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(7/16f,1f,7/16f,8/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(8/16f,1f,8/16f,9/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(9/16f,1f,9/16f,10/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(10/16f,1f,10/16f,11/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(11/16f,1f,11/16f,12/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,1f,12/16f,13/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,13/16f,14/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14/16f,1f,14/16f,15/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,1f,15/16f,1f,0f,1f, texture.get(index), tintIndex));
-                    }
-                    if (direction == south) {
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,1/16f,2/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,2/16f,3/16f,2/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,3/16f,4/16f,3/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,4/16f,5/16f,4/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,5/16f,6/16f,5/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,6/16f,7/16f,6/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,7/16f,8/16f,7/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,8/16f,9/16f,8/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,9/16f,10/16f,9/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,10/16f,11/16f,10/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,11/16f,12/16f,11/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,12/16f,13/16f,12/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,13/16f,14/16f,13/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,14/16f,15/16f,14/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,15/16f,1f,15/16f,1f, texture.get(index), tintIndex));
-                    }
-                    if (direction == west) {
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,1/16f,2/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,14/16f,2/16f,3/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,13/16f,3/16f,4/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,12/16f,4/16f,5/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,11/16f,5/16f,6/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,10/16f,6/16f,7/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,9/16f,7/16f,8/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,8/16f,8/16f,9/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,7/16f,9/16f,10/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,6/16f,10/16f,11/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,5/16f,11/16f,12/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,4/16f,12/16f,13/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,3/16f,13/16f,14/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,14/16f,15/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1/16f,15/16f,1f,0f,1f, texture.get(index), tintIndex));
-                    }
-                }
-                if (shape == outerLeft || shape == outerRight) {
-                    if ((direction == north && shape == outerLeft) || (direction == west && shape == outerRight)) {
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,1/16f,2/16f,0f,15/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,14/16f,2/16f,3/16f,0f,14/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,13/16f,3/16f,4/16f,0f,13/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,12/16f,4/16f,5/16f,0f,12/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,11/16f,5/16f,6/16f,0f,11/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,10/16f,6/16f,7/16f,0f,10/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,9/16f,7/16f,8/16f,0f,9/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,8/16f,8/16f,9/16f,0f,8/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,7/16f,9/16f,10/16f,0f,7/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,6/16f,10/16f,11/16f,0f,6/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,5/16f,11/16f,12/16f,0f,5/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,4/16f,12/16f,13/16f,0f,4/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,3/16f,13/16f,14/16f,0f,3/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,14/16f,15/16f,0f,2/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1/16f,15/16f,1f,0f,1/16f, texture.get(index), tintIndex));
-                    }
-                    if ((direction == east && shape == outerLeft) || (direction == north && shape == outerRight)) {
-                        quads.addAll(ModelHelper.createCuboid(1/16f,1f,1/16f,2/16f,0f,15/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(2/16f,1f,2/16f,3/16f,0f,14/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(3/16f,1f,3/16f,4/16f,0f,13/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(4/16f,1f,4/16f,5/16f,0f,12/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(5/16f,1f,5/16f,6/16f,0f,11/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(6/16f,1f,6/16f,7/16f,0f,10/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(7/16f,1f,7/16f,8/16f,0f,9/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(8/16f,1f,8/16f,9/16f,0f,8/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(9/16f,1f,9/16f,10/16f,0f,7/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(10/16f,1f,10/16f,11/16f,0f,6/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(11/16f,1f,11/16f,12/16f,0f,5/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,1f,12/16f,13/16f,0f,4/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,13/16f,14/16f,0f,3/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14/16f,1f,14/16f,15/16f,0f,2/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,1f,15/16f,1f,0f,1/16f, texture.get(index), tintIndex));
-                    }
-                    if ((direction == south && shape == outerLeft) || (direction == east && shape == outerRight)) {
-                        quads.addAll(ModelHelper.createCuboid(1/16f,1f,1/16f,2/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(2/16f,1f,2/16f,3/16f,2/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(3/16f,1f,3/16f,4/16f,3/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(4/16f,1f,4/16f,5/16f,4/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(5/16f,1f,5/16f,6/16f,5/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(6/16f,1f,6/16f,7/16f,6/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(7/16f,1f,7/16f,8/16f,7/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(8/16f,1f,8/16f,9/16f,8/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(9/16f,1f,9/16f,10/16f,9/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(10/16f,1f,10/16f,11/16f,10/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(11/16f,1f,11/16f,12/16f,11/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,1f,12/16f,13/16f,12/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,13/16f,14/16f,13/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14/16f,1f,14/16f,15/16f,14/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,1f,15/16f,1f,15/16f,1f, texture.get(index), tintIndex));
-                    }
-                    if ((direction == west && shape == outerLeft) || (direction == south && shape == outerRight)) {
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,1/16f,2/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,14/16f,2/16f,3/16f,2/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,13/16f,3/16f,4/16f,3/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,12/16f,4/16f,5/16f,4/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,11/16f,5/16f,6/16f,5/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,10/16f,6/16f,7/16f,6/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,9/16f,7/16f,8/16f,7/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,8/16f,8/16f,9/16f,8/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,7/16f,9/16f,10/16f,9/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,6/16f,10/16f,11/16f,10/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,5/16f,11/16f,12/16f,11/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,4/16f,12/16f,13/16f,12/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,3/16f,13/16f,14/16f,13/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,14/16f,15/16f,14/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1/16f,15/16f,1f,15/16f,1f, texture.get(index), tintIndex));
-                    }
-                }
-                if (shape == innerLeft || shape == innerRight) {
-                    //quads.addAll(ModelHelper.createCutoutCuboid(0f,1f,1/16f,2/16f, 0f, 1f, 14/16f,2/16f,14/16f, texture.get(index), tintIndex));
-                    //well fuck it
-                    if ((shape == innerLeft && direction == north) || shape == innerRight && direction == west) {
-                        //North
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,1/16f,2/16f,0f,15/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,2/16f,3/16f,0f,14/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,3/16f,4/16f,0f,13/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,4/16f,5/16f,0f,12/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,5/16f,6/16f,0f,11/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,6/16f,7/16f,0f,10/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,7/16f,8/16f,0f,9/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,8/16f,9/16f,0f,8/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,9/16f,10/16f,0f,7/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,10/16f,11/16f,0f,6/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,11/16f,12/16f,0f,5/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,12/16f,13/16f,0f,4/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,13/16f,14/16f,0f,3/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,14/16f,15/16f,0f,2/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,15/16f,1f,0f,1/16f, texture.get(index), tintIndex));
-                        //West
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,1/16f,2/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,14/16f,2/16f,3/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,13/16f,3/16f,4/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,12/16f,4/16f,5/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,11/16f,5/16f,6/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,10/16f,6/16f,7/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,9/16f,7/16f,8/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,8/16f,8/16f,9/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,7/16f,9/16f,10/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,6/16f,10/16f,11/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,5/16f,11/16f,12/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,4/16f,12/16f,13/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,3/16f,13/16f,14/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,14/16f,15/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1/16f,15/16f,1f,1/16f,1f, texture.get(index), tintIndex));
-                    }
-                    if ((shape == innerLeft && direction == east) || shape == innerRight && direction == north) {
-                        //East
-                        quads.addAll(ModelHelper.createCuboid(1/16f,15/16f,1/16f,2/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(2/16f,15/16f,2/16f,3/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(3/16f,15/16f,3/16f,4/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(4/16f,15/16f,4/16f,5/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(5/16f,15/16f,5/16f,6/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(6/16f,15/16f,6/16f,7/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(7/16f,15/16f,7/16f,8/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(8/16f,15/16f,8/16f,9/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(9/16f,15/16f,9/16f,10/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(10/16f,15/16f,10/16f,11/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(11/16f,15/16f,11/16f,12/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,15/16f,12/16f,13/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,15/16f,13/16f,14/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14/16f,15/16f,14/16f,15/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,15/16f,15/16f,1f,1/16f,1f, texture.get(index), tintIndex));
-                        //North
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,1/16f,2/16f,1/16f,15/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,2/16f,3/16f,1/16f,14/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,3/16f,4/16f,1/16f,13/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,4/16f,5/16f,1/16f,12/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,5/16f,6/16f,1/16f,11/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,6/16f,7/16f,1/16f,10/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,7/16f,8/16f,1/16f,9/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,8/16f,9/16f,1/16f,8/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,9/16f,10/16f,1/16f,7/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,10/16f,11/16f,1/16f,6/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,11/16f,12/16f,1/16f,5/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,12/16f,13/16f,1/16f,4/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,13/16f,14/16f,1/16f,3/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,14/16f,15/16f,1/16f,2/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,15/16f,1f,1/16f,1/16f, texture.get(index), tintIndex));
-                        //Back sides - workaround to fix some weird rendering issues
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,0f,1f,0f,0f,texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(1f,1f,0f,1f,0f,1f,texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,0f,0f,1f,0f,1/16f,texture.get(index),tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,1f,0f,1f,1f,1f,texture.get(index),tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,1f,1f,1f,0f,1f,texture.get(index),tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,1f,1f,0f,1/16f,texture.get(index),tintIndex));
-                    }
-                    if ((shape == innerLeft && direction == south) || shape == innerRight && direction == east) {
-                        //South
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,1/16f,2/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,2/16f,3/16f,2/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,3/16f,4/16f,3/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,4/16f,5/16f,4/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,5/16f,6/16f,5/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,6/16f,7/16f,6/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,7/16f,8/16f,7/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,8/16f,9/16f,8/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,9/16f,10/16f,9/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,10/16f,11/16f,10/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,11/16f,12/16f,11/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,12/16f,13/16f,12/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,13/16f,14/16f,13/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,14/16f,15/16f,14/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,15/16f,1f,15/16f,1f, texture.get(index), tintIndex));
-                        //East
-                        quads.addAll(ModelHelper.createCuboid(1/16f,1f,1/16f,2/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(2/16f,1f,2/16f,3/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(3/16f,1f,3/16f,4/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(4/16f,1f,4/16f,5/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(5/16f,1f,5/16f,6/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(6/16f,1f,6/16f,7/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(7/16f,1f,7/16f,8/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(8/16f,1f,8/16f,9/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(9/16f,1f,9/16f,10/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(10/16f,1f,10/16f,11/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(11/16f,1f,11/16f,12/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,1f,12/16f,13/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,13/16f,14/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14/16f,1f,14/16f,15/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,1f,15/16f,1f,0f,1f, texture.get(index), tintIndex));
-                    }
-                    if ((shape == innerLeft && direction == west) || shape == innerRight && direction == south) {
-                        //West
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,1/16f,2/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,14/16f,2/16f,3/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,13/16f,3/16f,4/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,12/16f,4/16f,5/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,11/16f,5/16f,6/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,10/16f,6/16f,7/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,9/16f,7/16f,8/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,8/16f,8/16f,9/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,7/16f,9/16f,10/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,6/16f,10/16f,11/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,5/16f,11/16f,12/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,4/16f,12/16f,13/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,3/16f,13/16f,14/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,14/16f,15/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1/16f,15/16f,1f,0f,1f, texture.get(index), tintIndex));
-                        //South
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,1/16f,2/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,2/16f,3/16f,2/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,3/16f,4/16f,3/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,4/16f,5/16f,4/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,5/16f,6/16f,5/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,6/16f,7/16f,6/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,7/16f,8/16f,7/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,8/16f,9/16f,8/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,9/16f,10/16f,9/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,10/16f,11/16f,10/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,11/16f,12/16f,11/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,12/16f,13/16f,12/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,13/16f,14/16f,13/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,14/16f,15/16f,14/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,15/16f,1f,15/16f,1f, texture.get(index), tintIndex));
+            //Don't even try to understand what's happening here
+            //If any of it broke, it's easier to completely rewrite it than to find the problem
+            //All the boolean expressions are used to determine whether a certain face of the voxel is visible or not
+            //e.g.: "z == 0" for parameter "north" means:
+            //      All voxels at z == 0 will have a visible north face
+            //e.g.: "z == 15 - y" for parameter "up" means:
+            //      All voxels with a z-value equal to "15 minus the current y-value" will have a visible top face
+            if (half == lower) {
+                //iterate through each of the 4096 voxels and check, which sides are visible, then add to quads
+                for (int x = 0; x < 16; x++) {
+                    for (int y = 0; y < 16; y++) {
+                        for (int z = 0; z < 16; z++) {
+                            if (shape == straight) {
+                                if (direction == north) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0, z == 15 - y, x == 15 && z <= 15 - y, x == 0 && z <= 15 - y, z == 15 - y, y == 0));
+                                } else if (direction == east) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x >= y, z == 15 && x >= y, x == 15, x == y, x == y, y == 0));
+                                } else if (direction == south) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == y, z == 15, x == 15 && z >= y, x == 0 && z >= y, z == y, y == 0));
+                                } else if (direction == west) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x <= 15 - y, z == 15 && x <= 15 - y, x == 15 - y, x == 0, x == 15 - y, y == 0));
+                                }
+                            }
+                            if (shape == innerLeft) {
+                                if (direction == north) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0, z == 15 - y && z < x || z == 15 && x <= 15 - y, x == 15 && z <= 15 - y || x == 15 - y && x < z, x == 0, z == 15 - y && z <= x || x == 15 - y && x <= z, y == 0));
+                                } else if (direction == east) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0, z == 15 && x >= y || z == 15 - y && z < 15 - x, x == 15, x == y && x > 15 - z || x == 0 && z <= 15 - y, z == 15 - y && z <= 15 - x || x == y && x >= 15 - z, y == 0));
+                                } else if (direction == south) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == y && z > x || z == 0 && x >= y, z == 15, x == 15, x == 0 && z >= y || x == y && x > z, z == y && z >= x || x == y && x >= z, y == 0));
+                                } else if (direction == west) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x <= 15 - y || z == y && z > 15 - x, z == 15, x == 15 - y && x < 15 - z || x == 15 && z >= y, x == 0, x == 15 - y && x <= 15 - z || z == y && z > 15 - x, y == 0));
+                                }
+                            }
+                            if (shape == innerRight) {
+                                if (direction == west) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0, z == 15 - y && z < x || z == 15 && x <= 15 - y, x == 15 && z <= 15 - y || x == 15 - y && x < z, x == 0, z == 15 - y && z <= x || x == 15 - y && x <= z, y == 0));
+                                } else if (direction == north) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0, z == 15 && x >= y || z == 15 - y && z < 15 - x, x == 15, x == y && x > 15 - z || x == 0 && z <= 15 - y, z == 15 - y && z <= 15 - x || x == y && x >= 15 - z, y == 0));
+                                } else if (direction == east) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == y && z > x || z == 0 && x >= y, z == 15, x == 15, x == 0 && z >= y || x == y && x > z, z == y && z >= x || x == y && x >= z, y == 0));
+                                } else if (direction == south) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x <= 15 - y || z == y && z > 15 - x, z == 15, x == 15 - y && x < 15 - z || x == 15 && z >= y, x == 0, x == 15 - y && x <= 15 - z || z == y && z > 15 - x, y == 0));
+                                }
+                            }
+                            if (shape == outerLeft) {
+                                if (direction == north) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x <= 15 - y, z == 15 - y && x <= 15 - y, x == 15 - y && z <= 15 - y, x == 0 && z <= 15 - y, z == 15 - y && z >= x || x == 15 - y && x >= z, y == 0));
+                                } else if (direction == east) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x >= y, z == 15 - y && x >= y, x == 15 && z <= 15 - y, x == y && x <= 15 - z, x == y && x <= 15 - z || z == 15 - y && z >= 15 - x, y == 0));
+                                } else if (direction == south) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == y && z <= x, z == 15 && x >= y, x == 15 && z >= y, x == y && z >= y, z == y && z <= x || x == y && x <= z, y == 0));
+                                } else if (direction == west) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == y && x <= 15 - y, z == 15 && x <= 15 - y, x == 15 - y && x >= 15 - z, x == 0 && z >= y, x == 15 - y && x >= 15 - z || z == y && z < 15 - x, y == 0));
+                                }
+                            }
+                            if (shape == outerRight) {
+                                if (direction == west) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x <= 15 - y, z == 15 - y && x <= 15 - y, x == 15 - y && z <= 15 - y, x == 0 && z <= 15 - y, z == 15 - y && z >= x || x == 15 - y && x >= z, y == 0));
+                                } else if (direction == north) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x >= y, z == 15 - y && x >= y, x == 15 && z <= 15 - y, x == y && x <= 15 - z, x == y && x <= 15 - z || z == 15 - y && z >= 15 - x, y == 0));
+                                } else if (direction == east) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == y && z <= x, z == 15 && x >= y, x == 15 && z >= y, x == y && z >= y, z == y && z <= x || x == y && x <= z, y == 0));
+                                } else if (direction == south) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == y && x <= 15 - y, z == 15 && x <= 15 - y, x == 15 - y && x >= 15 - z, x == 0 && z >= y, x == 15 - y && x >= 15 - z || z == y && z < 15 - x, y == 0));
+                                }
+                            }
+                        }
                     }
                 }
             }
 
 
-
-            if (half==upper) {
-                quads.addAll(ModelHelper.createCuboid(0f,1f,15/16f,1f, 0f, 1f, texture.get(index),tintIndex));
-                if(shape == straight) {
-                    if (direction == north) {
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,14/16f,15/16f,0f,15/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,13/16f,14/16f,0f,14/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,12/16f,13/16f,0f,13/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,11/16f,12/16f,0f,12/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,10/16f,11/16f,0f,11/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,9/16f,10/16f,0f,10/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,8/16f,9/16f,0f,9/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,7/16f,8/16f,0f,8/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,6/16f,7/16f,0f,7/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,5/16f,6/16f,0f,6/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,4/16f,5/16f,0f,5/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,3/16f,4/16f,0f,4/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,2/16f,3/16f,0f,3/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,1/16f,2/16f,0f,2/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,0f,1/16f,0f,1/16f, texture.get(index), tintIndex));
-                    }
-                    if (direction == east) {
-                        quads.addAll(ModelHelper.createCuboid(1/16f,1f,14/16f,15/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(2/16f,1f,13/16f,14/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(3/16f,1f,12/16f,13/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(4/16f,1f,11/16f,12/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(5/16f,1f,10/16f,11/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(6/16f,1f,9/16f,10/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(7/16f,1f,8/16f,9/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(8/16f,1f,7/16f,8/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(9/16f,1f,6/16f,7/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(10/16f,1f,5/16f,6/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(11/16f,1f,4/16f,5/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,1f,3/16f,4/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,2/16f,3/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14/16f,1f,1/16f,2/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,1f,0f,1/16f,0f,1f, texture.get(index), tintIndex));
-                    }
-                    if (direction == south) {
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,14/16f,15/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,13/16f,14/16f,2/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,12/16f,13/16f,3/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,11/16f,12/16f,4/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,10/16f,11/16f,5/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,9/16f,10/16f,6/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,8/16f,9/16f,7/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,7/16f,8/16f,8/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,6/16f,7/16f,9/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,5/16f,6/16f,10/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,4/16f,5/16f,11/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,3/16f,4/16f,12/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,2/16f,3/16f,13/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,1/16f,2/16f,14/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,0f,1/16f,15/16f,1f, texture.get(index), tintIndex));
-                    }
-                    if (direction == west) {
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,14/16f,15/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,14/16f,13/16f,14/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,13/16f,12/16f,13/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,12/16f,11/16f,12/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,11/16f,10/16f,11/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,10/16f,9/16f,10/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,9/16f,8/16f,9/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,8/16f,7/16f,8/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,7/16f,6/16f,7/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,6/16f,5/16f,6/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,5/16f,4/16f,5/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,4/16f,3/16f,4/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,3/16f,2/16f,3/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,1/16f,2/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1/16f,0f,1/16f,0f,1f, texture.get(index), tintIndex));
-                    }
-                }
-                if (shape == outerLeft || shape == outerRight) {
-                    if ((direction == north && shape == outerLeft) || (direction == west && shape == outerRight)) {
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,14/16f,15/16f,0f,15/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,14/16f,13/16f,14/16f,0f,14/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,13/16f,12/16f,13/16f,0f,13/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,12/16f,11/16f,12/16f,0f,12/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,11/16f,10/16f,11/16f,0f,11/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,10/16f,9/16f,10/16f,0f,10/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,9/16f,8/16f,9/16f,0f,9/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,8/16f,7/16f,8/16f,0f,8/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,7/16f,6/16f,7/16f,0f,7/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,6/16f,5/16f,6/16f,0f,6/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,5/16f,4/16f,5/16f,0f,5/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,4/16f,3/16f,4/16f,0f,4/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,3/16f,2/16f,3/16f,0f,3/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,1/16f,2/16f,0f,2/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1/16f,0f,1/16f,0f,1/16f, texture.get(index), tintIndex));
-                    }
-                    if ((direction == east && shape == outerLeft) || (direction == north && shape == outerRight)) {
-                        quads.addAll(ModelHelper.createCuboid(1/16f,1f,14/16f,15/16f,0f,15/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(2/16f,1f,13/16f,14/16f,0f,14/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(3/16f,1f,12/16f,13/16f,0f,13/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(4/16f,1f,11/16f,12/16f,0f,12/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(5/16f,1f,10/16f,11/16f,0f,11/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(6/16f,1f,9/16f,10/16f,0f,10/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(7/16f,1f,8/16f,9/16f,0f,9/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(8/16f,1f,7/16f,8/16f,0f,8/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(9/16f,1f,6/16f,7/16f,0f,7/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(10/16f,1f,5/16f,6/16f,0f,6/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(11/16f,1f,4/16f,5/16f,0f,5/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,1f,3/16f,4/16f,0f,4/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,2/16f,3/16f,0f,3/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14/16f,1f,1/16f,2/16f,0f,2/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,1f,0f,1/16f,0f,1/16f, texture.get(index), tintIndex));
-                    }
-                    if ((direction == south && shape == outerLeft) || (direction == east && shape == outerRight)) {
-                        quads.addAll(ModelHelper.createCuboid(1/16f,1f,14/16f,15/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(2/16f,1f,13/16f,14/16f,2/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(3/16f,1f,12/16f,13/16f,3/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(4/16f,1f,11/16f,12/16f,4/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(5/16f,1f,10/16f,11/16f,5/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(6/16f,1f,9/16f,10/16f,6/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(7/16f,1f,8/16f,9/16f,7/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(8/16f,1f,7/16f,8/16f,8/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(9/16f,1f,6/16f,7/16f,9/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(10/16f,1f,5/16f,6/16f,10/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(11/16f,1f,4/16f,5/16f,11/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,1f,3/16f,4/16f,12/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,2/16f,3/16f,13/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14/16f,1f,1/16f,2/16f,14/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,1f,0f,1/16f,15/16f,1f, texture.get(index), tintIndex));
-                    }
-                    if ((direction == west && shape == outerLeft) || (direction == south && shape == outerRight)) {
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,14/16f,15/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,14/16f,13/16f,14/16f,2/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,13/16f,12/16f,13/16f,3/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,12/16f,11/16f,12/16f,4/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,11/16f,10/16f,11/16f,5/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,10/16f,9/16f,10/16f,6/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,9/16f,8/16f,9/16f,7/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,8/16f,7/16f,8/16f,8/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,7/16f,6/16f,7/16f,9/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,6/16f,5/16f,6/16f,10/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,5/16f,4/16f,5/16f,11/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,4/16f,3/16f,4/16f,12/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,3/16f,2/16f,3/16f,13/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,1/16f,2/16f,14/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1/16f,0f,1/16f,15/16f,1f, texture.get(index), tintIndex));
-                    }
-                }
-                if (shape == innerLeft || shape == innerRight) {
-                    if ((shape == innerLeft && direction == north) || (shape == innerRight && direction == west)) {
-                        //North
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,14/16f,15/16f,0f,15/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,13/16f,14/16f,0f,14/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,12/16f,13/16f,0f,13/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,11/16f,12/16f,0f,12/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,10/16f,11/16f,0f,11/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,9/16f,10/16f,0f,10/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,8/16f,9/16f,0f,9/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,7/16f,8/16f,0f,8/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,6/16f,7/16f,0f,7/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,5/16f,6/16f,0f,6/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,4/16f,5/16f,0f,5/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,3/16f,4/16f,0f,4/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,2/16f,3/16f,0f,3/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,1/16f,2/16f,0f,2/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,0f,1/16f,0f,1/16f, texture.get(index), tintIndex));
-                        //West
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,14/16f,15/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,14/16f,13/16f,14/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,13/16f,12/16f,13/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,12/16f,11/16f,12/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,11/16f,10/16f,11/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,10/16f,9/16f,10/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,9/16f,8/16f,9/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,8/16f,7/16f,8/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,7/16f,6/16f,7/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,6/16f,5/16f,6/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,5/16f,4/16f,5/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,4/16f,3/16f,4/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,3/16f,2/16f,3/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,1/16f,2/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1/16f,0f,1/16f,1/16f,1f, texture.get(index), tintIndex));
-                    }
-                    if ((shape == innerLeft && direction == east) || (shape == innerRight && direction == north)) {
-                        //East
-                        quads.addAll(ModelHelper.createCuboid(1/16f,15/16f,14/16f,15/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(2/16f,15/16f,13/16f,14/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(3/16f,15/16f,12/16f,13/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(4/16f,15/16f,11/16f,12/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(5/16f,15/16f,10/16f,11/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(6/16f,15/16f,9/16f,10/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(7/16f,15/16f,8/16f,9/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(8/16f,15/16f,7/16f,8/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(9/16f,15/16f,6/16f,7/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(10/16f,15/16f,5/16f,6/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(11/16f,15/16f,4/16f,5/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,15/16f,3/16f,4/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,15/16f,2/16f,3/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14/16f,15/16f,1/16f,2/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,15/16f,0f,1/16f,1/16f,1f, texture.get(index), tintIndex));
-                        //North
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,14/16f,15/16f,1/16f,15/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,13/16f,14/16f,1/16f,14/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,12/16f,13/16f,1/16f,13/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,11/16f,12/16f,1/16f,12/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,10/16f,11/16f,1/16f,11/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,9/16f,10/16f,1/16f,10/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,8/16f,9/16f,1/16f,9/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,7/16f,8/16f,1/16f,8/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,6/16f,7/16f,1/16f,7/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,5/16f,6/16f,1/16f,6/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,4/16f,5/16f,1/16f,5/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,3/16f,4/16f,1/16f,4/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,2/16f,3/16f,1/16f,3/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,1/16f,2/16f,1/16f,2/16f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,0f,1/16f,1/16f,1/16f, texture.get(index), tintIndex));
-                        //Back sides - workaround to fix some weird rendering issues
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,0f,1f,0f,0f,texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(1f,1f,0f,1f,0f,1f,texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,0f,0f,1f,0f,1/16f,texture.get(index),tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,1f,0f,1f,1f,1f,texture.get(index),tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,1f,0f,0f,0f,1f,texture.get(index),tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,0f,0f,0f,1/16f,texture.get(index),tintIndex));
-                    }
-                    if ((shape == innerLeft && direction == south) || (shape == innerRight && direction == east)) {
-                        //South
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,14/16f,15/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,13/16f,14/16f,2/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,12/16f,13/16f,3/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,11/16f,12/16f,4/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,10/16f,11/16f,5/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,9/16f,10/16f,6/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,8/16f,9/16f,7/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,7/16f,8/16f,8/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,6/16f,7/16f,9/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,5/16f,6/16f,10/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,4/16f,5/16f,11/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,3/16f,4/16f,12/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,2/16f,3/16f,13/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,1/16f,2/16f,14/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,0f,1/16f,15/16f,1f, texture.get(index), tintIndex));
-                        //East
-                        quads.addAll(ModelHelper.createCuboid(1/16f,1f,14/16f,15/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(2/16f,1f,13/16f,14/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(3/16f,1f,12/16f,13/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(4/16f,1f,11/16f,12/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(5/16f,1f,10/16f,11/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(6/16f,1f,9/16f,10/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(7/16f,1f,8/16f,9/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(8/16f,1f,7/16f,8/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(9/16f,1f,6/16f,7/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(10/16f,1f,5/16f,6/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(11/16f,1f,4/16f,5/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12/16f,1f,3/16f,4/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(13/16f,1f,2/16f,3/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14/16f,1f,1/16f,2/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(15/16f,1f,0f,1/16f,0f,1f, texture.get(index), tintIndex));
-                    }
-                    if ((shape == innerLeft && direction == west) || (shape == innerRight && direction == south)) {
-                        //West
-                        quads.addAll(ModelHelper.createCuboid(0f,15/16f,14/16f,15/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,14/16f,13/16f,14/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,13/16f,12/16f,13/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,12/16f,11/16f,12/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,11/16f,10/16f,11/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,10/16f,9/16f,10/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,9/16f,8/16f,9/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,8/16f,7/16f,8/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,7/16f,6/16f,7/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,6/16f,5/16f,6/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,5/16f,4/16f,5/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,4/16f,3/16f,4/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,3/16f,2/16f,3/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,2/16f,1/16f,2/16f,0f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1/16f,0f,1/16f,0f,1f, texture.get(index), tintIndex));
-                        //South
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,14/16f,15/16f,1/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,13/16f,14/16f,2/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,12/16f,13/16f,3/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,11/16f,12/16f,4/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,10/16f,11/16f,5/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,9/16f,10/16f,6/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,8/16f,9/16f,7/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,7/16f,8/16f,8/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,6/16f,7/16f,9/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,5/16f,6/16f,10/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,4/16f,5/16f,11/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,3/16f,4/16f,12/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,2/16f,3/16f,13/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,1/16f,2/16f,14/16f,1f, texture.get(index), tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f,1f,0f,1/16f,15/16f,1f, texture.get(index), tintIndex));
+            if (half == upper) {
+                //iterate through each of the 4096 voxels and check, which sides are visible, then add to quads
+                for (int x = 0; x < 16; x++) {
+                    for (int y = 0; y < 16; y++) {
+                        for (int z = 0; z < 16; z++) {
+                            if (shape == straight) {
+                                if (direction == north) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0, z == y, x == 15 && z <= y, x == 0 && z <= y, y == 15, z == y));
+                                } else if (direction == east) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x >= 15 - y, z == 15 && x >= 15 - y, x == 15, x == 15 - y, y == 15, x == 15 - y));
+                                } else if (direction == south) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 15 - y, z == 15, x == 15 && z >= 15 - y, x == 0 && z >= 15 - y, y == 15, z == 15 - y));
+                                } else if (direction == west) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x <= y, z == 15 && x <= y, x == y, x == 0, y == 15, x == y));
+                                }
+                            }
+                            if (shape == innerLeft) {
+                                if (direction == north) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0, z == y && z < x || z == 15 && x <= y, x == 15 && z <= y || x == y && x < z, x == 0, y == 15, z == y && z <= x || x == y && x <= z));
+                                } else if (direction == east) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0, z == 15 && x >= 15 - y || z == y && z < 15 - x, x == 15, x == 15 - y && x > 15 - z || x == 0 && z <= y, y == 15, z == y && z <= 15 - x || x == 15 - y && x >= 15 - z));
+                                } else if (direction == south) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 15 - y && z > x || z == 0 && x >= 15 - y, z == 15, x == 15, x == 0 && z >= 15 - y || x == 15 - y && x > z, y == 15, z == 15 - y && z >= x || x == 15 - y && x >= z));
+                                } else if (direction == west) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x <= y || z == 15 - y && z > 15 - x, z == 15, x == y && x < 15 - z || x == 15 && z >= 15 - y, x == 0, y == 15, x == y && x <= 15 - z || z == 15 - y && z > 15 - x));
+                                }
+                            }
+                            if (shape == innerRight) {
+                                if (direction == west) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0, z == y && z < x || z == 15 && x <= y, x == 15 && z <= y || x == y && x < z, x == 0, y == 15, z == y && z <= x || x == y && x <= z));
+                                } else if (direction == north) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0, z == 15 && x >= 15 - y || z == y && z < 15 - x, x == 15, x == 15 - y && x > 15 - z || x == 0 && z <= y, y == 15, z == y && z <= 15 - x || x == 15 - y && x >= 15 - z));
+                                } else if (direction == east) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 15 - y && z > x || z == 0 && x >= 15 - y, z == 15, x == 15, x == 0 && z >= 15 - y || x == 15 - y && x > z, y == 15, z == 15 - y && z >= x || x == 15 - y && x >= z));
+                                } else if (direction == south) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x <= y || z == 15 - y && z > 15 - x, z == 15, x == y && x < 15 - z || x == 15 && z >= 15 - y, x == 0, y == 15, x == y && x <= 15 - z || z == 15 - y && z > 15 - x));
+                                }
+                            }
+                            if (shape == outerLeft) {
+                                if (direction == north) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x <= y, z == y && x <= y, x == y && z <= y, x == 0 && z <= y, y == 15, z == y && z >= x || x == y && x >= z));
+                                } else if (direction == east) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x >= 15 - y, z == y && x >= 15 - y, x == 15 && z <= y, x == 15 - y && x <= 15 - z, y == 15, x == 15 - y && x <= 15 - z || z == y && z >= 15 - x));
+                                } else if (direction == south) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 15 - y && z <= x, z == 15 && x >= 15 - y, x == 15 && z >= 15 - y, x == 15 - y && z >= 15 - y, y == 15, z == 15 - y && z <= x || x == 15 - y && x <= z));
+                                } else if (direction == west) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 15 - y && x <= y, z == 15 && x <= y, x == y && x >= 15 - z, x == 0 && z >= 15 - y, y == 15, x == y && x >= 15 - z || z == 15 - y && z < 15 - x));
+                                }
+                            }
+                            if (shape == outerRight) {
+                                if (direction == west) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x <= y, z == y && x <= y, x == y && z <= y, x == 0 && z <= y, y == 15, z == y && z >= x || x == y && x >= z));
+                                } else if (direction == north) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 0 && x >= 15 - y, z == y && x >= 15 - y, x == 15 && z <= y, x == 15 - y && x <= 15 - z, y == 15, x == 15 - y && x <= 15 - z || z == y && z >= 15 - x));
+                                } else if (direction == east) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 15 - y && z <= x, z == 15 && x >= 15 - y, x == 15 && z >= 15 - y, x == 15 - y && z >= 15 - y, y == 15, z == 15 - y && z <= x || x == 15 - y && x <= z));
+                                } else if (direction == south) {
+                                    quads.addAll(ModelHelper.createVoxel(x, y, z, texture.get(index), tintIndex, z == 15 - y && x <= y, z == 15 && x <= y, x == y && x >= 15 - z, x == 0 && z >= 15 - y, y == 15, x == y && x >= 15 - z || z == 15 - y && z < 15 - x));
+                                }
+                            }
+                        }
                     }
                 }
             }
