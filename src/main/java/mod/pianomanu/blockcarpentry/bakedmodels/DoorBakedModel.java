@@ -2,7 +2,6 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.bakedmodels.helper.DoorKnobBakedModel;
 import mod.pianomanu.blockcarpentry.block.DoorFrameBlock;
-import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
@@ -34,7 +33,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.8 08/27/21
+ * @version 1.9 05/30/22
  */
 public class DoorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -48,16 +47,10 @@ public class DoorBakedModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         //get block saved in frame tile
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
+        if (mimic != null) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
-            if (location != null) {
-                IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                model.getBakedModel().getQuads(mimic, side, rand, extraData);
-                if (model != null) {
-                    //only if model (from block saved in tile entity) exists:
-                    return getMimicQuads(state, side, rand, extraData, model);
-                }
-            }
+            IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+            return getMimicQuads(state, side, rand, extraData, model);
         }
         return Collections.emptyList();
     }
@@ -84,11 +77,9 @@ public class DoorBakedModel implements IDynamicBakedModel {
                 if (Minecraft.getInstance().player != null) {
                     Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
                 }
-                texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing"));
-                //return Collections.emptyList();
-            } else {
-                texture = textureList.get(tex);
+                return Collections.emptyList();
             }
+            texture = textureList.get(tex);
             List<BakedQuad> quads = new ArrayList<>();
             Direction dir = state.get(DoorFrameBlock.FACING);
             boolean open = state.get(DoorFrameBlock.OPEN);
@@ -111,134 +102,130 @@ public class DoorBakedModel implements IDynamicBakedModel {
             if (design == 0) {
                 if (northSide) {
                     if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 4 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 4 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 4 / 16f, 13 / 16f, 1f, texture, tintIndex, true, true, false, true, false, true));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 4 / 16f, 13 / 16f, 1f, texture, tintIndex, true, true, true, false, false, true));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 1f, 14 / 16f, 15 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, texture, tintIndex, true, true, false, false, true, true));
                     }
                     if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex, true, true, false, true, true, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex, true, true, true, false, true, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 12 / 16f, 13 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 12 / 16f, 13 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 12 / 16f, 14 / 16f, 15 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex, true, true, false, false, true, true));
                     }
                 } else if (westSide) {
                     if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 4 / 16f, 1f, 12 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 4 / 16f, 1f, 0f, 4 / 16f, texture, tintIndex, true, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 4 / 16f, 12 / 16f, 1f, texture, tintIndex, false, true, true, true, false, true));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 4 / 16f, 0f, 4 / 16f, texture, tintIndex, true, false, true, true, false, true));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 4 / 16f, 1f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex, false, false, true, true, true, true));
                     }
                     if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 12 / 16f, 1f, texture, tintIndex, false, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 0f, 4 / 16f, texture, tintIndex, true, false, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 12 / 16f, 12 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 12 / 16f, 0f, 4 / 16f, texture, tintIndex, true, true, true, true, false, false));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex, false, false, true, true, true, true));
                     }
                 } else if (eastSide) {
                     if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 4 / 16f, 1f, 12 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 4 / 16f, 1f, 0f, 4 / 16f, texture, tintIndex, true, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 4 / 16f, 12 / 16f, 1f, texture, tintIndex, false, true, true, true, false, true));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 4 / 16f, 0f, 4 / 16f, texture, tintIndex, true, false, true, true, false, true));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 4 / 16f, 1f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex, false, false, true, true, true, true));
                     }
                     if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 12 / 16f, 1f, texture, tintIndex, false, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 0f, 4 / 16f, texture, tintIndex, true, false, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 12 / 16f, 12 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 12 / 16f, 0f, 4 / 16f, texture, tintIndex, true, true, true, true, false, false));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex, false, false, true, true, true, true));
                     }
                 } else {
                     if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 4 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex, true, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 4 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex, true, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 4 / 16f, 0f, 3 / 16f, texture, tintIndex, true, true, false, true, false, true));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 4 / 16f, 0f, 3 / 16f, texture, tintIndex, true, true, true, false, false, true));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 1f, 1 / 16f, 2 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, texture, tintIndex, true, true, false, false, true, true));
                     }
                     if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex, true, true, false, true, true, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 12 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex, true, true, true, false, true, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 12 / 16f, 0f, 3 / 16f, texture, tintIndex, true, true, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 12 / 16f, 0f, 3 / 16f, texture, tintIndex, true, true, true, true, false, false));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 12 / 16f, 1 / 16f, 2 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex, true, true, false, false, true, true));
                     }
                 }
             }
             if (design == 3) {
                 if (northSide) {
-                    if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 14 / 16f, 15 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex));
-                    }
-                    if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 14 / 16f, 15 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, texture, tintIndex));
-                    }
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 4 / 16f, 13 / 16f, 1f, texture, tintIndex, true, true, false, true, false, half == lower));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 4 / 16f, 12 / 16f, 13 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex, true, true, false, true, half == upper, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 4 / 16f, 13 / 16f, 1f, texture, tintIndex, true, true, true, false, false, half == lower));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 4 / 16f, 12 / 16f, 13 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex, true, true, true, false, half == upper, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 14 / 16f, 15 / 16f, glass, -1));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, texture, tintIndex, true, true, false, false, true, half == lower));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, texture, tintIndex, true, true, false, false, half == upper, true));
                 } else if (westSide) {
-                    if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
-                    }
-                    if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex));
-                    }
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 4 / 16f, 12 / 16f, 1f, texture, tintIndex, false, true, true, true, false, half == lower));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 4 / 16f, 12 / 16f, 12 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 12 / 16f, 1f, texture, tintIndex, false, true, true, true, half == upper, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 4 / 16f, 0f, 4 / 16f, texture, tintIndex, true, false, true, true, false, half == lower));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 4 / 16f, 12 / 16f, 0f, 4 / 16f, texture, tintIndex, true, true, true, true, false, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 0f, 4 / 16f, texture, tintIndex, true, false, true, true, half == upper, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex, false, false, true, true, true, half == lower));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex, false, false, true, true, half == upper, true));
                 } else if (eastSide) {
-                    if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
-                    }
-                    if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 12 / 16f, 1f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 1f, 0f, 4 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex));
-                    }
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 4 / 16f, 12 / 16f, 1f, texture, tintIndex, false, true, true, true, false, half == lower));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 4 / 16f, 12 / 16f, 12 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 12 / 16f, 1f, texture, tintIndex, false, true, true, true, half == upper, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 4 / 16f, 0f, 4 / 16f, texture, tintIndex, true, false, true, true, false, half == lower));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 4 / 16f, 12 / 16f, 0f, 4 / 16f, texture, tintIndex, true, true, true, true, false, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 0f, 4 / 16f, texture, tintIndex, true, false, true, true, half == upper, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex, false, false, true, true, true, half == lower));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, texture, tintIndex, false, false, true, true, half == upper, true));
                 } else {
-                    if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 1 / 16f, 2 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex));
-                    }
-                    if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 1f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 1 / 16f, 2 / 16f, glass, -1));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, texture, tintIndex));
-                    }
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 0, 4 / 16f, 0f, 3 / 16f, texture, tintIndex, true, true, false, true, false, half == lower));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 4 / 16f, 12 / 16f, 0f, 3 / 16f, texture, tintIndex, true, true, true, true, false, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 4 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex, true, true, false, true, half == upper, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 0, 4 / 16f, 0f, 3 / 16f, texture, tintIndex, true, true, true, false, false, half == lower));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 4 / 16f, 12 / 16f, 0f, 3 / 16f, texture, tintIndex, true, true, true, true, false, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(12 / 16f, 1f, 12 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex, true, true, true, false, half == upper, false));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 1 / 16f, 2 / 16f, glass, -1));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, texture, tintIndex, true, true, false, false, true, half == lower));
+                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, texture, tintIndex, true, true, false, false, half == upper, true));
                 }
             }
             if (design == 1 || design == 2) {
                 int flag = 0;
                 if (northSide) {
                     flag = 1;
-                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, texture, tintIndex, true, true, true, true, half == upper, half == lower));
                 } else if (westSide) {
                     flag = 2;
-                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex, true, true, true, true, half == upper, half == lower));
                 } else if (eastSide) {
                     flag = 3;
-                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, texture, tintIndex, true, true, true, true, half == upper, half == lower));
                 } else {
-                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, texture, tintIndex));
+                    quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, texture, tintIndex, true, true, true, true, half == upper, half == lower));
                 }
                 if (design == 1) {
                     if (half == lower) {
