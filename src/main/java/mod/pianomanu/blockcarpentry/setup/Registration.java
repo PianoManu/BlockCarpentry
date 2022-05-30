@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
  * Just a normal registering class. See Forge-Documentation on how to register objects
  *
  * @author PianoManu
- * @version 1.10 08/19/21
+ * @version 1.11 05/30/22
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("all") //only warning: datafixer for build()-method is null, but method is annotated as "NotNull"
@@ -136,7 +136,6 @@ public class Registration {
     //public static final RegistryObject<Item> FLOWER_POT_FRAME_ITEM = ITEMS.register("frame_flower_pot", () -> new BlockItem(FLOWER_POT_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     //public static final RegistryObject<TileEntityType<FrameBlockTile>> FLOWER_POT_FRAME_TILE = TILES.register("frame_flower_pot", () -> TileEntityType.Builder.create(FrameBlockTile::new, FLOWER_POT_FRAMEBLOCK.get()).build(null));
 
-    //TODO WIP - may be removed or rewritten in the future
     public static final RegistryObject<SlopeFrameBlock> SLOPE_FRAMEBLOCK = BLOCKS.register("frame_slope", () -> new SlopeFrameBlock(() -> FRAMEBLOCK.get().getDefaultState(), Block.Properties.from(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> SLOPE_FRAME_ITEM = ITEMS.register("frame_slope", () -> new BlockItem(SLOPE_FRAMEBLOCK.get(), new Item.Properties().group(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> SLOPE_FRAME_TILE = TILES.register("frame_slope", () -> TileEntityType.Builder.create(FrameBlockTile::new, SLOPE_FRAMEBLOCK.get()).build(null));
