@@ -33,8 +33,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +45,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.13 02/08/22
+ * @version 1.14 05/30/22
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IWaterLoggable {
@@ -177,7 +175,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
                     insertBlock(world, pos, state, handBlockState);
                     if (!player.isCreative())
                         player.getHeldItem(hand).setCount(count - 1);
-                    checkForVisibility(state, world, pos, (TwoBlocksFrameBlockTile) tileEntity);
+                    //checkForVisibility(state, world, pos, (TwoBlocksFrameBlockTile) tileEntity);
                 }
 
             }
@@ -276,7 +274,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
         return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
-    @OnlyIn(Dist.CLIENT)
+    /*@OnlyIn(Dist.CLIENT)
     public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
         boolean similarState = false;
         if (adjacentBlockState.isIn(this)) {
@@ -287,9 +285,9 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
             }
         }
         return similarState || super.isSideInvisible(state, adjacentBlockState, side);// || BlockCullingHelper.skipSideRendering(adjacentBlockState);
-    }
+    }*/
 
-    private void checkForVisibility(BlockState state, World world, BlockPos pos, TwoBlocksFrameBlockTile tileEntity) {
+    /*private void checkForVisibility(BlockState state, World world, BlockPos pos, TwoBlocksFrameBlockTile tileEntity) {
         if (world.isRemote) {
             for (Direction d : Direction.values()) {
                 BlockPos.Mutable mutablePos = pos.toMutable();
@@ -298,6 +296,6 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
                     tileEntity.setVisibileSides(d, !(adjacentBlockState.isSolid() || isSideInvisible(state, adjacentBlockState, d)));
             }
         }
-    }
+    }*/
 }
 //========SOLI DEO GLORIA========//
