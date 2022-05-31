@@ -89,8 +89,10 @@ public class DoorFrameBlock extends DoorBlock implements EntityBlock {
                     }
                 } else if (tileEntity instanceof FrameBlockTile) {
                     LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
-                    if (newTile != null)
+                    if (newTile != null) {
                         level.setBlockEntity(newTile);
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
+                    }
                 }
                 return InteractionResult.CONSUME;
             }
@@ -109,8 +111,10 @@ public class DoorFrameBlock extends DoorBlock implements EntityBlock {
                     }
                 } else if (tileEntity instanceof FrameBlockTile) {
                     LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
-                    if (newTile != null)
+                    if (newTile != null) {
                         level.setBlockEntity(newTile);
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
+                    }
                 }
                 return InteractionResult.CONSUME;
             }
@@ -145,8 +149,10 @@ public class DoorFrameBlock extends DoorBlock implements EntityBlock {
                     }
                 } else if (tileEntity instanceof FrameBlockTile) {
                     LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
-                    if (newTile != null)
+                    if (newTile != null) {
                         level.setBlockEntity(newTile);
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
+                    }
                 }
             }
             if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {

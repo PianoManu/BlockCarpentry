@@ -87,8 +87,10 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
                     doorTileEntity.setCanBeOpenedByRedstoneSignal(!doorTileEntity.canBeOpenedByRedstoneSignal());
                 } else if (tileEntity instanceof FrameBlockTile) {
                     LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
-                    if (newTile != null)
+                    if (newTile != null) {
                         level.setBlockEntity(newTile);
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
+                    }
                 }
                 return InteractionResult.CONSUME;
             }
@@ -103,8 +105,10 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
                     doorTileEntity.setCanBeOpenedByPlayers(!doorTileEntity.canBeOpenedByPlayers());
                 } else if (tileEntity instanceof FrameBlockTile) {
                     LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
-                    if (newTile != null)
+                    if (newTile != null) {
                         level.setBlockEntity(newTile);
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
+                    }
                 }
                 return InteractionResult.CONSUME;
             }
@@ -129,8 +133,10 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
                     }
                 } else if (tileEntity instanceof FrameBlockTile) {
                     LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
-                    if (newTile != null)
+                    if (newTile != null) {
                         level.setBlockEntity(newTile);
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
+                    }
                 }
                 return InteractionResult.CONSUME;
             } else {

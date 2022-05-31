@@ -57,11 +57,6 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock {
         builder.add(HORIZONTAL_FACING, OPEN, HALF, POWERED, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
-    /*@Override
-    public boolean hasBlockEntity(BlockState state) {
-        return true;
-    }*/
-
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
@@ -91,8 +86,10 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock {
                     doorTileEntity.setCanBeOpenedByRedstoneSignal(!doorTileEntity.canBeOpenedByRedstoneSignal());
                 } else if (tileEntity instanceof FrameBlockTile) {
                     LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
-                    if (newTile != null)
+                    if (newTile != null) {
                         level.setBlockEntity(newTile);
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
+                    }
                 }
                 return InteractionResult.CONSUME;
             }
@@ -107,8 +104,10 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock {
                     doorTileEntity.setCanBeOpenedByPlayers(!doorTileEntity.canBeOpenedByPlayers());
                 } else if (tileEntity instanceof FrameBlockTile) {
                     LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
-                    if (newTile != null)
+                    if (newTile != null) {
                         level.setBlockEntity(newTile);
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
+                    }
                 }
                 return InteractionResult.CONSUME;
             }
@@ -145,10 +144,11 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock {
                     }
                 } else if (tileEntity instanceof FrameBlockTile) {
                     LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
-                    if (newTile != null)
+                    if (newTile != null) {
                         level.setBlockEntity(newTile);
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
+                    }
                 }
-                //this.playSound(player, level, pos, state.getValue(OPEN));
                 return InteractionResult.PASS;
             }
             if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
