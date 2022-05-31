@@ -41,7 +41,7 @@ public class PaintbrushItem extends Item {
         if (Screen.hasShiftDown()) {
             component.add(new TranslatableComponent("tooltip.blockcarpentry.paintbrush"));
         } else {
-            component.add(new TranslatableComponent("tooltip.blockcarpentry.tool_shift"));
+            component.add(new TranslatableComponent("tooltip.blockcarpentry.shift"));
         }
     }
 }

@@ -89,7 +89,7 @@
   "advancements.blockcarpentry.chest.description": "Bara det inte är en begravningskista...",
   "advancements.blockcarpentry.all.title": "Ramfeber",
   "advancements.blockcarpentry.all.description": "Se, vad många möjligheter!",
-  "tooltip.blockcarpentry.tool_shift": "§6§oPress §r§2§lSHIFT §r§6§ofor more information",
+  "tooltip.blockcarpentry.shift": "§6§oPress §r§2§lSHIFT §r§6§ofor more information",
   "tooltip.blockcarpentry.hammer": "§6§oRight-click on a frame or illusion block to remove its content without destroying the block",
   "tooltip.blockcarpentry.texture_wrench": "§6§oRight-click on a frame block to cycle through all possible textures or Right-click on an illusion block to rotate the model",
   "tooltip.blockcarpentry.chisel": "§6§oRight-click on a frame or illusion block to cycle through a list of available designs\n§eHint: §6§oSome blocks do not have multiple designs (right now), so using the Chisel on them won't change anything",

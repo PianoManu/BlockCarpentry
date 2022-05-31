@@ -41,7 +41,7 @@ public class ChiselItem extends Item {
         if (Screen.hasShiftDown()) {
             component.add(new TranslatableComponent("tooltip.blockcarpentry.chisel"));
         } else {
-            component.add(new TranslatableComponent("tooltip.blockcarpentry.tool_shift"));
+            component.add(new TranslatableComponent("tooltip.blockcarpentry.shift"));
         }
     }
 }
