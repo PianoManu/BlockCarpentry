@@ -4,6 +4,10 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.block.*;
 import mod.pianomanu.blockcarpentry.container.ChestFrameContainer;
 import mod.pianomanu.blockcarpentry.container.IllusionChestContainer;
+import mod.pianomanu.blockcarpentry.item.ChiselItem;
+import mod.pianomanu.blockcarpentry.item.HammerItem;
+import mod.pianomanu.blockcarpentry.item.PaintbrushItem;
+import mod.pianomanu.blockcarpentry.item.TextureWrenchItem;
 import mod.pianomanu.blockcarpentry.tileentity.*;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.inventory.MenuType;
@@ -233,10 +237,10 @@ public class Registration {
     }
 
 
-    public static final RegistryObject<Item> HAMMER = ITEMS.register("hammer", () -> new Item(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1)));
-    public static final RegistryObject<Item> TEXTURE_WRENCH = ITEMS.register("texture_wrench", () -> new Item(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1)));
-    public static final RegistryObject<Item> CHISEL = ITEMS.register("chisel", () -> new Item(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1)));
-    public static final RegistryObject<Item> PAINTBRUSH = ITEMS.register("paintbrush", () -> new Item(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1)));
+    public static final RegistryObject<HammerItem> HAMMER = ITEMS.register("hammer", () -> new HammerItem(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1)));
+    public static final RegistryObject<TextureWrenchItem> TEXTURE_WRENCH = ITEMS.register("texture_wrench", () -> new TextureWrenchItem(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1)));
+    public static final RegistryObject<ChiselItem> CHISEL = ITEMS.register("chisel", () -> new ChiselItem(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1)));
+    public static final RegistryObject<PaintbrushItem> PAINTBRUSH = ITEMS.register("paintbrush", () -> new PaintbrushItem(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1)));
 
 }
 //========SOLI DEO GLORIA========//
