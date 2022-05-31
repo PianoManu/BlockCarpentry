@@ -88,6 +88,7 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
                 } else if (tileEntity instanceof FrameBlockTile) {
                     LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
                     if (newTile != null) {
+                        newTile.addFromOutdatedTileEntity((FrameBlockTile) tileEntity);
                         level.setBlockEntity(newTile);
                         player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
                     }
@@ -106,6 +107,7 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
                 } else if (tileEntity instanceof FrameBlockTile) {
                     LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
                     if (newTile != null) {
+                        newTile.addFromOutdatedTileEntity((FrameBlockTile) tileEntity);
                         level.setBlockEntity(newTile);
                         player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
                     }
@@ -134,6 +136,7 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
                 } else if (tileEntity instanceof FrameBlockTile) {
                     LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
                     if (newTile != null) {
+                        newTile.addFromOutdatedTileEntity((FrameBlockTile) tileEntity);
                         level.setBlockEntity(newTile);
                         player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
                     }

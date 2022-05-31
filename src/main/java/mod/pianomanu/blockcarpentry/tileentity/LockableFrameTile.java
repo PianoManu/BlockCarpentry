@@ -119,5 +119,17 @@ public class LockableFrameTile extends FrameBlockTile {
         this.canBeOpenedByPlayers = true;
         this.canBeOpenedByRedstoneSignal = true;
     }
+
+    public void addFromOutdatedTileEntity(FrameBlockTile tile) {
+        if (level == null)
+            this.level = tile.getLevel();
+        this.setDesign(tile.getDesign());
+        this.setDesignTexture(tile.getDesignTexture());
+        this.setMimic(tile.getMimic());
+        this.setGlassColor(tile.getGlassColor());
+        this.setOverlay(tile.getOverlay());
+        this.setRotation(tile.getRotation());
+        this.setTexture(tile.getTexture());
+    }
 }
 //========SOLI DEO GLORIA========//
