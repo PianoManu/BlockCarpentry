@@ -100,5 +100,6 @@
   "tooltip.blockcarpentry.base_illusion": "§6§oPlatzieren und Rechtsklick mit einem anderen Block auf diesen Block, und der Illusionsblock übernimmt das gesamte Modell des Blocks\nNimmt man beispielsweise einen Ofen, hat der Illusionsblock die Vorder-, Ober-, Unter- und Seitentexturen wie ein echter Ofen - daher der Name \"Illusionsblock\".",
   "tooltip.blockcarpentry.vanilla_like": "\n§6§oDer Rahmenblock verhält sich wie sein Vanilla-Gegenstück, übernimmt aber keine Attribute des nachgeahmten Blocks",
   "tooltip.blockcarpentry.layered": "\n§6§oDieser Block kann in alle sechs Richtungen platziert und ähnlich wie Schnee gestapelt werden",
-  "tooltip.blockcarpentry.slope": "\n§6§oDie Rahmenschräge und die eckige Rahmenschräge verhalten sich wie eine normale Minecraft-Treppe, aber mit mehr Abstufungen pro Block"
+  "tooltip.blockcarpentry.slope": "\n§6§oDie Rahmenschräge und die eckige Rahmenschräge verhalten sich wie eine normale Minecraft-Treppe, aber mit mehr Abstufungen pro Block",
+  "tooltip.blockcarpentry.locking": "\n§6§oRechtsklick auf diesen Block, um seinen Zustand zu fixieren (offen oder geschlossen, Spieler können diesen Block nicht mehr öffnen oder schließen), oder mit einem Stück Redstone-Staub, damit er Redstone-Signale ignoriert\nKlicke erneut mit der rechten Maustaste, um den Vorgang rückgängig zu machen"
 }

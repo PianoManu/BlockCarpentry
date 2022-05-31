@@ -44,10 +44,15 @@ public class BaseFrameItem extends BlockItem {
             component.add(new TranslatableComponent("tooltip.blockcarpentry.base_frame"));
             if (!this.getBlock().equals(Registration.FRAMEBLOCK.get()) && !this.getBlock().equals(Registration.LAYERED_FRAMEBLOCK.get()) && !this.getBlock().equals(Registration.SLOPE_FRAMEBLOCK.get()) && !this.getBlock().equals(Registration.EDGED_SLOPE_FRAMEBLOCK.get())) {
                 component.add(new TranslatableComponent("tooltip.blockcarpentry.vanilla_like"));
-            } else if (this.getBlock().equals(Registration.LAYERED_FRAMEBLOCK.get())) {
+            }
+            if (this.getBlock().equals(Registration.LAYERED_FRAMEBLOCK.get())) {
                 component.add(new TranslatableComponent("tooltip.blockcarpentry.layered"));
-            } else if (this.getBlock().equals(Registration.SLOPE_FRAMEBLOCK.get()) || this.getBlock().equals(Registration.EDGED_SLOPE_FRAMEBLOCK.get())) {
+            }
+            if (this.getBlock().equals(Registration.SLOPE_FRAMEBLOCK.get()) || this.getBlock().equals(Registration.EDGED_SLOPE_FRAMEBLOCK.get())) {
                 component.add(new TranslatableComponent("tooltip.blockcarpentry.slope"));
+            }
+            if (this.getBlock().equals(Registration.DOOR_FRAMEBLOCK.get()) || this.getBlock().equals(Registration.TRAPDOOR_FRAMEBLOCK.get()) || this.getBlock().equals(Registration.FENCE_GATE_FRAMEBLOCK.get())) {
+                component.add(new TranslatableComponent("tooltip.blockcarpentry.locking"));
             }
         } else {
             component.add(new TranslatableComponent("tooltip.blockcarpentry.shift"));

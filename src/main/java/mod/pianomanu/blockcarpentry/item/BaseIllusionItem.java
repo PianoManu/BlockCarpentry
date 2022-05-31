@@ -44,8 +44,12 @@ public class BaseIllusionItem extends BlockItem {
             component.add(new TranslatableComponent("tooltip.blockcarpentry.base_illusion"));
             if (!this.getBlock().equals(Registration.ILLUSION_BLOCK.get()) && !this.getBlock().equals(Registration.LAYERED_ILLUSIONBLOCK.get())) {
                 component.add(new TranslatableComponent("tooltip.blockcarpentry.vanilla_like"));
-            } else if (this.getBlock().equals(Registration.LAYERED_ILLUSIONBLOCK.get())) {
+            }
+            if (this.getBlock().equals(Registration.LAYERED_ILLUSIONBLOCK.get())) {
                 component.add(new TranslatableComponent("tooltip.blockcarpentry.layered"));
+            }
+            if (this.getBlock().equals(Registration.DOOR_ILLUSIONBLOCK.get()) || this.getBlock().equals(Registration.TRAPDOOR_ILLUSIONBLOCK.get()) || this.getBlock().equals(Registration.FENCE_GATE_ILLUSIONBLOCK.get())) {
+                component.add(new TranslatableComponent("tooltip.blockcarpentry.locking"));
             }
         } else {
             component.add(new TranslatableComponent("tooltip.blockcarpentry.shift"));
