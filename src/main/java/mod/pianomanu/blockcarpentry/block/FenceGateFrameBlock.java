@@ -4,10 +4,12 @@ import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.LockableFrameTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -57,15 +60,10 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
         builder.add(WATERLOGGED, HORIZONTAL_FACING, OPEN, POWERED, IN_WALL, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
-    /*@Override
-    public boolean hasBlockEntity(BlockState state) {
-        return true;
-    }*/
-
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new FrameBlockTile(pos, state);
+        return new LockableFrameTile(pos, state);
     }
 
     @Override
@@ -78,21 +76,62 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
                     BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
                     BlockAppearanceHelper.setRotation(level, pos, player, item))
                 return InteractionResult.CONSUME;
-            if ((state.getValue(CONTAINS_BLOCK) || !(item.getItem() instanceof BlockItem)) && !(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
-                if (state.getValue(OPEN)) {
-                    state = state.setValue(OPEN, false);
-                } else {
-                    Direction direction = player.getDirection();
-                    if (state.getValue(FACING) == direction.getOpposite()) {
-                        state = state.setValue(FACING, direction);
+            if (item.getItem() == Items.REDSTONE) {
+                BlockEntity tileEntity = level.getBlockEntity(pos);
+                if (tileEntity instanceof LockableFrameTile doorTileEntity) {
+                    if (doorTileEntity.canBeOpenedByRedstoneSignal()) {
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.redstone_off"), true);
+                    } else {
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.redstone_on"), true);
                     }
-
-                    state = state.setValue(OPEN, true);
+                    doorTileEntity.setCanBeOpenedByRedstoneSignal(!doorTileEntity.canBeOpenedByRedstoneSignal());
+                } else if (tileEntity instanceof FrameBlockTile) {
+                    LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
+                    if (newTile != null)
+                        level.setBlockEntity(newTile);
                 }
-                level.setBlock(pos, state, 10);
+                return InteractionResult.CONSUME;
+            }
+            if (item.getItem() == Items.IRON_INGOT) {
+                BlockEntity tileEntity = level.getBlockEntity(pos);
+                if (tileEntity instanceof LockableFrameTile doorTileEntity) {
+                    if (doorTileEntity.canBeOpenedByPlayers()) {
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.lock"), true);
+                    } else {
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.unlock"), true);
+                    }
+                    doorTileEntity.setCanBeOpenedByPlayers(!doorTileEntity.canBeOpenedByPlayers());
+                } else if (tileEntity instanceof FrameBlockTile) {
+                    LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
+                    if (newTile != null)
+                        level.setBlockEntity(newTile);
+                }
+                return InteractionResult.CONSUME;
+            }
+            if ((state.getValue(CONTAINS_BLOCK) || !(item.getItem() instanceof BlockItem)) && !(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
+                BlockEntity tileEntity = level.getBlockEntity(pos);
+                if (tileEntity instanceof LockableFrameTile fenceGateTileEntity) {
+                    if (fenceGateTileEntity.canBeOpenedByPlayers()) {
+                        if (state.getValue(OPEN)) {
+                            state = state.setValue(OPEN, false);
+                        } else {
+                            Direction direction = player.getDirection();
+                            if (state.getValue(FACING) == direction.getOpposite()) {
+                                state = state.setValue(FACING, direction);
+                            }
 
-                boolean open = state.getValue(OPEN);
-                level.playSound(null, pos, open ? SoundEvents.FENCE_GATE_OPEN : SoundEvents.FENCE_GATE_CLOSE, SoundSource.BLOCKS, 1f, 1f);
+                            state = state.setValue(OPEN, true);
+                        }
+                        level.setBlock(pos, state, 10);
+
+                        boolean open = state.getValue(OPEN);
+                        level.playSound(null, pos, open ? SoundEvents.FENCE_GATE_OPEN : SoundEvents.FENCE_GATE_CLOSE, SoundSource.BLOCKS, 1f, 1f);
+                    }
+                } else if (tileEntity instanceof FrameBlockTile) {
+                    LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
+                    if (newTile != null)
+                        level.setBlockEntity(newTile);
+                }
                 return InteractionResult.CONSUME;
             } else {
                 if (item.getItem() instanceof BlockItem) {
@@ -198,6 +237,26 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
             return Objects.requireNonNull(state).setValue(WATERLOGGED, fluidstate.isSource());
         } else {
             return state;
+        }
+    }
+
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos pos2, boolean update) {
+        if (!level.isClientSide) {
+            BlockEntity tileEntity = level.getBlockEntity(pos);
+            if (tileEntity instanceof LockableFrameTile trapdoorTileEntity && trapdoorTileEntity.canBeOpenedByRedstoneSignal()) {
+                boolean neighborSignal = level.hasNeighborSignal(pos);
+                if (neighborSignal != state.getValue(POWERED)) {
+                    if (state.getValue(OPEN) != neighborSignal) {
+                        state = state.setValue(OPEN, Boolean.valueOf(neighborSignal));
+                        level.playSound(null, pos, neighborSignal ? SoundEvents.FENCE_GATE_OPEN : SoundEvents.FENCE_GATE_CLOSE, SoundSource.BLOCKS, 1f, 1f);
+                    }
+
+                    level.setBlock(pos, state.setValue(POWERED, Boolean.valueOf(neighborSignal)), 2);
+                    if (state.getValue(WATERLOGGED)) {
+                        level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+                    }
+                }
+            }
         }
     }
 }
