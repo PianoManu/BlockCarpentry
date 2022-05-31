@@ -9,6 +9,8 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -37,7 +39,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 05/31/22
  */
 public class ButtonFrameBlock extends WoodButtonBlock implements EntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -104,7 +106,7 @@ public class ButtonFrameBlock extends WoodButtonBlock implements EntityBlock {
                 return InteractionResult.CONSUME;
             } else {
                 this.press(state, level, pos);
-                this.playSound(player, level, pos, true);
+                level.playSound(null, pos, SoundEvents.WOODEN_BUTTON_CLICK_ON, SoundSource.BLOCKS, 1f, 1f);
                 level.gameEvent(player, GameEvent.BLOCK_PRESS, pos);
                 //return InteractionResult.sidedSuccess(level.isClientSide);
             }

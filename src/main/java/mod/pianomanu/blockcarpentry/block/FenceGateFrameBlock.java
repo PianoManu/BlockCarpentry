@@ -8,6 +8,8 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -25,7 +27,6 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -43,7 +44,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 05/31/22
  */
 public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterloggedBlock, EntityBlock {
     public FenceGateFrameBlock(Properties properties) {
@@ -90,9 +91,8 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
                 }
                 level.setBlock(pos, state, 10);
 
-                boolean flag = state.getValue(OPEN);
-                level.levelEvent(null, flag ? 1008 : 1014, pos, 0);
-                level.gameEvent(player, flag ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
+                boolean open = state.getValue(OPEN);
+                level.playSound(null, pos, open ? SoundEvents.FENCE_GATE_OPEN : SoundEvents.FENCE_GATE_CLOSE, SoundSource.BLOCKS, 1f, 1f);
                 return InteractionResult.CONSUME;
             } else {
                 if (item.getItem() instanceof BlockItem) {
