@@ -93,5 +93,10 @@
   "tooltip.blockcarpentry.hammer": "§6§oRechtsklick auf einen Blockrahmen oder Illusionsblock, um seinen Inhalt zu entfernen, ohne den Block zu zerstören",
   "tooltip.blockcarpentry.texture_wrench": "§6§oRechtsklick auf einen Blockrahmen, um die nächste Textur auszuwählen; oder Rechtsklick auf einen Illusionsblock, um das Modell zu drehen",
   "tooltip.blockcarpentry.chisel": "§6§oRechtsklick auf einen Blockrahmen oder Illusionsblock, um aus einer Liste verfügbarer Designs das nächste auszuwählen\n§eHinweis: §6§oEinige Blöcke haben (bis jetzt) nur ein einziges Design, daher ändert die Verwendung des Meißels an ihnen nichts",
-  "tooltip.blockcarpentry.paintbrush": "§6§oRechtsklick auf einen Blockrahmen oder Illusionsblock, um die Farbe des Addons zu ändern\n§eHinweis: §6§oNur wenige Blöcke haben Designs mit Addons; der Pinsel kann nur die Farbe des Addons ändern, wenn das aktuelle Design eins hat"
+  "tooltip.blockcarpentry.paintbrush": "§6§oRechtsklick auf einen Blockrahmen oder Illusionsblock, um die Farbe des Addons zu ändern\n§eHinweis: §6§oNur wenige Blöcke haben Designs mit Addons; der Pinsel kann nur die Farbe des Addons ändern, wenn das aktuelle Design eins hat",
+  "tooltip.blockcarpentry.base_frame": "§6§oPlatzieren und Rechtsklick mit einem anderen Block auf diesen Block, und der Rahmen nimmt das Aussehen des Blocks an und hat auf allen Seiten die gleiche Textur",
+  "tooltip.blockcarpentry.base_illusion": "§6§oPlatzieren und Rechtsklick mit einem anderen Block auf diesen Block, und der Illusionsblock übernimmt das gesamte Modell des Blocks\nNimmt man beispielsweise einen Ofen, hat der Illusionsblock die Vorder-, Ober-, Unter- und Seitentexturen wie ein echter Ofen - daher der Name \"Illusionsblock\".",
+  "tooltip.blockcarpentry.vanilla_like": "\n§6§oDer Rahmenblock verhält sich wie sein Vanilla-Gegenstück, übernimmt aber keine Attribute des nachgeahmten Blocks",
+  "tooltip.blockcarpentry.layered": "\n§6§oDieser Block kann in alle sechs Richtungen platziert und ähnlich wie Schnee gestapelt werden",
+  "tooltip.blockcarpentry.slope": "\n§6§oDie Rahmenschräge und die eckige Rahmenschräge verhalten sich wie eine normale Minecraft-Treppe, aber mit mehr Abstufungen pro Block"
 }

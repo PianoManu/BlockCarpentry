@@ -93,5 +93,10 @@
 	"tooltip.blockcarpentry.hammer": "§6§oRight-click on a frame or illusion block to remove its content without destroying the block",
 	"tooltip.blockcarpentry.texture_wrench": "§6§oRight-click on a frame block to cycle through all possible textures or Right-click on an illusion block to rotate the model",
 	"tooltip.blockcarpentry.chisel": "§6§oRight-click on a frame or illusion block to cycle through a list of available designs\n§eHint: §6§oSome blocks do not have multiple designs (right now), so using the Chisel on them won't change anything",
-	"tooltip.blockcarpentry.paintbrush": "§6§oRight-click on a frame or illusion block to change the color of addons\n§eHint: §6§oOnly a few blocks have designs with addons; the Paintbrush can only change the color of the addon, if the current design has one"
+	"tooltip.blockcarpentry.paintbrush": "§6§oRight-click on a frame or illusion block to change the color of addons\n§eHint: §6§oOnly a few blocks have designs with addons; the Paintbrush can only change the color of the addon, if the current design has one",
+	"tooltip.blockcarpentry.base_frame": "§6§oPlace and right-click with a block of your choice, and the frame will take on the appearance of the block, having the same texture on every side",
+	"tooltip.blockcarpentry.base_illusion": "§6§oPlace and right-click with a block of your choice, and the illusion block will take on the whole model of the block\nIf you, for example, take a furnace, the illusion block will have the front, sides, top and bottom faces like a real furnace - hence the name \"illusion block\"",
+	"tooltip.blockcarpentry.vanilla_like": "\n§6§oThe frame behaves like its vanilla counterpart, but it won't take over attributes of the mimicked block",
+	"tooltip.blockcarpentry.layered": "\n§6§oThis block can be placed in all six directions and can be stacked similar to snow",
+	"tooltip.blockcarpentry.slope": "\n§6§oThe slope and edged slope behave like normal vanilla stairs but with more stages per block"
 }
