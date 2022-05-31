@@ -99,9 +99,9 @@ public class DoorFrameBlock extends DoorBlock implements EntityBlock {
                 if (tileEntity instanceof LockableFrameTile doorTileEntity) {
                     LockableFrameTile secondTile = (LockableFrameTile) (state.getValue(HALF) == DoubleBlockHalf.LOWER ? level.getBlockEntity(pos.above()) : level.getBlockEntity(pos.below()));
                     if (doorTileEntity.canBeOpenedByPlayers()) {
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.lock_door"), true);
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.lock"), true);
                     } else {
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.unlock_door"), true);
+                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.unlock"), true);
                     }
                     doorTileEntity.setCanBeOpenedByPlayers(!doorTileEntity.canBeOpenedByPlayers());
                     if (secondTile != null) {
