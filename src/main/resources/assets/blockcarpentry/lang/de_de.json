@@ -58,6 +58,7 @@
   "message.blockcarpentry.redstone_on": "Dieser Block ignoriert keine Redstone-Signale mehr",
   "message.blockcarpentry.block_not_available": "Dieser Block kann leider nicht dargestellt werden",
   "message.blockcarpentry.block_error": "Mit diesem Block ist ein Fehler aufgetreten, bitte dem Autor der Mod mitteilen (PianoManu)",
+  "message.blockcarpentry.converting_outdated_block": "Dieser Block hatte veraltete Informationen, aber ich hab die gerade umgewandelt, jetzt sollte es wieder funktionieren! :)",
   "itemGroup.blockcarpentry": "BlockCarpentry",
   "advancements.blockcarpentry.root.description": "Klick diesen Block mit der rechten Maustaste mit einem anderen Block an und erfreue dich",
   "advancements.blockcarpentry.illusion_blocks.title": "wO iSt dEr uNtErScHiEd??????",
