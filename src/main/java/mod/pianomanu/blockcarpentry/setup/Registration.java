@@ -28,7 +28,7 @@ import org.apache.logging.log4j.Logger;
  * Just a normal registering class. See Forge-Documentation on how to register objects
  *
  * @author PianoManu
- * @version 1.0 05/31/22
+ * @version 1.1 05/31/22
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("all") //only warning: datafixer for build()-method is null, but method is annotated as "NotNull"
@@ -93,20 +93,20 @@ public class Registration {
 
     public static final RegistryObject<DoorFrameBlock> DOOR_FRAMEBLOCK = BLOCKS.register("frame_door", () -> new DoorFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> DOOR_FRAME_ITEM = ITEMS.register("frame_door", () -> new BaseFrameItem(DOOR_FRAMEBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<BlockEntityType<FrameBlockTile>> DOOR_FRAME_TILE = TILES.register("frame_door", () -> BlockEntityType.Builder.of(FrameBlockTile::new, DOOR_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<LockableFrameTile>> DOOR_FRAME_TILE = TILES.register("frame_door", () -> BlockEntityType.Builder.of(LockableFrameTile::new, DOOR_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<DoorFrameBlock> DOOR_ILLUSIONBLOCK = BLOCKS.register("illusion_door", () -> new DoorFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> DOOR_ILLUSION_ITEM = ITEMS.register("illusion_door", () -> new BaseIllusionItem(DOOR_ILLUSIONBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<BlockEntityType<FrameBlockTile>> DOOR_ILLUSION_TILE = TILES.register("illusion_door", () -> BlockEntityType.Builder.of(FrameBlockTile::new, DOOR_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<LockableFrameTile>> DOOR_ILLUSION_TILE = TILES.register("illusion_door", () -> BlockEntityType.Builder.of(LockableFrameTile::new, DOOR_FRAMEBLOCK.get()).build(null));
 
 
     public static final RegistryObject<TrapdoorFrameBlock> TRAPDOOR_FRAMEBLOCK = BLOCKS.register("frame_trapdoor", () -> new TrapdoorFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> TRAPDOOR_FRAME_ITEM = ITEMS.register("frame_trapdoor", () -> new BaseFrameItem(TRAPDOOR_FRAMEBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<BlockEntityType<FrameBlockTile>> TRAPDOOR_FRAME_TILE = TILES.register("frame_trapdoor", () -> BlockEntityType.Builder.of(FrameBlockTile::new, TRAPDOOR_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<LockableFrameTile>> TRAPDOOR_FRAME_TILE = TILES.register("frame_trapdoor", () -> BlockEntityType.Builder.of(LockableFrameTile::new, TRAPDOOR_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<TrapdoorFrameBlock> TRAPDOOR_ILLUSIONBLOCK = BLOCKS.register("illusion_trapdoor", () -> new TrapdoorFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> TRAPDOOR_ILLUSION_ITEM = ITEMS.register("illusion_trapdoor", () -> new BaseIllusionItem(TRAPDOOR_ILLUSIONBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<BlockEntityType<FrameBlockTile>> TRAPDOOR_ILLUSION_TILE = TILES.register("illusion_trapdoor", () -> BlockEntityType.Builder.of(FrameBlockTile::new, TRAPDOOR_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<LockableFrameTile>> TRAPDOOR_ILLUSION_TILE = TILES.register("illusion_trapdoor", () -> BlockEntityType.Builder.of(LockableFrameTile::new, TRAPDOOR_FRAMEBLOCK.get()).build(null));
 
 
     public static final RegistryObject<LadderFrameBlock> LADDER_FRAMEBLOCK = BLOCKS.register("frame_ladder", () -> new LadderFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
@@ -129,11 +129,11 @@ public class Registration {
 
     public static final RegistryObject<FenceGateFrameBlock> FENCE_GATE_FRAMEBLOCK = BLOCKS.register("frame_fence_gate", () -> new FenceGateFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> FENCE_GATE_FRAME_ITEM = ITEMS.register("frame_fence_gate", () -> new BaseFrameItem(FENCE_GATE_FRAMEBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<BlockEntityType<FrameBlockTile>> FENCE_GATE_FRAME_TILE = TILES.register("frame_fence_gate", () -> BlockEntityType.Builder.of(FrameBlockTile::new, FENCE_GATE_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<LockableFrameTile>> FENCE_GATE_FRAME_TILE = TILES.register("frame_fence_gate", () -> BlockEntityType.Builder.of(LockableFrameTile::new, FENCE_GATE_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<FenceGateFrameBlock> FENCE_GATE_ILLUSIONBLOCK = BLOCKS.register("illusion_fence_gate", () -> new FenceGateFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> FENCE_GATE_ILLUSION_ITEM = ITEMS.register("illusion_fence_gate", () -> new BaseIllusionItem(FENCE_GATE_ILLUSIONBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
-    public static final RegistryObject<BlockEntityType<FrameBlockTile>> FENCE_GATE_ILLUSION_TILE = TILES.register("illusion_fence_gate", () -> BlockEntityType.Builder.of(FrameBlockTile::new, FENCE_GATE_ILLUSIONBLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<LockableFrameTile>> FENCE_GATE_ILLUSION_TILE = TILES.register("illusion_fence_gate", () -> BlockEntityType.Builder.of(LockableFrameTile::new, FENCE_GATE_ILLUSIONBLOCK.get()).build(null));
 
 
     public static final RegistryObject<WallFrameBlock> WALL_FRAMEBLOCK = BLOCKS.register("frame_wall", () -> new WallFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
