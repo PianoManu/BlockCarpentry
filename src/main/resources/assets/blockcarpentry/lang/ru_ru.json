@@ -88,5 +88,10 @@
   "advancements.blockcarpentry.chest.title": "I need to get something off my chest",
   "advancements.blockcarpentry.chest.description": "I would like to remind you of the Crate Depression, just in CASE you forgot, what has bin",
   "advancements.blockcarpentry.all.title": "World's §l§n§1p§2r§3e§4t§5t§6i§be§es§9t§r dirt house",
-  "advancements.blockcarpentry.all.description": "Look at all these new possibilities"
+  "advancements.blockcarpentry.all.description": "Look at all these new possibilities",
+  "tooltip.blockcarpentry.tool_shift": "§6§oPress §r§2§lSHIFT §r§6§ofor more information",
+  "tooltip.blockcarpentry.hammer": "§6§oRight-click on a frame or illusion block to remove its content without destroying the block",
+  "tooltip.blockcarpentry.texture_wrench": "§6§oRight-click on a frame block to cycle through all possible textures or Right-click on an illusion block to rotate the model",
+  "tooltip.blockcarpentry.chisel": "§6§oRight-click on a frame or illusion block to cycle through a list of available designs\n§eHint: §6§oSome blocks do not have multiple designs (right now), so using the Chisel on them won't change anything",
+  "tooltip.blockcarpentry.paintbrush": "§6§oRight-click on a frame or illusion block to change the color of addons\n§eHint: §6§oOnly a few blocks have designs with addons; the Paintbrush can only change the color of the addon, if the current design has one"
 }

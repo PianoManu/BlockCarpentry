@@ -88,5 +88,10 @@
   "advancements.blockcarpentry.chest.title": "Wie viele Items passen in eine leere Kiste?",
   "advancements.blockcarpentry.chest.description": "Eins, dann ist die Kiste nicht mehr leer",
   "advancements.blockcarpentry.all.title": "Das §1s§2c§3h§4ö§5n§6s§9t§ee§r Dreckhaus der Welt",
-  "advancements.blockcarpentry.all.description": "Sieh dir nur diese vielen Möglichkeiten an!"
+  "advancements.blockcarpentry.all.description": "Sieh dir nur diese vielen Möglichkeiten an!",
+  "tooltip.blockcarpentry.tool_shift": "§6§oDrücke §r§2§lSHIFT§r§6§o für weitere Informationen",
+  "tooltip.blockcarpentry.hammer": "§6§oRechtsklick auf einen Blockrahmen oder Illusionsblock, um seinen Inhalt zu entfernen, ohne den Block zu zerstören",
+  "tooltip.blockcarpentry.texture_wrench": "§6§oRechtsklick auf einen Blockrahmen, um die nächste Textur auszuwählen; oder Rechtsklick auf einen Illusionsblock, um das Modell zu drehen",
+  "tooltip.blockcarpentry.chisel": "§6§oRechtsklick auf einen Blockrahmen oder Illusionsblock, um aus einer Liste verfügbarer Designs das nächste auszuwählen\n§eHinweis: §6§oEinige Blöcke haben (bis jetzt) nur ein einziges Design, daher ändert die Verwendung des Meißels an ihnen nichts",
+  "tooltip.blockcarpentry.paintbrush": "§6§oRechtsklick auf einen Blockrahmen oder Illusionsblock, um die Farbe des Addons zu ändern\n§eHinweis: §6§oNur wenige Blöcke haben Designs mit Addons; der Pinsel kann nur die Farbe des Addons ändern, wenn das aktuelle Design eins hat"
 }
