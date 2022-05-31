@@ -86,6 +86,7 @@ public class LockableFrameTile extends FrameBlockTile {
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
+        super.onDataPacket(net, pkt);
     }
 
     @Override
