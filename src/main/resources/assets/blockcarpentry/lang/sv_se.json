@@ -52,12 +52,13 @@
   "message.blockcarpentry.vine_overlay": "Aktiverade växtöverdrag",
   "message.blockcarpentry.special_overlay": "Aktiverade specialöverdrag %s",
   "message.blockcarpentry.rotation": "Rotated Texture %s",
-
+  "message.blockcarpentry.lock": "This block is now locked!",
+  "message.blockcarpentry.unlock": "This block is now unlocked and players can open or close it!",
+  "message.blockcarpentry.redstone_off": "This block now ignores redstone signals",
+  "message.blockcarpentry.redstone_on": "This block no longer ignores redstone signals",
   "message.blockcarpentry.block_not_available": "Ledsen, men detta block kan inte visas.",
   "message.blockcarpentry.block_error": "Ett fel uppstod med detta block, anmäl gärna detta till mod-kreatören, PianoManu.",
-
   "itemGroup.blockcarpentry": "BlockCarpentry",
-
   "advancements.blockcarpentry.root.description": "Högerklicka med valfritt block, och bevittna magi",
   "advancements.blockcarpentry.illusion_blocks.title": "vAfAn E sKiLlNaDeN??????",
   "advancements.blockcarpentry.illusion_blocks.description": "Ledtråd: Lägg in ett ramblock i en arbetsbänk. Simpelt.",

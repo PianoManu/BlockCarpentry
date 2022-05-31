@@ -52,12 +52,13 @@
   "message.blockcarpentry.vine_overlay": "Rankenschicht aktiviert",
   "message.blockcarpentry.special_overlay": "Spezialschicht %s aktiviert",
   "message.blockcarpentry.rotation": "Rotierte Textur %s",
-
+  "message.blockcarpentry.lock": "Dieser Block wurde verschlossen!",
+  "message.blockcarpentry.unlock": "Dieser Block wurde aufgeschlossen und Spieler können ihn öffnen und schließen!",
+  "message.blockcarpentry.redstone_off": "Dieser Block ignoriert jetzt Redstone-Signale",
+  "message.blockcarpentry.redstone_on": "Dieser Block ignoriert keine Redstone-Signale mehr",
   "message.blockcarpentry.block_not_available": "Dieser Block kann leider nicht dargestellt werden",
   "message.blockcarpentry.block_error": "Mit diesem Block ist ein Fehler aufgetreten, bitte dem Autor der Mod mitteilen (PianoManu)",
-
   "itemGroup.blockcarpentry": "BlockCarpentry",
-
   "advancements.blockcarpentry.root.description": "Klick diesen Block mit der rechten Maustaste mit einem anderen Block an und erfreue dich",
   "advancements.blockcarpentry.illusion_blocks.title": "wO iSt dEr uNtErScHiEd??????",
   "advancements.blockcarpentry.illusion_blocks.description": "Tipp: Nutze eine Werkbank oder einen Ofen und verkleide jeweils einen Rahmenblock und einen Illusionsblock, dann siehst du es",
