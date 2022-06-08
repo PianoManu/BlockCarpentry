@@ -1,0 +1,63 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "contains_block": false
+      },
+      "apply": {
+        "model": "blockcarpentry:block/frame_fence_empty"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "contains_block": false
+      },
+      "apply": {
+        "model": "minecraft:block/spruce_fence_side",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "contains_block": false
+      },
+      "apply": {
+        "model": "minecraft:block/spruce_fence_side",
+        "y": 90,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "contains_block": false
+      },
+      "apply": {
+        "model": "minecraft:block/spruce_fence_side",
+        "y": 180,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "contains_block": false
+      },
+      "apply": {
+        "model": "minecraft:block/spruce_fence_side",
+        "y": 270,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "contains_block": true
+      },
+      "apply": {
+        "model": "blockcarpentry:block/frame_fence"
+      }
+    }
+  ]
+}

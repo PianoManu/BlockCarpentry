@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "O",
+	"I",
+	"#"
+  ],
+  "key": {
+    "#": {
+      "item": "blockcarpentry:frameblock"
+    },
+	"I": {
+      "item": "minecraft:stick"
+    },
+	"O": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "blockcarpentry:chisel",
+    "count": 1
+  }
+}

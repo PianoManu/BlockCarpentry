@@ -1,0 +1,32 @@
+{
+  "parent": "blockcarpentry:general/root",
+  "display": {
+    "icon": {
+      "item": "blockcarpentry:frame_ladder"
+    },
+    "title": {
+      "translate": "advancements.blockcarpentry.ladder.title"
+    },
+    "description": {
+      "translate": "advancements.blockcarpentry.ladder.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "blockcarpentry:frame_ladder"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

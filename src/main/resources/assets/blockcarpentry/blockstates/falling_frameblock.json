@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "contains_block=true": { "model": "blockcarpentry:block/frameblock" },
+    "contains_block=false": { "model": "blockcarpentry:block/falling_frameblock_empty" }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "parent": "blockcarpentry:general/root",
+  "display": {
+    "icon": {
+      "item": "blockcarpentry:frameblock"
+    },
+    "title": {
+      "translate": "advancements.blockcarpentry.all.title"
+    },
+    "description": {
+      "translate": "advancements.blockcarpentry.all.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "requirements": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "blockcarpentry:frame_bed"
+            ]
+          },
+          {
+            "items": [
+              "blockcarpentry:frame_button"
+            ]
+          },
+          {
+            "items": [
+              "blockcarpentry:frame_chest"
+            ]
+          },
+          {
+            "items": [
+              "blockcarpentry:frame_door"
+            ]
+          },
+          {
+            "items": [
+              "blockcarpentry:frame_fence"
+            ]
+          },
+          {
+            "items": [
+              "blockcarpentry:frame_fence_gate"
+            ]
+          },
+          {
+            "items": [
+              "blockcarpentry:frame_ladder"
+            ]
+          },
+          {
+            "items": [
+              "blockcarpentry:frame_pressure_plate"
+            ]
+          },
+          {
+            "items": [
+              "blockcarpentry:frame_slab"
+            ]
+          },
+          {
+            "items": [
+              "blockcarpentry:frame_stairs"
+            ]
+          },
+          {
+            "items": [
+              "blockcarpentry:frame_trapdoor"
+            ]
+          },
+          {
+            "items": [
+              "blockcarpentry:frame_wall"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

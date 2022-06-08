@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "item": "blockcarpentry:frameblock"
+    },
+    "title": {
+      "translate": "itemGroup.blockcarpentry"
+    },
+    "description": {
+      "translate": "advancements.blockcarpentry.root.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "minecraft:textures/block/oak_log.png"
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "blockcarpentry:frameblock"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

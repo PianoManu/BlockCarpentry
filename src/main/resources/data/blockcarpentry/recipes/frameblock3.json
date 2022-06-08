@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "blockcarpentry:frame_stairs"
+    }
+  ],
+  "result": {
+    "item": "blockcarpentry:frameblock"
+  }
+}

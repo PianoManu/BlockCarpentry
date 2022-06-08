@@ -1,0 +1,32 @@
+{
+  "parent": "blockcarpentry:general/root",
+  "display": {
+    "icon": {
+      "item": "blockcarpentry:illusion_block"
+    },
+    "title": {
+      "translate": "advancements.blockcarpentry.illusion_blocks.title"
+    },
+    "description": {
+      "translate": "advancements.blockcarpentry.illusion_blocks.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "blockcarpentry:illusion_block"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

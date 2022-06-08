@@ -1,0 +1,32 @@
+{
+  "parent": "blockcarpentry:general/root",
+  "display": {
+    "icon": {
+      "item": "blockcarpentry:frame_chest"
+    },
+    "title": {
+      "translate": "advancements.blockcarpentry.chest.title"
+    },
+    "description": {
+      "translate": "advancements.blockcarpentry.chest.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "blockcarpentry:frame_chest"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

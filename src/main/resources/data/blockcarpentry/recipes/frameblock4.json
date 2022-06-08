@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "blockcarpentry:frame_button"
+    }
+  ],
+  "result": {
+    "item": "blockcarpentry:frameblock",
+    "count": 1
+  }
+}
