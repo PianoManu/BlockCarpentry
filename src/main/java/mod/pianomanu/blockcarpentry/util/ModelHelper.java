@@ -9,8 +9,9 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -20,13 +21,12 @@ import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.1 05/29/22
+ * @version 1.2 06/11/22
  */
 public class ModelHelper {
 
@@ -203,7 +203,7 @@ public class ModelHelper {
         Vec3 SED = v(xh, yl, zh); //South-East-Down
         if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_error"), true);
+                Minecraft.getInstance().player.displayClientMessage(Component.translatable("message.blockcarpentry.block_error"), true);
             }
             return quads;
         }
@@ -245,11 +245,11 @@ public class ModelHelper {
         return quads;
     }
 
-    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, BakedModel model, IModelData extraData, Random rand, int tintIndex, int rotation) {
+    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, BakedModel model, IModelData extraData, RandomSource rand, int tintIndex, int rotation) {
         return createSixFaceCuboid(xl, xh, yl, yh, zl, zh, mimic, model, extraData, rand, tintIndex, true, true, true, true, true, true, rotation);
     }
 
-    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, BakedModel model, IModelData extraData, Random rand, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, int rotation) {
+    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, BakedModel model, IModelData extraData, RandomSource rand, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, int rotation) {
         List<BakedQuad> quads = new ArrayList<>();
         //Eight corners of the block
         Vec3 NWU = v(xl, yh, zl); //North-West-Up
@@ -262,7 +262,7 @@ public class ModelHelper {
         Vec3 SED = v(xh, yl, zh); //South-East-Down
         if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_error"), true);
+                Minecraft.getInstance().player.displayClientMessage(Component.translatable("message.blockcarpentry.block_error"), true);
             }
             return quads;
         }
@@ -293,7 +293,7 @@ public class ModelHelper {
         List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
         if (textureList.size() == 0) {
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_not_available"), true);
+                Minecraft.getInstance().player.displayClientMessage(Component.translatable("message.blockcarpentry.block_not_available"), true);
             }
             return quads;
         }
@@ -508,7 +508,7 @@ public class ModelHelper {
         Vec3 SED = v(xh, yl, zh); //South-East-Down
         if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_error"), true);
+                Minecraft.getInstance().player.displayClientMessage(Component.translatable("message.blockcarpentry.block_error"), true);
             }
             return quads;
         }

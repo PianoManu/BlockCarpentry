@@ -1,6 +1,5 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.client.Minecraft;
@@ -23,7 +22,7 @@ import java.util.Objects;
  * This class ensures that blocks of grass take on the correct color
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 06/11/22
  */
 public class BlockColorHandler implements BlockColor {
     public static final BlockColor INSTANCE = new BlockColorHandler();
@@ -77,8 +76,7 @@ public class BlockColorHandler implements BlockColor {
 
     @Override
     public int getColor(@Nonnull BlockState state, @Nullable BlockAndTintGetter blockAndTint, @Nullable BlockPos pos, int tintIndex) {
-        //TODO does this work?
-        if (Objects.requireNonNull(state.getBlock().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID) && blockAndTint != null && pos != null) {
+        if (blockAndTint != null && pos != null) {
             BlockEntity te = blockAndTint.getBlockEntity(pos);
             if (te instanceof FrameBlockTile && state.getValue(BCBlockStateProperties.CONTAINS_BLOCK)) {
                 BlockState containedBlock = ((FrameBlockTile) te).getMimic();

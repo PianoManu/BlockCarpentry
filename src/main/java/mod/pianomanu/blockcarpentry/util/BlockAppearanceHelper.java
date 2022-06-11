@@ -5,7 +5,7 @@ import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -29,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 06/11/22
  */
 public class BlockAppearanceHelper {
     public static boolean setLightLevel(ItemStack item, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand) {
@@ -37,21 +37,21 @@ public class BlockAppearanceHelper {
             int count = player.getItemInHand(hand).getCount();
             world.setBlock(pos, state.setValue(LIGHT_LEVEL, state.getBlock().getLightEmission(state, world, pos) + 3), 3);
             player.getItemInHand(hand).setCount(count - 1);
-            player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.light_level", (state.getValue(LIGHT_LEVEL) + 3)), true);
+            player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", (state.getValue(LIGHT_LEVEL) + 3)), true);
             return true;
         }
         if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.getValue(LIGHT_LEVEL) < 15) {
             int count = player.getItemInHand(hand).getCount();
             world.setBlock(pos, state.setValue(LIGHT_LEVEL, state.getBlock().getLightEmission(state, world, pos) + 1), 3);
             player.getItemInHand(hand).setCount(count - 1);
-            player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.light_level", (state.getValue(LIGHT_LEVEL) + 1)), true);
+            player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", (state.getValue(LIGHT_LEVEL) + 1)), true);
             return true;
         }
         if (item.getItem() == Items.GLOWSTONE_DUST && state.getValue(LIGHT_LEVEL) >= 13) {
-            player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.light_level", state.getValue(LIGHT_LEVEL)), true);
+            player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", state.getValue(LIGHT_LEVEL)), true);
         }
         if ((item.getItem() == Items.COAL || item.getItem() == Items.CHARCOAL) && state.getValue(LIGHT_LEVEL) == 15) {
-            player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.light_level", state.getValue(LIGHT_LEVEL)), true);
+            player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", state.getValue(LIGHT_LEVEL)), true);
         }
         return false;
     }
@@ -65,7 +65,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setTexture(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.texture", fte.getTexture()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture()), true);
             }
             if (tileEntity instanceof BedFrameTile fte) {
                 if (fte.getTexture() < 5) { //six sides possible
@@ -73,7 +73,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setTexture(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.texture", fte.getTexture()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture()), true);
             }
             if (tileEntity instanceof ChestFrameBlockEntity fte) {
                 if (fte.getTexture() < 5) { //six sides possible
@@ -81,7 +81,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setTexture(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.texture", fte.getTexture()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture()), true);
             }
             if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
                 if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
@@ -90,14 +90,14 @@ public class BlockAppearanceHelper {
                     } else {
                         fte.setTexture_1(0);
                     }
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.texture", fte.getTexture_1()), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture_1()), true);
                 } else {
                     if (fte.getTexture_2() < 5) {
                         fte.setTexture_2(fte.getTexture_2() + 1);
                     } else {
                         fte.setTexture_2(0);
                     }
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.texture", fte.getTexture_2()), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture_2()), true);
                 }
             }
             if (tileEntity instanceof DaylightDetectorFrameTileEntity fte) {
@@ -106,7 +106,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setTexture(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.texture", fte.getTexture()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture()), true);
             }
             return true;
         }
@@ -122,7 +122,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setDesign(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.design", fte.getDesign()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.design", fte.getDesign()), true);
             }
             if (tileEntity instanceof BedFrameTile fte) {
                 if (fte.getDesign() < fte.maxDesigns) {
@@ -130,7 +130,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setDesign(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.design", fte.getDesign()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.design", fte.getDesign()), true);
             }
             if (tileEntity instanceof ChestFrameBlockEntity fte) {
                 if (fte.getDesign() < fte.maxDesigns) {
@@ -138,7 +138,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setDesign(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.design", fte.getDesign()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.design", fte.getDesign()), true);
             }
             if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
                 BlockState state = world.getBlockState(pos);
@@ -148,14 +148,14 @@ public class BlockAppearanceHelper {
                     } else {
                         fte.setDesign_1(0);
                     }
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.design", fte.getDesign_1()), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.design", fte.getDesign_1()), true);
                 } else {
                     if (fte.getDesign_2() < fte.maxDesigns) {
                         fte.setDesign_2(fte.getDesign_2() + 1);
                     } else {
                         fte.setDesign_2(0);
                     }
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.design", fte.getDesign_2()), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.design", fte.getDesign_2()), true);
                 }
             }
             if (tileEntity instanceof DaylightDetectorFrameTileEntity fte) {
@@ -164,7 +164,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setDesign(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.design", fte.getDesign()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.design", fte.getDesign()), true);
             }
             return true;
         }
@@ -180,7 +180,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setDesignTexture(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
             }
             if (tileEntity instanceof BedFrameTile fte) {
                 if (fte.getDesignTexture() < 7) {
@@ -188,7 +188,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setDesignTexture(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
             }
             if (tileEntity instanceof ChestFrameBlockEntity fte) {
                 if (fte.getDesignTexture() < fte.maxDesignTextures) {
@@ -196,7 +196,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setDesignTexture(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
             }
             return true;
         }
@@ -227,7 +227,7 @@ public class BlockAppearanceHelper {
                 if (world.getBlockState(pos).getValue(BedFrameBlock.PART) == BedPart.HEAD) {
                     fte.setPillowColor(dyeItemToInt(player.getItemInHand(hand).getItem()));
                 }
-                //player.displayClientMessage(new TranslatableComponent("Glass Color: " + glassColorToString(fte.getGlassColor()-1)), true);
+                //player.displayClientMessage(Component.translatable("Glass Color: " + glassColorToString(fte.getGlassColor()-1)), true);
             }
             return true;
         }
@@ -257,10 +257,10 @@ public class BlockAppearanceHelper {
             if (tileEntity instanceof FrameBlockTile fte) {
                 if (fte.getOverlay() == 1) {
                     fte.setOverlay(2);
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.grass_overlay_large"), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.grass_overlay_large"), true);
                 } else {
                     fte.setOverlay(1);
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.grass_overlay"), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.grass_overlay"), true);
                 }
             }
             if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
@@ -268,18 +268,18 @@ public class BlockAppearanceHelper {
                 if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                     if (fte.getOverlay_1() == 1) {
                         fte.setOverlay_1(2);
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.grass_overlay_large"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.grass_overlay_large"), true);
                     } else {
                         fte.setOverlay_1(1);
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.grass_overlay"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.grass_overlay"), true);
                     }
                 } else {
                     if (fte.getOverlay_2() == 1) {
                         fte.setOverlay_2(2);
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.grass_overlay_large"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.grass_overlay_large"), true);
                     } else {
                         fte.setOverlay_2(1);
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.grass_overlay"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.grass_overlay"), true);
                     }
                 }
             }
@@ -290,10 +290,10 @@ public class BlockAppearanceHelper {
             if (tileEntity instanceof FrameBlockTile fte) {
                 if (fte.getOverlay() == 3) {
                     fte.setOverlay(4);
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.snow_overlay_small"), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.snow_overlay_small"), true);
                 } else {
                     fte.setOverlay(3);
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.snow_overlay"), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.snow_overlay"), true);
                 }
             }
             if (tileEntity instanceof TwoBlocksFrameBlockTile) {
@@ -302,19 +302,19 @@ public class BlockAppearanceHelper {
                     TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                     if (fte.getOverlay_1() == 3) {
                         fte.setOverlay_1(4);
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.snow_overlay_small"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.snow_overlay_small"), true);
                     } else {
                         fte.setOverlay_1(3);
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.snow_overlay"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.snow_overlay"), true);
                     }
                 } else {
                     TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                     if (fte.getOverlay_2() == 3) {
                         fte.setOverlay_2(4);
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.snow_overlay_small"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.snow_overlay_small"), true);
                     } else {
                         fte.setOverlay_2(3);
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.snow_overlay"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.snow_overlay"), true);
                     }
                 }
             }
@@ -324,18 +324,18 @@ public class BlockAppearanceHelper {
             BlockEntity tileEntity = world.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile fte) {
                 fte.setOverlay(5);
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.vine_overlay"), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.vine_overlay"), true);
             }
             if (tileEntity instanceof TwoBlocksFrameBlockTile) {
                 BlockState state = world.getBlockState(pos);
                 if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
                     TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                     fte.setOverlay_1(5);
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.vine_overlay"), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.vine_overlay"), true);
                 } else {
                     TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                     fte.setOverlay_2(5);
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.vine_overlay"), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.vine_overlay"), true);
                 }
             }
             return true;
@@ -346,7 +346,7 @@ public class BlockAppearanceHelper {
                 if (fte.getOverlay() > 5 && fte.getOverlay() < 10) {
                     fte.setOverlay(fte.getOverlay() + 1);
                 } else fte.setOverlay(6);
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.special_overlay", (fte.getOverlay() - 5)), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.special_overlay", (fte.getOverlay() - 5)), true);
             }
             if (tileEntity instanceof TwoBlocksFrameBlockTile) {
                 BlockState state = world.getBlockState(pos);
@@ -355,13 +355,13 @@ public class BlockAppearanceHelper {
                     if (fte.getOverlay_1() > 5 && fte.getOverlay_1() < 10) {
                         fte.setOverlay_1(fte.getOverlay_1() + 1);
                     } else fte.setOverlay_1(6);
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.special_overlay", (fte.getOverlay_1() - 5)), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.special_overlay", (fte.getOverlay_1() - 5)), true);
                 } else {
                     TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                     if (fte.getOverlay_2() > 5 && fte.getOverlay_2() < 10) {
                         fte.setOverlay_2(fte.getOverlay_2() + 1);
                     } else fte.setOverlay_2(6);
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.special_overlay", (fte.getOverlay_2() - 5)), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.special_overlay", (fte.getOverlay_2() - 5)), true);
                 }
             }
             return true;
@@ -386,7 +386,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setRotation(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation", fte.getRotation()), true);
             }
             if (tileEntity instanceof BedFrameTile fte) {
                 if (fte.getRotation() < 11) {
@@ -394,7 +394,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setRotation(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation", fte.getRotation()), true);
             }
             if (tileEntity instanceof ChestFrameBlockEntity fte) {
                 if (fte.getRotation() < 11) {
@@ -402,7 +402,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setRotation(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation", fte.getRotation()), true);
             }
             if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
                 BlockState state = world.getBlockState(pos);
@@ -412,14 +412,14 @@ public class BlockAppearanceHelper {
                     } else {
                         fte.setRotation_1(0);
                     }
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.rotation", fte.getRotation_1()), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation", fte.getRotation_1()), true);
                 } else {
                     if (fte.getRotation_2() < 11) {
                         fte.setRotation_2(fte.getRotation_2() + 1);
                     } else {
                         fte.setRotation_2(0);
                     }
-                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.rotation", fte.getRotation_2()), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation", fte.getRotation_2()), true);
                 }
             }
             if (tileEntity instanceof DaylightDetectorFrameTileEntity fte) {
@@ -428,7 +428,7 @@ public class BlockAppearanceHelper {
                 } else {
                     fte.setRotation(0);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation", fte.getRotation()), true);
             }
             return true;
         }

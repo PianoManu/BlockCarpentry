@@ -7,18 +7,18 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.client.model.data.IModelData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 06/11/22
  */
 public class TextureHelper {
 
@@ -92,7 +92,7 @@ public class TextureHelper {
         return metalTextures;
     }
 
-    public static List<TextureAtlasSprite> getTextureFromModel(BakedModel model, IModelData extraData, Random rand) {
+    public static List<TextureAtlasSprite> getTextureFromModel(BakedModel model, IModelData extraData, RandomSource rand) {
         List<TextureAtlasSprite> textureList = new ArrayList<>();
         for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.UP, rand, extraData)) {
             if (!textureList.contains(quad.getSprite())) {

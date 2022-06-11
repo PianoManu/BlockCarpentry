@@ -3,7 +3,6 @@ package mod.pianomanu.blockcarpentry.item;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -17,7 +16,7 @@ import java.util.List;
  * This class is used to add a tooltip to all illusion blocks that can be seen when hovering over the associated item
  *
  * @author PianoManu
- * @version 1.0 05/31/22
+ * @version 1.1 06/11/22
  */
 public class BaseIllusionItem extends BlockItem {
     /**
@@ -41,18 +40,18 @@ public class BaseIllusionItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> component, TooltipFlag flag) {
         if (Screen.hasShiftDown()) {
-            component.add(new TranslatableComponent("tooltip.blockcarpentry.base_illusion"));
+            component.add(Component.translatable("tooltip.blockcarpentry.base_illusion"));
             if (!this.getBlock().equals(Registration.ILLUSION_BLOCK.get()) && !this.getBlock().equals(Registration.LAYERED_ILLUSIONBLOCK.get())) {
-                component.add(new TranslatableComponent("tooltip.blockcarpentry.vanilla_like"));
+                component.add(Component.translatable("tooltip.blockcarpentry.vanilla_like"));
             }
             if (this.getBlock().equals(Registration.LAYERED_ILLUSIONBLOCK.get())) {
-                component.add(new TranslatableComponent("tooltip.blockcarpentry.layered"));
+                component.add(Component.translatable("tooltip.blockcarpentry.layered"));
             }
             if (this.getBlock().equals(Registration.DOOR_ILLUSIONBLOCK.get()) || this.getBlock().equals(Registration.TRAPDOOR_ILLUSIONBLOCK.get()) || this.getBlock().equals(Registration.FENCE_GATE_ILLUSIONBLOCK.get())) {
-                component.add(new TranslatableComponent("tooltip.blockcarpentry.locking"));
+                component.add(Component.translatable("tooltip.blockcarpentry.locking"));
             }
         } else {
-            component.add(new TranslatableComponent("tooltip.blockcarpentry.shift"));
+            component.add(Component.translatable("tooltip.blockcarpentry.shift"));
         }
     }
 }

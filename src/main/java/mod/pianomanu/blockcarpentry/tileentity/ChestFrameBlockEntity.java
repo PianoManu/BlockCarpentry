@@ -8,7 +8,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -40,7 +40,7 @@ import java.util.Objects;
  * Contains all information about the block and the mimicked block, as well as the inventory size and stored items
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 06/11/22
  */
 public class ChestFrameBlockEntity extends ChestBlockEntity {
 
@@ -105,8 +105,8 @@ public class ChestFrameBlockEntity extends ChestBlockEntity {
     }
 
     @Override
-    public TranslatableComponent getCustomName() {
-        return new TranslatableComponent("container.frame_chest");
+    public Component getCustomName() {
+        return Component.translatable("container.frame_chest");
     }
 
     @Nullable
