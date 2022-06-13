@@ -128,7 +128,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock {
                     return InteractionResult.SUCCESS;
                 }
             }
-            if (item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
+            if (!(item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem)) {
                 BlockEntity tileEntity = level.getBlockEntity(pos);
                 if (tileEntity instanceof LockableFrameTile trapdoorTileEntity) {
                     if (trapdoorTileEntity.canBeOpenedByPlayers()) {
