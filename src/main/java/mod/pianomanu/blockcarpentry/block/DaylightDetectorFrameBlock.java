@@ -60,9 +60,6 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
-            if (state.getValue(CONTAINS_BLOCK) && !(item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem)) {
-                super.use(state, level, pos, player, hand, hitresult);
-            }
             if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
                     BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
                     BlockAppearanceHelper.setDesign(level, pos, player, item) ||
@@ -71,6 +68,9 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
                     BlockAppearanceHelper.setOverlay(level, pos, player, item) ||
                     BlockAppearanceHelper.setRotation(level, pos, player, item))
                 return InteractionResult.CONSUME;
+            if (state.getValue(CONTAINS_BLOCK) && !(item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem)) {
+                super.use(state, level, pos, player, hand, hitresult);
+            }
             if (item.getItem() instanceof BlockItem) {
                 if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
                     return InteractionResult.PASS;
