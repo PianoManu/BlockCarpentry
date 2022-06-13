@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
+import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
+import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
@@ -48,7 +49,7 @@ import static mod.pianomanu.blockcarpentry.block.FrameBlock.WATERLOGGED;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 06/13/22
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements SimpleWaterloggedBlock, EntityBlock {
@@ -157,7 +158,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
                     BlockAppearanceHelper.setRotation(level, pos, player, item))
                 return InteractionResult.SUCCESS;
             if (item.getItem() instanceof BlockItem) {
-                if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) && !state.getValue(DOUBLE_SLAB) || state.getValue(BCBlockStateProperties.CONTAINS_2ND_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) && !state.getValue(DOUBLE_SLAB) || state.getValue(BCBlockStateProperties.CONTAINS_2ND_BLOCK) || item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
                     return InteractionResult.PASS;
                 }
                 BlockEntity tileEntity = level.getBlockEntity(pos);

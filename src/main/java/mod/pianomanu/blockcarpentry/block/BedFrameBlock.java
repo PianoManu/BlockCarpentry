@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
+import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
+import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
@@ -9,7 +10,7 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -36,14 +37,13 @@ import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Main class for frame beds - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 06/13/22
  */
 public class BedFrameBlock extends BedBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -84,7 +84,7 @@ public class BedFrameBlock extends BedBlock {
                     BlockAppearanceHelper.setOverlay(level, pos, player, item) ||
                     BlockAppearanceHelper.setRotation(level, pos, player, item))
                 return InteractionResult.SUCCESS;
-            if ((state.getValue(CONTAINS_BLOCK) && !item.is(Tags.Items.DYES) && !item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) || item.isEmpty()) {
+            if ((state.getValue(CONTAINS_BLOCK) && !item.is(Tags.Items.DYES) && item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) || item.isEmpty()) {
                 //Taken from BedBlock, should work similar to vanilla beds
                 if (state.getValue(PART) != BedPart.HEAD) {
                     pos = pos.relative(state.getValue(HORIZONTAL_FACING));
@@ -105,7 +105,7 @@ public class BedFrameBlock extends BedBlock {
                     return InteractionResult.SUCCESS;
                 } else if (state.getValue(OCCUPIED)) {
                     if (!this.kickVillagerOutOfBed(level, pos)) {
-                        player.displayClientMessage(new TranslatableComponent("block.minecraft.bed.occupied"), true);
+                        player.displayClientMessage(Component.translatable("block.minecraft.bed.occupied"), true);
                     }
 
                     return InteractionResult.SUCCESS;
@@ -125,7 +125,7 @@ public class BedFrameBlock extends BedBlock {
                 level.setBlock(pos, state, 2);
             } else {
                 if (item.getItem() instanceof BlockItem) {
-                    if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                    if (item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
                         return InteractionResult.PASS;
                     }
                     BlockEntity tileEntity = level.getBlockEntity(pos);

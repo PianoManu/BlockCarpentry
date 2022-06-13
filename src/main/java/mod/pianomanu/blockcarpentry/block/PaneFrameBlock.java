@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
+import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
+import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
@@ -34,14 +35,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 /**
  * Main class for frame carpets - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 06/13/22
  */
 public class PaneFrameBlock extends IronBarsBlock implements EntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -77,7 +77,7 @@ public class PaneFrameBlock extends IronBarsBlock implements EntityBlock {
                     BlockAppearanceHelper.setGlassColor(level, pos, player, hand))
                 return InteractionResult.SUCCESS;
             if (item.getItem() instanceof BlockItem) {
-                if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
                     return InteractionResult.PASS;
                 }
                 BlockEntity tileEntity = level.getBlockEntity(pos);

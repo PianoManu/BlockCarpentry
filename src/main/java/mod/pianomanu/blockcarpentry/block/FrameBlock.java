@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
+import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
+import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
@@ -36,7 +37,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.extensions.IForgeBlockState;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 
 /**
@@ -44,7 +44,7 @@ import java.util.Objects;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 06/13/22
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, SimpleWaterloggedBlock {
@@ -137,7 +137,7 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
                     BlockAppearanceHelper.setRotation(level, pos, player, item))
                 return InteractionResult.SUCCESS;
             if (item.getItem() instanceof BlockItem) {
-                if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
                     return InteractionResult.PASS;
                 }
                 BlockEntity tileEntity = level.getBlockEntity(pos);

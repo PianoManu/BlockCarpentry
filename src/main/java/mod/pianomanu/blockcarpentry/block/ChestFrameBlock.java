@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
+import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
+import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.ChestFrameBlockEntity;
@@ -34,8 +35,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.Objects;
-
 import static mod.pianomanu.blockcarpentry.block.AbstractSixWayFrameBlock.FACING;
 
 /**
@@ -43,7 +42,7 @@ import static mod.pianomanu.blockcarpentry.block.AbstractSixWayFrameBlock.FACING
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 06/13/22
  */
 public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBlock {
     private static final VoxelShape INNER_CUBE = Block.box(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
@@ -104,7 +103,7 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
                 return InteractionResult.SUCCESS;
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (item.getItem() instanceof BlockItem) {
-                if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                if (item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
                     return InteractionResult.PASS;
                 }
                 int count = player.getItemInHand(hand).getCount();
@@ -124,7 +123,7 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
                 level.setBlock(pos, state, 2);
             }
             if (tileEntity instanceof ChestFrameBlockEntity && state.getValue(CONTAINS_BLOCK)) {
-                if (!(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
+                if (!(item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem)) {
                     MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
                     if (menuprovider != null) {
                         player.openMenu(menuprovider);

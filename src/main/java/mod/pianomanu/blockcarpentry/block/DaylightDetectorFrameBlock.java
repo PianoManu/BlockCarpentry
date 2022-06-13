@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
+import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
+import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.DaylightDetectorFrameTileEntity;
@@ -28,14 +29,13 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 /**
  * Main class for frame carpets - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 06/13/22
  */
 public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -60,7 +60,7 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
-            if (state.getValue(CONTAINS_BLOCK) && !Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+            if (state.getValue(CONTAINS_BLOCK) && !(item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem)) {
                 super.use(state, level, pos, player, hand, hitresult);
             }
             if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
@@ -72,7 +72,7 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
                     BlockAppearanceHelper.setRotation(level, pos, player, item))
                 return InteractionResult.CONSUME;
             if (item.getItem() instanceof BlockItem) {
-                if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
                     return InteractionResult.PASS;
                 }
                 BlockEntity tileEntity = level.getBlockEntity(pos);

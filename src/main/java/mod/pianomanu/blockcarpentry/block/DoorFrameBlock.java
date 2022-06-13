@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
+import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
+import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
@@ -10,7 +11,7 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -34,8 +35,6 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
-import java.util.Objects;
-
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
 /**
@@ -43,7 +42,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 05/31/22
+ * @version 1.2 06/13/22
  */
 public class DoorFrameBlock extends DoorBlock implements EntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -79,9 +78,9 @@ public class DoorFrameBlock extends DoorBlock implements EntityBlock {
                 if (tileEntity instanceof LockableFrameTile doorTileEntity) {
                     LockableFrameTile secondTile = (LockableFrameTile) (state.getValue(HALF) == DoubleBlockHalf.LOWER ? level.getBlockEntity(pos.above()) : level.getBlockEntity(pos.below()));
                     if (doorTileEntity.canBeOpenedByRedstoneSignal()) {
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.redstone_off"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.redstone_off"), true);
                     } else {
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.redstone_on"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.redstone_on"), true);
                     }
                     doorTileEntity.setCanBeOpenedByRedstoneSignal(!doorTileEntity.canBeOpenedByRedstoneSignal());
                     if (secondTile != null) {
@@ -92,7 +91,7 @@ public class DoorFrameBlock extends DoorBlock implements EntityBlock {
                     if (newTile != null) {
                         newTile.addFromOutdatedTileEntity((FrameBlockTile) tileEntity);
                         level.setBlockEntity(newTile);
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.converting_outdated_block"), true);
                     }
                 }
                 return InteractionResult.CONSUME;
@@ -102,9 +101,9 @@ public class DoorFrameBlock extends DoorBlock implements EntityBlock {
                 if (tileEntity instanceof LockableFrameTile doorTileEntity) {
                     LockableFrameTile secondTile = (LockableFrameTile) (state.getValue(HALF) == DoubleBlockHalf.LOWER ? level.getBlockEntity(pos.above()) : level.getBlockEntity(pos.below()));
                     if (doorTileEntity.canBeOpenedByPlayers()) {
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.lock"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.lock"), true);
                     } else {
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.unlock"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.unlock"), true);
                     }
                     doorTileEntity.setCanBeOpenedByPlayers(!doorTileEntity.canBeOpenedByPlayers());
                     if (secondTile != null) {
@@ -115,13 +114,13 @@ public class DoorFrameBlock extends DoorBlock implements EntityBlock {
                     if (newTile != null) {
                         newTile.addFromOutdatedTileEntity((FrameBlockTile) tileEntity);
                         level.setBlockEntity(newTile);
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.converting_outdated_block"), true);
                     }
                 }
                 return InteractionResult.CONSUME;
             }
             if (item.getItem() instanceof BlockItem) {
-                if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                if (item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
                     return InteractionResult.PASS;
                 }
                 BlockEntity tileEntity = level.getBlockEntity(pos);
@@ -137,7 +136,7 @@ public class DoorFrameBlock extends DoorBlock implements EntityBlock {
                     return InteractionResult.SUCCESS;
                 }
             }
-            if (!item.getItem().getRegistryName().getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+            if (item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
                 BlockEntity tileEntity = level.getBlockEntity(pos);
                 if (tileEntity instanceof LockableFrameTile doorTileEntity) {
                     if (doorTileEntity.canBeOpenedByPlayers()) {
@@ -154,7 +153,7 @@ public class DoorFrameBlock extends DoorBlock implements EntityBlock {
                     if (newTile != null) {
                         newTile.addFromOutdatedTileEntity((FrameBlockTile) tileEntity);
                         level.setBlockEntity(newTile);
-                        player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.converting_outdated_block"), true);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.converting_outdated_block"), true);
                     }
                 }
             }
@@ -227,7 +226,7 @@ public class DoorFrameBlock extends DoorBlock implements EntityBlock {
             if (!this.defaultBlockState().is(block) && shouldOpenNow != state.getValue(POWERED)) {
                 if (shouldOpenNow != state.getValue(OPEN)) {
                     level.playSound(null, pos, shouldOpenNow ? SoundEvents.WOODEN_DOOR_OPEN : SoundEvents.WOODEN_DOOR_CLOSE, SoundSource.BLOCKS, 1f, 1f);
-                    level.gameEvent(shouldOpenNow ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
+                    level.gameEvent(null, shouldOpenNow ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
                 }
 
                 level.setBlock(pos, state.setValue(POWERED, shouldOpenNow).setValue(OPEN, shouldOpenNow), 2);

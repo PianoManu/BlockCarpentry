@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
+import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
+import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
@@ -30,7 +31,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
@@ -39,7 +39,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 05/31/22
+ * @version 1.2 06/13/22
  */
 public class ButtonFrameBlock extends WoodButtonBlock implements EntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -80,7 +80,7 @@ public class ButtonFrameBlock extends WoodButtonBlock implements EntityBlock {
             //TODO clean up
             if (!state.getValue(CONTAINS_BLOCK)) {
                 if (item.getItem() instanceof BlockItem) {
-                    if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
+                    if (item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
                         return InteractionResult.PASS;
                     }
                     BlockEntity tileEntity = level.getBlockEntity(pos);
@@ -107,7 +107,7 @@ public class ButtonFrameBlock extends WoodButtonBlock implements EntityBlock {
             } else {
                 this.press(state, level, pos);
                 level.playSound(null, pos, SoundEvents.WOODEN_BUTTON_CLICK_ON, SoundSource.BLOCKS, 1f, 1f);
-                level.gameEvent(player, GameEvent.BLOCK_PRESS, pos);
+                level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
                 //return InteractionResult.sidedSuccess(level.isClientSide);
             }
         }
