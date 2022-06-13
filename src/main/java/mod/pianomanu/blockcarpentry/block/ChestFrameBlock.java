@@ -136,7 +136,7 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
                 }
             }
         }
-        return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
