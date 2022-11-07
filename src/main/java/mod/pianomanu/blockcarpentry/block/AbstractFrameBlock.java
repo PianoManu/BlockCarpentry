@@ -55,7 +55,7 @@ public abstract class AbstractFrameBlock extends BaseEntityBlock {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
             if (removeBlock(level, pos, state, item, player))
-                return InteractionResult.CONSUME;
+                return InteractionResult.SUCCESS;
             if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
                     BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
                     BlockAppearanceHelper.setDesign(level, pos, player, item) ||
@@ -92,6 +92,9 @@ public abstract class AbstractFrameBlock extends BaseEntityBlock {
         if (itemStack.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
             if (!player.isCreative())
                 this.dropContainedBlock(level, pos);
+            else {
+                clearTile(level, pos);
+            }
             state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
             level.setBlock(pos, state, 2);
             return true;
@@ -99,15 +102,28 @@ public abstract class AbstractFrameBlock extends BaseEntityBlock {
         return false;
     }
 
+    protected void clearTile(Level level, BlockPos pos) {
+        if (!level.isClientSide) {
+            BlockEntity tileentity = level.getBlockEntity(pos);
+            System.out.println("TILE");
+            if (tileentity instanceof FrameBlockTile frameBlockEntity) {
+                BlockState blockState = frameBlockEntity.getMimic();
+                if (!(blockState == null)) {
+                    frameBlockEntity.clear();
+                    System.out.println("CLEARED");
+                    System.out.println(frameBlockEntity.getMimic());
+                }
+            }
+        }
+    }
+
     protected void dropContainedBlock(Level levelIn, BlockPos pos) {
         if (!levelIn.isClientSide) {
             BlockEntity tileentity = levelIn.getBlockEntity(pos);
-            if (tileentity instanceof FrameBlockTile) {
-                FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
+            if (tileentity instanceof FrameBlockTile frameBlockEntity) {
                 BlockState blockState = frameBlockEntity.getMimic();
                 if (!(blockState == null)) {
                     levelIn.levelEvent(1010, pos, 0);
-                    frameBlockEntity.clear();
                     float f = 0.7F;
                     double d0 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
                     double d1 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;

@@ -3,6 +3,7 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.block.LayeredBlock;
 import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
@@ -48,11 +49,16 @@ public class IllusionLayeredBlockBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, RenderType renderType) {
+        //1st block in slab
         BlockState mimic = extraData.get(FrameBlockTile.MIMIC);
-        if (mimic != null) {
-            ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
-            BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-            return getMimicQuads(state, side, rand, extraData, model);
+        if (state != null) {
+            if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) && mimic != null) {
+                ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
+                BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+                return getMimicQuads(state, side, rand, extraData, model);
+            } else {
+                return getMimicQuadsEmpty(state, side, extraData);
+            }
         }
 
         return Collections.emptyList();
@@ -103,6 +109,82 @@ public class IllusionLayeredBlockBakedModel implements IDynamicBakedModel {
                     case SOUTH -> quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 1f - layerHeight, 1f, overlayIndex, renderWest, renderEast, renderSouth, renderNorth, renderUp, renderDown, true));
                     case NORTH -> quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, layerHeight, overlayIndex, renderWest, renderEast, renderSouth, renderNorth, renderUp, renderDown, true));
                     case EAST -> quads.addAll(ModelHelper.createOverlay(1f - layerHeight, 1f, 0f, 1f, 0f, 1f, overlayIndex, renderWest, renderEast, renderSouth, renderNorth, renderUp, renderDown, true));
+                }
+            }
+            return quads;
+        }
+        return Collections.emptyList();
+    }
+
+    //supresses "Unboxing of "extraData..." may produce NullPointerException
+    @SuppressWarnings("all")
+    public List<BakedQuad> getMimicQuadsEmpty(@Nullable BlockState state, @Nullable Direction side, @Nonnull ModelData extraData) {
+        if (side == null) {
+            return Collections.emptyList();
+        }
+        if (state != null) {
+            int layers = state.getValue(LayeredBlock.LAYERS);
+            boolean renderNorth = side == Direction.NORTH && extraData.get(FrameBlockTile.NORTH_VISIBLE);
+            boolean renderEast = side == Direction.EAST && extraData.get(FrameBlockTile.EAST_VISIBLE);
+            boolean renderSouth = side == Direction.SOUTH && extraData.get(FrameBlockTile.SOUTH_VISIBLE);
+            boolean renderWest = side == Direction.WEST && extraData.get(FrameBlockTile.WEST_VISIBLE);
+            boolean renderUp = side == Direction.UP && extraData.get(FrameBlockTile.UP_VISIBLE);
+            boolean renderDown = side == Direction.DOWN && extraData.get(FrameBlockTile.DOWN_VISIBLE);
+            TextureAtlasSprite textureUp = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/oak_planks"));
+            TextureAtlasSprite textureDown = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/oak_planks"));
+            TextureAtlasSprite textureNorth = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/spruce_trapdoor"));
+            TextureAtlasSprite textureSouth = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/spruce_trapdoor"));
+            TextureAtlasSprite textureEast = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/spruce_trapdoor"));
+            TextureAtlasSprite textureWest = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/spruce_trapdoor"));
+            TextureAtlasSprite slime = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/slime_block"));
+            List<BakedQuad> quads = new ArrayList<>();
+            switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
+                case UP:
+                    for (int i = 0; i < layers; i++) {
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 1f - (i + 1) / 8f, 1 - (i + 0.5f) / 8f, 0f, 1f, -1, textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, 0));
+                        quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 1f - (i + 0.5f) / 8f, 1 - i / 8f, 1 / 16f, 15 / 16f, slime, -1));
+                    }
+                    break;
+                case DOWN:
+                    for (int i = 0; i < layers; i++) {
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, (i + 0.5f) / 8f, (i + 1) / 8f, 0f, 1f, -1, textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, 0));
+                        quads.addAll(ModelHelper.createCuboid(1 / 15f, 15 / 16f, i / 8f, (i + 0.5f) / 8f, 1 / 16f, 15 / 16f, slime, -1));
+                    }
+                    break;
+                case WEST:
+                    for (int i = 0; i < layers; i++) {
+                        quads.addAll(ModelHelper.createSixFaceCuboid((i + 0.5f) / 8f, (i + 1) / 8f, 0f, 1f, 0f, 1f, -1, textureUp, textureDown, textureEast, textureWest, textureNorth, textureSouth, 0));
+                        quads.addAll(ModelHelper.createCuboid(i / 8f, (i + 0.5f) / 8f, 1 / 15f, 15 / 16f, 1 / 15f, 15 / 16f, slime, -1));
+                    }
+                    break;
+                case SOUTH:
+                    for (int i = 0; i < layers; i++) {
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 1f - (i + 1) / 8f, 1 - (i + 0.5f) / 8f, -1, textureNorth, textureSouth, textureUp, textureDown, textureEast, textureWest, 0));
+                        quads.addAll(ModelHelper.createCuboid(1 / 15f, 15 / 16f, 1 / 15f, 15 / 16f, 1f - (i + 0.5f) / 8f, 1 - i / 8f, slime, -1));
+                    }
+                    break;
+                case NORTH:
+                    for (int i = 0; i < layers; i++) {
+                        quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, (i + 0.5f) / 8f, (i + 1) / 8f, -1, textureNorth, textureSouth, textureUp, textureDown, textureEast, textureWest, 0));
+                        quads.addAll(ModelHelper.createCuboid(1 / 15f, 15 / 16f, 1 / 15f, 15 / 16f, i / 8f, (i + 0.5f) / 8f, slime, -1));
+                    }
+                    break;
+                case EAST:
+                    for (int i = 0; i < layers; i++) {
+                        quads.addAll(ModelHelper.createSixFaceCuboid(1f - (i + 1) / 8f, 1f - (i + 0.5f) / 8f, 0f, 1f, 0f, 1f, -1, textureUp, textureDown, textureEast, textureWest, textureNorth, textureSouth, 0));
+                        quads.addAll(ModelHelper.createCuboid(1f - (i + 0.5f) / 8f, 1f - i / 8f, 1 / 15f, 15 / 16f, 1 / 15f, 15 / 16f, slime, -1));
+                    }
+                    break;
+            }
+            int overlayIndex_1 = extraData.get(FrameBlockTile.OVERLAY);
+            if (extraData.get(FrameBlockTile.OVERLAY) != 0) {
+                switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
+                    case UP -> quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 0.5f, 0f, 1f, overlayIndex_1, renderWest, renderEast, renderSouth, renderNorth, renderUp, renderDown, true));
+                    case DOWN -> quads.addAll(ModelHelper.createOverlay(0f, 1f, 0.5f, 1f, 0f, 1f, overlayIndex_1, renderWest, renderEast, renderSouth, renderNorth, renderUp, renderDown, true));
+                    case WEST -> quads.addAll(ModelHelper.createOverlay(0.5f, 1f, 0f, 1f, 0f, 1f, overlayIndex_1, renderWest, renderEast, renderSouth, renderNorth, renderUp, renderDown, true));
+                    case SOUTH -> quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 0.5f, overlayIndex_1, renderWest, renderEast, renderSouth, renderNorth, renderUp, renderDown, true));
+                    case NORTH -> quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0.5f, 1f, overlayIndex_1, renderWest, renderEast, renderSouth, renderNorth, renderUp, renderDown, true));
+                    case EAST -> quads.addAll(ModelHelper.createOverlay(0f, 0.5f, 0f, 1f, 0f, 1f, overlayIndex_1, renderWest, renderEast, renderSouth, renderNorth, renderUp, renderDown, true));
                 }
             }
             return quads;

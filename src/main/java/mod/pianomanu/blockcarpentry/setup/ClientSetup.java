@@ -38,7 +38,6 @@ public class ClientSetup {
         event.register("frame_pane_loader", new PaneFrameModelLoader());
         event.register("frame_daylight_detector_loader", new DaylightDetectorFrameModelLoader());
         event.register("frame_layered_block_loader", new LayeredBlockFrameModelLoader());
-        event.register("frame_layered_block_empty_loader", new LayeredBlockEmptyFrameModelLoader());
         event.register("frame_slope_loader", new SlopeFrameModelLoader());
         event.register("frame_edged_slope_loader", new EdgedSlopeFrameModelLoader());
 
@@ -61,7 +60,6 @@ public class ClientSetup {
         event.register("illusion_pane_loader", new IllusionPaneModelLoader());
         event.register("illusion_daylight_detector_loader", new IllusionDaylightDetectorModelLoader());
         event.register("illusion_layered_block_loader", new IllusionLayeredBlockModelLoader());
-        event.register("illusion_layered_block_empty_loader", new IllusionLayeredBlockEmptyModelLoader());
     }
 }
 //========SOLI DEO GLORIA========//

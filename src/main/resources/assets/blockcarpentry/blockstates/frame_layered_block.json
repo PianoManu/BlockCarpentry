@@ -1,10 +1,7 @@
 {
   "variants": {
-    "contains_block=true": {
+    "": {
       "model": "blockcarpentry:block/frame_layered_block"
-    },
-    "contains_block=false": {
-      "model": "blockcarpentry:block/frame_layered_block_empty"
     }
   }
 }
