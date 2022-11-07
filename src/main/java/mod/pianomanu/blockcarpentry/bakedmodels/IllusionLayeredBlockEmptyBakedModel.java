@@ -5,6 +5,7 @@ import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -13,8 +14,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.model.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.ModelData;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,7 +30,7 @@ import java.util.List;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.1 06/11/22
+ * @version 1.2 11/07/22
  */
 public class IllusionLayeredBlockEmptyBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -38,9 +41,9 @@ public class IllusionLayeredBlockEmptyBakedModel implements IDynamicBakedModel {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, RenderType renderType) {
 
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
+        BlockState mimic = extraData.get(FrameBlockTile.MIMIC);
         if (mimic == null) {
             return getMimicQuads(state, side, extraData);
         }
@@ -50,18 +53,18 @@ public class IllusionLayeredBlockEmptyBakedModel implements IDynamicBakedModel {
 
     //supresses "Unboxing of "extraData..." may produce NullPointerException
     @SuppressWarnings("all")
-    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull ModelData extraData) {
         if (side == null) {
             return Collections.emptyList();
         }
         if (state != null) {
             int layers = state.getValue(LayeredBlock.LAYERS);
-            boolean renderNorth = side == Direction.NORTH && extraData.getData(FrameBlockTile.NORTH_VISIBLE);
-            boolean renderEast = side == Direction.EAST && extraData.getData(FrameBlockTile.EAST_VISIBLE);
-            boolean renderSouth = side == Direction.SOUTH && extraData.getData(FrameBlockTile.SOUTH_VISIBLE);
-            boolean renderWest = side == Direction.WEST && extraData.getData(FrameBlockTile.WEST_VISIBLE);
-            boolean renderUp = side == Direction.UP && extraData.getData(FrameBlockTile.UP_VISIBLE);
-            boolean renderDown = side == Direction.DOWN && extraData.getData(FrameBlockTile.DOWN_VISIBLE);
+            boolean renderNorth = side == Direction.NORTH && extraData.get(FrameBlockTile.NORTH_VISIBLE);
+            boolean renderEast = side == Direction.EAST && extraData.get(FrameBlockTile.EAST_VISIBLE);
+            boolean renderSouth = side == Direction.SOUTH && extraData.get(FrameBlockTile.SOUTH_VISIBLE);
+            boolean renderWest = side == Direction.WEST && extraData.get(FrameBlockTile.WEST_VISIBLE);
+            boolean renderUp = side == Direction.UP && extraData.get(FrameBlockTile.UP_VISIBLE);
+            boolean renderDown = side == Direction.DOWN && extraData.get(FrameBlockTile.DOWN_VISIBLE);
             TextureAtlasSprite textureUp = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/oak_planks"));
             TextureAtlasSprite textureDown = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/oak_planks"));
             TextureAtlasSprite textureNorth = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/spruce_trapdoor"));
@@ -108,8 +111,8 @@ public class IllusionLayeredBlockEmptyBakedModel implements IDynamicBakedModel {
                     }
                     break;
             }
-            int overlayIndex_1 = extraData.getData(FrameBlockTile.OVERLAY);
-            if (extraData.getData(FrameBlockTile.OVERLAY) != 0) {
+            int overlayIndex_1 = extraData.get(FrameBlockTile.OVERLAY);
+            if (extraData.get(FrameBlockTile.OVERLAY) != 0) {
                 switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
                     case UP -> quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 0.5f, 0f, 1f, overlayIndex_1, renderWest, renderEast, renderSouth, renderNorth, renderUp, renderDown, true));
                     case DOWN -> quads.addAll(ModelHelper.createOverlay(0f, 1f, 0.5f, 1f, 0f, 1f, overlayIndex_1, renderWest, renderEast, renderSouth, renderNorth, renderUp, renderDown, true));
@@ -154,6 +157,12 @@ public class IllusionLayeredBlockEmptyBakedModel implements IDynamicBakedModel {
     @Nonnull
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
+    }
+
+    @Override
+    @NotNull
+    public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
+        return ChunkRenderTypeSet.of(RenderType.translucent());
     }
 }
 //========SOLI DEO GLORIA========//

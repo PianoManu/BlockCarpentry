@@ -7,7 +7,6 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.ModelDataManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +18,7 @@ import java.util.Objects;
  * can change the state of the block.
  *
  * @author PianoManu
- * @version 1.0 05/31/22
+ * @version 1.1 11/07/22
  */
 public class LockableFrameTile extends FrameBlockTile {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -75,14 +74,14 @@ public class LockableFrameTile extends FrameBlockTile {
         if (tag.contains("canBeOpenedByPlayers")) {
             canBeOpenedByPlayers = readBool(tag.getCompound("canBeOpenedByPlayers"), true);
             if (!Objects.equals(oldCanBeOpenedByPlayers, canBeOpenedByPlayers)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("canBeOpenedByRedstoneSignal")) {
             canBeOpenedByRedstoneSignal = readBool(tag.getCompound("canBeOpenedByRedstoneSignal"), true);
             if (!Objects.equals(oldCanBeOpenedByRedstoneSignal, canBeOpenedByRedstoneSignal)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }

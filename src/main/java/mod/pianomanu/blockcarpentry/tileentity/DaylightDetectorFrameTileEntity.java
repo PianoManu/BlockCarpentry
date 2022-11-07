@@ -9,9 +9,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +25,7 @@ import java.util.Objects;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 11/07/22
  */
 public class DaylightDetectorFrameTileEntity extends BlockEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -255,49 +253,49 @@ public class DaylightDetectorFrameTileEntity extends BlockEntity {
         if (tag.contains("mimic")) {
             mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
             if (!Objects.equals(oldMimic, mimic)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("texture")) {
             texture = readInteger(tag.getCompound("texture"));
             if (!Objects.equals(oldTexture, texture)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("design")) {
             design = readInteger(tag.getCompound("design"));
             if (!Objects.equals(oldDesign, design)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("design_texture")) {
             designTexture = readInteger(tag.getCompound("design_texture"));
             if (!Objects.equals(oldDesignTexture, designTexture)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("glass_color")) {
             glassColor = readInteger(tag.getCompound("glass_color"));
             if (!Objects.equals(oldGlassColor, glassColor)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("overlay")) {
             overlay = readInteger(tag.getCompound("overlay"));
             if (!Objects.equals(oldOverlay, overlay)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("rotation")) {
             rotation = readInteger(tag.getCompound("rotation"));
             if (!Objects.equals(oldRotation, rotation)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
@@ -305,21 +303,21 @@ public class DaylightDetectorFrameTileEntity extends BlockEntity {
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder()
-                .withInitial(MIMIC, mimic)
-                .withInitial(TEXTURE, texture)
-                .withInitial(DESIGN, design)
-                .withInitial(DESIGN_TEXTURE, designTexture)
-                .withInitial(GLASS_COLOR, glassColor)
-                .withInitial(OVERLAY, overlay)
-                .withInitial(ROTATION, rotation)
-                .withInitial(NORTH_VISIBLE, northVisible)
-                .withInitial(EAST_VISIBLE, eastVisible)
-                .withInitial(SOUTH_VISIBLE, southVisible)
-                .withInitial(WEST_VISIBLE, westVisible)
-                .withInitial(UP_VISIBLE, upVisible)
-                .withInitial(DOWN_VISIBLE, downVisible)
+    public ModelData getModelData() {
+        return ModelData.builder()
+                .with(MIMIC, mimic)
+                .with(TEXTURE, texture)
+                .with(DESIGN, design)
+                .with(DESIGN_TEXTURE, designTexture)
+                .with(GLASS_COLOR, glassColor)
+                .with(OVERLAY, overlay)
+                .with(ROTATION, rotation)
+                .with(NORTH_VISIBLE, northVisible)
+                .with(EAST_VISIBLE, eastVisible)
+                .with(SOUTH_VISIBLE, southVisible)
+                .with(WEST_VISIBLE, westVisible)
+                .with(UP_VISIBLE, upVisible)
+                .with(DOWN_VISIBLE, downVisible)
                 .build();
     }
 

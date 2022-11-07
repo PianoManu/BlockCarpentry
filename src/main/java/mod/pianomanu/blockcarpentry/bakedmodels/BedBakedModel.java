@@ -7,6 +7,7 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -21,8 +22,10 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.model.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.ModelData;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +38,7 @@ import java.util.List;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.1 06/11/22
+ * @version 1.2 11/07/22
  */
 public class BedBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -46,8 +49,8 @@ public class BedBakedModel implements IDynamicBakedModel {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
-        BlockState mimic = extraData.getData(BedFrameTile.MIMIC);
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, RenderType renderType) {
+        BlockState mimic = extraData.get(BedFrameTile.MIMIC);
         if (mimic != null) {
             ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
             BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
@@ -57,18 +60,18 @@ public class BedBakedModel implements IDynamicBakedModel {
         return Collections.emptyList();
     }
 
-    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData, BakedModel model) {
+    public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, BakedModel model) {
         if (side != null) {
             return Collections.emptyList();
         }
-        BlockState mimic = extraData.getData(BedFrameTile.MIMIC);
-        int tex = extraData.getData(BedFrameTile.TEXTURE);
-        if (mimic != null && state != null) {// && extraData.getData(BedFrameTile.PILLOW)!=null && extraData.getData(BedFrameTile.BLANKET)!=null) {
+        BlockState mimic = extraData.get(BedFrameTile.MIMIC);
+        int tex = extraData.get(BedFrameTile.TEXTURE);
+        if (mimic != null && state != null) {// && extraData.get(BedFrameTile.PILLOW)!=null && extraData.get(BedFrameTile.BLANKET)!=null) {
             List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
             TextureAtlasSprite texture;
             if (textureList.size() <= tex) {
                 //texture = textureList.get(0);
-                extraData.setData(FrameBlockTile.TEXTURE, 0);
+                extraData.derive().with(FrameBlockTile.TEXTURE, 0);
                 tex = 0;
             }
             if (textureList.size() == 0) {
@@ -80,15 +83,15 @@ public class BedBakedModel implements IDynamicBakedModel {
             texture = textureList.get(tex);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 5 / 16f, 0f, 1f, texture, tintIndex));
-            TextureAtlasSprite pillow = TextureHelper.getWoolTextures().get(extraData.getData(BedFrameTile.PILLOW));
-            TextureAtlasSprite blanket = TextureHelper.getWoolTextures().get(extraData.getData(BedFrameTile.BLANKET));
-            Integer design = extraData.getData(BedFrameTile.DESIGN);
+            TextureAtlasSprite pillow = TextureHelper.getWoolTextures().get(extraData.get(BedFrameTile.PILLOW));
+            TextureAtlasSprite blanket = TextureHelper.getWoolTextures().get(extraData.get(BedFrameTile.BLANKET));
+            Integer design = extraData.get(BedFrameTile.DESIGN);
             if (design == null) {
                 return quads;
             }
             List<TextureAtlasSprite> planksList = TextureHelper.getPlanksTextures();
             TextureAtlasSprite planks;
-            Integer desTex = extraData.getData(BedFrameTile.DESIGN_TEXTURE);
+            Integer desTex = extraData.get(BedFrameTile.DESIGN_TEXTURE);
             if (desTex == null || desTex < 0 || desTex > 7) {
                 return quads;
             } else {
@@ -431,6 +434,12 @@ public class BedBakedModel implements IDynamicBakedModel {
     @Nonnull
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
+    }
+
+    @Override
+    @NotNull
+    public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
+        return ChunkRenderTypeSet.of(RenderType.translucent());
     }
 }
 //========SOLI DEO GLORIA========//

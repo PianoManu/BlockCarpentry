@@ -2,17 +2,12 @@ package mod.pianomanu.blockcarpentry.model;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraftforge.client.model.IModelLoader;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
 
-public class EdgedSlopeFrameModelLoader implements IModelLoader<EdgedSlopeFrameModelGeometry> {
-    @Override
-    public void onResourceManagerReload(ResourceManager resourceManager) {
-
-    }
+public class EdgedSlopeFrameModelLoader implements IGeometryLoader<EdgedSlopeFrameModelGeometry> {
 
     @Override
-    public EdgedSlopeFrameModelGeometry read(JsonDeserializationContext deserializationContext, JsonObject modelContents) {
+    public EdgedSlopeFrameModelGeometry read(JsonObject modelContents, JsonDeserializationContext deserializationContext) {
         return new EdgedSlopeFrameModelGeometry();
     }
 }

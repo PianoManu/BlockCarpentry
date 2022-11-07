@@ -2,17 +2,12 @@ package mod.pianomanu.blockcarpentry.model;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraftforge.client.model.IModelLoader;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
 
-public class IllusionLayeredBlockModelLoader implements IModelLoader<IllusionLayeredBlockModelGeometry> {
-    @Override
-    public void onResourceManagerReload(ResourceManager resourceManager) {
-
-    }
+public class IllusionLayeredBlockModelLoader implements IGeometryLoader<IllusionLayeredBlockModelGeometry> {
 
     @Override
-    public IllusionLayeredBlockModelGeometry read(JsonDeserializationContext deserializationContext, JsonObject modelContents) {
+    public IllusionLayeredBlockModelGeometry read(JsonObject modelContents, JsonDeserializationContext deserializationContext) {
         return new IllusionLayeredBlockModelGeometry();
     }
 }

@@ -2,17 +2,12 @@ package mod.pianomanu.blockcarpentry.model;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraftforge.client.model.IModelLoader;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
 
-public class DaylightDetectorFrameModelLoader implements IModelLoader<DaylightDetectorFrameModelGeometry> {
-    @Override
-    public void onResourceManagerReload(ResourceManager resourceManager) {
-
-    }
+public class DaylightDetectorFrameModelLoader implements IGeometryLoader<DaylightDetectorFrameModelGeometry> {
 
     @Override
-    public DaylightDetectorFrameModelGeometry read(JsonDeserializationContext deserializationContext, JsonObject modelContents) {
+    public DaylightDetectorFrameModelGeometry read(JsonObject modelContents, JsonDeserializationContext deserializationContext) {
         return new DaylightDetectorFrameModelGeometry();
     }
 }

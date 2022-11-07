@@ -6,6 +6,7 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -18,8 +19,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.model.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.ModelData;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,7 +35,7 @@ import java.util.List;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.1 06/11/22
+ * @version 1.2 11/07/22
  */
 public class IllusionPaneBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -43,10 +46,10 @@ public class IllusionPaneBakedModel implements IDynamicBakedModel {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, RenderType renderType) {
 
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        Integer design = extraData.getData(FrameBlockTile.DESIGN);
+        BlockState mimic = extraData.get(FrameBlockTile.MIMIC);
+        Integer design = extraData.get(FrameBlockTile.DESIGN);
         if (side != null) {
             return Collections.emptyList();
         }
@@ -64,19 +67,19 @@ public class IllusionPaneBakedModel implements IDynamicBakedModel {
                     }
                     //return Collections.emptyList();
                 }
-                TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.getData(FrameBlockTile.GLASS_COLOR));
-                int rotation = extraData.getData(FrameBlockTile.ROTATION);
+                TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.get(FrameBlockTile.GLASS_COLOR));
+                int rotation = extraData.get(FrameBlockTile.ROTATION);
 
                 boolean north = state.getValue(PaneFrameBlock.NORTH);
                 boolean east = state.getValue(PaneFrameBlock.EAST);
                 boolean south = state.getValue(PaneFrameBlock.SOUTH);
                 boolean west = state.getValue(PaneFrameBlock.WEST);
-                boolean renderNorth = extraData.getData(FrameBlockTile.NORTH_VISIBLE);
-                boolean renderEast = extraData.getData(FrameBlockTile.EAST_VISIBLE);
-                boolean renderSouth = extraData.getData(FrameBlockTile.SOUTH_VISIBLE);
-                boolean renderWest = extraData.getData(FrameBlockTile.WEST_VISIBLE);
-                boolean renderUp = extraData.getData(FrameBlockTile.UP_VISIBLE);
-                boolean renderDown = extraData.getData(FrameBlockTile.DOWN_VISIBLE);
+                boolean renderNorth = extraData.get(FrameBlockTile.NORTH_VISIBLE);
+                boolean renderEast = extraData.get(FrameBlockTile.EAST_VISIBLE);
+                boolean renderSouth = extraData.get(FrameBlockTile.SOUTH_VISIBLE);
+                boolean renderWest = extraData.get(FrameBlockTile.WEST_VISIBLE);
+                boolean renderUp = extraData.get(FrameBlockTile.UP_VISIBLE);
+                boolean renderDown = extraData.get(FrameBlockTile.DOWN_VISIBLE);
                 int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
                 List<BakedQuad> quads = new ArrayList<>();
                 if (design == 0) {
@@ -263,7 +266,7 @@ public class IllusionPaneBakedModel implements IDynamicBakedModel {
                     }
                 }
 
-                int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+                int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
                 if (overlayIndex != 0) {
                     //TODO fix overlay for transparent blocks - then also use transparent overlay
                     quads.addAll(ModelHelper.createOverlay(7 / 16f, 9 / 16f, 0f, 1f, 7 / 16f, 9 / 16f, overlayIndex, !north, !south, !east, !west, renderUp, renderDown, true));
@@ -312,6 +315,12 @@ public class IllusionPaneBakedModel implements IDynamicBakedModel {
     @Nonnull
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
+    }
+
+    @Override
+    @NotNull
+    public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
+        return ChunkRenderTypeSet.of(RenderType.translucent());
     }
 }
 //========SOLI DEO GLORIA========//

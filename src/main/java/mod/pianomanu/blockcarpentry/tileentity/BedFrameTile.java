@@ -8,9 +8,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +23,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
  * BlockEntity for frame beds, you can customize both pillow and blanket
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 11/07/22
  */
 public class BedFrameTile extends BlockEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -158,49 +156,49 @@ public class BedFrameTile extends BlockEntity {
         if (tag.contains("mimic")) {
             mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
             if (!Objects.equals(oldMimic, mimic)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("texture")) {
             texture = readInteger(tag.getCompound("texture"));
             if (!Objects.equals(oldTexture, texture)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("blanket")) {
             blanketColor = readInteger(tag.getCompound("blanket"));
             if (!Objects.equals(oldBlanket, blanketColor)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("pillow")) {
             pillowColor = readInteger(tag.getCompound("pillow"));
             if (!Objects.equals(oldPillow, pillowColor)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("design")) {
             design = readInteger(tag.getCompound("design"));
             if (!Objects.equals(oldDesign, design)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("design_texture")) {
             designTexture = readInteger(tag.getCompound("design_texture"));
             if (!Objects.equals(oldDesignTexture, designTexture)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("rotation")) {
             rotation = readInteger(tag.getCompound("rotation"));
             if (!Objects.equals(oldRotation, rotation)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
@@ -208,15 +206,15 @@ public class BedFrameTile extends BlockEntity {
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder()
-                .withInitial(MIMIC, mimic)
-                .withInitial(TEXTURE, texture)
-                .withInitial(BLANKET, blanketColor)
-                .withInitial(PILLOW, pillowColor)
-                .withInitial(DESIGN, design)
-                .withInitial(DESIGN_TEXTURE, designTexture)
-                .withInitial(ROTATION, rotation)
+    public ModelData getModelData() {
+        return ModelData.builder()
+                .with(MIMIC, mimic)
+                .with(TEXTURE, texture)
+                .with(BLANKET, blanketColor)
+                .with(PILLOW, pillowColor)
+                .with(DESIGN, design)
+                .with(DESIGN_TEXTURE, designTexture)
+                .with(ROTATION, rotation)
                 .build();
     }
 

@@ -5,6 +5,7 @@ import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -16,8 +17,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.model.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.ModelData;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +33,7 @@ import java.util.List;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.1 06/11/22
+ * @version 1.2 11/07/22
  */
 public class IllusionCarpetBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -41,26 +44,26 @@ public class IllusionCarpetBakedModel implements IDynamicBakedModel {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, RenderType renderType) {
         if (side != null) {
             return Collections.emptyList();
         }
-        BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        Integer design = extraData.getData(FrameBlockTile.DESIGN);
+        BlockState mimic = extraData.get(FrameBlockTile.MIMIC);
+        Integer design = extraData.get(FrameBlockTile.DESIGN);
         if (mimic != null) {
             ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
             BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-            TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.getData(FrameBlockTile.GLASS_COLOR));
-            int woolInt = extraData.getData(FrameBlockTile.GLASS_COLOR) - 1;
+            TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.get(FrameBlockTile.GLASS_COLOR));
+            int woolInt = extraData.get(FrameBlockTile.GLASS_COLOR) - 1;
             if (woolInt < 0)
                 woolInt = 0;
             TextureAtlasSprite wool = TextureHelper.getWoolTextures().get(woolInt);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-            boolean renderNorth = extraData.getData(FrameBlockTile.NORTH_VISIBLE);
-            boolean renderEast = extraData.getData(FrameBlockTile.EAST_VISIBLE);
-            boolean renderSouth = extraData.getData(FrameBlockTile.SOUTH_VISIBLE);
-            boolean renderWest = extraData.getData(FrameBlockTile.WEST_VISIBLE);
-            int rotation = extraData.getData(FrameBlockTile.ROTATION);
+            boolean renderNorth = extraData.get(FrameBlockTile.NORTH_VISIBLE);
+            boolean renderEast = extraData.get(FrameBlockTile.EAST_VISIBLE);
+            boolean renderSouth = extraData.get(FrameBlockTile.SOUTH_VISIBLE);
+            boolean renderWest = extraData.get(FrameBlockTile.WEST_VISIBLE);
+            int rotation = extraData.get(FrameBlockTile.ROTATION);
             List<BakedQuad> quads = new ArrayList<>();
             if (design == 0) {
                 quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -93,7 +96,7 @@ public class IllusionCarpetBakedModel implements IDynamicBakedModel {
 
                 quads.addAll(ModelHelper.createCuboid(2 / 16f, 14 / 16f, 0f, 1 / 16f, 2 / 16f, 14 / 16f, wool, -1, renderNorth, renderSouth, renderEast, renderWest, true, true));
             }
-            int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
+            int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
                 quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));
             }
@@ -132,6 +135,12 @@ public class IllusionCarpetBakedModel implements IDynamicBakedModel {
     @Nonnull
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
+    }
+
+    @Override
+    @NotNull
+    public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
+        return ChunkRenderTypeSet.of(RenderType.translucent());
     }
 }
 //========SOLI DEO GLORIA========//

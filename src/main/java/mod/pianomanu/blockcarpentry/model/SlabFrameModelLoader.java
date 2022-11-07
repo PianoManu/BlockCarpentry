@@ -2,17 +2,12 @@ package mod.pianomanu.blockcarpentry.model;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraftforge.client.model.IModelLoader;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
 
-public class SlabFrameModelLoader implements IModelLoader<SlabFrameModelGeometry> {
-    @Override
-    public void onResourceManagerReload(ResourceManager resourceManager) {
-
-    }
+public class SlabFrameModelLoader implements IGeometryLoader<SlabFrameModelGeometry> {
 
     @Override
-    public SlabFrameModelGeometry read(JsonDeserializationContext deserializationContext, JsonObject modelContents) {
+    public SlabFrameModelGeometry read(JsonObject modelContents, JsonDeserializationContext deserializationContext) {
         return new SlabFrameModelGeometry();
     }
 }

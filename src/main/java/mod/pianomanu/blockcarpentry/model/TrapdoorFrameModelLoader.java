@@ -2,17 +2,12 @@ package mod.pianomanu.blockcarpentry.model;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraftforge.client.model.IModelLoader;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
 
-public class TrapdoorFrameModelLoader implements IModelLoader<TrapdoorFrameModelGeometry> {
-    @Override
-    public void onResourceManagerReload(ResourceManager resourceManager) {
-
-    }
+public class TrapdoorFrameModelLoader implements IGeometryLoader<TrapdoorFrameModelGeometry> {
 
     @Override
-    public TrapdoorFrameModelGeometry read(JsonDeserializationContext deserializationContext, JsonObject modelContents) {
+    public TrapdoorFrameModelGeometry read(JsonObject modelContents, JsonDeserializationContext deserializationContext) {
         return new TrapdoorFrameModelGeometry();
     }
 }

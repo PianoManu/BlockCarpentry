@@ -5,6 +5,7 @@ import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -16,8 +17,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.model.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.ModelData;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,13 +33,13 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.1 06/11/22
+ * @version 1.2 11/07/22
  */
 public class IllusionSlabBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
-        BlockState mimic = extraData.getData(TwoBlocksFrameBlockTile.MIMIC_1);
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, RenderType renderType) {
+        BlockState mimic = extraData.get(TwoBlocksFrameBlockTile.MIMIC_1);
         if (mimic != null) {
             ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
             BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
@@ -47,12 +50,12 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
 
     //supresses "Unboxing of "extraData..." may produce NullPointerException
     @SuppressWarnings("all")
-    private List<BakedQuad> getIllusionQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData, BakedModel model) {
+    private List<BakedQuad> getIllusionQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, BakedModel model) {
         if (side == null) {
             return Collections.emptyList();
         }
-        BlockState mimic_1 = extraData.getData(TwoBlocksFrameBlockTile.MIMIC_1);
-        BlockState mimic_2 = extraData.getData(TwoBlocksFrameBlockTile.MIMIC_2);
+        BlockState mimic_1 = extraData.get(TwoBlocksFrameBlockTile.MIMIC_1);
+        BlockState mimic_2 = extraData.get(TwoBlocksFrameBlockTile.MIMIC_2);
         boolean sameBlocks;
         if (mimic_1 != null && mimic_2 != null)
             sameBlocks = mimic_1.is(mimic_2.getBlock());
@@ -61,14 +64,14 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
         if (mimic_1 != null && state != null) {
             int tintIndex_1 = BlockAppearanceHelper.setTintIndex(mimic_1);
             int tintIndex_2 = mimic_2 == null ? -1 : BlockAppearanceHelper.setTintIndex(mimic_2);
-            int rotation_1 = extraData.getData(TwoBlocksFrameBlockTile.ROTATION_1);
-            int rotation_2 = extraData.getData(TwoBlocksFrameBlockTile.ROTATION_2);
-            boolean renderNorth = side == Direction.NORTH && extraData.getData(TwoBlocksFrameBlockTile.NORTH_VISIBLE);
-            boolean renderEast = side == Direction.EAST && extraData.getData(TwoBlocksFrameBlockTile.EAST_VISIBLE);
-            boolean renderSouth = side == Direction.SOUTH && extraData.getData(TwoBlocksFrameBlockTile.SOUTH_VISIBLE);
-            boolean renderWest = side == Direction.WEST && extraData.getData(TwoBlocksFrameBlockTile.WEST_VISIBLE);
-            boolean renderUp = side == Direction.UP && extraData.getData(TwoBlocksFrameBlockTile.UP_VISIBLE);
-            boolean renderDown = side == Direction.DOWN && extraData.getData(TwoBlocksFrameBlockTile.DOWN_VISIBLE);
+            int rotation_1 = extraData.get(TwoBlocksFrameBlockTile.ROTATION_1);
+            int rotation_2 = extraData.get(TwoBlocksFrameBlockTile.ROTATION_2);
+            boolean renderNorth = side == Direction.NORTH && extraData.get(TwoBlocksFrameBlockTile.NORTH_VISIBLE);
+            boolean renderEast = side == Direction.EAST && extraData.get(TwoBlocksFrameBlockTile.EAST_VISIBLE);
+            boolean renderSouth = side == Direction.SOUTH && extraData.get(TwoBlocksFrameBlockTile.SOUTH_VISIBLE);
+            boolean renderWest = side == Direction.WEST && extraData.get(TwoBlocksFrameBlockTile.WEST_VISIBLE);
+            boolean renderUp = side == Direction.UP && extraData.get(TwoBlocksFrameBlockTile.UP_VISIBLE);
+            boolean renderDown = side == Direction.DOWN && extraData.get(TwoBlocksFrameBlockTile.DOWN_VISIBLE);
             List<BakedQuad> quads = new ArrayList<>();
             switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
                 case UP -> quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 0.5f, 0f, 1f, mimic_1, model, extraData, rand, tintIndex_1, renderNorth, renderSouth, renderEast, renderWest, renderUp && !sameBlocks, renderDown, rotation_1));
@@ -90,8 +93,8 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
                     case EAST -> quads.addAll(ModelHelper.createSixFaceCuboid(0.5f, 1f, 0f, 1f, 0f, 1f, mimic_2, model_2, extraData, rand, tintIndex_2, renderNorth, renderSouth, renderEast, renderWest && !sameBlocks, renderUp, renderDown, rotation_2));
                 }
             }
-            int overlayIndex_1 = extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_1);
-            if (extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_1) != 0) {
+            int overlayIndex_1 = extraData.get(TwoBlocksFrameBlockTile.OVERLAY_1);
+            if (extraData.get(TwoBlocksFrameBlockTile.OVERLAY_1) != 0) {
                 switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
                     case UP -> quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 0.5f, 0f, 1f, overlayIndex_1, renderNorth, renderSouth, renderEast, renderWest, renderUp && !sameBlocks, renderDown, true));
                     case DOWN -> quads.addAll(ModelHelper.createOverlay(0f, 1f, 0.5f, 1f, 0f, 1f, overlayIndex_1, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown && !sameBlocks, true));
@@ -102,8 +105,8 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
                 }
             }
             if (state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                int overlayIndex_2 = extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_2);
-                if (extraData.getData(TwoBlocksFrameBlockTile.OVERLAY_2) != 0) {
+                int overlayIndex_2 = extraData.get(TwoBlocksFrameBlockTile.OVERLAY_2);
+                if (extraData.get(TwoBlocksFrameBlockTile.OVERLAY_2) != 0) {
                     switch (state.getValue(SixWaySlabFrameBlock.FACING)) {
                         case UP -> quads.addAll(ModelHelper.createOverlay(0f, 1f, 0.5f, 1f, 0f, 1f, overlayIndex_2, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown && !sameBlocks, false));
                         case DOWN -> quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 0.5f, 0f, 1f, overlayIndex_2, renderNorth, renderSouth, renderEast, renderWest, renderUp && !sameBlocks, renderDown, false));
@@ -149,6 +152,12 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
     @Nonnull
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
+    }
+
+    @Override
+    @NotNull
+    public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
+        return ChunkRenderTypeSet.of(RenderType.translucent());
     }
 }
 //========SOLI DEO GLORIA========//

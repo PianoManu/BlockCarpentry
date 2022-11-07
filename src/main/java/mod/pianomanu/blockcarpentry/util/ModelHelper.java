@@ -1,10 +1,10 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -15,8 +15,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +26,7 @@ import java.util.List;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.2 06/11/22
+ * @version 1.3 11/07/22
  */
 public class ModelHelper {
 
@@ -48,38 +48,17 @@ public class ModelHelper {
      * @param g       green value
      * @param b       blue value
      */
-    private static void putVertex(BakedQuadBuilder builder, Vec3 normal,
-                                  double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
+    private static void putVertex(VertexConsumer builder, Vec3 normal,
+                                  double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b, float a) {
 
-        ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
-        for (int j = 0; j < elements.size(); j++) {
-            VertexFormatElement e = elements.get(j);
-            switch (e.getUsage()) {
-                case POSITION:
-                    builder.put(j, (float) x, (float) y, (float) z, 1.0f);
-                    break;
-                case COLOR:
-                    builder.put(j, r, g, b, 1.0f);
-                    break;
-                case UV:
-                    switch (e.getIndex()) {
-                        case 0 -> {
-                            float iu = sprite.getU(u);
-                            float iv = sprite.getV(v);
-                            builder.put(j, iu, iv);
-                        }
-                        case 2 -> builder.put(j, (short) 0, (short) 0);
-                        default -> builder.put(j);
-                    }
-                    break;
-                case NORMAL:
-                    builder.put(j, (float) normal.x, (float) normal.y, (float) normal.z);
-                    break;
-                default:
-                    builder.put(j);
-                    break;
-            }
-        }
+        float iu = sprite.getU(u);
+        float iv = sprite.getV(v);
+        builder.vertex(x, y, z)
+                .uv(iu, iv)
+                .uv2(0, 0)
+                .color(r, g, b, a)
+                .normal((float) normal.x(), (float) normal.y(), (float) normal.z())
+                .endVertex();
     }
 
     /**
@@ -103,15 +82,17 @@ public class ModelHelper {
     public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex) {
         Vec3 normal = v3.subtract(v2).cross(v1.subtract(v2)).normalize();
 
-        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
-        builder.setQuadOrientation(Direction.getNearest(normal.x, normal.y, normal.z));
-        builder.setApplyDiffuseLighting(true);
-        builder.setQuadTint(tintIndex);
-        putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v2.x, v2.y, v2.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v4.x, v4.y, v4.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f);
-        return builder.build();
+        BakedQuad[] quad = new BakedQuad[1];
+        QuadBakingVertexConsumer builder = new QuadBakingVertexConsumer(q -> quad[0] = q);
+        builder.setSprite(sprite);
+        builder.setDirection(Direction.getNearest(normal.x, normal.y, normal.z));
+        builder.setTintIndex(tintIndex);
+
+        putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v2.x, v2.y, v2.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v4.x, v4.y, v4.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+        return quad[0];
     }
 
     public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex, boolean invert) {
@@ -120,22 +101,24 @@ public class ModelHelper {
             normal = normal.reverse();
         }
 
-        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
-        builder.setQuadOrientation(Direction.getNearest(normal.x, normal.y, normal.z));
-        builder.setApplyDiffuseLighting(true);
-        builder.setQuadTint(tintIndex);
+        BakedQuad[] quad = new BakedQuad[1];
+        QuadBakingVertexConsumer builder = new QuadBakingVertexConsumer(q -> quad[0] = q);
+        builder.setSprite(sprite);
+        builder.setDirection(Direction.getNearest(normal.x, normal.y, normal.z));
+        builder.setTintIndex(tintIndex);
+
         if (invert) {
-            putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f);
-            putVertex(builder, normal, v2.x, v2.y, v2.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f);
-            putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f);
-            putVertex(builder, normal, v4.x, v4.y, v4.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v2.x, v2.y, v2.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v4.x, v4.y, v4.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
         } else {
-            putVertex(builder, normal, v4.x, v4.y, v4.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f);
-            putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f);
-            putVertex(builder, normal, v2.x, v2.y, v2.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f);
-            putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v4.x, v4.y, v4.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v2.x, v2.y, v2.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
         }
-        return builder.build();
+        return quad[0];
     }
 
     public static BakedQuad createQuadInverted(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex) {
@@ -148,22 +131,24 @@ public class ModelHelper {
             normal = normal.reverse();
         }
 
-        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
-        builder.setQuadOrientation(Direction.getNearest(normal.x, normal.y, normal.z));
-        builder.setApplyDiffuseLighting(true);
-        builder.setQuadTint(tintIndex);
+        BakedQuad[] quad = new BakedQuad[1];
+        QuadBakingVertexConsumer builder = new QuadBakingVertexConsumer(q -> quad[0] = q);
+        builder.setSprite(sprite);
+        builder.setDirection(Direction.getNearest(normal.x, normal.y, normal.z));
+        builder.setTintIndex(tintIndex);
+
         if (invert) {
-            putVertex(builder, normal, v4.x, v4.y, v4.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f);
-            putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f);
-            putVertex(builder, normal, v2.x, v2.y, v2.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f);
-            putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v4.x, v4.y, v4.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v2.x, v2.y, v2.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
         } else {
-            putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f);
-            putVertex(builder, normal, v2.x, v2.y, v2.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f);
-            putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f);
-            putVertex(builder, normal, v4.x, v4.y, v4.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v2.x, v2.y, v2.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+            putVertex(builder, normal, v4.x, v4.y, v4.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
         }
-        return builder.build();
+        return quad[0];
     }
 
     /**
@@ -245,11 +230,11 @@ public class ModelHelper {
         return quads;
     }
 
-    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, BakedModel model, IModelData extraData, RandomSource rand, int tintIndex, int rotation) {
+    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, BakedModel model, ModelData extraData, RandomSource rand, int tintIndex, int rotation) {
         return createSixFaceCuboid(xl, xh, yl, yh, zl, zh, mimic, model, extraData, rand, tintIndex, true, true, true, true, true, true, rotation);
     }
 
-    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, BakedModel model, IModelData extraData, RandomSource rand, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, int rotation) {
+    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, BakedModel model, ModelData extraData, RandomSource rand, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, int rotation) {
         List<BakedQuad> quads = new ArrayList<>();
         //Eight corners of the block
         Vec3 NWU = v(xl, yh, zl); //North-West-Up
@@ -303,22 +288,22 @@ public class ModelHelper {
         TextureAtlasSprite textureWest = textureList.get(0);
         TextureAtlasSprite textureUp = textureList.get(0);
         TextureAtlasSprite textureDown = textureList.get(0);
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.NORTH, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.get(FrameBlockTile.MIMIC), Direction.NORTH, rand, extraData, RenderType.translucent())) {
             textureNorth = quad.getSprite();
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.EAST, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.get(FrameBlockTile.MIMIC), Direction.EAST, rand, extraData, RenderType.translucent())) {
             textureEast = quad.getSprite();
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.SOUTH, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.get(FrameBlockTile.MIMIC), Direction.SOUTH, rand, extraData, RenderType.translucent())) {
             textureSouth = quad.getSprite();
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.WEST, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.get(FrameBlockTile.MIMIC), Direction.WEST, rand, extraData, RenderType.translucent())) {
             textureWest = quad.getSprite();
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.UP, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.get(FrameBlockTile.MIMIC), Direction.UP, rand, extraData, RenderType.translucent())) {
             textureUp = quad.getSprite();
         }
-        for (BakedQuad quad : model.getQuads(extraData.getData(FrameBlockTile.MIMIC), Direction.DOWN, rand, extraData)) {
+        for (BakedQuad quad : model.getQuads(extraData.get(FrameBlockTile.MIMIC), Direction.DOWN, rand, extraData, RenderType.translucent())) {
             textureDown = quad.getSprite();
         }
         if (rotation == 0) {

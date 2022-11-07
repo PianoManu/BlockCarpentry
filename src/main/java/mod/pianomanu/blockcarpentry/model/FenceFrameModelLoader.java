@@ -2,17 +2,12 @@ package mod.pianomanu.blockcarpentry.model;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraftforge.client.model.IModelLoader;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
 
-public class FenceFrameModelLoader implements IModelLoader<FenceFrameModelGeometry> {
-    @Override
-    public void onResourceManagerReload(ResourceManager resourceManager) {
-
-    }
+public class FenceFrameModelLoader implements IGeometryLoader<FenceFrameModelGeometry> {
 
     @Override
-    public FenceFrameModelGeometry read(JsonDeserializationContext deserializationContext, JsonObject modelContents) {
+    public FenceFrameModelGeometry read(JsonObject modelContents, JsonDeserializationContext deserializationContext) {
         return new FenceFrameModelGeometry();
     }
 }
