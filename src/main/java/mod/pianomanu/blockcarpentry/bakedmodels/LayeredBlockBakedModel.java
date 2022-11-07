@@ -127,7 +127,6 @@ public class LayeredBlockBakedModel implements IDynamicBakedModel {
         if (side == null) {
             return Collections.emptyList();
         }
-        System.out.println("EMPTY");
         if (state != null) {
             int layers = state.getValue(LayeredBlock.LAYERS);
             boolean renderNorth = side == Direction.NORTH && extraData.get(FrameBlockTile.NORTH_VISIBLE);

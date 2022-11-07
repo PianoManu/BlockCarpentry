@@ -105,13 +105,10 @@ public abstract class AbstractFrameBlock extends BaseEntityBlock {
     protected void clearTile(Level level, BlockPos pos) {
         if (!level.isClientSide) {
             BlockEntity tileentity = level.getBlockEntity(pos);
-            System.out.println("TILE");
             if (tileentity instanceof FrameBlockTile frameBlockEntity) {
                 BlockState blockState = frameBlockEntity.getMimic();
                 if (!(blockState == null)) {
                     frameBlockEntity.clear();
-                    System.out.println("CLEARED");
-                    System.out.println(frameBlockEntity.getMimic());
                 }
             }
         }
