@@ -41,7 +41,7 @@ import java.util.Map;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 06/13/22
+ * @version 1.2 11/07/22
  */
 public class WallFrameBlock extends WallBlock implements EntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -126,11 +126,6 @@ public class WallFrameBlock extends WallBlock implements EntityBlock {
         return this.stateToShapeMap.get(state);
     }
 
-    /*@Override
-    public boolean hasBlockEntity(BlockState state) {
-        return true;
-    }*/
-
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
@@ -141,6 +136,8 @@ public class WallFrameBlock extends WallBlock implements EntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
+            if (removeBlock(level, pos, state, item, player))
+                return InteractionResult.CONSUME;
             if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
                     BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
                     BlockAppearanceHelper.setDesign(level, pos, player, item) ||
@@ -164,15 +161,19 @@ public class WallFrameBlock extends WallBlock implements EntityBlock {
 
                 }
             }
-
-            if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
-                if (!player.isCreative())
-                    this.dropContainedBlock(level, pos);
-                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-                level.setBlock(pos, state, 2);
-            }
         }
         return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+    }
+
+    private boolean removeBlock(Level level, BlockPos pos, BlockState state, ItemStack itemStack, Player player) {
+        if (itemStack.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
+            if (!player.isCreative())
+                this.dropContainedBlock(level, pos);
+            state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
+            level.setBlock(pos, state, 2);
+            return true;
+        }
+        return false;
     }
 
     protected void dropContainedBlock(Level levelIn, BlockPos pos) {

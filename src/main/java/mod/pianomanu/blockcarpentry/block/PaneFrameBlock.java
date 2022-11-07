@@ -41,7 +41,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 06/13/22
+ * @version 1.2 11/07/22
  */
 public class PaneFrameBlock extends IronBarsBlock implements EntityBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -68,6 +68,8 @@ public class PaneFrameBlock extends IronBarsBlock implements EntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
+            if (removeBlock(level, pos, state, item, player))
+                return InteractionResult.CONSUME;
             if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
                     BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
                     BlockAppearanceHelper.setDesign(level, pos, player, item) ||
@@ -91,15 +93,19 @@ public class PaneFrameBlock extends IronBarsBlock implements EntityBlock {
                     checkForVisibility(state, level, pos, (FrameBlockTile) tileEntity);
                 }
             }
-            //hammer is needed to remove the block from the frame - you can change it in the config
-            if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
-                if (!player.isCreative())
-                    this.dropContainedBlock(level, pos);
-                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-                level.setBlock(pos, state, 2);
-            }
         }
         return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+    }
+
+    private boolean removeBlock(Level level, BlockPos pos, BlockState state, ItemStack itemStack, Player player) {
+        if (itemStack.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
+            if (!player.isCreative())
+                this.dropContainedBlock(level, pos);
+            state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
+            level.setBlock(pos, state, 2);
+            return true;
+        }
+        return false;
     }
 
     protected void dropContainedBlock(Level level, BlockPos pos) {
@@ -153,17 +159,6 @@ public class PaneFrameBlock extends IronBarsBlock implements EntityBlock {
         }
         return state.getValue(LIGHT_LEVEL);
     }
-
-    /*@Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        BlockPos blockpos = context.getPos();
-        FluidState fluidstate = context.getWorld().getFluidState(blockpos);
-        if (fluidstate.getFluid() == Fluids.WATER) {
-            return this.getDefaultState().with(WATERLOGGED, fluidstate.isSource());
-        } else {
-            return this.getDefaultState();
-        }
-    }*/
 
     @Override
     @Nonnull

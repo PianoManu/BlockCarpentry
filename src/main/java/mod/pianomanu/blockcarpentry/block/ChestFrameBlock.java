@@ -42,7 +42,7 @@ import static mod.pianomanu.blockcarpentry.block.AbstractSixWayFrameBlock.FACING
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 06/13/22
+ * @version 1.2 11/07/22
  */
 public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBlock {
     private static final VoxelShape INNER_CUBE = Block.box(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
@@ -80,14 +80,8 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
         }
     }
 
-    /*@Override
-    public boolean hasBlockEntity(BlockState state) {
-        return true;
-    }*/
-
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        //return Registration.CHEST_FRAME_TILE.get().create();
         return new ChestFrameBlockEntity(Registration.CHEST_FRAME_TILE.get(), pos, state);
     }
 
@@ -95,6 +89,8 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
+            if (removeBlock(level, pos, state, item, player))
+                return InteractionResult.CONSUME;
             if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
                     BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
                     BlockAppearanceHelper.setDesign(level, pos, player, item) ||
@@ -115,13 +111,6 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
                         player.getItemInHand(hand).setCount(count - 1);
                 }
             }
-            //hammer is needed to remove the block from the frame - you can change it in the config
-            if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
-                if (!player.isCreative())
-                    this.dropContainedBlock(level, pos);
-                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-                level.setBlock(pos, state, 2);
-            }
             if (tileEntity instanceof ChestFrameBlockEntity && state.getValue(CONTAINS_BLOCK)) {
                 if (!(item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem)) {
                     MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
@@ -137,6 +126,17 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
             }
         }
         return InteractionResult.SUCCESS;
+    }
+
+    private boolean removeBlock(Level level, BlockPos pos, BlockState state, ItemStack itemStack, Player player) {
+        if (itemStack.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
+            if (!player.isCreative())
+                this.dropContainedBlock(level, pos);
+            state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
+            level.setBlock(pos, state, 2);
+            return true;
+        }
+        return false;
     }
 
     @Override

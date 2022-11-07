@@ -44,7 +44,7 @@ import javax.annotation.Nullable;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.1 06/13/22
+ * @version 1.2 11/07/22
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, SimpleWaterloggedBlock {
@@ -129,6 +129,8 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
+            if (removeBlock(level, pos, state, item, player))
+                return InteractionResult.CONSUME;
             if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
                     BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
                     BlockAppearanceHelper.setDesign(level, pos, player, item) ||
@@ -152,13 +154,6 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
                     //checkForVisibility(state, level, pos, (FrameBlockTile) tileEntity);
                 }
             }
-            //hammer is needed to remove the block from the frame - you can change it in the config
-            if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
-                if (!player.isCreative())
-                    this.dropContainedBlock(level, pos);
-                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-                level.setBlock(pos, state, 2);
-            }
         }
         return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
@@ -167,9 +162,20 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
      * Used to drop the contained block
      * We check the tile entity, get the block from the tile entity and drop it at the block pos plus some small random coords in the level
      *
-     * @param levelIn the level where we drop the block
-     * @param pos     the block position where we drop the block
+     * @param level the level where we drop the block
+     * @param pos   the block position where we drop the block
      */
+    private boolean removeBlock(Level level, BlockPos pos, BlockState state, ItemStack itemStack, Player player) {
+        if (itemStack.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
+            if (!player.isCreative())
+                this.dropContainedBlock(level, pos);
+            state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
+            level.setBlock(pos, state, 2);
+            return true;
+        }
+        return false;
+    }
+
     protected void dropContainedBlock(Level levelIn, BlockPos pos) {
         if (!levelIn.isClientSide) {
             BlockEntity tileentity = levelIn.getBlockEntity(pos);

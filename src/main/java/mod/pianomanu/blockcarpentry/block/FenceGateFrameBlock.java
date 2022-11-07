@@ -48,7 +48,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.2 06/13/22
+ * @version 1.3 11/07/22
  */
 public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterloggedBlock, EntityBlock {
     public FenceGateFrameBlock(Properties properties) {
@@ -71,6 +71,8 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
+            if (removeBlock(level, pos, state, item, player))
+                return InteractionResult.CONSUME;
             if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
                     BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
                     BlockAppearanceHelper.setDesign(level, pos, player, item) ||
@@ -162,14 +164,19 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
                     }
                 }
             }
-            if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
-                if (!player.isCreative())
-                    this.dropContainedBlock(level, pos);
-                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-                level.setBlock(pos, state, 2);
-            }
         }
         return InteractionResult.SUCCESS;
+    }
+
+    private boolean removeBlock(Level level, BlockPos pos, BlockState state, ItemStack itemStack, Player player) {
+        if (itemStack.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
+            if (!player.isCreative())
+                this.dropContainedBlock(level, pos);
+            state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
+            level.setBlock(pos, state, 2);
+            return true;
+        }
+        return false;
     }
 
     protected void dropContainedBlock(Level levelIn, BlockPos pos) {

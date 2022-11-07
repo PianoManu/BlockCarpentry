@@ -43,7 +43,7 @@ import java.util.List;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 06/13/22
+ * @version 1.2 11/07/22
  */
 public class BedFrameBlock extends BedBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -61,11 +61,6 @@ public class BedFrameBlock extends BedBlock {
         builder.add(CONTAINS_BLOCK, LIGHT_LEVEL, PART, OCCUPIED, HORIZONTAL_FACING);//, TEXTURE);
     }
 
-    /*@Override
-    public boolean hasBlockEntity(BlockState state) {
-        return true;
-    }*/
-
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
@@ -76,6 +71,8 @@ public class BedFrameBlock extends BedBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
+            if (removeBlock(level, pos, state, item, player))
+                return InteractionResult.CONSUME;
             if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
                     BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
                     BlockAppearanceHelper.setDesign(level, pos, player, item) ||
@@ -119,31 +116,19 @@ public class BedFrameBlock extends BedBlock {
                     return InteractionResult.SUCCESS;
                 }
             }
-            if (state.getValue(CONTAINS_BLOCK) && player.isCrouching()) {
-                this.dropContainedBlock(level, pos);
-                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-                level.setBlock(pos, state, 2);
-            } else {
-                if (item.getItem() instanceof BlockItem) {
-                    if (item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
-                        return InteractionResult.PASS;
-                    }
-                    BlockEntity tileEntity = level.getBlockEntity(pos);
-                    int count = player.getItemInHand(hand).getCount();
-                    Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                    if (tileEntity instanceof BedFrameTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
-                        BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
-                        insertBlock(level, pos, state, handBlockState);
-                        if (!player.isCreative())
-                            player.getItemInHand(hand).setCount(count - 1);
-                    }
+            if (item.getItem() instanceof BlockItem) {
+                if (item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
+                    return InteractionResult.PASS;
                 }
-            }
-            if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
-                if (!player.isCreative())
-                    this.dropContainedBlock(level, pos);
-                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-                level.setBlock(pos, state, 2);
+                BlockEntity tileEntity = level.getBlockEntity(pos);
+                int count = player.getItemInHand(hand).getCount();
+                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
+                if (tileEntity instanceof BedFrameTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
+                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
+                    insertBlock(level, pos, state, handBlockState);
+                    if (!player.isCreative())
+                        player.getItemInHand(hand).setCount(count - 1);
+                }
             }
         }
         return InteractionResult.SUCCESS;
@@ -157,6 +142,17 @@ public class BedFrameBlock extends BedBlock {
             list.get(0).stopSleeping();
             return true;
         }
+    }
+
+    private boolean removeBlock(Level level, BlockPos pos, BlockState state, ItemStack itemStack, Player player) {
+        if (itemStack.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
+            if (!player.isCreative())
+                this.dropContainedBlock(level, pos);
+            state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
+            level.setBlock(pos, state, 2);
+            return true;
+        }
+        return false;
     }
 
     protected void dropContainedBlock(Level levelIn, BlockPos pos) {
