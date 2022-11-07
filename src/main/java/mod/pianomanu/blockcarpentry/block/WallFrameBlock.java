@@ -137,7 +137,7 @@ public class WallFrameBlock extends WallBlock implements EntityBlock {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
             if (removeBlock(level, pos, state, item, player))
-                return InteractionResult.CONSUME;
+                return InteractionResult.SUCCESS;
             if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
                     BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
                     BlockAppearanceHelper.setDesign(level, pos, player, item) ||

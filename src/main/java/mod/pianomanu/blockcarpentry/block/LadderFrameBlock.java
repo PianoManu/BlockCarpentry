@@ -67,7 +67,7 @@ public class LadderFrameBlock extends LadderBlock implements EntityBlock {
         ItemStack item = player.getItemInHand(Objects.requireNonNull(hand));
         if (!level.isClientSide && state != null && pos != null) {
             if (removeBlock(level, pos, state, item, player))
-                return InteractionResult.CONSUME;
+                return InteractionResult.SUCCESS;
             if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
                     BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
                     BlockAppearanceHelper.setDesign(level, pos, player, item) ||
