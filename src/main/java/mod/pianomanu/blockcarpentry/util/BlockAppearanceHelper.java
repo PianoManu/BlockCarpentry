@@ -29,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.1 06/11/22
+ * @version 1.2 11/12/22
  */
 public class BlockAppearanceHelper {
     public static boolean setLightLevel(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand) {
@@ -203,8 +203,8 @@ public class BlockAppearanceHelper {
         return false;
     }
 
-    public static boolean setGlassColor(Level level, BlockPos pos, Player player, InteractionHand hand) {
-        if (BlockSavingHelper.isDyeItem(player.getItemInHand(hand).getItem())) {
+    public static boolean setColor(Level level, BlockPos pos, Player player, InteractionHand hand) {
+        if (BlockAppearanceHelperItems.isDyeItem(player.getItemInHand(hand).getItem())) {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile fte) {
                 fte.setGlassColor(dyeItemToInt(player.getItemInHand(hand).getItem()) + 1); //plus 1, because 0 is undyed glass
@@ -212,14 +212,6 @@ public class BlockAppearanceHelper {
             if (tileEntity instanceof DaylightDetectorFrameTileEntity fte) {
                 fte.setGlassColor(dyeItemToInt(player.getItemInHand(hand).getItem()) + 1); //plus 1, because 0 is undyed glass
             }
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean setWoolColor(Level level, BlockPos pos, Player player, InteractionHand hand) {
-        if (BlockSavingHelper.isDyeItem(player.getItemInHand(hand).getItem())) {
-            BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof BedFrameTile fte) {
                 if (level.getBlockState(pos).getValue(BedFrameBlock.PART) == BedPart.FOOT) {
                     fte.setBlanketColor(dyeItemToInt(player.getItemInHand(hand).getItem()));
@@ -227,24 +219,14 @@ public class BlockAppearanceHelper {
                 if (level.getBlockState(pos).getValue(BedFrameBlock.PART) == BedPart.HEAD) {
                     fte.setPillowColor(dyeItemToInt(player.getItemInHand(hand).getItem()));
                 }
-                //player.displayClientMessage(Component.translatable("Glass Color: " + glassColorToString(fte.getGlassColor()-1)), true);
             }
             return true;
         }
         return false;
     }
 
-    //reminder to myself: DO NOT USE, CAUSES SERVER CRASHES, fix or remove
-    /*private static String glassColorToString(int glassColor) {
-        List<String> colors = new ArrayList<>();
-        for (Item item : Tags.Items.DYES) {
-            colors.add(item.getDescription().getString());
-        }
-        return colors.get(glassColor);
-    }*/
-
     public static Integer dyeItemToInt(Item item) {
-        List<Item> colors = new ArrayList<>(BlockSavingHelper.getDyeItems());
+        List<Item> colors = new ArrayList<>(BlockAppearanceHelperItems.getDyeItems());
         if (colors.contains(item)) {
             return colors.indexOf(item);
         }
