@@ -1,31 +1,18 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
-import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
-import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
-import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
-import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -35,123 +22,48 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.2 11/12/22
  */
-public abstract class AbstractFrameBlock extends BaseEntityBlock {
-    public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
-    public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
+public abstract class AbstractFrameBlock extends BaseEntityBlock implements IFrameBlock {
 
     public AbstractFrameBlock(Properties properties) {
         super(properties);
     }
 
-    public boolean hasBlockEntity(BlockState state) {
-        return true;
-    }
-
+    /**
+     * Is called, whenever the block is right-clicked:
+     * First it is checked, whether the world is remote (this has to be done client-side only).
+     * Afterwards, we check, whether the held item is some sort of block item (e.g. logs, but not torches)
+     * If that's the case, we ask for the tile entity of the frame and if the frame is empty, we fill it with the held block and remove the item from the player's inventory
+     * If the frame is not empty and the player holds the hammer, the contained block is dropped into the world
+     *
+     * @param state     state of the block that is clicked
+     * @param level     world the block is placed in
+     * @param pos       position (x,y,z) of block
+     * @param player    entity of the player that includes all important information (health, armor, inventory,
+     * @param hand      which hand is used (e.g. you have a sword in your main hand and an axe in your off-hand and right click a log -> you use the off-hand, not the main hand)
+     * @param hitresult to determine which part of the block is clicked (upper half, lower half, right side, left side, corners...)
+     * @return see {@link InteractionResult}
+     */
     @Override
-    @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide) {
-            if (removeBlock(level, pos, state, item, player))
-                return InteractionResult.SUCCESS;
-            if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
-                    BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
-                    BlockAppearanceHelper.setDesign(level, pos, player, item) ||
-                    BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
-                    BlockAppearanceHelper.setOverlay(level, pos, player, item) ||
-                    BlockAppearanceHelper.setRotation(level, pos, player, item))
-                return InteractionResult.SUCCESS;
-            if (item.getItem() instanceof BlockItem) {
-                if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
-                    return InteractionResult.PASS;
-                }
-                BlockEntity tileEntity = level.getBlockEntity(pos);
-                int count = player.getItemInHand(hand).getCount();
-                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
-                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
-                    insertBlock(level, pos, state, handBlockState);
-                    if (!player.isCreative())
-                        player.getItemInHand(hand).setCount(count - 1);
-                }
-            }
-            //hammer is needed to remove the block from the frame - you can change it in the config
-            if (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
-                if (!player.isCreative())
-                    this.dropContainedBlock(level, pos);
-                state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-                level.setBlock(pos, state, 2);
-            }
+            return frameUse(state, level, pos, player, hand, hitresult);
         }
-        return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return player.getItemInHand(hand).getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
-    private boolean removeBlock(Level level, BlockPos pos, BlockState state, ItemStack itemStack, Player player) {
-        if (itemStack.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
-            if (!player.isCreative())
-                this.dropContainedBlock(level, pos);
-            else {
-                clearTile(level, pos);
-            }
-            state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-            level.setBlock(pos, state, 2);
-            return true;
-        }
-        return false;
-    }
-
-    protected void clearTile(Level level, BlockPos pos) {
-        if (!level.isClientSide) {
-            BlockEntity tileentity = level.getBlockEntity(pos);
-            if (tileentity instanceof FrameBlockTile frameBlockEntity) {
-                BlockState blockState = frameBlockEntity.getMimic();
-                if (!(blockState == null)) {
-                    frameBlockEntity.clear();
-                }
-            }
-        }
-    }
-
-    protected void dropContainedBlock(Level levelIn, BlockPos pos) {
-        if (!levelIn.isClientSide) {
-            BlockEntity tileentity = levelIn.getBlockEntity(pos);
-            if (tileentity instanceof FrameBlockTile frameBlockEntity) {
-                BlockState blockState = frameBlockEntity.getMimic();
-                if (!(blockState == null)) {
-                    levelIn.levelEvent(1010, pos, 0);
-                    float f = 0.7F;
-                    double d0 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
-                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
-                    ItemEntity itementity = new ItemEntity(levelIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickUpDelay();
-                    levelIn.addFreshEntity(itementity);
-                    frameBlockEntity.clear();
-                }
-            }
-        }
-    }
-
-    protected void insertBlock(Level levelIn, BlockPos pos, BlockState state, BlockState handBlock) {
-        BlockEntity tileentity = levelIn.getBlockEntity(pos);
-        if (tileentity instanceof FrameBlockTile) {
-            FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
-            frameBlockEntity.clear();
-            frameBlockEntity.setMimic(handBlock);
-            levelIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
-        }
-    }
-
-
+    /**
+     * This method returns the light value of the block, i.e. the emitted light level
+     *
+     * @param state state of the block
+     * @param level level the block is in
+     * @param pos   block position
+     * @return new amount of light that is emitted by the block
+     */
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        if (state.getValue(LIGHT_LEVEL) > 15) {
-            return 15;
-        }
-        return state.getValue(LIGHT_LEVEL);
+        return IFrameBlock.getLightEmission(state);
     }
 
     public abstract BlockState getStateForPlacement(BlockPlaceContext context);

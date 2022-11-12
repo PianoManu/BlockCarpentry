@@ -1,20 +1,11 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
-import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
-import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.LockableFrameTile;
-import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
-import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -27,34 +18,27 @@ import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.Half;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
-
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 /**
  * Main class for frame trapdoors - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.3 11/07/22
+ * @version 1.4 11/12/22
  */
-public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock {
-    public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
-    public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
+public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock, IFrameBlock {
 
     public TrapdoorFrameBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(OPEN, Boolean.valueOf(false)).setValue(HALF, Half.BOTTOM).setValue(POWERED, Boolean.valueOf(false)).setValue(WATERLOGGED, Boolean.valueOf(false)).setValue(CONTAINS_BLOCK, Boolean.FALSE).setValue(LIGHT_LEVEL, 0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(OPEN, Boolean.valueOf(false)).setValue(POWERED, Boolean.valueOf(false)).setValue(CONTAINS_BLOCK, Boolean.FALSE).setValue(LIGHT_LEVEL, 0));
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING, OPEN, HALF, POWERED, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
+        super.createBlockStateDefinition(builder);
+        builder.add(CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
     @Nullable
@@ -65,143 +49,70 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        ItemStack item = player.getItemInHand(hand);
+        ItemStack itemStack = player.getItemInHand(hand);
         if (!level.isClientSide) {
-            if (removeBlock(level, pos, state, item, player))
-                return InteractionResult.SUCCESS;
-            if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
-                    BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
-                    BlockAppearanceHelper.setDesign(level, pos, player, item) ||
-                    BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
-                    BlockAppearanceHelper.setGlassColor(level, pos, player, hand) ||
-                    BlockAppearanceHelper.setOverlay(level, pos, player, item) ||
-                    BlockAppearanceHelper.setRotation(level, pos, player, item))
+            convertOutdatedTile(state, level, pos, player);
+            if (shouldCallFrameUse(state, itemStack))
+                return frameUse(state, level, pos, player, hand, hitresult);
+            if (lockRedstoneSignal(state, level, pos, player, itemStack) || lockOpenClose(state, level, pos, player, itemStack))
                 return InteractionResult.CONSUME;
-            if (item.getItem() == Items.REDSTONE) {
-                BlockEntity tileEntity = level.getBlockEntity(pos);
-                if (tileEntity instanceof LockableFrameTile doorTileEntity) {
-                    if (doorTileEntity.canBeOpenedByRedstoneSignal()) {
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.redstone_off"), true);
-                    } else {
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.redstone_on"), true);
-                    }
-                    doorTileEntity.setCanBeOpenedByRedstoneSignal(!doorTileEntity.canBeOpenedByRedstoneSignal());
-                } else if (tileEntity instanceof FrameBlockTile) {
-                    LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
-                    if (newTile != null) {
-                        newTile.addFromOutdatedTileEntity((FrameBlockTile) tileEntity);
-                        level.setBlockEntity(newTile);
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.converting_outdated_block"), true);
-                    }
+            BlockEntity tileEntity = level.getBlockEntity(pos);
+            if (tileEntity instanceof LockableFrameTile trapdoorTileEntity) {
+                System.out.println(1);
+                if (trapdoorTileEntity.canBeOpenedByPlayers() && hand == InteractionHand.MAIN_HAND) { //TODO remove hand, fix opening mechanism
+                    return super.use(state, level, pos, player, hand, hitresult);
                 }
-                return InteractionResult.CONSUME;
-            }
-            if (item.getItem() == Items.IRON_INGOT) {
-                BlockEntity tileEntity = level.getBlockEntity(pos);
-                if (tileEntity instanceof LockableFrameTile doorTileEntity) {
-                    if (doorTileEntity.canBeOpenedByPlayers()) {
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.lock"), true);
-                    } else {
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.unlock"), true);
-                    }
-                    doorTileEntity.setCanBeOpenedByPlayers(!doorTileEntity.canBeOpenedByPlayers());
-                } else if (tileEntity instanceof FrameBlockTile) {
-                    LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
-                    if (newTile != null) {
-                        newTile.addFromOutdatedTileEntity((FrameBlockTile) tileEntity);
-                        level.setBlockEntity(newTile);
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.converting_outdated_block"), true);
-                    }
-                }
-                return InteractionResult.CONSUME;
-            }
-            if (item.getItem() instanceof BlockItem) {
-                if (item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
-                    return InteractionResult.PASS;
-                }
-                BlockEntity tileEntity = level.getBlockEntity(pos);
-                int count = player.getItemInHand(hand).getCount();
-                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
-                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
-                    insertBlock(level, pos, state, handBlockState);
-                    if (!player.isCreative())
-                        player.getItemInHand(hand).setCount(count - 1);
-                    return InteractionResult.SUCCESS;
-                }
-            }
-            if (!(item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem)) {
-                BlockEntity tileEntity = level.getBlockEntity(pos);
-                if (tileEntity instanceof LockableFrameTile trapdoorTileEntity) {
-                    if (trapdoorTileEntity.canBeOpenedByPlayers()) {
-                        if (state.getValue(OPEN)) {
-                            state = state.setValue(OPEN, false);
-                            level.levelEvent(null, 1007, pos, 0);
-                        } else {
-                            state = state.setValue(OPEN, true);
-                            level.levelEvent(null, 1013, pos, 0);
-                        }
-                        level.setBlock(pos, state, 2);
-                        if (state.getValue(WATERLOGGED)) {
-                            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-                        }
-                    }
-                } else if (tileEntity instanceof FrameBlockTile) {
-                    LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
-                    if (newTile != null) {
-                        newTile.addFromOutdatedTileEntity((FrameBlockTile) tileEntity);
-                        level.setBlockEntity(newTile);
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.converting_outdated_block"), true);
-                    }
-                }
-                return InteractionResult.PASS;
             }
         }
-        return InteractionResult.SUCCESS;
+        return itemStack.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
-    private boolean removeBlock(Level level, BlockPos pos, BlockState state, ItemStack itemStack, Player player) {
-        if (itemStack.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
-            if (!player.isCreative())
-                this.dropContainedBlock(level, pos);
-            state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-            level.setBlock(pos, state, 2);
+    private void convertOutdatedTile(BlockState state, Level level, BlockPos pos, Player player) {
+        BlockEntity tileEntity = level.getBlockEntity(pos);
+        if (!(tileEntity instanceof LockableFrameTile) && (tileEntity instanceof FrameBlockTile)) {
+            LockableFrameTile newTile = (LockableFrameTile) newBlockEntity(pos, state);
+            if (newTile != null) {
+                newTile.addFromOutdatedTileEntity((FrameBlockTile) tileEntity);
+                level.setBlockEntity(newTile);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.converting_outdated_block"), true);
+            }
+        }
+    }
+
+    private boolean lockRedstoneSignal(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        if (itemStack.getItem() == Items.REDSTONE) {
+            BlockEntity tileEntity = level.getBlockEntity(pos);
+            if (tileEntity instanceof LockableFrameTile doorTileEntity) {
+                if (doorTileEntity.canBeOpenedByRedstoneSignal()) {
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.redstone_off"), true);
+                } else {
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.redstone_on"), true);
+                }
+                doorTileEntity.setCanBeOpenedByRedstoneSignal(!doorTileEntity.canBeOpenedByRedstoneSignal());
+            } else {
+                convertOutdatedTile(state, level, pos, player);
+            }
             return true;
         }
         return false;
     }
 
-    protected void dropContainedBlock(Level levelIn, BlockPos pos) {
-        if (!levelIn.isClientSide) {
-            BlockEntity tileentity = levelIn.getBlockEntity(pos);
-            if (tileentity instanceof FrameBlockTile) {
-                FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
-                BlockState blockState = frameBlockEntity.getMimic();
-                if (!(blockState == null)) {
-                    levelIn.levelEvent(1010, pos, 0);
-                    frameBlockEntity.clear();
-                    float f = 0.7F;
-                    double d0 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (levelIn.random.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
-                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
-                    ItemEntity itementity = new ItemEntity(levelIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickUpDelay();
-                    levelIn.addFreshEntity(itementity);
-                    frameBlockEntity.clear();
+    private boolean lockOpenClose(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        if (itemStack.getItem() == Items.IRON_INGOT) {
+            BlockEntity tileEntity = level.getBlockEntity(pos);
+            if (tileEntity instanceof LockableFrameTile doorTileEntity) {
+                if (doorTileEntity.canBeOpenedByPlayers()) {
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.lock"), true);
+                } else {
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.unlock"), true);
                 }
+                doorTileEntity.setCanBeOpenedByPlayers(!doorTileEntity.canBeOpenedByPlayers());
+            } else {
+                convertOutdatedTile(state, level, pos, player);
             }
+            return true;
         }
-    }
-
-    public void insertBlock(Level levelIn, BlockPos pos, BlockState state, BlockState handBlock) {
-        BlockEntity tileentity = levelIn.getBlockEntity(pos);
-        if (tileentity instanceof FrameBlockTile) {
-            FrameBlockTile frameBlockEntity = (FrameBlockTile) tileentity;
-            frameBlockEntity.clear();
-            frameBlockEntity.setMimic(handBlock);
-            levelIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
-        }
+        return false;
     }
 
     @Override
@@ -216,30 +127,27 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock {
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        if (state.getValue(LIGHT_LEVEL) > 15) {
-            return 15;
-        }
-        return state.getValue(LIGHT_LEVEL);
+        return IFrameBlock.getLightEmission(state);
     }
 
+    @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos pos2, boolean update) {
-        if (!level.isClientSide) {
-            BlockEntity tileEntity = level.getBlockEntity(pos);
-            if (tileEntity instanceof LockableFrameTile trapdoorTileEntity && trapdoorTileEntity.canBeOpenedByRedstoneSignal()) {
-                boolean flag = level.hasNeighborSignal(pos);
-                if (flag != state.getValue(POWERED)) {
-                    if (state.getValue(OPEN) != flag) {
-                        state = state.setValue(OPEN, Boolean.valueOf(flag));
-                        this.playSound((Player) null, level, pos, flag);
-                    }
-
-                    level.setBlock(pos, state.setValue(POWERED, Boolean.valueOf(flag)), 2);
-                    if (state.getValue(WATERLOGGED)) {
-                        level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-                    }
-                }
-            }
+        BlockEntity tileEntity = level.getBlockEntity(pos);
+        if (tileEntity instanceof LockableFrameTile doorTileEntity && doorTileEntity.canBeOpenedByRedstoneSignal()) {
+            super.neighborChanged(state, level, pos, block, pos2, update);
         }
+    }
+
+    @Override
+    public boolean isCorrectTileInstance(BlockEntity blockEntity) {
+        return blockEntity instanceof LockableFrameTile;
+    }
+
+    public void fillBlockEntity(Level levelIn, BlockPos pos, BlockState state, BlockState handBlock, BlockEntity blockEntity) {
+        LockableFrameTile frameBlockEntity = (LockableFrameTile) blockEntity;
+        frameBlockEntity.clear();
+        frameBlockEntity.setMimic(handBlock);
+        levelIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
     }
 }
 //========SOLI DEO GLORIA========//

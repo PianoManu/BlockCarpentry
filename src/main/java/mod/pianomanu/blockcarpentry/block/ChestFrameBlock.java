@@ -35,8 +35,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import static mod.pianomanu.blockcarpentry.block.AbstractSixWayFrameBlock.FACING;
-
 /**
  * Main class for frame chests - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
@@ -128,7 +126,7 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
         return InteractionResult.SUCCESS;
     }
 
-    private boolean removeBlock(Level level, BlockPos pos, BlockState state, ItemStack itemStack, Player player) {
+    public boolean removeBlock(Level level, BlockPos pos, BlockState state, ItemStack itemStack, Player player) {
         if (itemStack.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
             if (!player.isCreative())
                 this.dropContainedBlock(level, pos);
@@ -140,23 +138,23 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
     }
 
     @Override
-    protected void dropContainedBlock(Level levelIn, BlockPos pos) {
-        if (!levelIn.isClientSide) {
-            BlockEntity tileentity = levelIn.getBlockEntity(pos);
+    public void dropContainedBlock(Level level, BlockPos pos) {
+        if (!level.isClientSide) {
+            BlockEntity tileentity = level.getBlockEntity(pos);
             if (tileentity instanceof ChestFrameBlockEntity) {
                 ChestFrameBlockEntity frameBlockEntity = (ChestFrameBlockEntity) tileentity;
                 BlockState blockState = frameBlockEntity.getMimic();
                 if (!(blockState == null)) {
-                    levelIn.levelEvent(1010, pos, 0);
+                    level.levelEvent(1010, pos, 0);
                     frameBlockEntity.clear();
                     float f = 0.7F;
-                    double d0 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (levelIn.random.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (levelIn.random.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d0 = (double) (level.random.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d1 = (level.random.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d2 = (double) (level.random.nextFloat() * 0.7F) + (double) 0.15F;
                     ItemStack itemstack1 = new ItemStack(blockState.getBlock());
-                    ItemEntity itementity = new ItemEntity(levelIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
+                    ItemEntity itementity = new ItemEntity(level, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickUpDelay();
-                    levelIn.addFreshEntity(itementity);
+                    level.addFreshEntity(itementity);
                     frameBlockEntity.clear();
                 }
             }
