@@ -2,7 +2,6 @@ package mod.pianomanu.blockcarpentry.item;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -14,9 +13,9 @@ import java.util.List;
  * This class is used to add a tooltip to the hammer item
  *
  * @author PianoManu
- * @version 1.1 06/11/22
+ * @version 1.2 11/12/22
  */
-public class HammerItem extends Item {
+public class HammerItem extends BCToolItem {
 
     /**
      * Standard constructor for Minecraft items
