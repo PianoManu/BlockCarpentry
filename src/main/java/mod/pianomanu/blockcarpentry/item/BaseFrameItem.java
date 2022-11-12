@@ -44,6 +44,9 @@ public class BaseFrameItem extends BlockItem {
             if (!this.getBlock().equals(Registration.FRAMEBLOCK.get()) && !this.getBlock().equals(Registration.LAYERED_FRAMEBLOCK.get()) && !this.getBlock().equals(Registration.SLOPE_FRAMEBLOCK.get()) && !this.getBlock().equals(Registration.EDGED_SLOPE_FRAMEBLOCK.get())) {
                 component.add(Component.translatable("tooltip.blockcarpentry.vanilla_like"));
             }
+            if (this.getBlock().equals(Registration.SLAB_FRAMEBLOCK.get())) {
+                component.add(Component.translatable("tooltip.blockcarpentry.rotatable"));
+            }
             if (this.getBlock().equals(Registration.LAYERED_FRAMEBLOCK.get())) {
                 component.add(Component.translatable("tooltip.blockcarpentry.layered"));
             }
