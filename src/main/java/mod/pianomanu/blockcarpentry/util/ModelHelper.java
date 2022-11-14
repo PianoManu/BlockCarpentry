@@ -642,6 +642,14 @@ public class ModelHelper {
         return new Vec3(x, y, z);
     }
 
+    public static List<BakedQuad> createOverlayVoxel(int xl, int xh, int yl, int yh, int zl, int zh, int overlayIndex) {
+        return createOverlay(xl / 16f, xh / 16f, yl / 16f, yh / 16f, zl / 16f, zh / 16f, overlayIndex);
+    }
+
+    public static List<BakedQuad> createOverlayVoxel(int xl, int xh, int yl, int yh, int zl, int zh, int overlayIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, Boolean doNotMoveOverlay) {
+        return createOverlay(xl / 16f, xh / 16f, yl / 16f, yh / 16f, zl / 16f, zh / 16f, overlayIndex, north, south, east, west, up, down, doNotMoveOverlay);
+    }
+
     public static List<BakedQuad> createOverlay(float xl, float xh, float yl, float yh, float zl, float zh, int overlayIndex) {
         return createOverlay(xl, xh, yl, yh, zl, zh, overlayIndex, true, true, true, true, true, true, true);
     }
