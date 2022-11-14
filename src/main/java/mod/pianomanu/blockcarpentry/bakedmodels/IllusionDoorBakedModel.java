@@ -38,7 +38,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 11/12/22
  */
 public class IllusionDoorBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -62,7 +62,7 @@ public class IllusionDoorBakedModel implements IDynamicBakedModel {
             List<TextureAtlasSprite> glassBlockList = TextureHelper.getGlassTextures();
             TextureAtlasSprite glass = glassBlockList.get(extraData.get(FrameBlockTile.GLASS_COLOR));
             List<BakedQuad> quads = new ArrayList<>();
-            Direction dir = state.getValue(DoorFrameBlock.FACING);
+            Direction dir = state.getValue(DoorBlock.FACING);
             boolean open = state.getValue(DoorFrameBlock.OPEN);
             DoorHingeSide hinge = state.getValue(DoorFrameBlock.HINGE);
             Direction west = Direction.WEST;

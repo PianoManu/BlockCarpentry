@@ -39,7 +39,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 11/12/22 TODO fix broken models
  */
 public class DoorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -87,7 +87,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
             }
             texture = textureList.get(tex);
             List<BakedQuad> quads = new ArrayList<>();
-            Direction dir = state.getValue(DoorFrameBlock.FACING);
+            Direction dir = state.getValue(DoorBlock.FACING);
             boolean open = state.getValue(DoorFrameBlock.OPEN);
             DoorHingeSide hinge = state.getValue(DoorFrameBlock.HINGE);
             Direction west = Direction.WEST;

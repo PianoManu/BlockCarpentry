@@ -40,7 +40,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 11/14/22
  */
 public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBlock {
     private static final VoxelShape INNER_CUBE = Block.box(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
@@ -86,7 +86,7 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
-        if (!level.isClientSide) {
+        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
             if (removeBlock(level, pos, state, item, player))
                 return InteractionResult.SUCCESS;
             if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||

@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.3 11/12/22
+ * @version 1.4 11/14/22
  */
 public class BedFrameBlock extends BedBlock implements IFrameBlock {
     public static final EnumProperty<BedPart> PART = BlockStateProperties.BED_PART;
@@ -51,7 +51,7 @@ public class BedFrameBlock extends BedBlock implements IFrameBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
             ItemStack itemStack = player.getItemInHand(hand);
             if (shouldCallFrameUse(state, itemStack)) {
                 return frameUse(state, level, pos, player, hand, hitresult);

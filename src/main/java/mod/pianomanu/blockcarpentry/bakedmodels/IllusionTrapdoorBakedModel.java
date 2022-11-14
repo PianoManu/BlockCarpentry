@@ -1,7 +1,6 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.bakedmodels.helper.HandleBakedModel;
-import mod.pianomanu.blockcarpentry.block.DoorFrameBlock;
 import mod.pianomanu.blockcarpentry.block.TrapdoorFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
@@ -19,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Half;
@@ -38,7 +38,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 11/12/22
  */
 public class IllusionTrapdoorBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -65,7 +65,7 @@ public class IllusionTrapdoorBakedModel implements IDynamicBakedModel {
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             int rotation = extraData.get(FrameBlockTile.ROTATION);
             List<BakedQuad> quads = new ArrayList<>();
-            Direction dir = state.getValue(DoorFrameBlock.FACING);
+            Direction dir = state.getValue(DoorBlock.FACING);
             boolean open = state.getValue(TrapdoorFrameBlock.OPEN);
             Half half = state.getValue(TrapDoorBlock.HALF);
             Half top = Half.TOP;

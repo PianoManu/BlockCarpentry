@@ -36,7 +36,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 11/12/22
+ * @version 1.5 11/14/22
  */
 public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterloggedBlock, EntityBlock, IFrameBlock {
     public FenceGateFrameBlock(Properties properties) {
@@ -59,7 +59,7 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
-        if (!level.isClientSide) {
+        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
             convertOutdatedTile(state, level, pos, player);
             if (shouldCallFrameUse(state, item))
                 return frameUse(state, level, pos, player, hand, hitresult);
@@ -70,7 +70,9 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
                 BlockEntity tileEntity = level.getBlockEntity(pos);
                 if (tileEntity instanceof LockableFrameTile fenceGateTileEntity) {
                     if (fenceGateTileEntity.canBeOpenedByPlayers()) {
-                        return super.use(state, level, pos, player, hand, hitresult);
+                        super.use(state, level, pos, player, hand, hitresult);
+                        level.levelEvent(null, state.getValue(OPEN) ? 1014 : 1008, pos, 0);
+                        return InteractionResult.SUCCESS;
                     }
                 }
                 return InteractionResult.CONSUME;

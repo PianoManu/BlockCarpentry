@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 11/12/22
+ * @version 1.2 11/14/22
  */
 public class CarpetFrameBlock extends CarpetBlock implements EntityBlock, IFrameBlock {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
@@ -47,7 +47,7 @@ public class CarpetFrameBlock extends CarpetBlock implements EntityBlock, IFrame
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
             return frameUse(state, level, pos, player, hand, hitresult);
         }
         return player.getItemInHand(hand).getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;

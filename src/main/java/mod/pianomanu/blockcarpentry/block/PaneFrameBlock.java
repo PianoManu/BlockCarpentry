@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.3 11/12/22
+ * @version 1.4 11/14/22
  */
 public class PaneFrameBlock extends IronBarsBlock implements EntityBlock, IFrameBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -61,7 +61,7 @@ public class PaneFrameBlock extends IronBarsBlock implements EntityBlock, IFrame
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
-        if (!level.isClientSide) {
+        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
             return frameUse(state, level, pos, player, hand, hitresult);
         }
         return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;

@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 11/12/22
+ * @version 1.5 11/14/22
  */
 public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock, IFrameBlock {
 
@@ -50,7 +50,7 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock, IF
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if (!level.isClientSide) {
+        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {  //TODO why does OFF_HAND destroy everything??
             convertOutdatedTile(state, level, pos, player);
             if (shouldCallFrameUse(state, itemStack))
                 return frameUse(state, level, pos, player, hand, hitresult);
@@ -58,9 +58,10 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock, IF
                 return InteractionResult.CONSUME;
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof LockableFrameTile trapdoorTileEntity) {
-                System.out.println(1);
-                if (trapdoorTileEntity.canBeOpenedByPlayers() && hand == InteractionHand.MAIN_HAND) { //TODO remove hand, fix opening mechanism
-                    return super.use(state, level, pos, player, hand, hitresult);
+                if (trapdoorTileEntity.canBeOpenedByPlayers()) {
+                    super.use(state, level, pos, player, hand, hitresult);
+                    this.playSound(null, level, pos, state.getValue(OPEN));
+                    return InteractionResult.SUCCESS;
                 }
             }
         }

@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.3 11/12/22
+ * @version 1.4 11/14/22
  */
 public class PressurePlateFrameBlock extends PressurePlateBlock implements EntityBlock, IFrameBlock {
 
@@ -48,7 +48,7 @@ public class PressurePlateFrameBlock extends PressurePlateBlock implements Entit
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if (!level.isClientSide) {
+        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
             return frameUse(state, level, pos, player, hand, hitresult);
         }
         return itemStack.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;

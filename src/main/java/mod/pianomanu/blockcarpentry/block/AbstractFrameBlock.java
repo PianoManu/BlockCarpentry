@@ -22,7 +22,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.2 11/12/22
+ * @version 1.3 11/14/22
  */
 public abstract class AbstractFrameBlock extends BaseEntityBlock implements IFrameBlock {
 
@@ -47,7 +47,7 @@ public abstract class AbstractFrameBlock extends BaseEntityBlock implements IFra
      */
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
             return frameUse(state, level, pos, player, hand, hitresult);
         }
         return player.getItemInHand(hand).getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
