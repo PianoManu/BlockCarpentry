@@ -38,7 +38,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.3 11/12/22
+ * @version 1.4 11/14/22
  */
 public class IllusionDoorBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -109,8 +109,8 @@ public class IllusionDoorBakedModel implements IDynamicBakedModel {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, true, rotation));
                     }
                     if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, true, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, true, false, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 12 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 12 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
@@ -126,8 +126,8 @@ public class IllusionDoorBakedModel implements IDynamicBakedModel {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, true, rotation));
                     }
                     if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, false, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, true, false, rotation));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, true, false, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 12 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 12 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));

@@ -39,7 +39,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.3 11/12/22 TODO fix broken models
+ * @version 1.4 11/14/22
  */
 public class DoorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -133,8 +133,8 @@ public class DoorBakedModel implements IDynamicBakedModel {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex, false, false, true, true, true, true));
                     }
                     if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 12 / 16f, 1f, texture, tintIndex, false, true, true, true, false, false));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 0f, 4 / 16f, texture, tintIndex, true, false, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 12 / 16f, 1f, texture, tintIndex, false, true, true, true, true, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 12 / 16f, 1f, 0f, 4 / 16f, texture, tintIndex, true, false, true, true, true, false));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 12 / 16f, 12 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(13 / 16f, 1f, 0, 12 / 16f, 0f, 4 / 16f, texture, tintIndex, true, true, true, true, false, false));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
@@ -150,8 +150,8 @@ public class DoorBakedModel implements IDynamicBakedModel {
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, texture, tintIndex, false, false, true, true, true, true));
                     }
                     if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 12 / 16f, 1f, texture, tintIndex, false, true, true, true, false, false));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 0f, 4 / 16f, texture, tintIndex, true, false, true, true, false, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 12 / 16f, 1f, texture, tintIndex, false, true, true, true, true, false));
+                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 12 / 16f, 1f, 0f, 4 / 16f, texture, tintIndex, true, false, true, true, true, false));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 12 / 16f, 12 / 16f, 1f, texture, tintIndex, true, true, true, true, false, false));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 3 / 16f, 0, 12 / 16f, 0f, 4 / 16f, texture, tintIndex, true, true, true, true, false, false));
                         quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
