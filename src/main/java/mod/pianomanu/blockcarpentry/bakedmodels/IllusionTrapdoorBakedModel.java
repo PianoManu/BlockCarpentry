@@ -74,121 +74,185 @@ public class IllusionTrapdoorBakedModel implements IDynamicBakedModel {
             Direction north = Direction.NORTH;
             Direction south = Direction.SOUTH;
             int design = extraData.get(FrameBlockTile.DESIGN);//int design = state.getValue(DoorFrameBlock.DESIGN);
-            int desTex = extraData.get(FrameBlockTile.DESIGN_TEXTURE); //state.getValue(DoorFrameBlock.DESIGN_TEXTURE);
+            int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
+
+            boolean upVisible, downVisible, nVisible, eVisible, sVisible, wVisible;
+            boolean xStripe, yStripe, zStripe;
+            int xOffset = dir == east ? 0 : 13;
+            int yOffset = half == bottom ? 0 : 13;
+            int zOffset = dir == south ? 0 : 13;
 
             if (design == 0) {
                 if (dir == north && open) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    if (overlayIndex != 0)
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 13 / 16f, 1f, overlayIndex));
                 } else if (dir == west && open) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    if (overlayIndex != 0)
+                        quads.addAll(ModelHelper.createOverlay(13 / 16f, 1f, 0f, 1f, 0f, 1f, overlayIndex));
                 } else if (dir == east && open) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    if (overlayIndex != 0)
+                        quads.addAll(ModelHelper.createOverlay(0f, 3 / 16f, 0f, 1f, 0f, 1f, overlayIndex));
                 } else if (dir == south && open) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                    if (overlayIndex != 0)
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 3 / 16f, overlayIndex));
                 } else if (half == bottom) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 3 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    if (overlayIndex != 0)
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 3 / 16f, 0f, 1f, overlayIndex));
                 } else if (half == top) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 13 / 16f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                    if (overlayIndex != 0)
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 13 / 16f, 1f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));
                 }
             }
             if (design == 1 || design == 2 || design == 3) {
-                if (dir == north && open) {
-                    //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 3 / 16f, 13 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 3 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 3 / 16f, 13 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 13 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 14 / 16f, 15 / 16f, glass, -1));
-                } else if (dir == west && open) {
-                    //quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 3 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createCuboid(14 / 16f, 15 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, glass, -1));
-                } else if (dir == east && open) {
-                    //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 3 / 16f, 13 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 13 / 16f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 3 / 16f, 13 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 3 / 16f, 0f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createCuboid(1 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, glass, -1));
-                } else if (dir == south && open) {
-                    //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, mimic,model,extraData,rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 3 / 16f, 13 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 3 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 3 / 16f, 13 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 13 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 1 / 16f, 2 / 16f, glass, -1));
-                } else if (half == bottom) {
-                    //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 3 / 16f, 0f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 3 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 3 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 3 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 3 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 1 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, glass, -1));
-                } else if (half == top) {
-                    //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 13 / 16f, 1f, 0f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 13 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 13 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 14 / 16f, 15 / 16f, 3 / 16f, 13 / 16f, glass, -1));
+                if (!open) {
+                    for (int x = 0; x < 16; x++) {
+                        for (int y = 0; y < 3; y++) {
+                            for (int z = 0; z < 16; z++) {
+                                xStripe = x < 3 || x >= 13;
+                                zStripe = z < 3 || z >= 13;
+                                upVisible = y == 2;
+                                downVisible = y == 0;
+                                nVisible = (!xStripe && z == 13) || z == 0;
+                                sVisible = (!xStripe && z == 2) || z == 15;
+                                wVisible = (!zStripe && x == 13) || x == 0;
+                                eVisible = (!zStripe && x == 2) || x == 15;
+                                if (xStripe || zStripe)
+                                    quads.addAll(ModelHelper.createSixFaceCuboid(x / 16f, (x + 1) / 16f, (y + yOffset) / 16f, (y + yOffset + 1) / 16f, z / 16f, (z + 1) / 16f, mimic, model, extraData, rand, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible, rotation));
+                                if ((xStripe || zStripe) && overlayIndex != 0)
+                                    quads.addAll(ModelHelper.createOverlayVoxel(x, x + 1, y + yOffset, y + yOffset + 1, z, z + 1, overlayIndex, nVisible, sVisible, eVisible, wVisible, upVisible, y == 15, half == bottom));
+                            }
+                        }
+                    }
+                } else {
+                    if ((dir == north || dir == south) && open) {
+                        for (int x = 0; x < 16; x++) {
+                            for (int y = 0; y < 16; y++) {
+                                for (int z = 0; z < 3; z++) {
+                                    xStripe = x < 3 || x >= 13;
+                                    yStripe = y < 3 || y >= 13;
+                                    nVisible = z == 0;
+                                    sVisible = z == 2;
+                                    wVisible = (!yStripe && x == 13) || x == 0;
+                                    eVisible = (!yStripe && x == 2) || x == 15;
+                                    upVisible = (!xStripe && y == 2) || y == 15;
+                                    downVisible = (!xStripe && y == 13) || y == 0;
+                                    if (xStripe || yStripe)
+                                        quads.addAll(ModelHelper.createSixFaceCuboid(x / 16f, (x + 1) / 16f, y / 16f, (y + 1) / 16f, (z + zOffset) / 16f, (z + zOffset + 1) / 16f, mimic, model, extraData, rand, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible, rotation));
+                                    if ((xStripe || yStripe) && overlayIndex != 0)
+                                        quads.addAll(ModelHelper.createOverlayVoxel(x, x + 1, y, y + 1, z + zOffset, z + zOffset + 1, overlayIndex, nVisible, sVisible, eVisible, wVisible, y == 15, downVisible, false));
+                                }
+                            }
+                        }
+                        quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, (zOffset + 1) / 16f, (zOffset + 2) / 16f, glass, -1));
+                    } else if ((dir == west || dir == east) && open) {
+                        for (int x = 0; x < 3; x++) {
+                            for (int y = 0; y < 16; y++) {
+                                for (int z = 0; z < 16; z++) {
+                                    zStripe = z < 3 || z >= 13;
+                                    yStripe = y < 3 || y >= 13;
+                                    wVisible = x == 0;
+                                    eVisible = x == 2;
+                                    nVisible = (!yStripe && z == 13) || z == 0;
+                                    sVisible = (!yStripe && z == 2) || z == 15;
+                                    upVisible = (!zStripe && y == 2) || y == 15;
+                                    downVisible = (!zStripe && y == 13) || y == 0;
+                                    if (yStripe || zStripe)
+                                        quads.addAll(ModelHelper.createSixFaceCuboid((x + xOffset) / 16f, (x + xOffset + 1) / 16f, y / 16f, (y + 1) / 16f, (z) / 16f, (z + 1) / 16f, mimic, model, extraData, rand, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible, rotation));
+                                    if ((yStripe || zStripe) && overlayIndex != 0)
+                                        quads.addAll(ModelHelper.createOverlayVoxel(x + xOffset, x + xOffset + 1, y, y + 1, z, z + 1, overlayIndex, nVisible, sVisible, eVisible, wVisible, y == 15, downVisible, false));
+                                }
+                            }
+                        }
+                        quads.addAll(ModelHelper.createCuboid((xOffset + 1) / 16f, (xOffset + 2) / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, glass, -1));
+                    }
                 }
                 if (design == 2) {
                     if (dir == north && open) {
-                        //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                        if (overlayIndex != 0) {
+                            quads.addAll(ModelHelper.createOverlay(7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, 13 / 16f, 1f, overlayIndex));
+                            quads.addAll(ModelHelper.createOverlay(3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, 13 / 16f, 1f, overlayIndex));
+                        }
                     } else if (dir == west && open) {
-                        //quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        if (overlayIndex != 0) {
+                            quads.addAll(ModelHelper.createOverlay(13 / 16f, 1f, 3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, overlayIndex));
+                            quads.addAll(ModelHelper.createOverlay(13 / 16f, 1f, 7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, overlayIndex));
+                        }
                     } else if (dir == east && open) {
-                        //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        if (overlayIndex != 0) {
+                            quads.addAll(ModelHelper.createOverlay(0f, 3 / 16f, 3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, overlayIndex));
+                            quads.addAll(ModelHelper.createOverlay(0f, 3 / 16f, 7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, overlayIndex));
+                        }
                     } else if (dir == south && open) {
-                        //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, mimic,model,extraData,rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        if (overlayIndex != 0) {
+                            quads.addAll(ModelHelper.createOverlay(7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, 0f, 3 / 16f, overlayIndex));
+                            quads.addAll(ModelHelper.createOverlay(3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, 0f, 3 / 16f, overlayIndex));
+                        }
                     } else if (half == bottom) {
-                        //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 3 / 16f, 0f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(7 / 16f, 9 / 16f, 0f, 3 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 0f, 3 / 16f, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        if (overlayIndex != 0) {
+                            quads.addAll(ModelHelper.createOverlay(7 / 16f, 9 / 16f, 0f, 3 / 16f, 3 / 16f, 13 / 16f, overlayIndex));
+                            quads.addAll(ModelHelper.createOverlay(3 / 16f, 13 / 16f, 0f, 3 / 16f, 7 / 16f, 9 / 16f, overlayIndex));
+                        }
                     } else if (half == top) {
-                        //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 13 / 16f, 1f, 0f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(7 / 16f, 9 / 16f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 13 / 16f, 1f, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        if (overlayIndex != 0) {
+                            quads.addAll(ModelHelper.createOverlay(7 / 16f, 9 / 16f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, overlayIndex));
+                            quads.addAll(ModelHelper.createOverlay(3 / 16f, 13 / 16f, 13 / 16f, 1f, 7 / 16f, 9 / 16f, overlayIndex));
+                        }
                     }
                 }
                 if (design == 3) {
                     if (dir == north && open) {
-                        //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 14 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        if (overlayIndex != 0) {
+                            quads.addAll(ModelHelper.createOverlay(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 14 / 16f, 15 / 16f, overlayIndex));
+                        }
                     } else if (dir == west && open) {
-                        //quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(14 / 16f, 15 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        if (overlayIndex != 0) {
+                            quads.addAll(ModelHelper.createOverlay(14 / 16f, 15 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, overlayIndex));
+                        }
                     } else if (dir == east && open) {
-                        //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        if (overlayIndex != 0) {
+                            quads.addAll(ModelHelper.createOverlay(1 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, overlayIndex));
+                        }
                     } else if (dir == south && open) {
-                        //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, mimic,model,extraData,rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 1 / 16f, 2 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        if (overlayIndex != 0) {
+                            quads.addAll(ModelHelper.createOverlay(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 1 / 16f, 2 / 16f, overlayIndex));
+                        }
                     } else if (half == bottom) {
-                        //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 3 / 16f, 0f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 1 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        if (overlayIndex != 0) {
+                            quads.addAll(ModelHelper.createOverlay(3 / 16f, 13 / 16f, 1 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, overlayIndex));
+                        }
                     } else if (half == top) {
-                        //quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 13 / 16f, 1f, 0f, 1f, mimic,model,extraData,rand, tintIndex, rotation));
                         quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 14 / 16f, 15 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        if (overlayIndex != 0) {
+                            quads.addAll(ModelHelper.createOverlay(3 / 16f, 13 / 16f, 14 / 16f, 15 / 16f, 3 / 16f, 13 / 16f, overlayIndex));
+                        }
                     }
                 }
             }
             if (design == 4) {
                 if (!open) {
-                    int yOffset = half == bottom ? 0 : 13;
-                    boolean upVisible, downVisible, nVisible, eVisible, sVisible, wVisible;
-                    boolean xStripe, zStripe;
                     for (int x = 0; x < 16; x++) {
                         for (int y = 0; y < 3; y++) {
                             for (int z = 0; z < 16; z++) {
@@ -202,14 +266,13 @@ public class IllusionTrapdoorBakedModel implements IDynamicBakedModel {
                                 wVisible = (xStripe && !zStripe) || x == 0;
                                 if (xStripe || zStripe)
                                     quads.addAll(ModelHelper.createSixFaceCuboid(x / 16f, (x + 1) / 16f, (y + yOffset) / 16f, (y + yOffset + 1) / 16f, z / 16f, (z + 1) / 16f, mimic, model, extraData, rand, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible, rotation));
+                                if ((xStripe || zStripe) && overlayIndex != 0)
+                                    quads.addAll(ModelHelper.createOverlayVoxel(x, x + 1, y + yOffset, y + yOffset + 1, z, z + 1, overlayIndex, nVisible, sVisible, eVisible, wVisible, upVisible, y == 15, half == bottom));
                             }
                         }
                     }
                 } else {
                     if (dir == west || dir == east) {
-                        int xOffset = dir == east ? 0 : 13;
-                        boolean upVisible, downVisible, nVisible, eVisible, sVisible, wVisible;
-                        boolean yStripe, zStripe;
                         for (int x = 0; x < 3; x++) {
                             for (int y = 0; y < 16; y++) {
                                 for (int z = 0; z < 16; z++) {
@@ -223,13 +286,12 @@ public class IllusionTrapdoorBakedModel implements IDynamicBakedModel {
                                     downVisible = (yStripe && !zStripe) || y == 0;
                                     if (yStripe || zStripe)
                                         quads.addAll(ModelHelper.createSixFaceCuboid((x + xOffset) / 16f, (x + xOffset + 1) / 16f, y / 16f, (y + 1) / 16f, z / 16f, (z + 1) / 16f, mimic, model, extraData, rand, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible, rotation));
+                                    if ((yStripe || zStripe) && overlayIndex != 0)
+                                        quads.addAll(ModelHelper.createOverlayVoxel(x + xOffset, x + xOffset + 1, y, y + 1, z, z + 1, overlayIndex, nVisible, sVisible, eVisible, wVisible, y == 15, downVisible, false));
                                 }
                             }
                         }
                     } else {
-                        int zOffset = dir == south ? 0 : 13;
-                        boolean upVisible, downVisible, nVisible, eVisible, sVisible, wVisible;
-                        boolean yStripe, xStripe;
                         for (int x = 0; x < 16; x++) {
                             for (int y = 0; y < 16; y++) {
                                 for (int z = 0; z < 3; z++) {
@@ -243,26 +305,12 @@ public class IllusionTrapdoorBakedModel implements IDynamicBakedModel {
                                     downVisible = (yStripe && !xStripe) || y == 0;
                                     if (yStripe || xStripe)
                                         quads.addAll(ModelHelper.createSixFaceCuboid(x / 16f, (x + 1) / 16f, y / 16f, (y + 1) / 16f, (z + zOffset) / 16f, (z + zOffset + 1) / 16f, mimic, model, extraData, rand, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible, rotation));
+                                    if ((xStripe || yStripe) && overlayIndex != 0)
+                                        quads.addAll(ModelHelper.createOverlayVoxel(x, x + 1, y, y + 1, z + zOffset, z + zOffset + 1, overlayIndex, nVisible, sVisible, eVisible, wVisible, y == 15, downVisible, false));
                                 }
                             }
                         }
                     }
-                }
-            }
-            int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
-            if (overlayIndex != 0) {
-                if (dir == north && open) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 13 / 16f, 1f, overlayIndex));
-                } else if (dir == west && open) {
-                    quads.addAll(ModelHelper.createOverlay(13 / 16f, 1f, 0f, 1f, 0f, 1f, overlayIndex));
-                } else if (dir == east && open) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 3 / 16f, 0f, 1f, 0f, 1f, overlayIndex));
-                } else if (dir == south && open) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 3 / 16f, overlayIndex));
-                } else if (half == bottom) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 3 / 16f, 0f, 1f, overlayIndex));
-                } else if (half == top) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 13 / 16f, 1f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));
                 }
             }
             return quads;
