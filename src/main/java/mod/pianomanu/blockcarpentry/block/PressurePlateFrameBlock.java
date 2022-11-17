@@ -24,13 +24,13 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 11/14/22
+ * @version 1.5 11/17/22
  */
 public class PressurePlateFrameBlock extends PressurePlateBlock implements EntityBlock, IFrameBlock {
 
     public PressurePlateFrameBlock(Sensitivity sensitivityIn, Properties propertiesIn) {
         super(sensitivityIn, propertiesIn);
-        this.registerDefaultState(this.stateDefinition.any().setValue(CONTAINS_BLOCK, Boolean.FALSE).setValue(LIGHT_LEVEL, 0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, Boolean.FALSE).setValue(CONTAINS_BLOCK, Boolean.FALSE).setValue(LIGHT_LEVEL, 0));
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
