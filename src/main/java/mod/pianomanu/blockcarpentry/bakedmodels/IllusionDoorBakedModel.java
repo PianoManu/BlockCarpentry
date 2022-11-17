@@ -37,7 +37,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.4 11/14/22
+ * @version 1.5 11/17/22
  */
 public class IllusionDoorBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -76,203 +76,187 @@ public class IllusionDoorBakedModel implements IDynamicBakedModel {
             DoubleBlockHalf upper = DoubleBlockHalf.UPPER;
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             int rotation = extraData.get(FrameBlockTile.ROTATION);
-            boolean northSide = (dir == north && !open && hinge == right) || (dir == east && open && hinge == right) || (dir == west && open && hinge == left) || (dir == north && !open && hinge == left);
-            boolean westSide = (dir == west && !open && hinge == right) || (dir == north && open && hinge == right) || (dir == south && open && hinge == left) || (dir == west && !open && hinge == left);
-            boolean eastSide = (dir == south && open && hinge == right) || (dir == east && !open && hinge == right) || (dir == east && !open && hinge == left) || (dir == north && open && hinge == left);
+            boolean upVisible, downVisible, nVisible, eVisible, sVisible, wVisible;
+            boolean xStripe, yStripe, zStripe;
+
+            int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
+            boolean northSide = (dir == north && !open) || (dir == east && open && hinge == right) || (dir == west && open && hinge == left);
+            boolean westSide = (dir == west && !open) || (dir == north && open && hinge == right) || (dir == south && open && hinge == left);
+            boolean eastSide = (dir == south && open && hinge == right) || (dir == east && !open) || (dir == north && open && hinge == left);
+            boolean southSide = (dir == east && open && hinge == left) || (dir == west && open && hinge == right) || (dir == south && !open);
+            int xOffset = eastSide ? 0 : 13;
+            int zOffset = southSide ? 0 : 13;
             if (design == 0 || design == 1) {
-                if (northSide) {
-                    if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 4 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 4 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, true, false, true, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, false, false, true, rotation));
-                        if (design == 0)
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 1f, 14 / 16f, 15 / 16f, glass, -1));
-                        else
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 4 / 16f, 1f, 14 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, false, true, true, rotation));
+                if (northSide || southSide) {
+                    for (int x = 0; x < 16; x++) {
+                        for (int y = 0; y < 16; y++) {
+                            for (int z = 0; z < 3; z++) {
+                                xStripe = half == lower ? y < 4 : y > 11;
+                                yStripe = x < 4 || x > 11;
+                                upVisible = half == lower ? (y == 3 && !yStripe) : y == 15;
+                                downVisible = half == upper ? (y == 12 && !yStripe) : y == 0;
+                                wVisible = x == 0 || (x == 12 && !xStripe);
+                                eVisible = x == 15 || (x == 3 && !xStripe);
+                                nVisible = z == 0;
+                                sVisible = z == 2;
+                                if (xStripe || yStripe)
+                                    quads.addAll(ModelHelper.createSixFaceVoxel(x, y, z + zOffset, mimic, model, extraData, rand, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible, rotation));
+                                if ((xStripe || yStripe) && overlayIndex > 0)
+                                    quads.addAll(ModelHelper.createOverlayVoxel(x, y, z + zOffset, overlayIndex, nVisible, sVisible, eVisible, wVisible, upVisible && y == 15, downVisible, false));
+                                if (!xStripe && !yStripe && z == 1)
+                                    if (design == 0)
+                                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createVoxel(x, y, z + zOffset, glass, tintIndex, true, true, false, false, false, false));
+                                    else
+                                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceVoxel(x, y, z + zOffset, mimic, model, extraData, rand, tintIndex, true, true, false, false, false, false, rotation));
+                                if (!xStripe && !yStripe && z == 1 && overlayIndex > 0)
+                                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlayVoxel(x, y, z + zOffset, overlayIndex, true, true, false, false, false, false, false));
+                            }
+                        }
                     }
-                    if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, true, true, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, false, true, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 12 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 12 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        if (design == 0)
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 12 / 16f, 14 / 16f, 15 / 16f, glass, -1));
-                        else
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 12 / 16f, 14 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, false, true, true, rotation));
+                } else if (westSide || eastSide) {
+                    for (int x = 0; x < 3; x++) {
+                        for (int y = 0; y < 16; y++) {
+                            for (int z = 0; z < 16; z++) {
+                                zStripe = half == lower ? y < 4 : y > 11;
+                                yStripe = z < 4 || z > 11;
+                                upVisible = half == lower ? (y == 3 && !yStripe) : y == 15;
+                                downVisible = half == upper ? (y == 12 && !yStripe) : y == 0;
+                                nVisible = z == 0 || (z == 12 && !zStripe);
+                                sVisible = z == 15 || (z == 3 && !zStripe);
+                                wVisible = x == 0;
+                                eVisible = x == 2;
+                                if (zStripe || yStripe)
+                                    quads.addAll(ModelHelper.createSixFaceVoxel(x + xOffset, y, z, mimic, model, extraData, rand, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible, rotation));
+                                if ((zStripe || yStripe) && overlayIndex > 0)
+                                    quads.addAll(ModelHelper.createOverlayVoxel(x + xOffset, y, z, overlayIndex, nVisible, sVisible, eVisible, wVisible, upVisible && y == 15, downVisible, false));
+                                if (!zStripe && !yStripe && x == 1)
+                                    if (design == 0)
+                                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createVoxel(x + xOffset, y, z, glass, tintIndex, false, false, true, true, false, false));
+                                    else
+                                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceVoxel(x + xOffset, y, z, mimic, model, extraData, rand, tintIndex, false, false, true, true, false, false, rotation));
+                                if (!zStripe && !yStripe && x == 1 && overlayIndex > 0)
+                                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlayVoxel(x + xOffset, y, z, overlayIndex, false, false, true, true, false, false, false));
+                            }
+                        }
                     }
-                } else if (westSide) {
-                    if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 4 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 4 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 4 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, false, true, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 4 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, false, true, rotation));
-                        if (design == 0)
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 4 / 16f, 1f, 4 / 16f, 12 / 16f, glass, -1));
-                        else
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(14 / 16f, 15 / 16f, 4 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, true, rotation));
-                    }
-                    if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, true, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, true, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 12 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 12 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        if (design == 0)
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        else
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(14 / 16f, 15 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, true, rotation));
-                    }
-                } else if (eastSide) {
-                    if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 4 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 4 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 4 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, false, true, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 4 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, false, true, rotation));
-                        if (design == 0)
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 4 / 16f, 1f, 4 / 16f, 12 / 16f, glass, -1));
-                        else
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(1 / 16f, 2 / 16f, 4 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, true, rotation));
-                    }
-                    if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, true, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, true, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 12 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 12 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        if (design == 0)
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                        else
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(1 / 16f, 2 / 16f, 0f, 12 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, true, rotation));
-                    }
-                } else {
-                    if (half == lower) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 4 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 4 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, true, false, true, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, false, false, true, rotation));
-                        if (design == 0)
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 1f, 1 / 16f, 2 / 16f, glass, -1));
-                        else
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 4 / 16f, 1f, 1 / 16f, 2 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, false, true, true, rotation));
-                    }
-                    if (half == upper) {
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, true, true, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, false, true, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 12 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 12 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                        if (design == 0)
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 0f, 12 / 16f, 1 / 16f, 2 / 16f, glass, -1));
-                        else
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 12 / 16f, 1 / 16f, 2 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, false, true, true, rotation));
-                    }
-                }
-            }
-            if (design == 3) {
-                if (northSide) {
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, true, false, half == lower, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 4 / 16f, 12 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, true, half == upper, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, false, false, half == lower, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 4 / 16f, 12 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, false, half == upper, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 14 / 16f, 15 / 16f, glass, -1));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, false, true, half == lower, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, false, false, half == upper, true, rotation));
-                } else if (westSide) {
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 4 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, false, half == lower, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 4 / 16f, 12 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, half == upper, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 4 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, false, half == lower, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 4 / 16f, 12 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, half == upper, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 15 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, half == lower, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, half == upper, true, rotation));
-                } else if (eastSide) {
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 4 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, false, half == lower, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 4 / 16f, 12 / 16f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 12 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, half == upper, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 4 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, false, half == lower, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 4 / 16f, 12 / 16f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 0f, 4 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, half == upper, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(1 / 16f, 2 / 16f, 4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, glass, -1));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 4 / 16f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, true, half == lower, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 12 / 16f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, false, false, true, true, half == upper, true, rotation));
-                } else {
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 0, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, true, false, half == lower, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 4 / 16f, 12 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(0f, 4 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, true, half == upper, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 0, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, false, false, half == lower, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 4 / 16f, 12 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, false, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(12 / 16f, 1f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, false, half == upper, false, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(4 / 16f, 12 / 16f, 4 / 16f, 12 / 16f, 1 / 16f, 2 / 16f, glass, -1));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 4 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, false, true, half == lower, rotation));
-                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 12 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, false, half == upper, true, rotation));
                 }
             }
             if (design == 2) {
                 if (northSide) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, half == upper, half == lower, rotation));
+                    if (overlayIndex > 0)
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 13 / 16f, 1f, overlayIndex, true, true, true, true, half == upper, half == lower, false));
                 } else if (westSide) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, half == upper, half == lower, rotation));
+                    if (overlayIndex > 0)
+                        quads.addAll(ModelHelper.createOverlay(13 / 16f, 1f, 0f, 1f, 0f, 1f, overlayIndex, true, true, true, true, half == upper, half == lower, false));
                 } else if (eastSide) {
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, true, true, true, true, half == upper, half == lower, rotation));
+                    if (overlayIndex > 0)
+                        quads.addAll(ModelHelper.createOverlay(0f, 3 / 16f, 0f, 1f, 0f, 1f, overlayIndex, true, true, true, true, half == upper, half == lower, false));
                 } else {
                     quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, half == upper, half == lower, rotation));
+                    if (overlayIndex > 0)
+                        quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 3 / 16f, overlayIndex, true, true, true, true, half == upper, half == lower, false));
+                }
+            }
+            if (design == 3) {
+                if (northSide || southSide) {
+                    for (int x = 0; x < 16; x++) {
+                        for (int y = 0; y < 16; y++) {
+                            for (int z = 0; z < 3; z++) {
+                                xStripe = y < 4 || y > 11;
+                                yStripe = x < 4 || x > 11;
+                                upVisible = half == lower ? (y == 3 && !yStripe) : y == 15 || (y == 3 && !yStripe);
+                                downVisible = half == upper ? (y == 12 && !yStripe) : y == 0 || (y == 12 && !yStripe);
+                                wVisible = x == 0 || (x == 12 && !xStripe);
+                                eVisible = x == 15 || (x == 3 && !xStripe);
+                                nVisible = z == 0;
+                                sVisible = z == 2;
+                                if (xStripe || yStripe)
+                                    quads.addAll(ModelHelper.createSixFaceVoxel(x, y, z + zOffset, mimic, model, extraData, rand, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible, rotation));
+                                if ((xStripe || yStripe) && overlayIndex > 0)
+                                    quads.addAll(ModelHelper.createOverlayVoxel(x, y, z + zOffset, overlayIndex, nVisible, sVisible, eVisible, wVisible, upVisible && y == 15, downVisible, false));
+                                if (!xStripe && !yStripe && z == 1)
+                                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createVoxel(x, y, z + zOffset, glass, tintIndex, true, true, false, false, false, false));
+                                if (!xStripe && !yStripe && z == 1 && overlayIndex > 0)
+                                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlayVoxel(x, y, z + zOffset, overlayIndex, true, true, false, false, false, false, false));
+                            }
+                        }
+                    }
+                } else if (westSide || eastSide) {
+                    for (int x = 0; x < 3; x++) {
+                        for (int y = 0; y < 16; y++) {
+                            for (int z = 0; z < 16; z++) {
+                                zStripe = y < 4 || y > 11;
+                                yStripe = z < 4 || z > 11;
+                                upVisible = half == lower ? (y == 3 && !yStripe) : y == 15 || (y == 3 && !yStripe);
+                                downVisible = half == upper ? (y == 12 && !yStripe) : y == 0 || (y == 12 && !yStripe);
+                                nVisible = z == 0 || (z == 12 && !zStripe);
+                                sVisible = z == 15 || (z == 3 && !zStripe);
+                                wVisible = x == 0;
+                                eVisible = x == 2;
+                                if (zStripe || yStripe)
+                                    quads.addAll(ModelHelper.createSixFaceVoxel(x + xOffset, y, z, mimic, model, extraData, rand, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible, rotation));
+                                if ((zStripe || yStripe) && overlayIndex > 0)
+                                    quads.addAll(ModelHelper.createOverlayVoxel(x + xOffset, y, z, overlayIndex, nVisible, sVisible, eVisible, wVisible, upVisible && y == 15, downVisible, false));
+                                if (!zStripe && !yStripe && x == 1)
+                                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createVoxel(x + xOffset, y, z, glass, tintIndex, false, false, true, true, false, false));
+                                if (!zStripe && !yStripe && x == 1 && overlayIndex > 0)
+                                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlayVoxel(x + xOffset, y, z, overlayIndex, false, false, true, true, false, false, false));
+                            }
+                        }
+                    }
                 }
             }
             if (design == 4) {
-                if (northSide) {
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 14 / 16f, 15 / 16f, glass, -1));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 0f, 3 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 13 / 16f, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                } else if (westSide) {
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createCuboid(14 / 16f, 15 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, glass, -1));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0f, 3 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                } else if (eastSide) {
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 1f, 13 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createCuboid(1 / 16f, 2 / 16f, 3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, glass, -1));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0f, 3 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 13 / 16f, 1f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                } else {
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 3 / 16f, 0, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(13 / 16f, 1f, 0, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, 3 / 16f, 13 / 16f, 1 / 16f, 2 / 16f, glass, -1));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 0f, 3 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 13 / 16f, 1f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(7 / 16f, 9 / 16f, 3 / 16f, 13 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(3 / 16f, 13 / 16f, 7 / 16f, 9 / 16f, 0f, 3 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                if (northSide || southSide) {
+                    for (int x = 0; x < 16; x++) {
+                        for (int y = 0; y < 16; y++) {
+                            for (int z = 0; z < 3; z++) {
+                                xStripe = y < 3 || y > 12 || y == 7 || y == 8;
+                                yStripe = x < 3 || x > 12 || x == 7 || x == 8;
+                                upVisible = half == lower ? ((y == 2 || y == 8) && !yStripe) : y == 15 || ((y == 2 || y == 8) && !yStripe);
+                                downVisible = half == upper ? ((y == 7 || y == 13) && !yStripe) : y == 0 || ((y == 7 || y == 13) && !yStripe);
+                                wVisible = x == 0 || ((x == 7 || x == 13) && !xStripe);
+                                eVisible = x == 15 || ((x == 2 || x == 8) && !xStripe);
+                                nVisible = z == 0;
+                                sVisible = z == 2;
+                                if (xStripe || yStripe)
+                                    quads.addAll(ModelHelper.createSixFaceVoxel(x, y, z + zOffset, mimic, model, extraData, rand, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible, rotation));
+                                if ((xStripe || yStripe) && overlayIndex > 0)
+                                    quads.addAll(ModelHelper.createOverlayVoxel(x, y, z + zOffset, overlayIndex, nVisible, sVisible, eVisible, wVisible, upVisible && y == 15, downVisible, false));
+                                if (!xStripe && !yStripe && z == 1)
+                                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createVoxel(x, y, z + zOffset, glass, tintIndex, true, true, false, false, false, false));
+                                if (!xStripe && !yStripe && z == 1 && overlayIndex > 0)
+                                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlayVoxel(x, y, z + zOffset, overlayIndex, true, true, false, false, false, false, false));
+                            }
+                        }
+                    }
                 }
-            }
-            int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
-            if (overlayIndex != 0) {
-                if (northSide) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 13 / 16f, 1f, overlayIndex));
-                } else if (westSide) {
-                    quads.addAll(ModelHelper.createOverlay(13 / 16f, 1f, 0f, 1f, 0f, 1f, overlayIndex));
-                } else if (eastSide) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 3 / 16f, 0f, 1f, 0f, 1f, overlayIndex));
-                } else {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 3 / 16f, overlayIndex));
+                if (westSide || eastSide) {
+                    for (int x = 0; x < 3; x++) {
+                        for (int y = 0; y < 16; y++) {
+                            for (int z = 0; z < 16; z++) {
+                                zStripe = y < 3 || y > 12 || y == 7 || y == 8;
+                                yStripe = z < 3 || z > 12 || z == 7 || z == 8;
+                                upVisible = half == lower ? ((y == 2 || y == 8) && !yStripe) : y == 15 || ((y == 2 || y == 8) && !yStripe);
+                                downVisible = half == upper ? ((y == 7 || y == 13) && !yStripe) : y == 0 || ((y == 7 || y == 13) && !yStripe);
+                                nVisible = z == 0 || ((z == 7 || z == 13) && !zStripe);
+                                sVisible = z == 15 || ((z == 2 || z == 8) && !zStripe);
+                                wVisible = x == 0;
+                                eVisible = x == 2;
+                                if (zStripe || yStripe)
+                                    quads.addAll(ModelHelper.createSixFaceVoxel(x + xOffset, y, z, mimic, model, extraData, rand, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible, rotation));
+                                if ((zStripe || yStripe) && overlayIndex > 0)
+                                    quads.addAll(ModelHelper.createOverlayVoxel(x + xOffset, y, z, overlayIndex, nVisible, sVisible, eVisible, wVisible, upVisible && y == 15, downVisible, false));
+                                if (!zStripe && !yStripe && x == 1)
+                                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createVoxel(x + xOffset, y, z, glass, tintIndex, false, false, true, true, false, false));
+                                if (!zStripe && !yStripe && x == 1 && overlayIndex > 0)
+                                    quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlayVoxel(x + xOffset, y, z, overlayIndex, false, false, true, true, false, false, false));
+                            }
+                        }
+                    }
                 }
             }
             return quads;

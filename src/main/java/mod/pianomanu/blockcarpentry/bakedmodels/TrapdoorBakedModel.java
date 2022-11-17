@@ -38,7 +38,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.3 11/14/22
+ * @version 1.4 11/17/22
  */
 public class TrapdoorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -148,7 +148,7 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
                                 if (xStripe || zStripe)
                                     quads.addAll(ModelHelper.createCuboid(x / 16f, (x + 1) / 16f, (y + yOffset) / 16f, (y + yOffset + 1) / 16f, z / 16f, (z + 1) / 16f, texture, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible));
                                 if ((xStripe || zStripe) && overlayIndex != 0)
-                                    quads.addAll(ModelHelper.createOverlayVoxel(x, x + 1, y + yOffset, y + yOffset + 1, z, z + 1, overlayIndex, nVisible, sVisible, eVisible, wVisible, upVisible, y == 15, half == bottom));
+                                    quads.addAll(ModelHelper.createOverlayVoxel(x, y + yOffset, z, overlayIndex, nVisible, sVisible, eVisible, wVisible, upVisible, y == 15, half == bottom));
                             }
                         }
                     }
@@ -168,7 +168,7 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
                                     if (xStripe || yStripe)
                                         quads.addAll(ModelHelper.createCuboid(x / 16f, (x + 1) / 16f, y / 16f, (y + 1) / 16f, (z + zOffset) / 16f, (z + zOffset + 1) / 16f, texture, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible));
                                     if ((xStripe || yStripe) && overlayIndex != 0)
-                                        quads.addAll(ModelHelper.createOverlayVoxel(x, x + 1, y, y + 1, z + zOffset, z + zOffset + 1, overlayIndex, nVisible, sVisible, eVisible, wVisible, y == 15, downVisible, false));
+                                        quads.addAll(ModelHelper.createOverlayVoxel(x, y, z + zOffset, overlayIndex, nVisible, sVisible, eVisible, wVisible, y == 15, downVisible, false));
                                 }
                             }
                         }
@@ -188,7 +188,7 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
                                     if (yStripe || zStripe)
                                         quads.addAll(ModelHelper.createCuboid((x + xOffset) / 16f, (x + xOffset + 1) / 16f, y / 16f, (y + 1) / 16f, (z) / 16f, (z + 1) / 16f, texture, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible));
                                     if ((yStripe || zStripe) && overlayIndex != 0)
-                                        quads.addAll(ModelHelper.createOverlayVoxel(x + xOffset, x + xOffset + 1, y, y + 1, z, z + 1, overlayIndex, nVisible, sVisible, eVisible, wVisible, y == 15, downVisible, false));
+                                        quads.addAll(ModelHelper.createOverlayVoxel(x + xOffset, y, z, overlayIndex, nVisible, sVisible, eVisible, wVisible, y == 15, downVisible, false));
                                 }
                             }
                         }
@@ -290,7 +290,7 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
                                 if (xStripe || zStripe)
                                     quads.addAll(ModelHelper.createCuboid(x / 16f, (x + 1) / 16f, (y + yOffset) / 16f, (y + yOffset + 1) / 16f, z / 16f, (z + 1) / 16f, texture, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible));
                                 if ((xStripe || zStripe) && overlayIndex != 0)
-                                    quads.addAll(ModelHelper.createOverlayVoxel(x, x + 1, y + yOffset, y + yOffset + 1, z, z + 1, overlayIndex, nVisible, sVisible, eVisible, wVisible, upVisible, y == 15, half == bottom));
+                                    quads.addAll(ModelHelper.createOverlayVoxel(x, y + yOffset, z, overlayIndex, nVisible, sVisible, eVisible, wVisible, upVisible, y == 15, half == bottom));
                             }
                         }
                     }
@@ -310,7 +310,7 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
                                     if (yStripe || zStripe)
                                         quads.addAll(ModelHelper.createCuboid((x + xOffset) / 16f, (x + xOffset + 1) / 16f, y / 16f, (y + 1) / 16f, z / 16f, (z + 1) / 16f, texture, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible));
                                     if ((yStripe || zStripe) && overlayIndex != 0)
-                                        quads.addAll(ModelHelper.createOverlayVoxel(x + xOffset, x + xOffset + 1, y, y + 1, z, z + 1, overlayIndex, nVisible, sVisible, eVisible, wVisible, y == 15, downVisible, false));
+                                        quads.addAll(ModelHelper.createOverlayVoxel(x + xOffset, y, z, overlayIndex, nVisible, sVisible, eVisible, wVisible, y == 15, downVisible, false));
                                 }
                             }
                         }
@@ -329,7 +329,7 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
                                     if (xStripe || yStripe)
                                         quads.addAll(ModelHelper.createCuboid(x / 16f, (x + 1) / 16f, y / 16f, (y + 1) / 16f, (z + zOffset) / 16f, (z + zOffset + 1) / 16f, texture, tintIndex, nVisible, sVisible, eVisible, wVisible, upVisible, downVisible));
                                     if ((xStripe || yStripe) && overlayIndex != 0)
-                                        quads.addAll(ModelHelper.createOverlayVoxel(x, x + 1, y, y + 1, z + zOffset, z + zOffset + 1, overlayIndex, nVisible, sVisible, eVisible, wVisible, y == 15, downVisible, false));
+                                        quads.addAll(ModelHelper.createOverlayVoxel(x, y, z + zOffset, overlayIndex, nVisible, sVisible, eVisible, wVisible, y == 15, downVisible, false));
                                 }
                             }
                         }

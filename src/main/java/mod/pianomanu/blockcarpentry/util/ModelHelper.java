@@ -26,7 +26,7 @@ import java.util.List;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.3 11/07/22
+ * @version 1.4 11/17/22
  */
 public class ModelHelper {
 
@@ -476,6 +476,10 @@ public class ModelHelper {
         return quads;
     }
 
+    public static List<BakedQuad> createSixFaceVoxel(float x, float y, float z, BlockState mimic, BakedModel model, ModelData extraData, RandomSource rand, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, int rotation) {
+        return createSixFaceCuboid(x / 16f, (x + 1) / 16f, y / 16f, (y + 1) / 16f, z / 16f, (z + 1) / 16f, mimic, model, extraData, rand, tintIndex, north, south, east, west, up, down, rotation);
+    }
+
     public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, int tintIndex, TextureAtlasSprite textureNorth, TextureAtlasSprite textureSouth, TextureAtlasSprite textureEast, TextureAtlasSprite textureWest, TextureAtlasSprite textureUp, TextureAtlasSprite textureDown, int rotation) {
         return createSixFaceCuboid(xl, xh, yl, yh, zl, zh, tintIndex, true, true, true, true, true, true, textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, true, rotation);
     }
@@ -642,12 +646,12 @@ public class ModelHelper {
         return new Vec3(x, y, z);
     }
 
-    public static List<BakedQuad> createOverlayVoxel(int xl, int xh, int yl, int yh, int zl, int zh, int overlayIndex) {
-        return createOverlay(xl / 16f, xh / 16f, yl / 16f, yh / 16f, zl / 16f, zh / 16f, overlayIndex);
+    public static List<BakedQuad> createOverlayVoxel(int x, int y, int z, int overlayIndex) {
+        return createOverlay(x / 16f, (x + 1) / 16f, y / 16f, (y + 1) / 16f, z / 16f, (z + 1) / 16f, overlayIndex);
     }
 
-    public static List<BakedQuad> createOverlayVoxel(int xl, int xh, int yl, int yh, int zl, int zh, int overlayIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, Boolean doNotMoveOverlay) {
-        return createOverlay(xl / 16f, xh / 16f, yl / 16f, yh / 16f, zl / 16f, zh / 16f, overlayIndex, north, south, east, west, up, down, doNotMoveOverlay);
+    public static List<BakedQuad> createOverlayVoxel(int x, int y, int z, int overlayIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, Boolean doNotMoveOverlay) {
+        return createOverlay(x / 16f, (x + 1) / 16f, y / 16f, (y + 1) / 16f, z / 16f, (z + 1) / 16f, overlayIndex, north, south, east, west, up, down, doNotMoveOverlay);
     }
 
     public static List<BakedQuad> createOverlay(float xl, float xh, float yl, float yh, float zl, float zh, int overlayIndex) {
