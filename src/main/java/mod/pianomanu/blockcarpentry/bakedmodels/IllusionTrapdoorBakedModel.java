@@ -129,6 +129,7 @@ public class IllusionTrapdoorBakedModel implements IDynamicBakedModel {
                             }
                         }
                     }
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, (yOffset + 1) / 16f, (yOffset + 2) / 16f, 3 / 16f, 13 / 16f, glass, -1));
                 } else {
                     if ((dir == north || dir == south) && open) {
                         for (int x = 0; x < 16; x++) {

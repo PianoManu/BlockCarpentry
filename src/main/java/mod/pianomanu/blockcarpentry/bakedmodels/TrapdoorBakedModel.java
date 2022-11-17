@@ -105,7 +105,7 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
             int yOffset = half == bottom ? 0 : 13;
             int zOffset = dir == south ? 0 : 13;
 
-            if (design == 0) {
+            if (design == 0) { //TODO glass portions!
                 if (dir == north && open) {
                     quads.addAll(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 13 / 16f, 1f, texture, tintIndex));
                     if (overlayIndex != 0)
@@ -152,6 +152,7 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
                             }
                         }
                     }
+                    quads.addAll(ModelHelper.createCuboid(3 / 16f, 13 / 16f, (yOffset + 1) / 16f, (yOffset + 2) / 16f, 3 / 16f, 13 / 16f, glass, -1));
                 } else {
                     if ((dir == north || dir == south) && open) {
                         for (int x = 0; x < 16; x++) {
