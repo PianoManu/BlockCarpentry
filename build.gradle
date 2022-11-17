@@ -4,7 +4,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '5.+'
 }
 
-version = '1.19-0.1.1.0'
+version = '1.19-0.1.1.1'
 group = 'mod.pianomanu.blockcarpentry' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'blockcarpentry'
 
