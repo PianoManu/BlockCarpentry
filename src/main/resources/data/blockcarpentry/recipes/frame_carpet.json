@@ -10,7 +10,7 @@
       "item": "blockcarpentry:frameblock"
     },
     "#": {
-      "tag": "minecraft:carpets"
+      "tag": "minecraft:wool_carpets"
     }
   },
   "result": {
