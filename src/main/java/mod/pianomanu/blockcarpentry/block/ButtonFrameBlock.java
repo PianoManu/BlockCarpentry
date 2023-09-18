@@ -10,15 +10,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.WoodButtonBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.AttachFace;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
@@ -28,14 +25,14 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 11/14/22
+ * @version 1.6 09/18/23
  */
-public class ButtonFrameBlock extends WoodButtonBlock implements EntityBlock, IFrameBlock {
+public class ButtonFrameBlock extends ButtonBlock implements EntityBlock, IFrameBlock {
     public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<AttachFace> FACE = BlockStateProperties.ATTACH_FACE;
 
     public ButtonFrameBlock(Properties properties) {
-        super(properties);
+        super(properties, BlockSetType.OAK, 30, true); // Copied from Blocks::woodenButton
         this.registerDefaultState(this.defaultBlockState().setValue(CONTAINS_BLOCK, false).setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(POWERED, false).setValue(FACE, AttachFace.WALL).setValue(LIGHT_LEVEL, 0));
     }
 

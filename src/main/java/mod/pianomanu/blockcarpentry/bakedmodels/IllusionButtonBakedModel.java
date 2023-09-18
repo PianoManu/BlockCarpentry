@@ -15,7 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.block.WoodButtonBlock;
+import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraftforge.client.ChunkRenderTypeSet;
@@ -34,7 +34,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 09/18/23
  */
 public class IllusionButtonBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -59,14 +59,14 @@ public class IllusionButtonBakedModel implements IDynamicBakedModel {
             int rotation = extraData.get(FrameBlockTile.ROTATION);
             float yl = 0f;
             float yh = 2 / 16f;
-            if (state.getValue(WoodButtonBlock.FACE).equals(AttachFace.CEILING)) {
+            if (state.getValue(ButtonBlock.FACE).equals(AttachFace.CEILING)) {
                 yl = 14 / 16f;
                 yh = 1f;
             }
             List<BakedQuad> quads = new ArrayList<>();
-            switch (state.getValue(WoodButtonBlock.FACE)) {
+            switch (state.getValue(ButtonBlock.FACE)) {
                 case WALL:
-                    switch (state.getValue(WoodButtonBlock.FACING)) {
+                    switch (state.getValue(ButtonBlock.FACING)) {
                         case NORTH -> quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 14 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
                         case EAST -> quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         case WEST -> quads.addAll(ModelHelper.createSixFaceCuboid(14 / 16f, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
@@ -75,16 +75,16 @@ public class IllusionButtonBakedModel implements IDynamicBakedModel {
                     break;
                 case FLOOR:
                 case CEILING:
-                    switch (state.getValue(WoodButtonBlock.FACING)) {
+                    switch (state.getValue(ButtonBlock.FACING)) {
                         case EAST, WEST -> quads.addAll(ModelHelper.createSixFaceCuboid(6 / 16f, 10 / 16f, yl, yh, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                         case SOUTH, NORTH -> quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, yl, yh, 6 / 16f, 10 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
                     }
             }
             int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
-                switch (state.getValue(WoodButtonBlock.FACE)) {
+                switch (state.getValue(ButtonBlock.FACE)) {
                     case WALL:
-                        switch (state.getValue(WoodButtonBlock.FACING)) {
+                        switch (state.getValue(ButtonBlock.FACING)) {
                             case NORTH -> quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 14 / 16f, 1f, overlayIndex));
                             case EAST -> quads.addAll(ModelHelper.createOverlay(0f, 2 / 16f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
                             case WEST -> quads.addAll(ModelHelper.createOverlay(14 / 16f, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
@@ -93,7 +93,7 @@ public class IllusionButtonBakedModel implements IDynamicBakedModel {
                         break;
                     case FLOOR:
                     case CEILING:
-                        switch (state.getValue(WoodButtonBlock.FACING)) {
+                        switch (state.getValue(ButtonBlock.FACING)) {
                             case EAST, WEST -> quads.addAll(ModelHelper.createOverlay(6 / 16f, 10 / 16f, yl, yh, 5 / 16f, 11 / 16f, overlayIndex));
                             case SOUTH, NORTH -> quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, yl, yh, 6 / 16f, 10 / 16f, overlayIndex));
                         }
