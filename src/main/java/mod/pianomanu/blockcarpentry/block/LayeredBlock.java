@@ -21,18 +21,22 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Main class for frame and illusion layered blocks - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 11/17/22
+ * @version 1.2 09/18/23
  */
 public class LayeredBlock extends AbstractSixWayFrameBlock implements SimpleWaterloggedBlock {
     public static final IntegerProperty LAYERS = BCBlockStateProperties.LAYERS;
@@ -150,6 +154,11 @@ public class LayeredBlock extends AbstractSixWayFrameBlock implements SimpleWate
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        return new ArrayList<>(Collections.singleton(new ItemStack(this.asItem(), state.getValue(LAYERS))));
     }
 }
 //========SOLI DEO GLORIA========//
