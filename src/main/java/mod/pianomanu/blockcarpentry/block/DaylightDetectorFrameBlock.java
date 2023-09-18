@@ -1,7 +1,9 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.DaylightDetectorFrameTileEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -9,9 +11,12 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DaylightDetectorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -82,6 +87,38 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock implements
         frameBlockEntity.clear();
         frameBlockEntity.setMimic(handBlock);
         levelIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
+    }
+
+    private static void updateSignalStrength(BlockState state, Level level, BlockPos pos) {
+        int i = level.getBrightness(LightLayer.SKY, pos) - level.getSkyDarken();
+        float f = level.getSunAngle(1.0F);
+        boolean inverted = state.getValue(INVERTED);
+        if (inverted) {
+            i = 15 - i;
+        } else if (i > 0) {
+            float f1 = f < (float) Math.PI ? 0.0F : ((float) Math.PI * 2F);
+            f += (f1 - f) * 0.2F;
+            i = Math.round((float) i * Mth.cos(f));
+        }
+
+        i = Mth.clamp(i, 0, 15);
+        if (state.getValue(POWER) != i) {
+            level.setBlock(pos, state.setValue(POWER, i), 3);
+        }
+
+    }
+
+    private static void tickEntity(Level level, BlockPos pos, BlockState state, DaylightDetectorFrameTileEntity detectorEntity) {
+        if (level.getGameTime() % 20L == 0L) {
+            updateSignalStrength(state, level, pos);
+        }
+
+    }
+
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> entityType) {
+        System.out.println("tick");
+        return !level.isClientSide && level.dimensionType().hasSkyLight() ? createTickerHelper(entityType, Registration.DAYLIGHT_DETECTOR_FRAME_TILE.get(), DaylightDetectorFrameBlock::tickEntity) : null;
     }
 }
 //========SOLI DEO GLORIA========//
