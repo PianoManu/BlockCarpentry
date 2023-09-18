@@ -34,7 +34,7 @@ import java.util.List;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 09/18/23
  */
 public class IllusionWallBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -60,45 +60,69 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
             int rotation = extraData.get(FrameBlockTile.ROTATION);
             List<BakedQuad> quads = new ArrayList<>();
 
-            //Create middle post
-            if (state.getValue(WallFrameBlock.UP)) {
-                quads.addAll(ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 1f, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-            } else {
-                quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, 14 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-            }
-            if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.TALL && state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.TALL || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.TALL && state.getValue(WallFrameBlock.WEST_WALL) == WallSide.TALL) {
-                quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, 1f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-            } else if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.NONE && state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.NONE || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.NONE && state.getValue(WallFrameBlock.WEST_WALL) == WallSide.NONE) {
-                quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, 14 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-            }
+            WallSide north = state.getValue(WallFrameBlock.NORTH_WALL);
+            WallSide east = state.getValue(WallFrameBlock.EAST_WALL);
+            WallSide south = state.getValue(WallFrameBlock.SOUTH_WALL);
+            WallSide west = state.getValue(WallFrameBlock.WEST_WALL);
 
+            boolean isThickPost = state.getValue(WallFrameBlock.UP);
             //determine wall height - if block above this block is also a wall with connections, the wall height of this block right here needs to be a full block - otherwise just 14/16
             float height_north = 1f;
             float height_east = 1f;
             float height_south = 1f;
             float height_west = 1f;
-            if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.LOW)
+            float height_post = 1f;
+            if (north != WallSide.TALL)
                 height_north = 14 / 16f;
-            if (state.getValue(WallFrameBlock.EAST_WALL) == WallSide.LOW)
+            if (east != WallSide.TALL)
                 height_east = 14 / 16f;
-            if (state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.LOW)
+            if (south != WallSide.TALL)
                 height_south = 14 / 16f;
-            if (state.getValue(WallFrameBlock.WEST_WALL) == WallSide.LOW)
+            if (west != WallSide.TALL)
                 height_west = 14 / 16f;
+
+            boolean lowNorth = height_north == 14 / 16f;
+            boolean lowEast = height_east == 14 / 16f;
+            boolean lowSouth = height_south == 14 / 16f;
+            boolean lowWest = height_west == 14 / 16f;
+
+            boolean tallNorth = height_north == 1;
+            boolean tallEast = height_east == 1;
+            boolean tallSouth = height_south == 1;
+            boolean tallWest = height_west == 1;
+            boolean somethingOnTop = tallNorth || tallEast || tallSouth || tallWest;
+
+            boolean lowMiddle = lowNorth && lowEast && lowSouth && lowWest;
+            if (lowMiddle)
+                height_post = 14 / 16f;
+
+            boolean renderNorth = north == WallSide.NONE;
+            boolean renderEast = east == WallSide.NONE;
+            boolean renderSouth = south == WallSide.NONE;
+            boolean renderWest = west == WallSide.NONE;
+
+            //Create thin middle post
+            if (!isThickPost) {
+                quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, height_post, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, renderNorth, renderSouth, renderEast, renderWest, !somethingOnTop, true, rotation));
+            }
+            // Create thick middle post
+            else {
+                quads.addAll(ModelHelper.createSixFaceCuboid(4 / 16f, 12 / 16f, 0f, 1, 4 / 16f, 12 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, true, true, true, rotation));
+            }
 
             //classic wall design
             if (design == 0) {
-                if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.TALL) {
-                    quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, height_north, 0f, 5 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                if (north == WallSide.LOW || north == WallSide.TALL) {
+                    quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, height_north, 0f, 5 / 16f, mimic, model, extraData, rand, tintIndex, true, false, true, true, lowNorth, true, rotation));
                 }
-                if (state.getValue(WallFrameBlock.EAST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.TALL) {
-                    quads.addAll(ModelHelper.createSixFaceCuboid(11 / 16f, 1f, 0f, height_east, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                if (east == WallSide.LOW || east == WallSide.TALL) {
+                    quads.addAll(ModelHelper.createSixFaceCuboid(11 / 16f, 1f, 0f, height_east, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, true, true, true, false, lowEast, true, rotation));
                 }
-                if (state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.TALL) {
-                    quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, height_south, 11 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                if (south == WallSide.LOW || south == WallSide.TALL) {
+                    quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 0f, height_south, 11 / 16f, 1f, mimic, model, extraData, rand, tintIndex, false, true, true, true, lowSouth, true, rotation));
                 }
-                if (state.getValue(WallFrameBlock.WEST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.WEST_WALL) == WallSide.TALL) {
-                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 5 / 16f, 0f, height_west, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                if (west == WallSide.LOW || west == WallSide.TALL) {
+                    quads.addAll(ModelHelper.createSixFaceCuboid(0f, 5 / 16f, 0f, height_west, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, true, true, false, true, lowWest, true, rotation));
                 }
             }
             //wall with hole
@@ -224,25 +248,26 @@ public class IllusionWallBakedModel implements IDynamicBakedModel {
             }
             int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
-                if (state.getValue(WallFrameBlock.UP) && !(state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.TALL || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.TALL || state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.TALL || state.getValue(WallFrameBlock.WEST_WALL) == WallSide.TALL)) {
-                    quads.addAll(ModelHelper.createOverlay(4 / 16f, 12 / 16f, 0f, 1f, 4 / 16f, 12 / 16f, overlayIndex));
-                } else {
-                    if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.EAST_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.LOW || state.getValue(WallFrameBlock.WEST_WALL) == WallSide.LOW)
-                        quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 0f, 14 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
+                //Create thin middle post
+                if (!isThickPost) {
+                    quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 0f, height_post, 5 / 16f, 11 / 16f, overlayIndex, renderNorth, renderSouth, renderEast, renderWest, !somethingOnTop, true, true));
                 }
-                if (state.getValue(WallFrameBlock.NORTH_WALL) == WallSide.LOW) {
-                    //quads.retainAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 0f, height_north, 0f, 5 / 16f, texture.get(index), tintIndex, rotation));
-                    quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 0f, height_north, 0f, 5 / 16f, overlayIndex));
+                // Create thick middle post
+                else {
+                    quads.addAll(ModelHelper.createOverlay(4 / 16f, 12 / 16f, 0f, 1, 4 / 16f, 12 / 16f, overlayIndex, true, true, true, true, true, true, true));
                 }
-                if (state.getValue(WallFrameBlock.EAST_WALL) == WallSide.LOW) {
-                    //quads.retainAll(ModelHelper.createCuboid(11 / 16f, 1f, 0f, height_east, 5 / 16f, 11 / 16f, texture.get(index), tintIndex, rotation));
-                    quads.addAll(ModelHelper.createOverlay(11 / 16f, 1f, 0f, height_east, 5 / 16f, 11 / 16f, overlayIndex));
+
+                if (north == WallSide.LOW || north == WallSide.TALL) {
+                    quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 0f, height_north, 0f, 5 / 16f, overlayIndex, true, false, true, true, lowNorth, true, true));
                 }
-                if (state.getValue(WallFrameBlock.SOUTH_WALL) == WallSide.LOW) {
-                    quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 0f, height_south, 11 / 16f, 1f, overlayIndex));
+                if (east == WallSide.LOW || east == WallSide.TALL) {
+                    quads.addAll(ModelHelper.createOverlay(11 / 16f, 1f, 0f, height_east, 5 / 16f, 11 / 16f, overlayIndex, true, true, true, false, lowEast, true, true));
                 }
-                if (state.getValue(WallFrameBlock.WEST_WALL) == WallSide.LOW) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 5 / 16f, 0f, height_west, 5 / 16f, 11 / 16f, overlayIndex));
+                if (south == WallSide.LOW || south == WallSide.TALL) {
+                    quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 0f, height_south, 11 / 16f, 1f, overlayIndex, false, true, true, true, lowSouth, true, true));
+                }
+                if (west == WallSide.LOW || west == WallSide.TALL) {
+                    quads.addAll(ModelHelper.createOverlay(0f, 5 / 16f, 0f, height_west, 5 / 16f, 11 / 16f, overlayIndex, true, true, false, true, lowWest, true, true));
                 }
             }
             return quads;
