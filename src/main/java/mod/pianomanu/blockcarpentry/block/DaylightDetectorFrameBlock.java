@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.3 11/14/22
+ * @version 1.4 19/09/23
  */
 public class DaylightDetectorFrameBlock extends DaylightDetectorBlock implements IFrameBlock {
 
@@ -117,7 +117,6 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock implements
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> entityType) {
-        System.out.println("tick");
         return !level.isClientSide && level.dimensionType().hasSkyLight() ? createTickerHelper(entityType, Registration.DAYLIGHT_DETECTOR_FRAME_TILE.get(), DaylightDetectorFrameBlock::tickEntity) : null;
     }
 }
