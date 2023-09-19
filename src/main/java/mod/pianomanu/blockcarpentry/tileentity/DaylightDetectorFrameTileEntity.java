@@ -62,7 +62,7 @@ public class DaylightDetectorFrameTileEntity extends BlockEntity {
     private Boolean downVisible = true;
 
     public DaylightDetectorFrameTileEntity(BlockPos pos, BlockState state) {
-        super(Registration.DAYLIGHT_DETECTOR_FRAME_TILE.get(), pos, state);
+        super(state.getBlock().getName().equals(Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get().getName()) ? Registration.DAYLIGHT_DETECTOR_FRAME_TILE.get() : Registration.DAYLIGHT_DETECTOR_ILLUSION_TILE.get(), pos, state);
     }
 
     private static Integer readInteger(CompoundTag tag) {
