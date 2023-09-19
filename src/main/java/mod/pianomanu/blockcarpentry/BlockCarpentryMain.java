@@ -6,9 +6,11 @@ import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.util.BlockColorHandler;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import mod.pianomanu.blockcarpentry.util.Tags;
-import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -22,15 +24,13 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-
 import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
 
 /**
  * Main class of the BlockCarpentry mod
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 09/19/23
  */
 @Mod(MOD_ID)
 public class BlockCarpentryMain
@@ -42,7 +42,6 @@ public class BlockCarpentryMain
 
     public BlockCarpentryMain() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BCModConfig.COMMON_CONFIG);
-        //ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, BCModConfig.CLIENT_CONFIG);
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -58,13 +57,67 @@ public class BlockCarpentryMain
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(BlockCarpentryMain::onCreativeModeTabRegister);
+    }
+
+    public static void onCreativeModeTabRegister(CreativeModeTabEvent.Register event) {
+        event.registerCreativeModeTab(new ResourceLocation(MOD_ID, "all"), builder -> builder
+                .icon(() -> new ItemStack(Registration.FRAMEBLOCK.get()))
+                .title(Component.translatable("itemGroup.blockcarpentry"))
+                .displayItems((params, output, gen) -> {
+                    output.accept(new ItemStack(Registration.FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.SLAB_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.STAIRS_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.BUTTON_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.PRESSURE_PLATE_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.DOOR_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.TRAPDOOR_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.LADDER_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.FENCE_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.FENCE_GATE_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.WALL_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.BED_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.CHEST_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.CARPET_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.PANE_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.LAYERED_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.SLOPE_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.EDGED_SLOPE_FRAMEBLOCK.get()));
+
+
+                    output.accept(new ItemStack(Registration.ILLUSION_BLOCK.get()));
+                    output.accept(new ItemStack(Registration.SLAB_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.STAIRS_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.BUTTON_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.PRESSURE_PLATE_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.DOOR_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.TRAPDOOR_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.LADDER_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.FENCE_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.FENCE_GATE_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.WALL_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.BED_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.CHEST_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.CARPET_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.PANE_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.LAYERED_ILLUSIONBLOCK.get()));
+
+                    output.accept(new ItemStack(Registration.HAMMER.get()));
+                    output.accept(new ItemStack(Registration.TEXTURE_WRENCH.get()));
+                    output.accept(new ItemStack(Registration.CHISEL.get()));
+                    output.accept(new ItemStack(Registration.PAINTBRUSH.get()));
+                })
+                .build()
+        );
     }
 
     /**
      * doing setup stuff (currently unused)
      */
-    private void setup(final FMLCommonSetupEvent event)
-    {
+    private void setup(final FMLCommonSetupEvent event) {
         LOGGER.info("Setting up BlockCarpentry mod");
     }
 
@@ -105,23 +158,6 @@ public class BlockCarpentryMain
      */
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-    }
-
-    /**
-     * Registering my ItemGroup for all blocks and items from BlockCarpentry
-     */
-    public static class BlockCarpentryItemGroup extends CreativeModeTab {
-
-        public static final BlockCarpentryItemGroup BLOCK_CARPENTRY = new BlockCarpentryItemGroup(CreativeModeTab.TABS.length,"blockcarpentry");
-        private BlockCarpentryItemGroup(int index, String label) {
-            super(index, label);
-        }
-
-        @Override
-        @Nonnull
-        public ItemStack makeIcon() {
-            return new ItemStack(Registration.FRAMEBLOCK.get());
-        }
     }
 }
 //This mod is dedicated to the living God and His son, Jesus. Without His support, I would never have had enough strength and perseverance to get this project working and publish it. Learn to hear His voice, it will transform your life. (Based on a quote from Covert_Jaguar, creator of RailCraft)

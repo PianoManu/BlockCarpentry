@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 09/19/23
  */
 public class SignFrameTile extends SignBlockEntity {
     //TODO delete later
@@ -145,7 +145,7 @@ public class SignFrameTile extends SignBlockEntity {
         Integer oldGlassColor = glassColor;
         CompoundTag tag = pkt.getNbtCompound();
         if (tag.contains("mimic")) {
-            mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
+            mimic = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic"));
             if (!Objects.equals(oldMimic, mimic)) {
                 ModelDataManager.requestModelDataRefresh(this);
                 world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
@@ -197,7 +197,7 @@ public class SignFrameTile extends SignBlockEntity {
     public void read(BlockState state, CompoundTag tag) {
         super.read(state, tag);
         if (tag.contains("mimic")) {
-            mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
+            mimic = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic"));
         }
         if (tag.contains("texture")) {
             texture = readInteger(tag.getCompound("texture"));

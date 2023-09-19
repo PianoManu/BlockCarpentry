@@ -2,6 +2,7 @@ package mod.pianomanu.blockcarpentry.tileentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
@@ -27,7 +28,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.SLAB_FRAME_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.1 11/07/22
+ * @version 1.2 09/19/23
  */
 public class TwoBlocksFrameBlockTile extends BlockEntity {
     public static final ModelProperty<BlockState> MIMIC_1 = new ModelProperty<>();
@@ -327,7 +328,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
         Integer oldRotation_2 = rotation_2;
         CompoundTag tag = pkt.getTag();
         if (tag.contains("mimic_1")) {
-            mimic_1 = NbtUtils.readBlockState(tag.getCompound("mimic_1"));
+            mimic_1 = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic_1"));
             if (!Objects.equals(oldMimic_1, mimic_1)) {
                 this.requestModelDataUpdate();
                 Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
@@ -370,7 +371,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
         }
 
         if (tag.contains("mimic_2")) {
-            mimic_2 = NbtUtils.readBlockState(tag.getCompound("mimic_2"));
+            mimic_2 = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic_2"));
             if (!Objects.equals(oldMimic_2, mimic_2)) {
                 this.requestModelDataUpdate();
                 Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
@@ -444,7 +445,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public void load(@Nonnull CompoundTag tag) {
         super.load(tag);
         if (tag.contains("mimic_1")) {
-            mimic_1 = NbtUtils.readBlockState(tag.getCompound("mimic_1"));
+            mimic_1 = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic_1"));
         }
         if (tag.contains("texture_1")) {
             texture_1 = readInteger(tag.getCompound("texture_1"));
@@ -463,7 +464,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
         }
 
         if (tag.contains("mimic_2")) {
-            mimic_2 = NbtUtils.readBlockState(tag.getCompound("mimic_2"));
+            mimic_2 = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic_2"));
         }
         if (tag.contains("texture_2")) {
             texture_2 = readInteger(tag.getCompound("texture_2"));
