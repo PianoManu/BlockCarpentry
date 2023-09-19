@@ -5,6 +5,7 @@ import mod.pianomanu.blockcarpentry.container.ChestFrameContainer;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
@@ -38,7 +39,7 @@ import java.util.Objects;
  * Contains all information about the block and the mimicked block, as well as the inventory size and stored items
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 09/19/23
  */
 public class ChestFrameBlockEntity extends ChestBlockEntity {
 
@@ -247,7 +248,7 @@ public class ChestFrameBlockEntity extends ChestBlockEntity {
         super.load(compound);
         //FRAME BEGIN
         if (compound.contains("mimic")) {
-            mimic = NbtUtils.readBlockState(compound.getCompound("mimic"));
+            mimic = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), compound.getCompound("mimic"));
         }
         if (compound.contains("texture")) {
             texture = readInteger(compound.getCompound("texture"));
@@ -365,7 +366,7 @@ public class ChestFrameBlockEntity extends ChestBlockEntity {
         Integer oldRotation = rotation;
         CompoundTag tag = pkt.getTag();
         if (tag.contains("mimic")) {
-            mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
+            mimic = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic"));
             if (!Objects.equals(oldMimic, mimic)) {
                 this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);

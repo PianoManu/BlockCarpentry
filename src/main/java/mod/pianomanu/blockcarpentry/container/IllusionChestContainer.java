@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  * Here you can find all information about the Chest Illusion Container, like number of slots and stored itemStacks
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 09/19/23
  */
 public class IllusionChestContainer extends AbstractContainerMenu {
     private final Container container;
@@ -27,15 +27,25 @@ public class IllusionChestContainer extends AbstractContainerMenu {
         super(menuType, containerId);
 
         this.container = inventory;
+        this.createSlots(playerInventory);
+    }
 
-        inventory.startOpen(playerInventory.player);
+    public IllusionChestContainer(int containerId, Inventory playerInventory) {
+        super(Registration.CHEST_ILLUSION_CONTAINER.get(), containerId);
+
+        this.container = new SimpleContainer(3 * 9);
+        this.createSlots(playerInventory);
+    }
+
+    private void createSlots(Inventory playerInventory) {
+        this.container.startOpen(playerInventory.player);
 
         int i = (this.rows - 4) * 18;
 
 
         for (int j = 0; j < this.rows; ++j) {
             for (int k = 0; k < this.columns; ++k) {
-                this.addSlot(new Slot(inventory, k + j * 9, 8 + k * 18, 18 + j * 18));
+                this.addSlot(new Slot(this.container, k + j * 9, 8 + k * 18, 18 + j * 18));
             }
         }
 

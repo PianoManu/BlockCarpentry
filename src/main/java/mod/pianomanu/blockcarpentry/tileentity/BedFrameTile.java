@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
@@ -23,7 +24,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
  * BlockEntity for frame beds, you can customize both pillow and blanket
  *
  * @author PianoManu
- * @version 1.1 11/07/22
+ * @version 1.2 09/19/23
  */
 public class BedFrameTile extends BlockEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -154,7 +155,7 @@ public class BedFrameTile extends BlockEntity {
         Integer oldRotation = rotation;
         CompoundTag tag = pkt.getTag();
         if (tag.contains("mimic")) {
-            mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
+            mimic = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic"));
             if (!Objects.equals(oldMimic, mimic)) {
                 this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
@@ -249,7 +250,7 @@ public class BedFrameTile extends BlockEntity {
     public void load(CompoundTag tag) {
         super.load(tag);
         if (tag.contains("mimic")) {
-            mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
+            mimic = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic"));
         }
         if (tag.contains("texture")) {
             texture = readInteger(tag.getCompound("texture"));

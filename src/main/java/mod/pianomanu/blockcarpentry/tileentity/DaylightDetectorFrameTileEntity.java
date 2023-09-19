@@ -3,6 +3,7 @@ package mod.pianomanu.blockcarpentry.tileentity;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -25,7 +26,7 @@ import java.util.Objects;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.1 11/07/22
+ * @version 1.2 09/19/23
  */
 public class DaylightDetectorFrameTileEntity extends BlockEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -251,7 +252,7 @@ public class DaylightDetectorFrameTileEntity extends BlockEntity {
         Integer oldRotation = rotation;
         CompoundTag tag = pkt.getTag();
         if (tag.contains("mimic")) {
-            mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
+            mimic = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic"));
             if (!Objects.equals(oldMimic, mimic)) {
                 this.requestModelDataUpdate();
                 this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
@@ -325,7 +326,7 @@ public class DaylightDetectorFrameTileEntity extends BlockEntity {
     public void load(CompoundTag tag) {
         super.load(tag);
         if (tag.contains("mimic")) {
-            mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
+            mimic = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic"));
         }
         if (tag.contains("texture")) {
             texture = readInteger(tag.getCompound("texture"));
