@@ -174,50 +174,57 @@ public class Registration {
     public static final RegistryObject<ChestFrameBlock> CHEST_FRAMEBLOCK = BLOCKS.register("frame_chest", () -> new ChestFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> CHEST_FRAME_ITEM = ITEMS.register("frame_chest", () -> new BaseFrameItem(CHEST_FRAMEBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<BlockEntityType<ChestFrameBlockEntity>> CHEST_FRAME_TILE = BLOCK_ENTITY_TYPES.register("frame_chest", () -> BlockEntityType.Builder.of(ChestFrameBlockEntity::new, CHEST_FRAMEBLOCK.get()).build(null));
-    public static final RegistryObject<Item> CHEST_ILLUSION_ITEM = ITEMS.register("illusion_chest", () -> new BaseIllusionItem(CHEST_ILLUSIONBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<MenuType<ChestFrameContainer>> CHEST_FRAME_CONTAINER = MENU_TYPES.register("frame_chest", () -> new MenuType(ChestFrameContainer::new, FeatureFlags.DEFAULT_FLAGS));
 
     public static final RegistryObject<ChestFrameBlock> CHEST_ILLUSIONBLOCK = BLOCKS.register("illusion_chest", () -> new ChestFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
-    public static final RegistryObject<Item> CARPET_FRAME_ITEM = ITEMS.register("frame_carpet", () -> new BaseFrameItem(CARPET_FRAMEBLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> CHEST_ILLUSION_ITEM = ITEMS.register("illusion_chest", () -> new BaseIllusionItem(CHEST_ILLUSIONBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<BlockEntityType<ChestFrameBlockEntity>> CHEST_ILLUSION_TILE = BLOCK_ENTITY_TYPES.register("illusion_chest", () -> BlockEntityType.Builder.of(ChestFrameBlockEntity::new, CHEST_ILLUSIONBLOCK.get()).build(null));
-    public static final RegistryObject<Item> CARPET_ILLUSION_ITEM = ITEMS.register("illusion_carpet", () -> new BaseIllusionItem(CARPET_ILLUSIONBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<MenuType<IllusionChestContainer>> CHEST_ILLUSION_CONTAINER = MENU_TYPES.register("illusion_chest", () -> new MenuType(IllusionChestContainer::new, FeatureFlags.DEFAULT_FLAGS));
 
 
     public static final RegistryObject<CarpetFrameBlock> CARPET_FRAMEBLOCK = BLOCKS.register("frame_carpet", () -> new CarpetFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
-    public static final RegistryObject<Item> PANE_FRAME_ITEM = ITEMS.register("frame_pane", () -> new BaseFrameItem(PANE_FRAMEBLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> CARPET_FRAME_ITEM = ITEMS.register("frame_carpet", () -> new BaseFrameItem(CARPET_FRAMEBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> CARPET_FRAME_TILE = BLOCK_ENTITY_TYPES.register("frame_carpet", () -> BlockEntityType.Builder.of(FrameBlockTile::new, CARPET_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<CarpetFrameBlock> CARPET_ILLUSIONBLOCK = BLOCKS.register("illusion_carpet", () -> new CarpetFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
-    public static final RegistryObject<Item> PANE_ILLUSION_ITEM = ITEMS.register("illusion_pane", () -> new BaseIllusionItem(PANE_ILLUSIONBLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> CARPET_ILLUSION_ITEM = ITEMS.register("illusion_carpet", () -> new BaseIllusionItem(CARPET_ILLUSIONBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> CARPET_ILLUSION_TILE = BLOCK_ENTITY_TYPES.register("illusion_carpet", () -> BlockEntityType.Builder.of(FrameBlockTile::new, CARPET_ILLUSIONBLOCK.get()).build(null));
 
 
     public static final RegistryObject<PaneFrameBlock> PANE_FRAMEBLOCK = BLOCKS.register("frame_pane", () -> new PaneFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
-    public static final RegistryObject<Item> DAYLIGHT_DETECTOR_FRAME_ITEM = ITEMS.register("frame_daylight_detector", () -> new BaseFrameItem(DAYLIGHT_DETECTOR_FRAMEBLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> PANE_FRAME_ITEM = ITEMS.register("frame_pane", () -> new BaseFrameItem(PANE_FRAMEBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> PANE_FRAME_TILE = BLOCK_ENTITY_TYPES.register("frame_pane", () -> BlockEntityType.Builder.of(FrameBlockTile::new, PANE_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<PaneFrameBlock> PANE_ILLUSIONBLOCK = BLOCKS.register("illusion_pane", () -> new PaneFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
-    public static final RegistryObject<Item> DAYLIGHT_DETECTOR_ILLUSION_ITEM = ITEMS.register("illusion_daylight_detector", () -> new BaseIllusionItem(DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> PANE_ILLUSION_ITEM = ITEMS.register("illusion_pane", () -> new BaseIllusionItem(PANE_ILLUSIONBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> PANE_ILLUSION_TILE = BLOCK_ENTITY_TYPES.register("illusion_pane", () -> BlockEntityType.Builder.of(FrameBlockTile::new, PANE_ILLUSIONBLOCK.get()).build(null));
 
 
     public static final RegistryObject<DaylightDetectorFrameBlock> DAYLIGHT_DETECTOR_FRAMEBLOCK = BLOCKS.register("frame_daylight_detector", () -> new DaylightDetectorFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
-    public static final RegistryObject<Item> LAYERED_FRAME_ITEM = ITEMS.register("frame_layered_block", () -> new BaseFrameItem(LAYERED_FRAMEBLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DAYLIGHT_DETECTOR_FRAME_ITEM = ITEMS.register("frame_daylight_detector", () -> new BaseFrameItem(DAYLIGHT_DETECTOR_FRAMEBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<BlockEntityType<DaylightDetectorFrameTileEntity>> DAYLIGHT_DETECTOR_FRAME_TILE = BLOCK_ENTITY_TYPES.register("frame_daylight_detector", () -> BlockEntityType.Builder.of(DaylightDetectorFrameTileEntity::new, DAYLIGHT_DETECTOR_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<DaylightDetectorFrameBlock> DAYLIGHT_DETECTOR_ILLUSIONBLOCK = BLOCKS.register("illusion_daylight_detector", () -> new DaylightDetectorFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
-    public static final RegistryObject<Item> LAYERED_ILLUSION_ITEM = ITEMS.register("illusion_layered_block", () -> new BaseIllusionItem(LAYERED_ILLUSIONBLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DAYLIGHT_DETECTOR_ILLUSION_ITEM = ITEMS.register("illusion_daylight_detector", () -> new BaseIllusionItem(DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<BlockEntityType<DaylightDetectorFrameTileEntity>> DAYLIGHT_DETECTOR_ILLUSION_TILE = BLOCK_ENTITY_TYPES.register("illusion_daylight_detector", () -> BlockEntityType.Builder.of(DaylightDetectorFrameTileEntity::new, DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get()).build(null));
 
 
     public static final RegistryObject<LayeredBlock> LAYERED_FRAMEBLOCK = BLOCKS.register("frame_layered_block", () -> new LayeredBlock(Block.Properties.copy(FRAMEBLOCK.get())));
-    public static final RegistryObject<Item> SLOPE_FRAME_ITEM = ITEMS.register("frame_slope", () -> new BaseFrameItem(SLOPE_FRAMEBLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> LAYERED_FRAME_ITEM = ITEMS.register("frame_layered_block", () -> new BaseFrameItem(LAYERED_FRAMEBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> LAYERED_FRAME_TILE = BLOCK_ENTITY_TYPES.register("frame_layered_block", () -> BlockEntityType.Builder.of(FrameBlockTile::new, LAYERED_FRAMEBLOCK.get()).build(null));
 
     public static final RegistryObject<LayeredBlock> LAYERED_ILLUSIONBLOCK = BLOCKS.register("illusion_layered_block", () -> new LayeredBlock(Block.Properties.copy(FRAMEBLOCK.get())));
-    public static final RegistryObject<Item> EDGED_SLOPE_FRAME_ITEM = ITEMS.register("frame_edged_slope", () -> new BaseFrameItem(EDGED_SLOPE_FRAMEBLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> LAYERED_ILLUSION_ITEM = ITEMS.register("illusion_layered_block", () -> new BaseIllusionItem(LAYERED_ILLUSIONBLOCK.get(), new Item.Properties()));
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> LAYERED_ILLUSION_TILE = BLOCK_ENTITY_TYPES.register("illusion_layered_block", () -> BlockEntityType.Builder.of(FrameBlockTile::new, LAYERED_ILLUSIONBLOCK.get()).build(null));
+
+
+    public static final RegistryObject<SlopeFrameBlock> SLOPE_FRAMEBLOCK = BLOCKS.register("frame_slope", () -> new SlopeFrameBlock(() -> FRAMEBLOCK.get().defaultBlockState(), Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> SLOPE_FRAME_ITEM = ITEMS.register("frame_slope", () -> new BaseFrameItem(SLOPE_FRAMEBLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<BlockEntityType<FrameBlockTile>> SLOPE_FRAME_TILE = BLOCK_ENTITY_TYPES.register("frame_slope", () -> BlockEntityType.Builder.of(FrameBlockTile::new, SLOPE_FRAMEBLOCK.get()).build(null));
+
+    public static final RegistryObject<SlopeFrameBlock> EDGED_SLOPE_FRAMEBLOCK = BLOCKS.register("frame_edged_slope", () -> new SlopeFrameBlock(() -> FRAMEBLOCK.get().defaultBlockState(), Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> EDGED_SLOPE_FRAME_ITEM = ITEMS.register("frame_edged_slope", () -> new BaseFrameItem(EDGED_SLOPE_FRAMEBLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<BlockEntityType<FrameBlockTile>> EDGED_SLOPE_FRAME_TILE = BLOCK_ENTITY_TYPES.register("frame_edged_slope", () -> BlockEntityType.Builder.of(FrameBlockTile::new, EDGED_SLOPE_FRAMEBLOCK.get()).build(null));
 
 
     //disabled signs - TODO fix signs
@@ -226,14 +233,8 @@ public class Registration {
     //public static final RegistryObject<Item> SIGN_FRAME_ITEM = ITEMS.register("frame_sign", () -> new FrameSignItem((new Item.Properties()).maxStackSize(16), Registration.STANDING_SIGN_FRAMEBLOCK.get(), Registration.WALL_SIGN_FRAMEBLOCK.get()));
     //public static final RegistryObject<BlockEntityType<SignFrameTile>> SIGN_FRAME_TILE = TILES.register("frame_sign", () -> BlockEntityType.Builder.of(SignFrameTile::new, STANDING_SIGN_FRAMEBLOCK.get(), WALL_SIGN_FRAMEBLOCK.get()).build(null));
 
-    public static final RegistryObject<SlopeFrameBlock> SLOPE_FRAMEBLOCK = BLOCKS.register("frame_slope", () -> new SlopeFrameBlock(() -> FRAMEBLOCK.get().defaultBlockState(), Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<HammerItem> HAMMER = ITEMS.register("hammer", () -> new HammerItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<BlockEntityType<FrameBlockTile>> SLOPE_FRAME_TILE = BLOCK_ENTITY_TYPES.register("frame_slope", () -> BlockEntityType.Builder.of(FrameBlockTile::new, SLOPE_FRAMEBLOCK.get()).build(null));
-
-
-    public static final RegistryObject<SlopeFrameBlock> EDGED_SLOPE_FRAMEBLOCK = BLOCKS.register("frame_edged_slope", () -> new SlopeFrameBlock(() -> FRAMEBLOCK.get().defaultBlockState(), Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<TextureWrenchItem> TEXTURE_WRENCH = ITEMS.register("texture_wrench", () -> new TextureWrenchItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<BlockEntityType<FrameBlockTile>> EDGED_SLOPE_FRAME_TILE = BLOCK_ENTITY_TYPES.register("frame_edged_slope", () -> BlockEntityType.Builder.of(FrameBlockTile::new, EDGED_SLOPE_FRAMEBLOCK.get()).build(null));
     public static final RegistryObject<ChiselItem> CHISEL = ITEMS.register("chisel", () -> new ChiselItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<PaintbrushItem> PAINTBRUSH = ITEMS.register("paintbrush", () -> new PaintbrushItem(new Item.Properties().stacksTo(1)));
 
