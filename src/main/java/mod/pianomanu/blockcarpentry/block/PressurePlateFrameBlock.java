@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
@@ -24,12 +25,12 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 11/17/22
+ * @version 1.6 09/19/23
  */
 public class PressurePlateFrameBlock extends PressurePlateBlock implements EntityBlock, IFrameBlock {
 
     public PressurePlateFrameBlock(Sensitivity sensitivityIn, Properties propertiesIn) {
-        super(sensitivityIn, propertiesIn);
+        super(sensitivityIn, propertiesIn, BlockSetType.OAK);
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, Boolean.FALSE).setValue(CONTAINS_BLOCK, Boolean.FALSE).setValue(LIGHT_LEVEL, 0));
     }
 
