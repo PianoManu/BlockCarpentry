@@ -117,7 +117,6 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock implements
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> entityType) {
-        System.out.println("tick");
         return !level.isClientSide && level.dimensionType().hasSkyLight() ? createTickerHelper(entityType, Registration.DAYLIGHT_DETECTOR_FRAME_TILE.get(), DaylightDetectorFrameBlock::tickEntity) : null;
     }
 }
