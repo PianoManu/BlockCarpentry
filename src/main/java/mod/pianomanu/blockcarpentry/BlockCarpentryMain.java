@@ -6,9 +6,12 @@ import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.util.BlockColorHandler;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import mod.pianomanu.blockcarpentry.util.Tags;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -22,19 +25,16 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-
 import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
 
 /**
  * Main class of the BlockCarpentry mod
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 09/19/23
  */
 @Mod(MOD_ID)
-public class BlockCarpentryMain
-{
+public class BlockCarpentryMain {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "blockcarpentry";
     //TODO main klasse aufräumen - check
@@ -58,14 +58,62 @@ public class BlockCarpentryMain
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(BlockCarpentryMain::onCreativeModeTabRegister);
     }
 
-    /**
-     * doing setup stuff (currently unused)
-     */
-    private void setup(final FMLCommonSetupEvent event)
-    {
-        LOGGER.info("Setting up BlockCarpentry mod");
+    public static void onCreativeModeTabRegister(CreativeModeTabEvent.Register event) {
+        event.registerCreativeModeTab(new ResourceLocation(MOD_ID, "all"), builder -> builder
+                .icon(() -> new ItemStack(Registration.FRAMEBLOCK.get()))
+                .title(Component.translatable("itemGroup.blockcarpentry"))
+                .displayItems((params, output) -> {
+                    output.accept(new ItemStack(Registration.FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.SLAB_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.STAIRS_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.BUTTON_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.PRESSURE_PLATE_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.DOOR_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.TRAPDOOR_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.LADDER_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.FENCE_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.FENCE_GATE_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.WALL_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.BED_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.CHEST_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.CARPET_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.PANE_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.LAYERED_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.SLOPE_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.EDGED_SLOPE_FRAMEBLOCK.get()));
+
+
+                    output.accept(new ItemStack(Registration.ILLUSION_BLOCK.get()));
+                    output.accept(new ItemStack(Registration.SLAB_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.STAIRS_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.BUTTON_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.PRESSURE_PLATE_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.DOOR_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.TRAPDOOR_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.LADDER_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.FENCE_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.FENCE_GATE_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.WALL_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.BED_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.CHEST_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.CARPET_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.PANE_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.LAYERED_ILLUSIONBLOCK.get()));
+
+                    output.accept(new ItemStack(Registration.HAMMER.get()));
+                    output.accept(new ItemStack(Registration.TEXTURE_WRENCH.get()));
+                    output.accept(new ItemStack(Registration.CHISEL.get()));
+                    output.accept(new ItemStack(Registration.PAINTBRUSH.get()));
+                })
+                //.withTabFactory(BCCreativeModeTab::new)
+                .build()
+        );
     }
 
     /**
@@ -82,22 +130,17 @@ public class BlockCarpentryMain
     }
 
     /**
-     * Dispatching inter-mod-communication
+     * doing setup stuff (currently unused)
      */
-    private void enqueueIMC(final InterModEnqueueEvent event)
-    {
-
+    private void setup(final FMLCommonSetupEvent event) {
+        LOGGER.info("Setting up BlockCarpentry mod");
     }
 
     /**
-     * Receiving and processing inter-mod-communication from other mods
+     * Dispatching inter-mod-communication
      */
-    private void processIMC(final InterModProcessEvent event)
-    {
-        LOGGER.info("Processing InterModCommunication");
-        BlockSavingHelper.createValidBlockList();
-        Tags.init();
-        LOGGER.info("Processed InterModCommunication");
+    private void enqueueIMC(final InterModEnqueueEvent event) {
+
     }
 
     /**
@@ -108,19 +151,23 @@ public class BlockCarpentryMain
     }
 
     /**
-     * Registering my ItemGroup for all blocks and items from BlockCarpentry
+     * Receiving and processing inter-mod-communication from other mods
      */
-    public static class BlockCarpentryItemGroup extends CreativeModeTab {
+    private void processIMC(final InterModProcessEvent event) {
+        LOGGER.info("Processing InterModCommunication");
+        BlockSavingHelper.createValidBlockList();
+        Tags.init();
+        LOGGER.info("Processed InterModCommunication");
+    }
 
-        public static final BlockCarpentryItemGroup BLOCK_CARPENTRY = new BlockCarpentryItemGroup(CreativeModeTab.TABS.length,"blockcarpentry");
-        private BlockCarpentryItemGroup(int index, String label) {
-            super(index, label);
+    private static class BCCreativeModeTab extends CreativeModeTab {
+        public BCCreativeModeTab(CreativeModeTab.Builder builder) {
+            super(builder);
         }
 
         @Override
-        @Nonnull
-        public ItemStack makeIcon() {
-            return new ItemStack(Registration.FRAMEBLOCK.get());
+        public ItemStack getIconItem() {
+            return Registration.FRAMEBLOCK_ITEM.get().getDefaultInstance();
         }
     }
 }
