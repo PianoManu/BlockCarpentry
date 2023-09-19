@@ -117,7 +117,12 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock implements
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> entityType) {
-        return !level.isClientSide && level.dimensionType().hasSkyLight() ? createTickerHelper(entityType, Registration.DAYLIGHT_DETECTOR_FRAME_TILE.get(), DaylightDetectorFrameBlock::tickEntity) : null;
+        if (this.getName().equals(Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get().getName()))
+            return !level.isClientSide && level.dimensionType().hasSkyLight() ? createTickerHelper(entityType, Registration.DAYLIGHT_DETECTOR_FRAME_TILE.get(), DaylightDetectorFrameBlock::tickEntity) : null;
+        else if (this.getName().equals(Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get().getName()))
+            return !level.isClientSide && level.dimensionType().hasSkyLight() ? createTickerHelper(entityType, Registration.DAYLIGHT_DETECTOR_ILLUSION_TILE.get(), DaylightDetectorFrameBlock::tickEntity) : null;
+        else
+            throw new IllegalStateException("Block " + this.getName() + " is neither frame or illusion block! BlockState: " + state);
     }
 }
 //========SOLI DEO GLORIA========//
