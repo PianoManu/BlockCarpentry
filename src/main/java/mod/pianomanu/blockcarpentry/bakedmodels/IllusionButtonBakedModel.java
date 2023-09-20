@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
+import mod.pianomanu.blockcarpentry.block.ButtonFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
@@ -34,7 +35,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 09/20/23
  */
 public class IllusionButtonBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -57,20 +58,23 @@ public class IllusionButtonBakedModel implements IDynamicBakedModel {
         if (mimic != null && state != null) {
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             int rotation = extraData.get(FrameBlockTile.ROTATION);
+            boolean isPowered = state.getValue(ButtonFrameBlock.POWERED);
+            float thickness = isPowered ? 1 / 16f : 2 / 16f;
+
             float yl = 0f;
-            float yh = 2 / 16f;
+            float yh = thickness;
             if (state.getValue(WoodButtonBlock.FACE).equals(AttachFace.CEILING)) {
-                yl = 14 / 16f;
+                yl = 1 - thickness;
                 yh = 1f;
             }
             List<BakedQuad> quads = new ArrayList<>();
             switch (state.getValue(WoodButtonBlock.FACE)) {
                 case WALL:
                     switch (state.getValue(WoodButtonBlock.FACING)) {
-                        case NORTH -> quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 14 / 16f, 1f, mimic, model, extraData, rand, tintIndex, rotation));
-                        case EAST -> quads.addAll(ModelHelper.createSixFaceCuboid(0f, 2 / 16f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        case WEST -> quads.addAll(ModelHelper.createSixFaceCuboid(14 / 16f, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
-                        case SOUTH -> quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 0f, 2 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        case NORTH -> quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 1 - thickness, 1f, mimic, model, extraData, rand, tintIndex, rotation));
+                        case EAST -> quads.addAll(ModelHelper.createSixFaceCuboid(0f, thickness, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        case WEST -> quads.addAll(ModelHelper.createSixFaceCuboid(1 - thickness, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+                        case SOUTH -> quads.addAll(ModelHelper.createSixFaceCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 0f, thickness, mimic, model, extraData, rand, tintIndex, rotation));
                     }
                     break;
                 case FLOOR:
@@ -85,10 +89,10 @@ public class IllusionButtonBakedModel implements IDynamicBakedModel {
                 switch (state.getValue(WoodButtonBlock.FACE)) {
                     case WALL:
                         switch (state.getValue(WoodButtonBlock.FACING)) {
-                            case NORTH -> quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 14 / 16f, 1f, overlayIndex));
-                            case EAST -> quads.addAll(ModelHelper.createOverlay(0f, 2 / 16f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
-                            case WEST -> quads.addAll(ModelHelper.createOverlay(14 / 16f, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
-                            case SOUTH -> quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 0f, 2 / 16f, overlayIndex));
+                            case NORTH -> quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 1 - thickness, 1f, overlayIndex));
+                            case EAST -> quads.addAll(ModelHelper.createOverlay(0f, thickness, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
+                            case WEST -> quads.addAll(ModelHelper.createOverlay(1 - thickness, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
+                            case SOUTH -> quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 0f, thickness, overlayIndex));
                         }
                         break;
                     case FLOOR:
