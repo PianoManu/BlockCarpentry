@@ -29,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.2 11/12/22
+ * @version 1.3 09/20/23
  */
 public class BlockAppearanceHelper {
     public static boolean setLightLevel(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand) {
@@ -235,116 +235,22 @@ public class BlockAppearanceHelper {
 
     public static boolean setOverlay(Level level, BlockPos pos, Player player, ItemStack itemStack) {
         if (itemStack.getItem().equals(Items.GRASS)) {
-            BlockEntity tileEntity = level.getBlockEntity(pos);
-            if (tileEntity instanceof FrameBlockTile fte) {
-                if (fte.getOverlay() == 1) {
-                    fte.setOverlay(2);
-                    player.displayClientMessage(Component.translatable("message.blockcarpentry.grass_overlay_large"), true);
-                } else {
-                    fte.setOverlay(1);
-                    player.displayClientMessage(Component.translatable("message.blockcarpentry.grass_overlay"), true);
-                }
-            }
-            if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
-                BlockState state = level.getBlockState(pos);
-                if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    if (fte.getOverlay_1() == 1) {
-                        fte.setOverlay_1(2);
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.grass_overlay_large"), true);
-                    } else {
-                        fte.setOverlay_1(1);
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.grass_overlay"), true);
-                    }
-                } else {
-                    if (fte.getOverlay_2() == 1) {
-                        fte.setOverlay_2(2);
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.grass_overlay_large"), true);
-                    } else {
-                        fte.setOverlay_2(1);
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.grass_overlay"), true);
-                    }
-                }
-            }
-            return true;
+            return OverlayHelper.setOverlay(level, pos, player, 1, 2);
         }
         if (itemStack.getItem().equals(Items.SNOWBALL)) {
-            BlockEntity tileEntity = level.getBlockEntity(pos);
-            if (tileEntity instanceof FrameBlockTile fte) {
-                if (fte.getOverlay() == 3) {
-                    fte.setOverlay(4);
-                    player.displayClientMessage(Component.translatable("message.blockcarpentry.snow_overlay_small"), true);
-                } else {
-                    fte.setOverlay(3);
-                    player.displayClientMessage(Component.translatable("message.blockcarpentry.snow_overlay"), true);
-                }
-            }
-            if (tileEntity instanceof TwoBlocksFrameBlockTile) {
-                BlockState state = level.getBlockState(pos);
-                if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
-                    if (fte.getOverlay_1() == 3) {
-                        fte.setOverlay_1(4);
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.snow_overlay_small"), true);
-                    } else {
-                        fte.setOverlay_1(3);
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.snow_overlay"), true);
-                    }
-                } else {
-                    TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
-                    if (fte.getOverlay_2() == 3) {
-                        fte.setOverlay_2(4);
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.snow_overlay_small"), true);
-                    } else {
-                        fte.setOverlay_2(3);
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.snow_overlay"), true);
-                    }
-                }
-            }
-            return true;
+            return OverlayHelper.setOverlay(level, pos, player, 3, 4);
         }
         if (itemStack.getItem().equals(Items.VINE)) {
-            BlockEntity tileEntity = level.getBlockEntity(pos);
-            if (tileEntity instanceof FrameBlockTile fte) {
-                fte.setOverlay(5);
-                player.displayClientMessage(Component.translatable("message.blockcarpentry.vine_overlay"), true);
-            }
-            if (tileEntity instanceof TwoBlocksFrameBlockTile) {
-                BlockState state = level.getBlockState(pos);
-                if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
-                    fte.setOverlay_1(5);
-                    player.displayClientMessage(Component.translatable("message.blockcarpentry.vine_overlay"), true);
-                } else {
-                    TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
-                    fte.setOverlay_2(5);
-                    player.displayClientMessage(Component.translatable("message.blockcarpentry.vine_overlay"), true);
-                }
-            }
-            return true;
+            return OverlayHelper.setOverlay(level, pos, player, 5, 5);
         }
         if (itemStack.getItem().equals(Items.GUNPOWDER)) {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile fte) {
-                if (fte.getOverlay() > 5 && fte.getOverlay() < 10) {
-                    fte.setOverlay(fte.getOverlay() + 1);
-                } else fte.setOverlay(6);
-                player.displayClientMessage(Component.translatable("message.blockcarpentry.special_overlay", (fte.getOverlay() - 5)), true);
+                return OverlayHelper.setOverlay(level, pos, player, 6, 10, 5);
             }
-            if (tileEntity instanceof TwoBlocksFrameBlockTile) {
+            if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
                 BlockState state = level.getBlockState(pos);
-                if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
-                    if (fte.getOverlay_1() > 5 && fte.getOverlay_1() < 10) {
-                        fte.setOverlay_1(fte.getOverlay_1() + 1);
-                    } else fte.setOverlay_1(6);
-                    player.displayClientMessage(Component.translatable("message.blockcarpentry.special_overlay", (fte.getOverlay_1() - 5)), true);
-                } else {
-                    TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
-                    if (fte.getOverlay_2() > 5 && fte.getOverlay_2() < 10) {
-                        fte.setOverlay_2(fte.getOverlay_2() + 1);
-                    } else fte.setOverlay_2(6);
-                    player.displayClientMessage(Component.translatable("message.blockcarpentry.special_overlay", (fte.getOverlay_2() - 5)), true);
-                }
+                return OverlayHelper.setOverlay(level, pos, player, 6, 10, 5);
             }
             return true;
         }

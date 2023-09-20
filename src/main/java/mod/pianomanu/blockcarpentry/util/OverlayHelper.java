@@ -1,0 +1,84 @@
+package mod.pianomanu.blockcarpentry.util;
+
+import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+
+/**
+ * Util class for frame block overlays
+ *
+ * @author PianoManu
+ * @version 1.0 09/20/23
+ */
+public class OverlayHelper {
+    private static final String[] messageStrings = {
+            "",
+            "message.blockcarpentry.grass_overlay",
+            "message.blockcarpentry.grass_overlay_large",
+            "message.blockcarpentry.snow_overlay",
+            "message.blockcarpentry.snow_overlay_small",
+            "message.blockcarpentry.vine_overlay",
+            "message.blockcarpentry.special_overlay",
+            "message.blockcarpentry.special_overlay",
+            "message.blockcarpentry.special_overlay",
+            "message.blockcarpentry.special_overlay",
+            "message.blockcarpentry.special_overlay"
+    };
+
+    public static boolean setOverlay(Level level, BlockPos pos, Player player, int lowerBound, int upperBound) {
+        return setOverlay(level, pos, player, lowerBound, upperBound, 0);
+    }
+
+    public static boolean setOverlay(Level level, BlockPos pos, Player player, int lowerBound, int upperBound, int messageIndexOffset) {
+        BlockEntity tileEntity = level.getBlockEntity(pos);
+        if (tileEntity instanceof FrameBlockTile fte) {
+            setOverlayBaseFrameCycle(fte, player, lowerBound, upperBound, messageIndexOffset);
+            return true;
+        }
+        if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
+            BlockState state = level.getBlockState(pos);
+            setOverlayTwoBlocksFrameCycle(state, fte, player, lowerBound, upperBound, messageIndexOffset);
+            return true;
+        }
+        return false;
+    }
+
+    private static void setOverlayBaseFrameCycle(FrameBlockTile fte, Player player, int lowerBound, int upperBound, int messageIndexOffset) {
+        if (fte.getOverlay() < upperBound && fte.getOverlay() >= lowerBound) {
+            setOverlayBaseFrame(fte, player, fte.getOverlay() + 1, messageIndexOffset);
+        } else {
+            setOverlayBaseFrame(fte, player, lowerBound, messageIndexOffset);
+        }
+    }
+
+    private static void setOverlayTwoBlocksFrameCycle(BlockState state, TwoBlocksFrameBlockTile fte, Player player, int lowerBound, int upperBound, int messageIndexOffset) {
+        if (fte.getOverlay_1() < upperBound && !state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB) || fte.getOverlay_2() < upperBound && state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+            setOverlayTwoBlocksFrame(state, fte, player, !state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB) ? fte.getOverlay_1() + 1 : fte.getOverlay_1() + 2, messageIndexOffset);
+        } else {
+            setOverlayTwoBlocksFrame(state, fte, player, lowerBound, messageIndexOffset);
+        }
+    }
+
+    private static void setOverlayBaseFrame(FrameBlockTile fte, Player player, int newOverlay, int messageIndexOffset) {
+        fte.setOverlay(newOverlay);
+        int messageIndex = messageIndexOffset == 0 ? 0 : newOverlay - messageIndexOffset;
+        player.displayClientMessage(Component.translatable(messageStrings[newOverlay], messageIndex), true);
+    }
+
+    private static void setOverlayTwoBlocksFrame(BlockState state, TwoBlocksFrameBlockTile fte, Player player, int newOverlay, int messageIndexOffset) {
+        if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+            fte.setOverlay_1(newOverlay);
+        } else {
+            fte.setOverlay_2(newOverlay);
+        }
+        int messageIndex = messageIndexOffset == 0 ? 0 : newOverlay - messageIndexOffset;
+        player.displayClientMessage(Component.translatable(messageStrings[newOverlay], messageIndex), true);
+    }
+}
+//========SOLI DEO GLORIA========//
