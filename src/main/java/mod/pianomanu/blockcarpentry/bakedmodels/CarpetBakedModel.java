@@ -102,7 +102,7 @@ public class CarpetBakedModel implements IDynamicBakedModel {
                 }
                 int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
                 if (overlayIndex != 0) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));
+                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, true));
                 }
                 return quads;
             }
