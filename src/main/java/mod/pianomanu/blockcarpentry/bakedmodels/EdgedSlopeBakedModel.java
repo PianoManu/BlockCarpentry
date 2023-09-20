@@ -58,6 +58,11 @@ public class EdgedSlopeBakedModel implements IDynamicBakedModel {
         return Collections.emptyList();
     }
 
+    private static void o(List<BakedQuad> quads, int x, int y, int z, int overlayIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down) {
+        if (overlayIndex > 0)
+            quads.addAll(ModelHelper.createOverlayVoxel(x, y, z, overlayIndex, north, south, east, west, up, down, false));
+    }
+
     public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, ModelData extraData, BakedModel model) {
         if (side != null) {
             return Collections.emptyList();
@@ -81,6 +86,7 @@ public class EdgedSlopeBakedModel implements IDynamicBakedModel {
             StairsShape innerRight = StairsShape.INNER_RIGHT;
             StairsShape outerLeft = StairsShape.OUTER_LEFT;
             StairsShape outerRight = StairsShape.OUTER_RIGHT;
+            int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
 
             //Don't even try to understand what's happening here
             //If any of it broke, it's easier to completely rewrite it than to find the problem
@@ -97,56 +103,76 @@ public class EdgedSlopeBakedModel implements IDynamicBakedModel {
                             if (shape == straight) {
                                 if (direction == north) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0, z == 15 - y, x == 15 && z <= 15 - y, x == 0 && z <= 15 - y, z == 15 - y, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == 0, z == 15 - y, x == 15 && z <= 15 - y, x == 0 && z <= 15 - y, z == 15 - y, y == 0);
                                 } else if (direction == east) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x >= y, z == 15 && x >= y, x == 15, x == y, x == y, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x >= y, z == 15 && x >= y, x == 15, x == y, x == y, y == 0);
                                 } else if (direction == south) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == y, z == 15, x == 15 && z >= y, x == 0 && z >= y, z == y, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == y, z == 15, x == 15 && z >= y, x == 0 && z >= y, z == y, y == 0);
                                 } else if (direction == west) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x <= 15 - y, z == 15 && x <= 15 - y, x == 15 - y, x == 0, x == 15 - y, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x <= 15 - y, z == 15 && x <= 15 - y, x == 15 - y, x == 0, x == 15 - y, y == 0);
                                 }
                             }
                             if (shape == innerLeft) {
                                 if (direction == north) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0, z == 15 - y && z < x || z == 15 && x <= 15 - y, x == 15 && z <= 15 - y || x == 15 - y && x < z, x == 0, z == 15 - y && z <= x || x == 15 - y && x <= z, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == 0, z == 15 - y && z < x || z == 15 && x <= 15 - y, x == 15 && z <= 15 - y || x == 15 - y && x < z, x == 0, z == 15 - y && z <= x || x == 15 - y && x <= z, y == 0);
                                 } else if (direction == east) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0, z == 15 && x >= y || z == 15 - y && z < 15 - x, x == 15, x == y && x > 15 - z || x == 0 && z <= 15 - y, z == 15 - y && z <= 15 - x || x == y && x >= 15 - z, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == 0, z == 15 && x >= y || z == 15 - y && z < 15 - x, x == 15, x == y && x > 15 - z || x == 0 && z <= 15 - y, z == 15 - y && z <= 15 - x || x == y && x >= 15 - z, y == 0);
                                 } else if (direction == south) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == y && z > x || z == 0 && x >= y, z == 15, x == 15, x == 0 && z >= y || x == y && x > z, z == y && z >= x || x == y && x >= z, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == y && z > x || z == 0 && x >= y, z == 15, x == 15, x == 0 && z >= y || x == y && x > z, z == y && z >= x || x == y && x >= z, y == 0);
                                 } else if (direction == west) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x <= 15 - y || z == y && z > 15 - x, z == 15, x == 15 - y && x < 15 - z || x == 15 && z >= y, x == 0, x == 15 - y && x <= 15 - z || z == y && z > 15 - x, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x <= 15 - y || z == y && z > 15 - x, z == 15, x == 15 - y && x < 15 - z || x == 15 && z >= y, x == 0, x == 15 - y && x <= 15 - z || z == y && z > 15 - x, y == 0);
                                 }
                             }
                             if (shape == innerRight) {
                                 if (direction == west) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0, z == 15 - y && z < x || z == 15 && x <= 15 - y, x == 15 && z <= 15 - y || x == 15 - y && x < z, x == 0, z == 15 - y && z <= x || x == 15 - y && x <= z, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == 0, z == 15 - y && z < x || z == 15 && x <= 15 - y, x == 15 && z <= 15 - y || x == 15 - y && x < z, x == 0, z == 15 - y && z <= x || x == 15 - y && x <= z, y == 0);
                                 } else if (direction == north) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0, z == 15 && x >= y || z == 15 - y && z < 15 - x, x == 15, x == y && x > 15 - z || x == 0 && z <= 15 - y, z == 15 - y && z <= 15 - x || x == y && x >= 15 - z, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == 0, z == 15 && x >= y || z == 15 - y && z < 15 - x, x == 15, x == y && x > 15 - z || x == 0 && z <= 15 - y, z == 15 - y && z <= 15 - x || x == y && x >= 15 - z, y == 0);
                                 } else if (direction == east) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == y && z > x || z == 0 && x >= y, z == 15, x == 15, x == 0 && z >= y || x == y && x > z, z == y && z >= x || x == y && x >= z, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == y && z > x || z == 0 && x >= y, z == 15, x == 15, x == 0 && z >= y || x == y && x > z, z == y && z >= x || x == y && x >= z, y == 0);
                                 } else if (direction == south) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x <= 15 - y || z == y && z > 15 - x, z == 15, x == 15 - y && x < 15 - z || x == 15 && z >= y, x == 0, x == 15 - y && x <= 15 - z || z == y && z > 15 - x, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x <= 15 - y || z == y && z > 15 - x, z == 15, x == 15 - y && x < 15 - z || x == 15 && z >= y, x == 0, x == 15 - y && x <= 15 - z || z == y && z > 15 - x, y == 0);
                                 }
                             }
                             if (shape == outerLeft) {
                                 if (direction == north) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x <= 15 - y, z == 15 - y && x <= 15 - y, x == 15 - y && z <= 15 - y, x == 0 && z <= 15 - y, z == 15 - y && z >= x || x == 15 - y && x >= z, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x <= 15 - y, z == 15 - y && x <= 15 - y, x == 15 - y && z <= 15 - y, x == 0 && z <= 15 - y, z == 15 - y && z >= x || x == 15 - y && x >= z, y == 0);
                                 } else if (direction == east) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x >= y, z == 15 - y && x >= y, x == 15 && z <= 15 - y, x == y && x <= 15 - z, x == y && x <= 15 - z || z == 15 - y && z >= 15 - x, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x >= y, z == 15 - y && x >= y, x == 15 && z <= 15 - y, x == y && x <= 15 - z, x == y && x <= 15 - z || z == 15 - y && z >= 15 - x, y == 0);
                                 } else if (direction == south) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == y && z <= x, z == 15 && x >= y, x == 15 && z >= y, x == y && z >= y, z == y && z <= x || x == y && x <= z, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == y && z <= x, z == 15 && x >= y, x == 15 && z >= y, x == y && z >= y, z == y && z <= x || x == y && x <= z, y == 0);
                                 } else if (direction == west) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == y && x <= 15 - y, z == 15 && x <= 15 - y, x == 15 - y && x >= 15 - z, x == 0 && z >= y, x == 15 - y && x >= 15 - z || z == y && z < 15 - x, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == y && x <= 15 - y, z == 15 && x <= 15 - y, x == 15 - y && x >= 15 - z, x == 0 && z >= y, x == 15 - y && x >= 15 - z || z == y && z < 15 - x, y == 0);
                                 }
                             }
                             if (shape == outerRight) {
                                 if (direction == west) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x <= 15 - y, z == 15 - y && x <= 15 - y, x == 15 - y && z <= 15 - y, x == 0 && z <= 15 - y, z == 15 - y && z >= x || x == 15 - y && x >= z, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x <= 15 - y, z == 15 - y && x <= 15 - y, x == 15 - y && z <= 15 - y, x == 0 && z <= 15 - y, z == 15 - y && z >= x || x == 15 - y && x >= z, y == 0);
                                 } else if (direction == north) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x >= y, z == 15 - y && x >= y, x == 15 && z <= 15 - y, x == y && x <= 15 - z, x == y && x <= 15 - z || z == 15 - y && z >= 15 - x, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x >= y, z == 15 - y && x >= y, x == 15 && z <= 15 - y, x == y && x <= 15 - z, x == y && x <= 15 - z || z == 15 - y && z >= 15 - x, y == 0);
                                 } else if (direction == east) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == y && z <= x, z == 15 && x >= y, x == 15 && z >= y, x == y && z >= y, z == y && z <= x || x == y && x <= z, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == y && z <= x, z == 15 && x >= y, x == 15 && z >= y, x == y && z >= y, z == y && z <= x || x == y && x <= z, y == 0);
                                 } else if (direction == south) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == y && x <= 15 - y, z == 15 && x <= 15 - y, x == 15 - y && x >= 15 - z, x == 0 && z >= y, x == 15 - y && x >= 15 - z || z == y && z < 15 - x, y == 0));
+                                    o(quads, x, y, z, overlayIndex, z == y && x <= 15 - y, z == 15 && x <= 15 - y, x == 15 - y && x >= 15 - z, x == 0 && z >= y, x == 15 - y && x >= 15 - z || z == y && z < 15 - x, y == 0);
                                 }
                             }
                         }
@@ -163,56 +189,76 @@ public class EdgedSlopeBakedModel implements IDynamicBakedModel {
                             if (shape == straight) {
                                 if (direction == north) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0, z == y, x == 15 && z <= y, x == 0 && z <= y, y == 15, z == y));
+                                    o(quads, x, y, z, overlayIndex, z == 0, z == y, x == 15 && z <= y, x == 0 && z <= y, y == 15, z == y);
                                 } else if (direction == east) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x >= 15 - y, z == 15 && x >= 15 - y, x == 15, x == 15 - y, y == 15, x == 15 - y));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x >= 15 - y, z == 15 && x >= 15 - y, x == 15, x == 15 - y, y == 15, x == 15 - y);
                                 } else if (direction == south) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 15 - y, z == 15, x == 15 && z >= 15 - y, x == 0 && z >= 15 - y, y == 15, z == 15 - y));
+                                    o(quads, x, y, z, overlayIndex, z == 15 - y, z == 15, x == 15 && z >= 15 - y, x == 0 && z >= 15 - y, y == 15, z == 15 - y);
                                 } else if (direction == west) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x <= y, z == 15 && x <= y, x == y, x == 0, y == 15, x == y));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x <= y, z == 15 && x <= y, x == y, x == 0, y == 15, x == y);
                                 }
                             }
                             if (shape == innerLeft) {
                                 if (direction == north) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0, z == y && z < x || z == 15 && x <= y, x == 15 && z <= y || x == y && x < z, x == 0, y == 15, z == y && z <= x || x == y && x <= z));
+                                    o(quads, x, y, z, overlayIndex, z == 0, z == y && z < x || z == 15 && x <= y, x == 15 && z <= y || x == y && x < z, x == 0, y == 15, z == y && z <= x || x == y && x <= z);
                                 } else if (direction == east) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0, z == 15 && x >= 15 - y || z == y && z < 15 - x, x == 15, x == 15 - y && x > 15 - z || x == 0 && z <= y, y == 15, z == y && z <= 15 - x || x == 15 - y && x >= 15 - z));
+                                    o(quads, x, y, z, overlayIndex, z == 0, z == 15 && x >= 15 - y || z == y && z < 15 - x, x == 15, x == 15 - y && x > 15 - z || x == 0 && z <= y, y == 15, z == y && z <= 15 - x || x == 15 - y && x >= 15 - z);
                                 } else if (direction == south) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 15 - y && z > x || z == 0 && x >= 15 - y, z == 15, x == 15, x == 0 && z >= 15 - y || x == 15 - y && x > z, y == 15, z == 15 - y && z >= x || x == 15 - y && x >= z));
+                                    o(quads, x, y, z, overlayIndex, z == 15 - y && z > x || z == 0 && x >= 15 - y, z == 15, x == 15, x == 0 && z >= 15 - y || x == 15 - y && x > z, y == 15, z == 15 - y && z >= x || x == 15 - y && x >= z);
                                 } else if (direction == west) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x <= y || z == 15 - y && z > 15 - x, z == 15, x == y && x < 15 - z || x == 15 && z >= 15 - y, x == 0, y == 15, x == y && x <= 15 - z || z == 15 - y && z > 15 - x));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x <= y || z == 15 - y && z > 15 - x, z == 15, x == y && x < 15 - z || x == 15 && z >= 15 - y, x == 0, y == 15, x == y && x <= 15 - z || z == 15 - y && z > 15 - x);
                                 }
                             }
                             if (shape == innerRight) {
                                 if (direction == west) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0, z == y && z < x || z == 15 && x <= y, x == 15 && z <= y || x == y && x < z, x == 0, y == 15, z == y && z <= x || x == y && x <= z));
+                                    o(quads, x, y, z, overlayIndex, z == 0, z == y && z < x || z == 15 && x <= y, x == 15 && z <= y || x == y && x < z, x == 0, y == 15, z == y && z <= x || x == y && x <= z);
                                 } else if (direction == north) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0, z == 15 && x >= 15 - y || z == y && z < 15 - x, x == 15, x == 15 - y && x > 15 - z || x == 0 && z <= y, y == 15, z == y && z <= 15 - x || x == 15 - y && x >= 15 - z));
+                                    o(quads, x, y, z, overlayIndex, z == 0, z == 15 && x >= 15 - y || z == y && z < 15 - x, x == 15, x == 15 - y && x > 15 - z || x == 0 && z <= y, y == 15, z == y && z <= 15 - x || x == 15 - y && x >= 15 - z);
                                 } else if (direction == east) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 15 - y && z > x || z == 0 && x >= 15 - y, z == 15, x == 15, x == 0 && z >= 15 - y || x == 15 - y && x > z, y == 15, z == 15 - y && z >= x || x == 15 - y && x >= z));
+                                    o(quads, x, y, z, overlayIndex, z == 15 - y && z > x || z == 0 && x >= 15 - y, z == 15, x == 15, x == 0 && z >= 15 - y || x == 15 - y && x > z, y == 15, z == 15 - y && z >= x || x == 15 - y && x >= z);
                                 } else if (direction == south) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x <= y || z == 15 - y && z > 15 - x, z == 15, x == y && x < 15 - z || x == 15 && z >= 15 - y, x == 0, y == 15, x == y && x <= 15 - z || z == 15 - y && z > 15 - x));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x <= y || z == 15 - y && z > 15 - x, z == 15, x == y && x < 15 - z || x == 15 && z >= 15 - y, x == 0, y == 15, x == y && x <= 15 - z || z == 15 - y && z > 15 - x);
                                 }
                             }
                             if (shape == outerLeft) {
                                 if (direction == north) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x <= y, z == y && x <= y, x == y && z <= y, x == 0 && z <= y, y == 15, z == y && z >= x || x == y && x >= z));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x <= y, z == y && x <= y, x == y && z <= y, x == 0 && z <= y, y == 15, z == y && z >= x || x == y && x >= z);
                                 } else if (direction == east) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x >= 15 - y, z == y && x >= 15 - y, x == 15 && z <= y, x == 15 - y && x <= 15 - z, y == 15, x == 15 - y && x <= 15 - z || z == y && z >= 15 - x));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x >= 15 - y, z == y && x >= 15 - y, x == 15 && z <= y, x == 15 - y && x <= 15 - z, y == 15, x == 15 - y && x <= 15 - z || z == y && z >= 15 - x);
                                 } else if (direction == south) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 15 - y && z <= x, z == 15 && x >= 15 - y, x == 15 && z >= 15 - y, x == 15 - y && z >= 15 - y, y == 15, z == 15 - y && z <= x || x == 15 - y && x <= z));
+                                    o(quads, x, y, z, overlayIndex, z == 15 - y && z <= x, z == 15 && x >= 15 - y, x == 15 && z >= 15 - y, x == 15 - y && z >= 15 - y, y == 15, z == 15 - y && z <= x || x == 15 - y && x <= z);
                                 } else if (direction == west) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 15 - y && x <= y, z == 15 && x <= y, x == y && x >= 15 - z, x == 0 && z >= 15 - y, y == 15, x == y && x >= 15 - z || z == 15 - y && z < 15 - x));
+                                    o(quads, x, y, z, overlayIndex, z == 15 - y && x <= y, z == 15 && x <= y, x == y && x >= 15 - z, x == 0 && z >= 15 - y, y == 15, x == y && x >= 15 - z || z == 15 - y && z < 15 - x);
                                 }
                             }
                             if (shape == outerRight) {
                                 if (direction == west) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x <= y, z == y && x <= y, x == y && z <= y, x == 0 && z <= y, y == 15, z == y && z >= x || x == y && x >= z));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x <= y, z == y && x <= y, x == y && z <= y, x == 0 && z <= y, y == 15, z == y && z >= x || x == y && x >= z);
                                 } else if (direction == north) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 0 && x >= 15 - y, z == y && x >= 15 - y, x == 15 && z <= y, x == 15 - y && x <= 15 - z, y == 15, x == 15 - y && x <= 15 - z || z == y && z >= 15 - x));
+                                    o(quads, x, y, z, overlayIndex, z == 0 && x >= 15 - y, z == y && x >= 15 - y, x == 15 && z <= y, x == 15 - y && x <= 15 - z, y == 15, x == 15 - y && x <= 15 - z || z == y && z >= 15 - x);
                                 } else if (direction == east) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 15 - y && z <= x, z == 15 && x >= 15 - y, x == 15 && z >= 15 - y, x == 15 - y && z >= 15 - y, y == 15, z == 15 - y && z <= x || x == 15 - y && x <= z));
+                                    o(quads, x, y, z, overlayIndex, z == 15 - y && z <= x, z == 15 && x >= 15 - y, x == 15 && z >= 15 - y, x == 15 - y && z >= 15 - y, y == 15, z == 15 - y && z <= x || x == 15 - y && x <= z);
                                 } else if (direction == south) {
                                     quads.addAll(ModelHelper.createVoxel(x, y, z, texture, tintIndex, z == 15 - y && x <= y, z == 15 && x <= y, x == y && x >= 15 - z, x == 0 && z >= 15 - y, y == 15, x == y && x >= 15 - z || z == 15 - y && z < 15 - x));
+                                    o(quads, x, y, z, overlayIndex, z == 15 - y && x <= y, z == 15 && x <= y, x == y && x >= 15 - z, x == 0 && z >= 15 - y, y == 15, x == y && x >= 15 - z || z == 15 - y && z < 15 - x);
                                 }
                             }
                         }

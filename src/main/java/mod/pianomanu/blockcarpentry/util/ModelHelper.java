@@ -2,6 +2,7 @@ package mod.pianomanu.blockcarpentry.util;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
+import mod.pianomanu.blockcarpentry.bakedmodels.ModelInformation;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -26,7 +27,7 @@ import java.util.List;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.4 11/17/22
+ * @version 1.4 09/20/23
  */
 public class ModelHelper {
 
@@ -481,10 +482,10 @@ public class ModelHelper {
     }
 
     public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, int tintIndex, TextureAtlasSprite textureNorth, TextureAtlasSprite textureSouth, TextureAtlasSprite textureEast, TextureAtlasSprite textureWest, TextureAtlasSprite textureUp, TextureAtlasSprite textureDown, int rotation) {
-        return createSixFaceCuboid(xl, xh, yl, yh, zl, zh, tintIndex, true, true, true, true, true, true, textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, true, rotation);
+        return createSixFaceCuboid(xl, xh, yl, yh, zl, zh, tintIndex, true, true, true, true, true, true, textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, true, rotation, 0);
     }
 
-    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, TextureAtlasSprite textureNorth, TextureAtlasSprite textureSouth, TextureAtlasSprite textureEast, TextureAtlasSprite textureWest, TextureAtlasSprite textureUp, TextureAtlasSprite textureDown, Boolean moveOverlay, int rotation) {
+    public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, TextureAtlasSprite textureNorth, TextureAtlasSprite textureSouth, TextureAtlasSprite textureEast, TextureAtlasSprite textureWest, TextureAtlasSprite textureUp, TextureAtlasSprite textureDown, Boolean moveOverlay, int rotation, int moveVertically) {
         List<BakedQuad> quads = new ArrayList<>();
         //Eight corners of the block
         Vec3 NWU = v(xl, yh, zl); //North-West-Up
@@ -525,54 +526,53 @@ public class ModelHelper {
             zh--;
             zl--;
         }
-        if (rotation == 0) {
-            if (up && textureUp != null)
-                quads.add(createQuad(NWU, SWU, SEU, NEU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-            if (down && textureDown != null)
-                quads.add(createQuad(NED, SED, SWD, NWD, textureDown, xh * 16, xl * 16, 16 - zl * 16, 16 - zh * 16, tintIndex));
+
+        if (up && textureUp != null)
+            quads.add(createQuad(NWU, SWU, SEU, NEU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+        if (down && textureDown != null)
+            quads.add(createQuad(NED, SED, SWD, NWD, textureDown, xh * 16, xl * 16, 16 - zl * 16, 16 - zh * 16, tintIndex));
+
+
+        if (west && textureWest != null)
             //not moved overlay - texture starts from y=1
-            if (west && textureWest != null && !moveOverlay)
-                quads.add(createQuad(NWU, NWD, SWD, SWU, textureWest, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-            if (east && textureEast != null && !moveOverlay)
-                quads.add(createQuad(SEU, SED, NED, NEU, textureEast, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-            if (north && textureNorth != null && !moveOverlay)
-                quads.add(createQuad(NEU, NED, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-            if (south && textureSouth != null && !moveOverlay)
-                quads.add(createQuad(SWU, SWD, SED, SEU, textureSouth, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (!moveOverlay) {
+                quads.add(createQuad(NWU, NWD, SWD, SWU, textureWest, zl * 16, zh * 16, 16 - yh * 16 - moveVertically, 16 - yl * 16 - moveVertically, tintIndex));
+            }
             //moved overlay - texture starts from height of block
-            if (west && textureWest != null && moveOverlay)
-                quads.add(createQuad(NWU, NWD, SWD, SWU, textureWest, zl * 16, zh * 16, yl * 16, yh * 16, tintIndex));
-            if (east && textureEast != null && moveOverlay)
-                quads.add(createQuad(SEU, SED, NED, NEU, textureEast, 16 - zh * 16, 16 - zl * 16, yl * 16, yh * 16, tintIndex));
-            if (north && textureNorth != null && moveOverlay)
-                quads.add(createQuad(NEU, NED, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, yl * 16, yh * 16, tintIndex));
-            if (south && textureSouth != null && moveOverlay)
-                quads.add(createQuad(SWU, SWD, SED, SEU, textureSouth, xl * 16, xh * 16, yl * 16, yh * 16, tintIndex));
+            else {
+                quads.add(createQuad(NWU, NWD, SWD, SWU, textureWest, zl * 16, zh * 16, yl * 16 - moveVertically, yh * 16 - moveVertically, tintIndex));
+            }
+        if (east && textureEast != null) {
+            //not moved overlay - texture starts from y=1
+            if (!moveOverlay) {
+                quads.add(createQuad(SEU, SED, NED, NEU, textureEast, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16 - moveVertically, 16 - yl * 16 - moveVertically, tintIndex));
+            }
+            //moved overlay - texture starts from height of block
+            else {
+                quads.add(createQuad(SEU, SED, NED, NEU, textureEast, 16 - zh * 16, 16 - zl * 16, yl * 16 - moveVertically, yh * 16 - moveVertically, tintIndex));
+            }
         }
-        if (rotation == 1) {
-            //rotated
-            if (up && textureUp != null)
-                quads.add(createQuad(NWU, NEU, SEU, SWU, textureUp, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-            if (down && textureDown != null)
-                quads.add(createQuad(NED, NWD, SWD, SED, textureDown, xl * 16, xh * 16, 16 - zh * 16, 16 - zl * 16, tintIndex));
+
+        if (north && textureNorth != null) {
             //not moved overlay - texture starts from y=1
-            if (north && textureNorth != null && !moveOverlay)
-                quads.add(createQuad(SWU, SWD, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-            if (south && textureSouth != null && !moveOverlay)
-                quads.add(createQuad(NEU, NED, SED, SEU, textureSouth, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-            if (east && textureEast != null && !moveOverlay)
-                quads.add(createQuad(NWU, NWD, NED, NEU, textureEast, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-            if (west && textureWest != null && !moveOverlay)
-                quads.add(createQuad(SEU, SED, SWD, SWU, textureWest, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (!moveOverlay) {
+                quads.add(createQuad(NEU, NED, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16 - moveVertically, 16 - yl * 16 - moveVertically, tintIndex));
+            }
             //moved overlay - texture starts from height of block
-            if (north && textureNorth != null && moveOverlay)
-                quads.add(createQuad(SWU, SWD, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, yl * 16, yh * 16, tintIndex));
-            if (south && textureSouth != null && moveOverlay)
-                quads.add(createQuad(NEU, NED, SED, SEU, textureSouth, xl * 16, xh * 16, yl * 16, yh * 16, tintIndex));
-            if (east && textureEast != null && moveOverlay)
-                quads.add(createQuad(NWU, NWD, NED, NEU, textureEast, zl * 16, zh * 16, yl * 16, yh * 16, tintIndex));
-            if (west && textureWest != null && moveOverlay)
-                quads.add(createQuad(SEU, SED, SWD, SWU, textureWest, 16 - zh * 16, 16 - zl * 16, yl * 16, yh * 16, tintIndex));
+            else {
+                quads.add(createQuad(NEU, NED, NWD, NWU, textureNorth, 16 - xh * 16, 16 - xl * 16, yl * 16 - moveVertically, yh * 16 - moveVertically, tintIndex));
+            }
+        }
+
+        if (south && textureSouth != null) {
+            //not moved overlay - texture starts from y=1
+            if (!moveOverlay) {
+                quads.add(createQuad(SWU, SWD, SED, SEU, textureSouth, xl * 16, xh * 16, 16 - yh * 16 - moveVertically, 16 - yl * 16 - moveVertically, tintIndex));
+            }
+            //moved overlay - texture starts from height of block
+            else {
+                quads.add(createQuad(SWU, SWD, SED, SEU, textureSouth, xl * 16, xh * 16, yl * 16 - moveVertically, yh * 16 - moveVertically, tintIndex));
+            }
         }
         return quads;
     }
@@ -631,7 +631,7 @@ public class ModelHelper {
     }
 
     public static List<BakedQuad> createSixFaceVoxel(int x, int y, int z, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, TextureAtlasSprite textureNorth, TextureAtlasSprite textureSouth, TextureAtlasSprite textureEast, TextureAtlasSprite textureWest, TextureAtlasSprite textureUp, TextureAtlasSprite textureDown, Boolean moveOverlay, int rotation) {
-        return createSixFaceCuboid(x / 16f, (x + 1) / 16f, y / 16f, (y + 1) / 16f, z / 16f, (z + 1) / 16f, tintIndex, north, south, east, west, up, down, textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, moveOverlay, 0);
+        return createSixFaceCuboid(x / 16f, (x + 1) / 16f, y / 16f, (y + 1) / 16f, z / 16f, (z + 1) / 16f, tintIndex, north, south, east, west, up, down, textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, moveOverlay, 0, 0);
     }
 
     /**
@@ -659,6 +659,11 @@ public class ModelHelper {
     }
 
     public static List<BakedQuad> createOverlay(float xl, float xh, float yl, float yh, float zl, float zh, int overlayIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, Boolean doNotMoveOverlay) {
+        ModelInformation m = getOverlayModelInformation(overlayIndex);
+        return ModelHelper.createSixFaceCuboid(xl, xh, yl, yh, zl, zh, m.tintIndex, north, south, east, west, up, down, m.northTexture, m.southTexture, m.eastTexture, m.westTexture, m.upTexture, m.downTexture, doNotMoveOverlay, 0, 0);
+    }
+
+    public static ModelInformation getOverlayModelInformation(int overlayIndex) {
         int tintIndex = -1;
         TextureAtlasSprite overlay = null;
         TextureAtlasSprite upOverlay = null;
@@ -686,7 +691,6 @@ public class ModelHelper {
             overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/vine"));
         }
         if (overlayIndex >= 6 && overlayIndex <= 10) {
-            doNotMoveOverlay = false;
             if (overlayIndex == 6) {
                 overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
                 upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
@@ -711,14 +715,14 @@ public class ModelHelper {
                 downOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
             }
         }
-        /*int xStartInt = (int) xl*16;
-        int xEndInt = (int) xh*16;
-        int yStartInt = (int) yl*16;
-        int yEndInt = (int) yh*16;
-        int zStartInt = (int) zl*16;
-        int zEndInt = (int) zh*16;
-        return ModelHelper.createSixFaceCuboidAsVoxels(xStartInt, xEndInt, yStartInt, yEndInt, zStartInt, zEndInt, tintIndex, north, south, east, west, up, down, overlay, overlay, overlay, overlay, upOverlay, downOverlay, doNotMoveOverlay);*/
-        return ModelHelper.createSixFaceCuboid(xl, xh, yl, yh, zl, zh, tintIndex, north, south, east, west, up, down, overlay, overlay, overlay, overlay, upOverlay, downOverlay, doNotMoveOverlay, 0);
+        List<TextureAtlasSprite> textures = new ArrayList<>();
+        textures.add(overlay);
+        textures.add(overlay);
+        textures.add(overlay);
+        textures.add(overlay);
+        textures.add(upOverlay);
+        textures.add(downOverlay);
+        return new ModelInformation(textures, tintIndex, overlayIndex);
     }
 
     public static List<BakedQuad> createSixFaceCuboidAsVoxels(int xl, int xh, int yl, int yh, int zl, int zh, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, TextureAtlasSprite textureNorth, TextureAtlasSprite textureSouth, TextureAtlasSprite textureEast, TextureAtlasSprite textureWest, TextureAtlasSprite textureUp, TextureAtlasSprite textureDown, Boolean moveOverlay) {
