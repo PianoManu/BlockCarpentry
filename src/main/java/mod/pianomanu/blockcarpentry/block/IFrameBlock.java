@@ -32,7 +32,7 @@ import net.minecraft.world.phys.BlockHitResult;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.0 11/12/22
+ * @version 1.1 09/20/23
  */
 public interface IFrameBlock {
     BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -136,14 +136,16 @@ public interface IFrameBlock {
         ItemStack itemStack = player.getItemInHand(hand);
         if (removeBlock(level, pos, state, itemStack, player))
             return InteractionResult.SUCCESS;
-        if (BlockAppearanceHelper.setLightLevel(itemStack, state, level, pos, player, hand) ||
-                BlockAppearanceHelper.setTexture(itemStack, state, level, player, pos) ||
-                BlockAppearanceHelper.setDesign(level, pos, player, itemStack) ||
-                BlockAppearanceHelper.setDesignTexture(level, pos, player, itemStack) ||
-                BlockAppearanceHelper.setColor(level, pos, player, hand) ||
-                BlockAppearanceHelper.setOverlay(level, pos, player, itemStack) ||
-                BlockAppearanceHelper.setRotation(level, pos, player, itemStack))
-            return InteractionResult.SUCCESS;
+        if (state.getValue(CONTAINS_BLOCK)) {
+            if (BlockAppearanceHelper.setLightLevel(itemStack, state, level, pos, player, hand) ||
+                    BlockAppearanceHelper.setTexture(itemStack, state, level, player, pos) ||
+                    BlockAppearanceHelper.setDesign(level, pos, player, itemStack) ||
+                    BlockAppearanceHelper.setDesignTexture(level, pos, player, itemStack) ||
+                    BlockAppearanceHelper.setColor(level, pos, player, hand) ||
+                    BlockAppearanceHelper.setOverlay(level, pos, player, itemStack) ||
+                    BlockAppearanceHelper.setRotation(level, pos, player, itemStack))
+                return InteractionResult.SUCCESS;
+        }
         if (itemStack.getItem() instanceof BlockItem) {
             if (changeMimic(state, level, pos, player, itemStack))
                 return InteractionResult.SUCCESS;

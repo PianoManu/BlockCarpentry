@@ -5,8 +5,6 @@ import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.ChestFrameBlockEntity;
-import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.stats.Stats;
@@ -17,7 +15,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -40,7 +37,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.3 11/14/22
+ * @version 1.4 09/20/23
  */
 public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBlock {
     private static final VoxelShape INNER_CUBE = Block.box(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
@@ -87,29 +84,14 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack item = player.getItemInHand(hand);
         if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            if (removeBlock(level, pos, state, item, player))
-                return InteractionResult.SUCCESS;
-            if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
-                    BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
-                    BlockAppearanceHelper.setDesign(level, pos, player, item) ||
-                    BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
-                    BlockAppearanceHelper.setRotation(level, pos, player, item))
-                return InteractionResult.SUCCESS;
-            BlockEntity tileEntity = level.getBlockEntity(pos);
-            if (item.getItem() instanceof BlockItem) {
-                if (item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
-                    return InteractionResult.PASS;
-                }
-                int count = player.getItemInHand(hand).getCount();
-                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof ChestFrameBlockEntity && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
-                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
-                    insertBlock(level, pos, state, handBlockState);
-                    if (!player.isCreative())
-                        player.getItemInHand(hand).setCount(count - 1);
-                }
+            if (shouldCallFrameUse(state, item)) {
+                return frameUse(state, level, pos, player, hand, hitresult);
             }
-            if (tileEntity instanceof ChestFrameBlockEntity && state.getValue(CONTAINS_BLOCK)) {
+            return super.use(state, level, pos, player, hand, hitresult);
+        }
+        if (level.isClientSide) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof ChestFrameBlockEntity && state.getValue(CONTAINS_BLOCK)) {
                 if (!(item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem)) {
                     MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
                     if (menuprovider != null) {
@@ -202,6 +184,11 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, BlockGetter levelIn, BlockPos pos, CollisionContext context) {
         return CHEST;
+    }
+
+    @Override
+    public boolean isCorrectTileInstance(BlockEntity blockEntity) {
+        return blockEntity instanceof ChestFrameBlockEntity;
     }
 }
 //========SOLI DEO GLORIA========//
