@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -35,7 +34,7 @@ import java.util.List;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 09/20/23
  */
 public class DaylightDetectorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -57,8 +56,7 @@ public class DaylightDetectorBakedModel implements IDynamicBakedModel {
             ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
             if (state != null) {
                 BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
-                TextureAtlasSprite texture;
+                TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, DaylightDetectorFrameTileEntity.TEXTURE);
                 TextureAtlasSprite sensor;
                 TextureAtlasSprite sensor_side = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/daylight_detector_side"));
                 TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.get(DaylightDetectorFrameTileEntity.GLASS_COLOR));
@@ -67,21 +65,6 @@ public class DaylightDetectorBakedModel implements IDynamicBakedModel {
                 } else {
                     sensor = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/daylight_detector_top"));
                 }
-                Integer tex = extraData.get(DaylightDetectorFrameTileEntity.TEXTURE);
-                if (textureList.size() <= tex) {
-                    extraData.derive().with(DaylightDetectorFrameTileEntity.TEXTURE, 0);
-                    tex = 0;
-                }
-                if (textureList.size() == 0) {
-                    if (Minecraft.getInstance().player != null) {
-                        Minecraft.getInstance().player.displayClientMessage(Component.translatable("message.blockcarpentry.block_not_available"), true);
-                    }
-                    for (int i = 0; i < 6; i++) {
-                        textureList.add(Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("missing")));
-                    }
-                    //return Collections.emptyList();
-                }
-                texture = textureList.get(tex);
                 int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
                 List<BakedQuad> quads = new ArrayList<>();
                 if (design == 0) {

@@ -3,7 +3,6 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
@@ -37,7 +36,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 09/20/23
  */
 public class SlopeBakedModel implements IDynamicBakedModel {
     private static Vec3 v(double x, double y, double z) {
@@ -64,19 +63,9 @@ public class SlopeBakedModel implements IDynamicBakedModel {
             return new ArrayList<>();
         List<BakedQuad> quads = new ArrayList<>();
         BlockState mimic = extraData.get(FrameBlockTile.MIMIC);
-        List<TextureAtlasSprite> texture = TextureHelper.getTextureFromModel(model, extraData, rand);
-        int index = extraData.get(FrameBlockTile.TEXTURE);
-        if (index >= texture.size()) {
-            index = 0;
-        }
-        if (texture.size() == 0) {
-            if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.displayClientMessage(Component.translatable("message.blockcarpentry.block_not_available"), true);
-            }
-            return Collections.emptyList();
-        }
+        TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
         int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-        quads.addAll(createSlope(0, 1, 0, 1, 0, 1, texture.get(index), tintIndex, state.getValue(StairBlock.FACING), state.getValue(StairBlock.SHAPE), state.getValue(StairBlock.HALF)));
+        quads.addAll(createSlope(0, 1, 0, 1, 0, 1, texture, tintIndex, state.getValue(StairBlock.FACING), state.getValue(StairBlock.SHAPE), state.getValue(StairBlock.HALF)));
         return quads;
     }
 
