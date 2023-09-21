@@ -21,7 +21,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 09/20/23
+ * @version 1.1 09/21/23
  */
 public class QuadUtils {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -32,7 +32,7 @@ public class QuadUtils {
         TextureAtlasSprite texture;
         Integer tex = extraData.get(modelPropertyTexture);
         if (tex == null) {
-            LOGGER.error("ERROR");
+            LOGGER.error("Cannot determine model texture for model " + model);
         }
         if (textureList.size() <= tex) {
             extraData.derive().with(modelPropertyTexture, 0);
