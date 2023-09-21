@@ -34,7 +34,7 @@ import java.util.List;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.3 09/20/23
+ * @version 1.4 09/21/23
  */
 public class DaylightDetectorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -102,10 +102,6 @@ public class DaylightDetectorBakedModel implements IDynamicBakedModel {
 
                     quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 1 / 16f, 5 / 16f, 1 / 16f, 15 / 16f, -1, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
 
-                    /*quads.addAll(ModelHelper.createSixFaceCuboid(5/16f, 6/16f, 5/16f, 6/16f, 1/16f, 15/16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(10/16f, 11/16f, 5/16f, 6/16f, 1/16f, 15/16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(1/16f, 15/16f, 5/16f, 6/16f, 5/16f, 6/16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(1/16f, 15/16f, 5/16f, 6/16f, 10/16f, 11/16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));*/
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 6 / 16f, 5 / 16f, 6 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(10 / 16f, 11 / 16f, 5 / 16f, 6 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 6 / 16f, 5 / 16f, 6 / 16f, texture, tintIndex));
@@ -113,7 +109,7 @@ public class DaylightDetectorBakedModel implements IDynamicBakedModel {
                 }
                 int overlayIndex = extraData.get(DaylightDetectorFrameTileEntity.OVERLAY);
                 if (overlayIndex != 0) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 6 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));
+                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 6 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, true));
                 }
                 return quads;
             }
