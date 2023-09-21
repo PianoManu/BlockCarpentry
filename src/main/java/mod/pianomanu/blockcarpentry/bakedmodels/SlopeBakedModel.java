@@ -72,7 +72,7 @@ public class SlopeBakedModel implements IDynamicBakedModel {
             texture = m.upTexture;
         if (overlaySideIndex == 5)
             texture = m.downTexture;
-        if (overlayIndex > 0) {
+        if (overlayIndex > 0 && texture != null) {
             if (invert) {
                 quads.add(ModelHelper.createQuadInverted(v1, v2, v3, v4, texture, ulow, uhigh, vlow, vhigh, m.tintIndex));
             } else {
