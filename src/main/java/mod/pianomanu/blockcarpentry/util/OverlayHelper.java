@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * Util class for frame block overlays
  *
  * @author PianoManu
- * @version 1.0 09/20/23
+ * @version 1.1 09/21/23
  */
 public class OverlayHelper {
     private static final String[] messageStrings = {
@@ -43,7 +43,9 @@ public class OverlayHelper {
         }
         if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
             BlockState state = level.getBlockState(pos);
-            setOverlayTwoBlocksFrameCycle(state, fte, player, lowerBound, upperBound, messageIndexOffset);
+            boolean isDouble = state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB);
+            boolean condition = fte.getOverlay_1() < upperBound && fte.getOverlay_1() >= lowerBound && !isDouble || fte.getOverlay_2() < upperBound && fte.getOverlay_2() >= lowerBound && isDouble;
+            setOverlayTwoBlocksFrameCycle(condition, state, fte, player, lowerBound, messageIndexOffset);
             return true;
         }
         return false;
@@ -57,9 +59,9 @@ public class OverlayHelper {
         }
     }
 
-    private static void setOverlayTwoBlocksFrameCycle(BlockState state, TwoBlocksFrameBlockTile fte, Player player, int lowerBound, int upperBound, int messageIndexOffset) {
-        if (fte.getOverlay_1() < upperBound && !state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB) || fte.getOverlay_2() < upperBound && state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-            setOverlayTwoBlocksFrame(state, fte, player, !state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB) ? fte.getOverlay_1() + 1 : fte.getOverlay_1() + 2, messageIndexOffset);
+    private static void setOverlayTwoBlocksFrameCycle(boolean condition, BlockState state, TwoBlocksFrameBlockTile fte, Player player, int lowerBound, int messageIndexOffset) {
+        if (condition) {
+            setOverlayTwoBlocksFrame(state, fte, player, !state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB) ? fte.getOverlay_1() + 1 : fte.getOverlay_2() + 1, messageIndexOffset);
         } else {
             setOverlayTwoBlocksFrame(state, fte, player, lowerBound, messageIndexOffset);
         }
