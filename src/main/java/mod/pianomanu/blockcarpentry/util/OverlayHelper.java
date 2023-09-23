@@ -1,6 +1,5 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
 import net.minecraft.core.BlockPos;
@@ -8,13 +7,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Util class for frame block overlays
  *
  * @author PianoManu
- * @version 1.1 09/21/23
+ * @version 1.2 09/23/23
  */
 public class OverlayHelper {
     private static final String[] messageStrings = {
@@ -42,10 +40,9 @@ public class OverlayHelper {
             return true;
         }
         if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
-            BlockState state = level.getBlockState(pos);
-            boolean isDouble = state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB);
-            boolean condition = fte.getOverlay_1() < upperBound && fte.getOverlay_1() >= lowerBound && !isDouble || fte.getOverlay_2() < upperBound && fte.getOverlay_2() >= lowerBound && isDouble;
-            setOverlayTwoBlocksFrameCycle(condition, state, fte, player, lowerBound, messageIndexOffset);
+            boolean applyToUpper = fte.getMimic_2() != null;
+            boolean condition = fte.getOverlay_1() < upperBound && fte.getOverlay_1() >= lowerBound && !applyToUpper || fte.getOverlay_2() < upperBound && fte.getOverlay_2() >= lowerBound && applyToUpper;
+            setOverlayTwoBlocksFrameCycle(condition, fte, player, lowerBound, messageIndexOffset);
             return true;
         }
         return false;
@@ -59,11 +56,12 @@ public class OverlayHelper {
         }
     }
 
-    private static void setOverlayTwoBlocksFrameCycle(boolean condition, BlockState state, TwoBlocksFrameBlockTile fte, Player player, int lowerBound, int messageIndexOffset) {
+    private static void setOverlayTwoBlocksFrameCycle(boolean condition, TwoBlocksFrameBlockTile fte, Player player, int lowerBound, int messageIndexOffset) {
         if (condition) {
-            setOverlayTwoBlocksFrame(state, fte, player, !state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB) ? fte.getOverlay_1() + 1 : fte.getOverlay_2() + 1, messageIndexOffset);
+            boolean applyToUpper = fte.getMimic_2() != null;
+            setOverlayTwoBlocksFrame(fte, player, !applyToUpper ? fte.getOverlay_1() + 1 : fte.getOverlay_2() + 1, messageIndexOffset);
         } else {
-            setOverlayTwoBlocksFrame(state, fte, player, lowerBound, messageIndexOffset);
+            setOverlayTwoBlocksFrame(fte, player, lowerBound, messageIndexOffset);
         }
     }
 
@@ -73,8 +71,9 @@ public class OverlayHelper {
         player.displayClientMessage(Component.translatable(messageStrings[newOverlay], messageIndex), true);
     }
 
-    private static void setOverlayTwoBlocksFrame(BlockState state, TwoBlocksFrameBlockTile fte, Player player, int newOverlay, int messageIndexOffset) {
-        if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
+    private static void setOverlayTwoBlocksFrame(TwoBlocksFrameBlockTile fte, Player player, int newOverlay, int messageIndexOffset) {
+        boolean applyToUpper = fte.getMimic_2() != null;
+        if (!applyToUpper) {
             fte.setOverlay_1(newOverlay);
         } else {
             fte.setOverlay_2(newOverlay);

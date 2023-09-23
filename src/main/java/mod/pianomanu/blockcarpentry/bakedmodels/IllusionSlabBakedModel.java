@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
@@ -33,7 +34,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 09/23/23
  */
 public class IllusionSlabBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -57,7 +58,7 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
         BlockState mimic_1 = extraData.get(TwoBlocksFrameBlockTile.MIMIC_1);
         BlockState mimic_2 = extraData.get(TwoBlocksFrameBlockTile.MIMIC_2);
         boolean sameBlocks;
-        if (mimic_1 != null && mimic_2 != null)
+        if (mimic_1 != null && mimic_2 != null && mimic_2 != Blocks.AIR.defaultBlockState())
             sameBlocks = mimic_1.is(mimic_2.getBlock());
         else
             sameBlocks = false; //no second block in slab: not the same, we can render the face between the two slabs - prevents crash, if only one slab is filled
@@ -81,7 +82,7 @@ public class IllusionSlabBakedModel implements IDynamicBakedModel {
                 case NORTH -> quads.addAll(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0.5f, 1f, mimic_1, model, extraData, rand, tintIndex_1, renderNorth && !sameBlocks, renderSouth, renderEast, renderWest, renderUp, renderDown, rotation_1));
                 case EAST -> quads.addAll(ModelHelper.createSixFaceCuboid(0f, 0.5f, 0f, 1f, 0f, 1f, mimic_1, model, extraData, rand, tintIndex_1, renderNorth, renderSouth, renderEast && !sameBlocks, renderWest, renderUp, renderDown, rotation_1));
             }
-            if (state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB) && mimic_2 != null) {
+            if (state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB) && mimic_2 != null && mimic_2 != Blocks.AIR.defaultBlockState()) {
                 ModelResourceLocation location_2 = BlockModelShaper.stateToModelLocation(mimic_2);
                 BakedModel model_2 = Minecraft.getInstance().getModelManager().getModel(location_2);
                 switch (state.getValue(SixWaySlabFrameBlock.FACING)) {

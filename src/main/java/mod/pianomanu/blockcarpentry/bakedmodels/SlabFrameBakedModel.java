@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
@@ -33,7 +34,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.3 09/20/23
+ * @version 1.4 09/23/23
  */
 public class SlabFrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -66,7 +67,7 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
         BlockState mimic_1 = extraData.get(TwoBlocksFrameBlockTile.MIMIC_1);
         BlockState mimic_2 = extraData.get(TwoBlocksFrameBlockTile.MIMIC_2);
         boolean sameBlocks;
-        if (mimic_1 != null && mimic_2 != null)
+        if (mimic_1 != null && mimic_2 != null && mimic_2 != Blocks.AIR.defaultBlockState())
             sameBlocks = mimic_1.is(mimic_2.getBlock());
         else
             sameBlocks = false; //no second block in slab: not the same, we can render the face between the two slabs - prevents crash, if only one slab is filled
@@ -74,7 +75,7 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
             TextureAtlasSprite texture_1 = QuadUtils.getTexture(model, rand, extraData, TwoBlocksFrameBlockTile.TEXTURE_1);
             TextureAtlasSprite texture_2 = null;
 
-            if (mimic_2 != null) {
+            if (mimic_2 != null && mimic_2 != Blocks.AIR.defaultBlockState()) {
                 ModelResourceLocation location_2 = BlockModelShaper.stateToModelLocation(mimic_2);
                 BakedModel model_2 = Minecraft.getInstance().getModelManager().getModel(location_2);
                 texture_2 = QuadUtils.getTexture(model_2, rand, extraData, TwoBlocksFrameBlockTile.TEXTURE_2);
