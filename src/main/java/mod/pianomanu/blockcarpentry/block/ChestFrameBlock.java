@@ -5,6 +5,7 @@ import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.ChestFrameBlockEntity;
+import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.stats.Stats;
@@ -15,6 +16,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -37,7 +39,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 09/20/23
+ * @version 1.5 09/23/23
  */
 public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBlock {
     private static final VoxelShape INNER_CUBE = Block.box(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
@@ -82,30 +84,62 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        ItemStack item = player.getItemInHand(hand);
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            if (shouldCallFrameUse(state, item)) {
-                return frameUse(state, level, pos, player, hand, hitresult);
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (hand == InteractionHand.MAIN_HAND) {
+            if (!level.isClientSide) {
+                return frameUseServer(state, level, pos, player, itemStack, hitresult);
             }
-            return super.use(state, level, pos, player, hand, hitresult);
+            return frameUseClient(state, level, pos, player, itemStack, hitresult);
         }
-        if (level.isClientSide) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof ChestFrameBlockEntity && state.getValue(CONTAINS_BLOCK)) {
-                if (!(item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem)) {
-                    MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
-                    if (menuprovider != null) {
-                        player.openMenu(menuprovider);
-                        player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
-                        PiglinAi.angerNearbyPiglins(player, true);
-                        return InteractionResult.SUCCESS;
-                    }
+        return InteractionResult.FAIL;
+    }
 
-                    return InteractionResult.CONSUME;
+    public InteractionResult frameUseServer(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack, BlockHitResult hitresult) {
+        if (removeBlock(level, pos, state, itemStack, player))
+            return InteractionResult.SUCCESS;
+        if (state.getValue(CONTAINS_BLOCK)) {
+            if (BlockAppearanceHelper.setAll(itemStack, state, level, pos, player))
+                return InteractionResult.CONSUME;
+        }
+        if (itemStack.getItem() instanceof BlockItem) {
+            if (changeMimic(state, level, pos, player, itemStack))
+                return InteractionResult.SUCCESS;
+        }
+        BlockEntity tileEntity = level.getBlockEntity(pos);
+        if (tileEntity instanceof ChestFrameBlockEntity && state.getValue(CONTAINS_BLOCK)) {
+            return chestBehavior(state, level, pos, player, itemStack);
+        }
+        return InteractionResult.FAIL;
+    }
+
+    private InteractionResult chestBehavior(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
+        if (menuprovider != null) {
+            player.openMenu(menuprovider);
+            player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
+            PiglinAi.angerNearbyPiglins(player, true);
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.CONSUME;
+    }
+
+    @Override
+    public InteractionResult frameUseClient(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack, BlockHitResult hitresult) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof ChestFrameBlockEntity && state.getValue(CONTAINS_BLOCK)) {
+            if (!(itemStack.getItem() instanceof BaseFrameItem || itemStack.getItem() instanceof BaseIllusionItem)) {
+                MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
+                if (menuprovider != null) {
+                    player.openMenu(menuprovider);
+                    player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
+                    PiglinAi.angerNearbyPiglins(player, true);
+                    return InteractionResult.SUCCESS;
                 }
+
+                return InteractionResult.CONSUME;
             }
         }
-        return InteractionResult.SUCCESS;
+        return super.frameUseClient(state, level, pos, player, itemStack, hitresult);
     }
 
     public boolean removeBlock(Level level, BlockPos pos, BlockState state, ItemStack itemStack, Player player) {

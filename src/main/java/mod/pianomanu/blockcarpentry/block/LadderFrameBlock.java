@@ -6,8 +6,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -28,7 +26,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.3 11/12/22
+ * @version 1.4 09/23/23
  */
 public class LadderFrameBlock extends LadderBlock implements EntityBlock, IFrameBlock {
 
@@ -53,11 +51,7 @@ public class LadderFrameBlock extends LadderBlock implements EntityBlock, IFrame
     @Nonnull
     @SuppressWarnings("deprecation")
     public InteractionResult use(@Nullable BlockState state, Level level, @Nullable BlockPos pos, Player player, @Nullable InteractionHand hand, @Nullable BlockHitResult hitResult) {
-        ItemStack item = player.getItemInHand(Objects.requireNonNull(hand));
-        if (!level.isClientSide && state != null && pos != null) {
-            return frameUse(state, level, pos, player, hand, hitResult);
-        }
-        return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return frameUse(state, level, pos, player, hand, hitResult);
     }
 
     @Override

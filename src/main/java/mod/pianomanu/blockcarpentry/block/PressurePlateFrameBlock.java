@@ -5,8 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -24,7 +22,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 11/17/22
+ * @version 1.6 09/23/23
  */
 public class PressurePlateFrameBlock extends PressurePlateBlock implements EntityBlock, IFrameBlock {
 
@@ -47,11 +45,7 @@ public class PressurePlateFrameBlock extends PressurePlateBlock implements Entit
     @SuppressWarnings("deprecation")
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        ItemStack itemStack = player.getItemInHand(hand);
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            return frameUse(state, level, pos, player, hand, hitresult);
-        }
-        return itemStack.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return frameUse(state, level, pos, player, hand, hitresult);
     }
 
     @Override

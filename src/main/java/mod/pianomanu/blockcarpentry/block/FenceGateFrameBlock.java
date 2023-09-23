@@ -1,7 +1,5 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
-import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.LockableFrameTile;
 import net.minecraft.core.BlockPos;
@@ -10,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -36,7 +33,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 11/14/22
+ * @version 1.6 09/23/23
  */
 public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterloggedBlock, EntityBlock, IFrameBlock {
     public FenceGateFrameBlock(Properties properties) {
@@ -58,27 +55,32 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        ItemStack item = player.getItemInHand(hand);
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            convertOutdatedTile(state, level, pos, player);
-            if (shouldCallFrameUse(state, item))
-                return frameUse(state, level, pos, player, hand, hitresult);
-            if (lockRedstoneSignal(state, level, pos, player, item) || lockOpenClose(state, level, pos, player, item))
-                return InteractionResult.CONSUME;
+        return frameUse(state, level, pos, player, hand, hitresult);
+    }
 
-            if ((state.getValue(CONTAINS_BLOCK) || !(item.getItem() instanceof BlockItem)) && !(item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem)) {
-                BlockEntity tileEntity = level.getBlockEntity(pos);
-                if (tileEntity instanceof LockableFrameTile fenceGateTileEntity) {
-                    if (fenceGateTileEntity.canBeOpenedByPlayers()) {
-                        super.use(state, level, pos, player, hand, hitresult);
-                        level.levelEvent(null, state.getValue(OPEN) ? 1014 : 1008, pos, 0);
-                        return InteractionResult.SUCCESS;
-                    }
-                }
-                return InteractionResult.CONSUME;
+    @Override
+    public InteractionResult frameUseServer(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack, BlockHitResult hitresult) {
+        convertOutdatedTile(state, level, pos, player);
+        if (shouldCallFrameUse(state, itemStack))
+            return IFrameBlock.super.frameUseServer(state, level, pos, player, itemStack, hitresult);
+        if (lockRedstoneSignal(state, level, pos, player, itemStack) || lockOpenClose(state, level, pos, player, itemStack))
+            return InteractionResult.CONSUME;
+        if (state.getValue(CONTAINS_BLOCK)) {
+            return fenceGateBehavior(state, level, pos, player, hitresult);
+        }
+        return InteractionResult.FAIL;
+    }
+
+    private InteractionResult fenceGateBehavior(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitresult) {
+        BlockEntity tileEntity = level.getBlockEntity(pos);
+        if (tileEntity instanceof LockableFrameTile fenceGateTileEntity) {
+            if (fenceGateTileEntity.canBeOpenedByPlayers()) {
+                super.use(state, level, pos, player, InteractionHand.MAIN_HAND, hitresult);
+                level.levelEvent(null, state.getValue(OPEN) ? 1014 : 1008, pos, 0);
+                return InteractionResult.SUCCESS;
             }
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.CONSUME;
     }
 
     private void convertOutdatedTile(BlockState state, Level level, BlockPos pos, Player player) {

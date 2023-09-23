@@ -7,8 +7,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -34,7 +32,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 11/14/22
+ * @version 1.5 09/23/23
  */
 public class PaneFrameBlock extends IronBarsBlock implements EntityBlock, IFrameBlock {
     public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -60,11 +58,7 @@ public class PaneFrameBlock extends IronBarsBlock implements EntityBlock, IFrame
     @Nonnull
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        ItemStack item = player.getItemInHand(hand);
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            return frameUse(state, level, pos, player, hand, hitresult);
-        }
-        return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return frameUse(state, level, pos, player, hand, hitresult);
     }
 
     @Override

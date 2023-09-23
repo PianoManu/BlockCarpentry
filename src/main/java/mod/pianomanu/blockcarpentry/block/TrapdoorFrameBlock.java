@@ -7,7 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
@@ -27,7 +26,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 11/14/22
+ * @version 1.6 09/23/23
  */
 public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock, IFrameBlock {
 
@@ -49,23 +48,32 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock, IF
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        ItemStack itemStack = player.getItemInHand(hand);
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {  //TODO why does OFF_HAND destroy everything??
-            convertOutdatedTile(state, level, pos, player);
-            if (shouldCallFrameUse(state, itemStack))
-                return frameUse(state, level, pos, player, hand, hitresult);
-            if (lockRedstoneSignal(state, level, pos, player, itemStack) || lockOpenClose(state, level, pos, player, itemStack))
-                return InteractionResult.CONSUME;
-            BlockEntity tileEntity = level.getBlockEntity(pos);
-            if (tileEntity instanceof LockableFrameTile trapdoorTileEntity) {
-                if (trapdoorTileEntity.canBeOpenedByPlayers()) {
-                    super.use(state, level, pos, player, hand, hitresult);
-                    this.playSound(null, level, pos, state.getValue(OPEN));
-                    return InteractionResult.SUCCESS;
-                }
+        return frameUse(state, level, pos, player, hand, hitresult);
+    }
+
+    @Override
+    public InteractionResult frameUseServer(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack, BlockHitResult hitresult) {
+        convertOutdatedTile(state, level, pos, player);
+        if (shouldCallFrameUse(state, itemStack))
+            return IFrameBlock.super.frameUseServer(state, level, pos, player, itemStack, hitresult);
+        if (lockRedstoneSignal(state, level, pos, player, itemStack) || lockOpenClose(state, level, pos, player, itemStack))
+            return InteractionResult.CONSUME;
+        if (state.getValue(CONTAINS_BLOCK)) {
+            return trapdoorBehavior(state, level, pos, player, hitresult);
+        }
+        return InteractionResult.FAIL;
+    }
+
+    private InteractionResult trapdoorBehavior(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitresult) {
+        BlockEntity tileEntity = level.getBlockEntity(pos);
+        if (tileEntity instanceof LockableFrameTile trapdoorTileEntity) {
+            if (trapdoorTileEntity.canBeOpenedByPlayers()) {
+                super.use(state, level, pos, player, InteractionHand.MAIN_HAND, hitresult);
+                this.playSound(null, level, pos, state.getValue(OPEN));
+                return InteractionResult.SUCCESS;
             }
         }
-        return itemStack.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return InteractionResult.CONSUME;
     }
 
     private void convertOutdatedTile(BlockState state, Level level, BlockPos pos, Player player) {

@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -24,7 +23,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 11/14/22
+ * @version 1.5 09/23/23
  */
 public class FenceFrameBlock extends FenceBlock implements EntityBlock, IFrameBlock {
 
@@ -47,12 +46,15 @@ public class FenceFrameBlock extends FenceBlock implements EntityBlock, IFrameBl
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            if (shouldCallFrameUse(state, itemStack))
-                return frameUse(state, level, pos, player, hand, hitresult);
-            return super.use(state, level, pos, player, hand, hitresult);
+        if (hand == InteractionHand.MAIN_HAND) {
+            if (!level.isClientSide) {
+                if (shouldCallFrameUse(state, itemStack))
+                    return frameUseServer(state, level, pos, player, itemStack, hitresult);
+                return super.use(state, level, pos, player, hand, hitresult);
+            }
+            return frameUseClient(state, level, pos, player, itemStack, hitresult);
         }
-        return itemStack.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return InteractionResult.FAIL;
     }
 
     @SuppressWarnings("deprecation")

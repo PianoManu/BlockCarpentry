@@ -32,7 +32,7 @@ import net.minecraft.world.phys.BlockHitResult;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.1 09/20/23
+ * @version 1.2 09/23/23
  */
 public interface IFrameBlock {
     BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -134,23 +134,32 @@ public interface IFrameBlock {
 
     default InteractionResult frameUse(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack itemStack = player.getItemInHand(hand);
+        if (hand == InteractionHand.MAIN_HAND) {
+            if (!level.isClientSide) {
+                return frameUseServer(state, level, pos, player, itemStack, hitresult);
+            } else {
+                return frameUseClient(state, level, pos, player, itemStack, hitresult);
+            }
+        }
+        return InteractionResult.FAIL;
+    }
+
+    default InteractionResult frameUseServer(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack, BlockHitResult hitresult) {
         if (removeBlock(level, pos, state, itemStack, player))
             return InteractionResult.SUCCESS;
         if (state.getValue(CONTAINS_BLOCK)) {
-            if (BlockAppearanceHelper.setLightLevel(itemStack, state, level, pos, player, hand) ||
-                    BlockAppearanceHelper.setTexture(itemStack, state, level, player, pos) ||
-                    BlockAppearanceHelper.setDesign(level, pos, player, itemStack) ||
-                    BlockAppearanceHelper.setDesignTexture(level, pos, player, itemStack) ||
-                    BlockAppearanceHelper.setColor(level, pos, player, hand) ||
-                    BlockAppearanceHelper.setOverlay(level, pos, player, itemStack) ||
-                    BlockAppearanceHelper.setRotation(level, pos, player, itemStack))
-                return InteractionResult.SUCCESS;
+            if (BlockAppearanceHelper.setAll(itemStack, state, level, pos, player))
+                return InteractionResult.CONSUME;
         }
         if (itemStack.getItem() instanceof BlockItem) {
             if (changeMimic(state, level, pos, player, itemStack))
                 return InteractionResult.SUCCESS;
         }
-        return itemStack.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return itemStack.getItem() instanceof BlockItem ? InteractionResult.PASS : InteractionResult.CONSUME;
+    }
+
+    default InteractionResult frameUseClient(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack, BlockHitResult hitresult) {
+        return itemStack.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
 
     default boolean changeMimic(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {

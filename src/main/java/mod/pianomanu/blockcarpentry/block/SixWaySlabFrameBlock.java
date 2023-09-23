@@ -43,7 +43,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 11/14/22
+ * @version 1.5 09/23/23
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements SimpleWaterloggedBlock, EntityBlock {
@@ -142,12 +142,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        ItemStack item = player.getItemInHand(hand);
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            return frameUse(state, level, pos, player, hand, hitresult);
-
-        }
-        return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return frameUse(state, level, pos, player, hand, hitresult);
     }
 
     @Override
@@ -186,8 +181,6 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
             BlockEntity tileentity = level.getBlockEntity(pos);
             if (tileentity instanceof TwoBlocksFrameBlockTile frameBlockEntity) {
                 frameBlockEntity.clear();
-                System.out.println(frameBlockEntity.getMimic_1());
-                System.out.println(frameBlockEntity.getMimic_2());
             }
         }
     }

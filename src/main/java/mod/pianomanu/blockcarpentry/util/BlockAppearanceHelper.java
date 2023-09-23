@@ -6,7 +6,6 @@ import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,21 +28,31 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.3 09/20/23
+ * @version 1.4 09/23/23
  */
 public class BlockAppearanceHelper {
-    public static boolean setLightLevel(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand) {
+    public static boolean setAll(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player) {
+        return BlockAppearanceHelper.setLightLevel(itemStack, state, level, pos, player) ||
+                BlockAppearanceHelper.setTexture(itemStack, state, level, player, pos) ||
+                BlockAppearanceHelper.setDesign(level, pos, player, itemStack) ||
+                BlockAppearanceHelper.setDesignTexture(level, pos, player, itemStack) ||
+                BlockAppearanceHelper.setColor(level, pos, itemStack) ||
+                BlockAppearanceHelper.setOverlay(level, pos, player, itemStack) ||
+                BlockAppearanceHelper.setRotation(level, pos, player, itemStack);
+    }
+
+    public static boolean setLightLevel(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player) {
         if (itemStack.getItem() == Items.GLOWSTONE_DUST && state.getValue(LIGHT_LEVEL) < 13) {
-            int count = player.getItemInHand(hand).getCount();
+            int count = itemStack.getCount();
             level.setBlock(pos, state.setValue(LIGHT_LEVEL, state.getBlock().getLightEmission(state, level, pos) + 3), 3);
-            player.getItemInHand(hand).setCount(count - 1);
+            itemStack.setCount(count - 1);
             player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", (state.getValue(LIGHT_LEVEL) + 3)), true);
             return true;
         }
         if ((itemStack.getItem() == Items.COAL || itemStack.getItem() == Items.CHARCOAL) && state.getValue(LIGHT_LEVEL) < 15) {
-            int count = player.getItemInHand(hand).getCount();
+            int count = itemStack.getCount();
             level.setBlock(pos, state.setValue(LIGHT_LEVEL, state.getBlock().getLightEmission(state, level, pos) + 1), 3);
-            player.getItemInHand(hand).setCount(count - 1);
+            itemStack.setCount(count - 1);
             player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", (state.getValue(LIGHT_LEVEL) + 1)), true);
             return true;
         }
@@ -203,21 +212,21 @@ public class BlockAppearanceHelper {
         return false;
     }
 
-    public static boolean setColor(Level level, BlockPos pos, Player player, InteractionHand hand) {
-        if (BlockAppearanceHelperItems.isDyeItem(player.getItemInHand(hand).getItem())) {
+    public static boolean setColor(Level level, BlockPos pos, ItemStack itemStack) {
+        if (BlockAppearanceHelperItems.isDyeItem(itemStack.getItem())) {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile fte) {
-                fte.setGlassColor(dyeItemToInt(player.getItemInHand(hand).getItem()) + 1); //plus 1, because 0 is undyed glass
+                fte.setGlassColor(dyeItemToInt(itemStack.getItem()) + 1); //plus 1, because 0 is undyed glass
             }
             if (tileEntity instanceof DaylightDetectorFrameTileEntity fte) {
-                fte.setGlassColor(dyeItemToInt(player.getItemInHand(hand).getItem()) + 1); //plus 1, because 0 is undyed glass
+                fte.setGlassColor(dyeItemToInt(itemStack.getItem()) + 1); //plus 1, because 0 is undyed glass
             }
             if (tileEntity instanceof BedFrameTile fte) {
                 if (level.getBlockState(pos).getValue(BedFrameBlock.PART) == BedPart.FOOT) {
-                    fte.setBlanketColor(dyeItemToInt(player.getItemInHand(hand).getItem()));
+                    fte.setBlanketColor(dyeItemToInt(itemStack.getItem()));
                 }
                 if (level.getBlockState(pos).getValue(BedFrameBlock.PART) == BedPart.HEAD) {
-                    fte.setPillowColor(dyeItemToInt(player.getItemInHand(hand).getItem()));
+                    fte.setPillowColor(dyeItemToInt(itemStack.getItem()));
                 }
             }
             return true;

@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -26,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.2 11/14/22
+ * @version 1.3 09/23/23
  */
 public class CarpetFrameBlock extends CarpetBlock implements EntityBlock, IFrameBlock {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
@@ -47,10 +46,7 @@ public class CarpetFrameBlock extends CarpetBlock implements EntityBlock, IFrame
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            return frameUse(state, level, pos, player, hand, hitresult);
-        }
-        return player.getItemInHand(hand).getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return frameUse(state, level, pos, player, hand, hitresult);
     }
 
     @Override

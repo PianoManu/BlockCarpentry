@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -22,7 +21,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.3 11/14/22
+ * @version 1.4 09/23/23
  */
 public abstract class AbstractFrameBlock extends BaseEntityBlock implements IFrameBlock {
 
@@ -47,10 +46,7 @@ public abstract class AbstractFrameBlock extends BaseEntityBlock implements IFra
      */
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            return frameUse(state, level, pos, player, hand, hitresult);
-        }
-        return player.getItemInHand(hand).getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return frameUse(state, level, pos, player, hand, hitresult);
     }
 
     /**
