@@ -1,0 +1,19 @@
+{
+  "name": "Carving and Chiseling",
+  "icon": "blockcarpentry:chisel",
+  "category": "blockcarpentry:chiseling",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "It is time to use your first carpentry tool. It is simply a chisel! But it comes in handy when carving structures into certain blocks. Not every block has different designs, though. For those who have some, you can cycle through the different available designs by right-clicking the frame or illusion block with the chisel."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": {
+        "item": "blockcarpentry:chisel"
+      },
+      "text": "However, the prerequisite for this is that the frame or illusion block has already been \"filled\" with a block and imitates it. You cannot carve a design into an empty frame. Chiseling is possible for doors, trapdoors, ladders, fences, fence gates, walls, beds, chests, carpets, panes and daylight detectors."
+    }
+  ]
+}

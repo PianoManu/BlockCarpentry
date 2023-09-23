@@ -1,0 +1,8 @@
+{
+  "name": "Make them look alive!",
+  "icon": "minecraft:grass",
+  "category": "blockcarpentry:overlays",
+  "sortnum": 1000,
+  "pages": [
+  ]
+}
