@@ -2,7 +2,7 @@
   "name": "Everything is an illusion",
   "icon": "blockcarpentry:illusion_block",
   "category": "blockcarpentry:frame_blocks",
-  "sortnum": 2,
+  "sortnum": 3,
   "pages": [
     {
       "type": "patchouli:text",

@@ -2,7 +2,7 @@
   "name": "Deco yet functional",
   "icon": "blockcarpentry:frame_chest",
   "category": "blockcarpentry:frame_blocks",
-  "sortnum": 3,
+  "sortnum": 4,
   "pages": [
     {
       "type": "patchouli:text",
