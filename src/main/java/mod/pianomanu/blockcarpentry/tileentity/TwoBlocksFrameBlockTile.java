@@ -530,6 +530,10 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
         }
     }
 
+    public boolean applyToUpper() {
+        return this.getMimic_2() != null && this.getMimic_2() != Blocks.AIR.defaultBlockState();
+    }
+
     public void clear() {
         this.setMimic_1(null);
         this.setMimic_2(null);

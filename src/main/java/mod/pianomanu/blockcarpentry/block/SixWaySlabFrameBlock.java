@@ -1,7 +1,5 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
-import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
@@ -146,8 +144,10 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
     }
 
     @Override
-    public boolean changeMimic(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) { //TODO fix removing and replacing for double slabs -> somehow saves old mimic in model...
-        if (state.getValue(BCBlockStateProperties.CONTAINS_2ND_BLOCK) || itemStack.getItem() instanceof BaseFrameItem || itemStack.getItem() instanceof BaseIllusionItem) {
+    public boolean changeMimic(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        boolean isDouble = state.getValue(DOUBLE_SLAB);
+
+        if (isDouble && state.getValue(BCBlockStateProperties.CONTAINS_2ND_BLOCK) || !isDouble && state.getValue(BCBlockStateProperties.CONTAINS_BLOCK)) {
             return false;
         }
         BlockEntity tileEntity = level.getBlockEntity(pos);
