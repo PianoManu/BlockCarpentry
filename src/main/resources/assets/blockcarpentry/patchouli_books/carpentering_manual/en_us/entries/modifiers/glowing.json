@@ -1,5 +1,5 @@
 {
-  "name": "Carving and Chiseling",
+  "name": "Nasty torches!",
   "icon": "minecraft:glowstone_dust",
   "category": "blockcarpentry:modifiers",
   "sortnum": 100,
@@ -24,7 +24,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Also, breaking the frame or illusion block will not return any glowstone dust, coal or charcoal put into it. Those items will be lost. Pleas keep this in mind."
+      "text": "Also, breaking the frame or illusion block will not return any glowstone dust, coal or charcoal put into it. Those items will be lost. Please keep this in mind. Here, the hammer comes in handy, because you can remove a falsely selected block and reapply an new one without destroying the frame or illusion block."
     }
   ]
 }
