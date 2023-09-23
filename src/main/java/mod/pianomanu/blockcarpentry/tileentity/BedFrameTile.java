@@ -23,7 +23,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
  * BlockEntity for frame beds, you can customize both pillow and blanket
  *
  * @author PianoManu
- * @version 1.1 11/07/22
+ * @version 1.2 09/23/23
  */
 public class BedFrameTile extends BlockEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -299,12 +299,6 @@ public class BedFrameTile extends BlockEntity {
 
     public void clear() {
         this.setMimic(null);
-        this.setTexture(0);
-        this.setBlanketColor(0);
-        this.setPillowColor(0);
-        this.setDesign(0);
-        this.setDesignTexture(0);
-        this.setRotation(0);
     }
 }
 //========SOLI DEO GLORIA========//

@@ -27,7 +27,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.SLAB_FRAME_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.1 11/07/22
+ * @version 1.2 09/23/23
  */
 public class TwoBlocksFrameBlockTile extends BlockEntity {
     public static final ModelProperty<BlockState> MIMIC_1 = new ModelProperty<>();
@@ -527,18 +527,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
 
     public void clear() {
         this.setMimic_1(null);
-        this.setDesign_1(0);
-        this.setDesign_1(0);
-        this.setDesign_1(0);
-        this.setOverlay_1(0);
-        this.setRotation_1(0);
-
         this.setMimic_2(null);
-        this.setDesign_2(0);
-        this.setDesign_2(0);
-        this.setDesign_2(0);
-        this.setOverlay_2(0);
-        this.setRotation_2(0);
     }
 }
 //========SOLI DEO GLORIA========//

@@ -29,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 09/23/23
  */
 public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -376,12 +376,6 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
 
     public void clear() {
         this.setMimic(null);
-        this.setDesign(0);
-        this.setDesign(0);
-        this.setDesign(0);
-        this.setGlassColor(0);
-        this.setOverlay(0);
-        this.setRotation(0);
     }
 }
 //========SOLI DEO GLORIA========//

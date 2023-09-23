@@ -24,7 +24,7 @@ import java.util.Objects;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.2 19/09/23
+ * @version 1.3 09/23/23
  */
 public class DaylightDetectorFrameTileEntity extends FrameBlockTile {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -374,12 +374,6 @@ public class DaylightDetectorFrameTileEntity extends FrameBlockTile {
 
     public void clear() {
         this.setMimic(null);
-        this.setDesign(0);
-        this.setDesign(0);
-        this.setDesign(0);
-        this.setGlassColor(0);
-        this.setOverlay(0);
-        this.setRotation(0);
     }
 
 }

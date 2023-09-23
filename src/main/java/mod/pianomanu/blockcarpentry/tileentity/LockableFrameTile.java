@@ -18,7 +18,7 @@ import java.util.Objects;
  * can change the state of the block.
  *
  * @author PianoManu
- * @version 1.1 11/07/22
+ * @version 1.2 09/23/23
  */
 public class LockableFrameTile extends FrameBlockTile {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -116,8 +116,6 @@ public class LockableFrameTile extends FrameBlockTile {
 
     public void clear() {
         super.clear();
-        this.canBeOpenedByPlayers = true;
-        this.canBeOpenedByRedstoneSignal = true;
     }
 
     public void addFromOutdatedTileEntity(FrameBlockTile tile) {
