@@ -6,18 +6,20 @@ import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
-import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
-import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelperItems;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
+import mod.pianomanu.blockcarpentry.util.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,15 +28,18 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.extensions.IForgeBlock;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Basic interface for frame blocks (WIP)
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.2 09/23/23
+ * @version 1.3 09/24/23
  */
-public interface IFrameBlock {
+public interface IFrameBlock extends IForgeBlock {
     BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
@@ -148,7 +153,7 @@ public interface IFrameBlock {
         if (removeBlock(level, pos, state, itemStack, player))
             return InteractionResult.SUCCESS;
         if (state.getValue(CONTAINS_BLOCK)) {
-            if (BlockAppearanceHelper.setAll(itemStack, state, level, pos, player))
+            if (BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || BlockModificationHelper.setAll(itemStack, getTile(level, pos), player))
                 return InteractionResult.CONSUME;
         }
         if (itemStack.getItem() instanceof BlockItem) {
@@ -180,6 +185,42 @@ public interface IFrameBlock {
 
     default boolean isCorrectTileInstance(BlockEntity blockEntity) {
         return blockEntity instanceof FrameBlockTile;
+    }
+
+    default FrameBlockTile getTile(BlockGetter level, BlockPos pos) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof FrameBlockTile fte) {
+            return fte;
+        }
+        return null;
+    }
+
+    @Override
+    default float getFriction(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
+        if (getTile(level, pos) != null)
+            return getTile(level, pos).getFriction();
+        return IForgeBlock.super.getFriction(state, level, pos, entity);
+    }
+
+    @Override
+    default boolean canSustainPlant(BlockState state, BlockGetter level, BlockPos pos, Direction facing, IPlantable plantable) {
+        if (getTile(level, pos) != null)
+            return getTile(level, pos).getCanSustainPlant();
+        return false;
+    }
+
+    @Override
+    default float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
+        if (getTile(level, pos) != null)
+            return getTile(level, pos).getExplosionResistance();
+        return IForgeBlock.super.getExplosionResistance(state, level, pos, explosion);
+    }
+
+    @Override
+    default float getEnchantPowerBonus(BlockState state, LevelReader level, BlockPos pos) {
+        if (getTile(level, pos) != null)
+            return getTile(level, pos).getEnchantPowerBonus();
+        return IForgeBlock.super.getEnchantPowerBonus(state, level, pos);
     }
 }
 
