@@ -42,6 +42,7 @@
   "item.blockcarpentry.chisel": "Chisel",
   "item.blockcarpentry.paintbrush": "Paintbrush",
   "item.blockcarpentry.block_entity_debug_item": "Block Entity Debug Wand",
+  "item.blockcarpentry.explosion_resistance_ball": "Obsidian Compound Clump",
   "message.blockcarpentry.light_level": "Light Level: %s",
   "message.blockcarpentry.texture": "Texture: %s",
   "message.blockcarpentry.design": "Design: %s",
@@ -57,7 +58,9 @@
   "message.blockcarpentry.unlock": "This block is now unlocked and players can open or close it!",
   "message.blockcarpentry.redstone_off": "This block now ignores redstone signals",
   "message.blockcarpentry.redstone_on": "This block no longer ignores redstone signals",
-  "message.blockcarpentry.friction": "Changed block friction to %s",
+  "message.blockcarpentry.friction": "Block Friction: %s",
+  "message.blockcarpentry.strength": "Block Explosion Resistance: %s",
+  "message.blockcarpentry.strength_max": "Block is upgraded to maximum Explosion Resistance: %s",
   "message.blockcarpentry.block_not_available": "We're sorry, but this block can't be displayed",
   "message.blockcarpentry.block_error": "An error occured with this block, please report to the mod author (PianoManu)",
   "message.blockcarpentry.converting_outdated_block": "This block had an outdated tile entity, I've fixed that for you! :)",
@@ -104,5 +107,6 @@
   "tooltip.blockcarpentry.rotatable": "\n§6§oSneak when placing this block to create a vertical version",
   "tooltip.blockcarpentry.layered": "\n§6§oThis block can be placed in all six directions and can be stacked similar to snow",
   "tooltip.blockcarpentry.slope": "\n§6§oThe slope and edged slope behave like normal vanilla stairs but with more stages per block",
-  "tooltip.blockcarpentry.locking": "\n§6§oRight-click this block with an iron ingot to lock its state (open or closed, players won't be able to open or close this block anymore), or with a piece of redstone dust to make it ignore redstone signals\nRight-click again to undo"
+  "tooltip.blockcarpentry.locking": "\n§6§oRight-click this block with an iron ingot to lock its state (open or closed, players won't be able to open or close this block anymore), or with a piece of redstone dust to make it ignore redstone signals\nRight-click again to undo",
+  "tooltip.blockcarpentry.debug_item": "§6§oSneak and Right-click on a block to display its NBT data."
 }

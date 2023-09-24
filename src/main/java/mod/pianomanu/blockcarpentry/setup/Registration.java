@@ -242,6 +242,7 @@ public class Registration {
     public static final RegistryObject<PaintbrushItem> PAINTBRUSH = ITEMS.register("paintbrush", () -> new PaintbrushItem(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1)));
 
     public static final RegistryObject<BlockEntityDebugItem> DEBUG_ITEM = ITEMS.register("block_entity_debug_item", () -> new BlockEntityDebugItem(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1).rarity(Rarity.EPIC)));
+    public static final RegistryObject<Item> EXPLOSION_RESISTANCE_BALL = ITEMS.register("explosion_resistance_ball", () -> new Item(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).rarity(Rarity.UNCOMMON)));
 
 }
 //========SOLI DEO GLORIA========//
