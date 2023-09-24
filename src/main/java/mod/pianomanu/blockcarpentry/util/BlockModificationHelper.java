@@ -1,12 +1,10 @@
 package mod.pianomanu.blockcarpentry.util;
 
-import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 /**
  * Util class for certain frame block entity things like friction, explosion
@@ -30,10 +28,10 @@ public class BlockModificationHelper {
     }
 
     public static boolean setFriction(ItemStack itemStack, FrameBlockTile frameBlockTile, Player player) {
-        if (itemStack.getItem() == Items.BLUE_ICE) {
+        if (FrameInteractionItems.isFrictionModifierNegative(itemStack.getItem())) {
             return setFriction(itemStack, frameBlockTile, player, false);
         }
-        if (itemStack.getItem() == Items.HONEY_BLOCK) {
+        if (FrameInteractionItems.isFrictionModifierPositive(itemStack.getItem())) {
             return setFriction(itemStack, frameBlockTile, player, true);
         }
         return false;
@@ -55,7 +53,7 @@ public class BlockModificationHelper {
     }
 
     public static boolean setExplosionResistance(ItemStack itemStack, FrameBlockTile fte, Player player) {
-        if (itemStack.getItem() == Items.FLINT) {
+        if (FrameInteractionItems.isExplosionResistanceModifierSingle(itemStack.getItem())) {
             if (fte.getExplosionResistance() < EXPLOSION_RESISTANCE_MAX)
                 itemStack.setCount(itemStack.getCount() - 1);
             float min = Math.min(fte.getExplosionResistance() * EXPLOSION_RESISTANCE_MODIFIER, EXPLOSION_RESISTANCE_MAX);
@@ -63,7 +61,7 @@ public class BlockModificationHelper {
             player.displayClientMessage(Component.translatable("message.blockcarpentry.strength", (Math.round(fte.getExplosionResistance() * 1000) / 1000f)), true);
             return true;
         }
-        if (itemStack.getItem() == Registration.EXPLOSION_RESISTANCE_BALL.get()) {
+        if (FrameInteractionItems.isExplosionResistanceModifierUltra(itemStack.getItem())) {
             if (fte.getExplosionResistance() < EXPLOSION_RESISTANCE_MAX)
                 itemStack.setCount(itemStack.getCount() - 1);
             fte.setExplosionResistance(EXPLOSION_RESISTANCE_MAX);
@@ -74,7 +72,7 @@ public class BlockModificationHelper {
     }
 
     public static boolean setSustainability(ItemStack itemStack, FrameBlockTile fte, Player player) {
-        if (itemStack.getItem() == Items.BONE_MEAL) {
+        if (FrameInteractionItems.isSustainabilityModifier(itemStack.getItem())) {
             if (!fte.getCanSustainPlant())
                 itemStack.setCount(itemStack.getCount() - 1);
             fte.setCanSustainPlant(true);
@@ -85,7 +83,7 @@ public class BlockModificationHelper {
     }
 
     public static boolean setEnchantingPower(ItemStack itemStack, FrameBlockTile fte, Player player) {
-        if (itemStack.getItem() == Items.EXPERIENCE_BOTTLE) {
+        if (FrameInteractionItems.isEnchantingPowerModifier(itemStack.getItem())) {
             if (fte.getEnchantPowerBonus() != 1)
                 itemStack.setCount(itemStack.getCount() - 1);
             fte.setEnchantPowerBonus(1);

@@ -213,7 +213,7 @@ public class BlockAppearanceHelper {
     }
 
     public static boolean setColor(Level level, BlockPos pos, ItemStack itemStack) {
-        if (BlockAppearanceHelperItems.isDyeItem(itemStack.getItem())) {
+        if (FrameInteractionItems.isDyeItem(itemStack.getItem())) {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile fte) {
                 fte.setGlassColor(dyeItemToInt(itemStack.getItem()) + 1); //plus 1, because 0 is undyed glass
@@ -235,7 +235,7 @@ public class BlockAppearanceHelper {
     }
 
     public static Integer dyeItemToInt(Item item) {
-        List<Item> colors = new ArrayList<>(BlockAppearanceHelperItems.getDyeItems());
+        List<Item> colors = new ArrayList<>(FrameInteractionItems.getDyeItems());
         if (colors.contains(item)) {
             return colors.indexOf(item);
         }

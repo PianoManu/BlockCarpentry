@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.util;
 
+import mod.pianomanu.blockcarpentry.setup.Registration;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -15,9 +16,17 @@ import java.util.List;
  * @author PianoManu
  * @version 1.0 11/12/22
  */
-public class BlockAppearanceHelperItems {
-    public static boolean isAppearanceModifier(Item item) {
-        return isLightLevelModifier(item) || isOverlayModifier(item) || isDyeItem(item);
+public class FrameInteractionItems {
+    public static boolean isModifier(Item item) {
+        return isLightLevelModifier(item)
+                || isOverlayModifier(item)
+                || isDyeItem(item)
+                || isFrictionModifierNegative(item)
+                || isFrictionModifierPositive(item)
+                || isExplosionResistanceModifierSingle(item)
+                || isExplosionResistanceModifierUltra(item)
+                || isEnchantingPowerModifier(item)
+                || isSustainabilityModifier(item);
     }
 
     public static boolean isLightLevelModifier(Item item) {
@@ -101,5 +110,31 @@ public class BlockAppearanceHelperItems {
         wool_blocks.add(Blocks.BLACK_WOOL);
         return wool_blocks.contains(block);
     }
+
+    public static boolean isSustainabilityModifier(Item item) {
+        return item == Items.BONE_MEAL;
+    }
+
+    public static boolean isEnchantingPowerModifier(Item item) {
+        return item == Items.EXPERIENCE_BOTTLE;
+    }
+
+    public static boolean isFrictionModifierNegative(Item item) {
+        return item == Items.BLUE_ICE;
+    }
+
+    public static boolean isFrictionModifierPositive(Item item) {
+        return item == Items.HONEY_BLOCK;
+    }
+
+    public static boolean isExplosionResistanceModifierSingle(Item item) {
+        return item == Items.FLINT;
+    }
+
+    public static boolean isExplosionResistanceModifierUltra(Item item) {
+        return item == Registration.EXPLOSION_RESISTANCE_BALL.get();
+    }
+
+
 }
 //========SOLI DEO GLORIA========//
