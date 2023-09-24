@@ -119,6 +119,8 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
             return (V) NbtUtils.readBlockState(tag.getCompound(tagElement));
         }
         if (classType == Integer.class) {
+            if (readInteger(tag) != 0)
+                return (V) readInteger(tag);
             return (V) (Integer) tag.getInt(tagElement);
         }
         if (classType == Float.class) {
@@ -128,6 +130,20 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
             return (V) (Boolean) tag.getBoolean(tagElement);
         }
         return defaultValue;
+    }
+
+    //TODO LEGACY METHOD -> remove in 1.20
+    private static Integer readInteger(CompoundTag tag) {
+        if (!tag.contains("number", 8)) {
+            return 0;
+        } else {
+            try {
+                return Integer.parseInt(tag.getString("number"));
+            } catch (NumberFormatException e) {
+                LOGGER.error("Not a valid Number Format: " + tag.getString("number"));
+                return 0;
+            }
+        }
     }
 
     private static <V> void write(CompoundTag compoundNbt, V tagElement, String tagElementName) {
@@ -147,12 +163,6 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
 
     public Integer getDesign() {
         return this.design;
-    }
-
-    private static CompoundTag writeInteger(Integer tag) {
-        CompoundTag compoundnbt = new CompoundTag();
-        compoundnbt.putString("number", tag.toString());
-        return compoundnbt;
     }
 
     public <V> V set(V newValue) {
@@ -291,41 +301,26 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        BlockState oldMimic = mimic;
-        Integer oldTexture = texture;
-        Integer oldDesign = design;
-        Integer oldDesignTexture = designTexture;
-        Integer oldGlassColor = glassColor;
-        Integer oldOverlay = overlay;
-        Integer oldRotation = rotation;
-        Float oldFriction = friction;
-        Float oldExplosionResistance = explosionResistance;
-        Boolean oldCanSustainPlant = canSustainPlant;
-        Integer oldEnchantmentPowerBonus = enchantPowerBonus;
-        CompoundTag tag = pkt.getTag();
-        this.mimic = update(tag, "mimic", oldMimic, BlockState.class, Blocks.AIR.defaultBlockState());
-        this.texture = update(tag, "texture", oldTexture, Integer.class, 0);
-        this.design = update(tag, "design", oldDesign, Integer.class, 0);
-        this.designTexture = update(tag, "designTexture", oldDesignTexture, Integer.class, 0);
-        this.glassColor = update(tag, "glass_color", oldGlassColor, Integer.class, 0);
-        this.overlay = update(tag, "overlay", oldOverlay, Integer.class, 0);
-        this.rotation = update(tag, "rotation", oldRotation, Integer.class, 0);
-        this.friction = update(tag, "friction", oldFriction, Float.class, Registration.FRAMEBLOCK.get().getFriction());
-        this.explosionResistance = update(tag, "explosionResistance", oldExplosionResistance, Float.class, Registration.FRAMEBLOCK.get().getExplosionResistance());
-        this.canSustainPlant = update(tag, "canSustainPlant", oldCanSustainPlant, Boolean.class, false);
-        this.enchantPowerBonus = update(tag, "enchantmentPowerBonus", oldEnchantmentPowerBonus, Integer.class, 0);
+        onDataPacket(pkt);
     }
 
-    private <V> V update(CompoundTag tag, TagPacket<V> tagPacket, V oldValue) {
-        if (tag.contains(tagPacket.TAG_ELEMENT)) {
-            V newValue = getNewValue(tag, tagPacket);
-            if (!Objects.equals(oldValue, newValue)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+    private <V> void onDataPacket(ClientboundBlockEntityDataPacket pkt) {
+        CompoundTag tag = pkt.getTag();
+        Class cls = FrameBlockTile.class;
+        for (TagPacket<?> tagPacket : TAG_PACKETS) {
+            Field[] fs = cls.getDeclaredFields();
+            for (Field f : fs) {
+                if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
+                    try {
+                        V oldValue = (V) f.get(this);
+                        V newValue = update(tag, tagPacket.TAG_ELEMENT, oldValue, (Class<V>) tagPacket.CLASS_TYPE, (V) tagPacket.DEFAULT);
+                        f.set(this, newValue);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-            return newValue;
         }
-        return null;
     }
 
     private <V> V update(CompoundTag tag, String tagElement, V oldValue, Class<V> classType, V defaultValue) {
@@ -363,18 +358,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
-        setNewValue(tag, "mimic", this.mimic);
-        setNewValue(tag, "texture", this.texture);
-        setNewValue(tag, "design", this.design);
-        setNewValue(tag, "design_texture", this.designTexture);
-        setNewValue(tag, "glass_color", this.glassColor);
-        setNewValue(tag, "overlay", this.overlay);
-        setNewValue(tag, "rotation", this.rotation);
-        setNewValue(tag, "friction", this.friction);
-        setNewValue(tag, "explosionResistance", this.explosionResistance);
-        setNewValue(tag, "canSustainPlant", this.canSustainPlant);
-        setNewValue(tag, "enchantmentPowerBonus", this.enchantPowerBonus);
-        /*Class cls = FrameBlockTile.class;
+        Class cls = FrameBlockTile.class;
         for (TagPacket<?> tagPacket : TAG_PACKETS) {
             Field[] fs = cls.getDeclaredFields();
             for (Field f : fs) {
@@ -386,24 +370,13 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
                     }
                 }
             }
-        }*/
+        }
         return tag;
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        //this.mimic = loadTag(tag, "mimic", BlockState.class);
-        //this.texture = loadTag(tag, "texture", Integer.class);
-        //this.design = loadTag(tag, "design", Integer.class);
-        //this.designTexture = loadTag(tag, "design_texture", Integer.class);
-        //this.glassColor = loadTag(tag, "glass_color", Integer.class);
-        //this.overlay = loadTag(tag, "overlay", Integer.class);
-        //this.rotation = loadTag(tag, "rotation", Integer.class);
-        //this.friction = loadTag(tag, "friction", Float.class);
-        //this.explosionResistance = loadTag(tag, "explosionResistance", Float.class);
-        //this.canSustainPlant = loadTag(tag, "canSustainPlant", Boolean.class);
-        //this.enchantPowerBonus = loadTag(tag, "enchantmentPowerBonus", Integer.class);
         Class cls = FrameBlockTile.class;
         for (TagPacket<?> tagPacket : TAG_PACKETS) {
             Field[] fs = cls.getDeclaredFields();
@@ -422,17 +395,6 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        //setNewValue(tag, "mimic", this.mimic);
-        //setNewValue(tag, "texture", this.texture);
-        //setNewValue(tag, "design", this.design);
-        //setNewValue(tag, "design_texture", this.designTexture);
-        //setNewValue(tag, "glass_color", this.glassColor);
-        //setNewValue(tag, "overlay", this.overlay);
-        //setNewValue(tag, "rotation", this.rotation);
-        //setNewValue(tag, "friction", this.friction);
-        //setNewValue(tag, "explosionResistance", this.explosionResistance);
-        //setNewValue(tag, "canSustainPlant", this.canSustainPlant);
-        //setNewValue(tag, "enchantmentPowerBonus", this.enchantPowerBonus);
         Class cls = FrameBlockTile.class;
         for (TagPacket<?> tagPacket : TAG_PACKETS) {
             Field[] fs = cls.getDeclaredFields();
