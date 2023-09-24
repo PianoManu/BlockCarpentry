@@ -24,7 +24,9 @@ public class BlockModificationHelper {
 
     public static boolean setAll(ItemStack itemStack, FrameBlockTile frameBlockTile, Player player) {
         return setFriction(itemStack, frameBlockTile, player)
-                || setExplosionResistance(itemStack, frameBlockTile, player);
+                || setExplosionResistance(itemStack, frameBlockTile, player)
+                || setSustainability(itemStack, frameBlockTile, player)
+                || setEnchantingPower(itemStack, frameBlockTile, player);
     }
 
     public static boolean setFriction(ItemStack itemStack, FrameBlockTile frameBlockTile, Player player) {
@@ -66,6 +68,28 @@ public class BlockModificationHelper {
                 itemStack.setCount(itemStack.getCount() - 1);
             fte.setExplosionResistance(EXPLOSION_RESISTANCE_MAX);
             player.displayClientMessage(Component.translatable("message.blockcarpentry.strength_max", (Math.round(fte.getExplosionResistance() * 1000) / 1000f)), true);
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean setSustainability(ItemStack itemStack, FrameBlockTile fte, Player player) {
+        if (itemStack.getItem() == Items.BONE_MEAL) {
+            if (!fte.getCanSustainPlant())
+                itemStack.setCount(itemStack.getCount() - 1);
+            fte.setCanSustainPlant(true);
+            player.displayClientMessage(Component.translatable("message.blockcarpentry.sustainability"), true);
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean setEnchantingPower(ItemStack itemStack, FrameBlockTile fte, Player player) {
+        if (itemStack.getItem() == Items.EXPERIENCE_BOTTLE) {
+            if (fte.getEnchantPowerBonus() != 1)
+                itemStack.setCount(itemStack.getCount() - 1);
+            fte.setEnchantPowerBonus(1);
+            player.displayClientMessage(Component.translatable("message.blockcarpentry.enchanting_power"), true);
             return true;
         }
         return false;
