@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PressurePlateBlock;
@@ -239,6 +240,8 @@ public class Registration {
     public static final RegistryObject<TextureWrenchItem> TEXTURE_WRENCH = ITEMS.register("texture_wrench", () -> new TextureWrenchItem(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1)));
     public static final RegistryObject<ChiselItem> CHISEL = ITEMS.register("chisel", () -> new ChiselItem(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1)));
     public static final RegistryObject<PaintbrushItem> PAINTBRUSH = ITEMS.register("paintbrush", () -> new PaintbrushItem(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1)));
+
+    public static final RegistryObject<BlockEntityDebugItem> DEBUG_ITEM = ITEMS.register("block_entity_debug_item", () -> new BlockEntityDebugItem(new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY).stacksTo(1).rarity(Rarity.EPIC)));
 
 }
 //========SOLI DEO GLORIA========//
