@@ -55,7 +55,7 @@ public class BlockModificationHelper {
     }
 
     public static boolean setExplosionResistance(ItemStack itemStack, FrameBlockTile fte, Player player) {
-        if (itemStack.getItem() == Items.STONE) {
+        if (itemStack.getItem() == Items.FLINT) {
             if (fte.getExplosionResistance() < EXPLOSION_RESISTANCE_MAX)
                 itemStack.setCount(itemStack.getCount() - 1);
             float min = Math.min(fte.getExplosionResistance() * EXPLOSION_RESISTANCE_MODIFIER, EXPLOSION_RESISTANCE_MAX);

@@ -50,7 +50,7 @@ public class BCModConfig {
         FRICTION_MODIFIER = COMMON_BUILDER.comment("The factor, with which the friction is modified, when the corresponding block is applied to the frame or illusion block. Factor 1 means nothing will change at all!").defineInRange("friction_modifier", 1.05, 1, Double.MAX_VALUE);
 
         EXPLOSION_RESISTANCE_MAX = COMMON_BUILDER.comment("Maximum amount of explosion resistance modification of a frame or illusion block. For comparison: Stone has 6, Obsidian has 1200.").defineInRange("explosion_resistance_max", 1200, 1, Double.MAX_VALUE);
-        EXPLOSION_RESISTANCE_MODIFIER = COMMON_BUILDER.comment("The factor, with which the explosion resistance is modified with a single stone item. With the default values, 123 Stone items are required to achieve maximum explosion resistance.").defineInRange("explosion_resistance_modifier", 1.05, 1, Double.MAX_VALUE);
+        EXPLOSION_RESISTANCE_MODIFIER = COMMON_BUILDER.comment("The factor, with which the explosion resistance is modified with a single Flint item. With the default values, 123 Flint items are required to achieve maximum explosion resistance.").defineInRange("explosion_resistance_modifier", 1.05, 1, Double.MAX_VALUE);
     }
 }
 //========SOLI DEO GLORIA========//
