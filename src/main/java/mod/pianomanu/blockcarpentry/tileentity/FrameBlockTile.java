@@ -54,7 +54,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     public final int maxDesignTextures = 4;
     public final int maxDesigns = 4;
 
-    public static final List<TagPacket<?>> TAG_PACKETS = new ArrayList<>();
+    public static final List<TagPacket<?>> TAG_PACKETS = initTagPackets();
 
     private BlockState mimic;
     private Integer texture = 0;
@@ -77,84 +77,28 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    private static List<TagPacket<?>> initTagPackets() {
+        List<TagPacket<?>> packets = new ArrayList<>();
+        packets.add(new TagPacket<>("mimic", BlockState.class, Blocks.AIR.defaultBlockState()));
+        packets.add(new TagPacket<>("texture", Integer.class, 0));
+        packets.add(new TagPacket<>("design", Integer.class, 0));
+        packets.add(new TagPacket<>("designTexture", Integer.class, 0));
+        packets.add(new TagPacket<>("glassColor", Integer.class, 0));
+        packets.add(new TagPacket<>("overlay", Integer.class, 0));
+        packets.add(new TagPacket<>("rotation", Integer.class, 0));
+        packets.add(new TagPacket<>("friction", Float.class, Registration.FRAMEBLOCK.get().getFriction()));
+        packets.add(new TagPacket<>("explosionResistance", Float.class, Registration.FRAMEBLOCK.get().getExplosionResistance()));
+        packets.add(new TagPacket<>("canSustainPlant", Boolean.class, false));
+        packets.add(new TagPacket<>("enchantPowerBonus", Integer.class, 0));
+        return packets;
+    }
+
     public FrameBlockTile(BlockPos pos, BlockState state) {
         super(FRAMEBLOCK_TILE.get(), pos, state);
-        TAG_PACKETS.add(new TagPacket<>("mimic", BlockState.class, Blocks.AIR.defaultBlockState(), this.mimic));
-        TAG_PACKETS.add(new TagPacket<>("texture", Integer.class, 0, this.texture));
-        TAG_PACKETS.add(new TagPacket<>("design", Integer.class, 0, this.design));
-        TAG_PACKETS.add(new TagPacket<>("designTexture", Integer.class, 0, this.designTexture));
-        TAG_PACKETS.add(new TagPacket<>("glassColor", Integer.class, 0, this.glassColor));
-        TAG_PACKETS.add(new TagPacket<>("overlay", Integer.class, 0, this.overlay));
-        TAG_PACKETS.add(new TagPacket<>("rotation", Integer.class, 0, this.rotation));
-        TAG_PACKETS.add(new TagPacket<>("friction", Float.class, Registration.FRAMEBLOCK.get().getFriction(), this.friction));
-        TAG_PACKETS.add(new TagPacket<>("explosionResistance", Float.class, Registration.FRAMEBLOCK.get().getExplosionResistance(), this.explosionResistance));
-        TAG_PACKETS.add(new TagPacket<>("canSustainPlant", Boolean.class, false, this.canSustainPlant));
-        TAG_PACKETS.add(new TagPacket<>("enchantPowerBonus", Integer.class, 0, this.enchantPowerBonus));
     }
 
     public FrameBlockTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-    }
-
-    private static <V> V readDataType(CompoundTag tag, TagPacket<V> tagPacket) {
-        Class<V> classType = tagPacket.CLASS_TYPE;
-        String tagElement = tagPacket.TAG_ELEMENT;
-        if (classType == BlockState.class) {
-            return (V) NbtUtils.readBlockState(tag.getCompound(tagElement));
-        }
-        if (classType == Integer.class) {
-            return (V) (Integer) tag.getInt(tagElement);
-        }
-        if (classType == Float.class) {
-            return (V) (Float) tag.getFloat(tagElement);
-        }
-        if (classType == Boolean.class) {
-            return (V) (Boolean) tag.getBoolean(tagElement);
-        }
-        return tagPacket.DEFAULT;
-    }
-
-    private static <V> V readDataType(CompoundTag tag, String tagElement, Class<V> classType, V defaultValue) {
-        if (classType == BlockState.class) {
-            return (V) NbtUtils.readBlockState(tag.getCompound(tagElement));
-        }
-        if (classType == Integer.class) {
-            if (readInteger(tag) != 0)
-                return (V) readInteger(tag);
-            return (V) (Integer) tag.getInt(tagElement);
-        }
-        if (classType == Float.class) {
-            return (V) (Float) tag.getFloat(tagElement);
-        }
-        if (classType == Boolean.class) {
-            return (V) (Boolean) tag.getBoolean(tagElement);
-        }
-        return defaultValue;
-    }
-
-    //TODO LEGACY METHOD -> remove in 1.20
-    private static Integer readInteger(CompoundTag tag) {
-        if (!tag.contains("number", 8)) {
-            return 0;
-        } else {
-            try {
-                return Integer.parseInt(tag.getString("number"));
-            } catch (NumberFormatException e) {
-                LOGGER.error("Not a valid Number Format: " + tag.getString("number"));
-                return 0;
-            }
-        }
-    }
-
-    private static <V> void write(CompoundTag compoundNbt, V tagElement, String tagElementName) {
-        if (tagElement.getClass() == Integer.class)
-            compoundNbt.putInt(tagElementName, (int) tagElement);
-        if (tagElement.getClass() == Float.class)
-            compoundNbt.putFloat(tagElementName, (float) tagElement);
-        if (tagElement.getClass() == Boolean.class)
-            compoundNbt.putBoolean(tagElementName, (boolean) tagElement);
-        if (tagElement.getClass() == BlockState.class)
-            compoundNbt.put(tagElementName, NbtUtils.writeBlockState((BlockState) tagElement));
     }
 
     public BlockState getMimic() {
@@ -293,6 +237,68 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
         this.enchantPowerBonus = set(enchantPowerBonus);
     }
 
+    private static <V> V readDataType(CompoundTag tag, String tagElement, Class<V> classType, V defaultValue) {
+        if (classType == BlockState.class) {
+            return (V) NbtUtils.readBlockState(tag.getCompound(tagElement));
+        }
+        if (classType == Integer.class) {
+            if (readInteger(tag) != 0)
+                return (V) readInteger(tag);
+            return (V) (Integer) tag.getInt(tagElement);
+        }
+        if (classType == Float.class) {
+            return (V) (Float) tag.getFloat(tagElement);
+        }
+        if (classType == Boolean.class) {
+            return (V) (Boolean) tag.getBoolean(tagElement);
+        }
+        return defaultValue;
+    }
+
+    //TODO LEGACY METHOD -> remove in 1.20
+    private static Integer readInteger(CompoundTag tag) {
+        if (!tag.contains("number", 8)) {
+            return 0;
+        } else {
+            try {
+                return Integer.parseInt(tag.getString("number"));
+            } catch (NumberFormatException e) {
+                LOGGER.error("Not a valid Number Format: " + tag.getString("number"));
+                return 0;
+            }
+        }
+    }
+
+    private <V> V read(CompoundTag tag, String tagElement, Class<V> classType, V defaultValue) {
+        if (!tag.contains(tagElement)) {
+            return defaultValue;
+        } else {
+            try {
+                return readDataType(tag, tagElement, classType, defaultValue);
+            } catch (Exception e) {
+                LOGGER.error("Not a valid " + tagElement + " Format: " + tag.getString(tagElement));
+            }
+        }
+        return defaultValue;
+    }
+
+    private <V> V read(CompoundTag tag, TagPacket<V> tagPacket) {
+        return read(tag, tagPacket.TAG_ELEMENT, tagPacket.CLASS_TYPE, tagPacket.DEFAULT);
+    }
+
+    private <V> void write(CompoundTag tag, String tagElement, V newElement) {
+        if (newElement != null) {
+            if (newElement.getClass() == Integer.class)
+                tag.putInt(tagElement, (int) newElement);
+            if (newElement.getClass() == Float.class)
+                tag.putFloat(tagElement, (float) newElement);
+            if (newElement.getClass() == Boolean.class)
+                tag.putBoolean(tagElement, (boolean) newElement);
+            if (newElement.getClass() == BlockState.class)
+                tag.put(tagElement, NbtUtils.writeBlockState((BlockState) newElement));
+        }
+    }
+
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -325,7 +331,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
 
     private <V> V update(CompoundTag tag, String tagElement, V oldValue, Class<V> classType, V defaultValue) {
         if (tag.contains(tagElement)) {
-            V newValue = getNewValue(tag, tagElement, classType, defaultValue);
+            V newValue = read(tag, tagElement, classType, defaultValue);
             if (!Objects.equals(oldValue, newValue)) {
                 this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
@@ -364,7 +370,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
             for (Field f : fs) {
                 if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
                     try {
-                        setNewValue(tag, tagPacket.TAG_ELEMENT, f.get(this));
+                        write(tag, tagPacket.TAG_ELEMENT, f.get(this));
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
@@ -383,7 +389,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
             for (Field f : fs) {
                 if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
                     try {
-                        f.set(this, loadTag(tag, tagPacket));
+                        f.set(this, read(tag, tagPacket));
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
@@ -401,42 +407,12 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
             for (Field f : fs) {
                 if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
                     try {
-                        setNewValue(tag, tagPacket.TAG_ELEMENT, f.get(this));
+                        write(tag, tagPacket.TAG_ELEMENT, f.get(this));
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
             }
-        }
-    }
-
-    private <V> V loadTag(CompoundTag tag, TagPacket<V> tagPacket) {
-        if (tag.contains(tagPacket.TAG_ELEMENT)) {
-            return getNewValue(tag, tagPacket);
-        }
-        return null;
-    }
-
-    private <V> V getNewValue(CompoundTag tag, TagPacket<V> tagPacket) {
-        return getNewValue(tag, tagPacket.TAG_ELEMENT, tagPacket.CLASS_TYPE, tagPacket.DEFAULT);
-    }
-
-    private <V> V getNewValue(CompoundTag tag, String tagElement, Class<V> classType, V defaultValue) {
-        if (!tag.contains(tagElement)) {
-            return defaultValue;
-        } else {
-            try {
-                return readDataType(tag, tagElement, classType, defaultValue);
-            } catch (Exception e) {
-                LOGGER.error("Not a valid " + tagElement + " Format: " + tag.getString(tagElement));
-            }
-        }
-        return defaultValue;
-    }
-
-    private <V> void setNewValue(CompoundTag tag, String tagElement, V newElement) {
-        if (newElement != null) {
-            write(tag, newElement, tagElement);
         }
     }
 
@@ -448,13 +424,11 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
         public final String TAG_ELEMENT;
         public final Class<V> CLASS_TYPE;
         public final V DEFAULT;
-        public final V REFERENCE_VALUE;
 
-        public TagPacket(String tagElement, Class<V> classType, V defaultValue, V referenceValue) {
+        public TagPacket(String tagElement, Class<V> classType, V defaultValue) {
             this.TAG_ELEMENT = tagElement;
             this.CLASS_TYPE = classType;
             this.DEFAULT = defaultValue;
-            this.REFERENCE_VALUE = referenceValue;
         }
     }
 }
