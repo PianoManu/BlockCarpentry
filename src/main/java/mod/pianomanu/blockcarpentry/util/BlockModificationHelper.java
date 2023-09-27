@@ -1,7 +1,9 @@
 package mod.pianomanu.blockcarpentry.util;
 
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
+import mod.pianomanu.blockcarpentry.tileentity.BedFrameTile;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.IFrameTile;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -11,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
  * resistance, etc.
  *
  * @author PianoManu
- * @version 1.0 09/24/23
+ * @version 1.1 09/27/23
  */
 public class BlockModificationHelper {
     private static final float FRICTION_MAX_BOUNDARY = BCModConfig.FRICTION_MAX_BOUNDARY.get().floatValue();
@@ -20,14 +22,17 @@ public class BlockModificationHelper {
     private static final float EXPLOSION_RESISTANCE_MAX = BCModConfig.EXPLOSION_RESISTANCE_MAX.get().floatValue();
     private static final float EXPLOSION_RESISTANCE_MODIFIER = BCModConfig.EXPLOSION_RESISTANCE_MODIFIER.get().floatValue();
 
-    public static boolean setAll(ItemStack itemStack, FrameBlockTile frameBlockTile, Player player) {
-        return setFriction(itemStack, frameBlockTile, player)
-                || setExplosionResistance(itemStack, frameBlockTile, player)
-                || setSustainability(itemStack, frameBlockTile, player)
-                || setEnchantingPower(itemStack, frameBlockTile, player);
+    public static <V extends IFrameTile> boolean setAll(ItemStack itemStack, V blockEntity, Player player) {
+        if (IFrameTile.class.isAssignableFrom(blockEntity.getClass())) {
+            return setFriction(itemStack, blockEntity, player)
+                    || setExplosionResistance(itemStack, blockEntity, player)
+                    || setSustainability(itemStack, blockEntity, player)
+                    || setEnchantingPower(itemStack, blockEntity, player);
+        }
+        return false;
     }
 
-    public static boolean setFriction(ItemStack itemStack, FrameBlockTile frameBlockTile, Player player) {
+    public static <V extends IFrameTile> boolean setFriction(ItemStack itemStack, V frameBlockTile, Player player) {
         if (FrameInteractionItems.isFrictionModifierNegative(itemStack.getItem())) {
             return setFriction(itemStack, frameBlockTile, player, false);
         }
@@ -37,11 +42,18 @@ public class BlockModificationHelper {
         return false;
     }
 
-    private static boolean setFriction(ItemStack itemStack, FrameBlockTile fte, Player player, boolean increaseFriction) {
-        if (fte.getFriction() > FRICTION_MIN_BOUNDARY && fte.getFriction() < FRICTION_MAX_BOUNDARY)
-            itemStack.setCount(itemStack.getCount() - 1);
-        fte.setFriction(newFrictionValue(fte.getFriction(), increaseFriction));
-        player.displayClientMessage(Component.translatable("message.blockcarpentry.friction", (Math.round(fte.getFriction() * 1000) / 1000f)), true);
+    private static <V extends IFrameTile> boolean setFriction(ItemStack itemStack, V blockEntity, Player player, boolean increaseFriction) {
+        if (blockEntity instanceof FrameBlockTile fte) {
+            if (fte.getFriction() > FRICTION_MIN_BOUNDARY && fte.getFriction() < FRICTION_MAX_BOUNDARY)
+                itemStack.setCount(itemStack.getCount() - 1);
+            fte.setFriction(newFrictionValue(fte.getFriction(), increaseFriction));
+            player.displayClientMessage(Component.translatable("message.blockcarpentry.friction", (Math.round(fte.getFriction() * 1000) / 1000f)), true);
+        } else if (blockEntity instanceof BedFrameTile fte) {
+            if (fte.getFriction() > FRICTION_MIN_BOUNDARY && fte.getFriction() < FRICTION_MAX_BOUNDARY)
+                itemStack.setCount(itemStack.getCount() - 1);
+            fte.setFriction(newFrictionValue(fte.getFriction(), increaseFriction));
+            player.displayClientMessage(Component.translatable("message.blockcarpentry.friction", (Math.round(fte.getFriction() * 1000) / 1000f)), true);
+        }
         return true;
     }
 
@@ -52,7 +64,7 @@ public class BlockModificationHelper {
         return Math.max(currValue / FRICTION_MODIFIER, FRICTION_MIN_BOUNDARY);
     }
 
-    public static boolean setExplosionResistance(ItemStack itemStack, FrameBlockTile fte, Player player) {
+    public static <V extends IFrameTile> boolean setExplosionResistance(ItemStack itemStack, V fte, Player player) {
         if (FrameInteractionItems.isExplosionResistanceModifierSingle(itemStack.getItem())) {
             if (fte.getExplosionResistance() < EXPLOSION_RESISTANCE_MAX)
                 itemStack.setCount(itemStack.getCount() - 1);
@@ -71,7 +83,7 @@ public class BlockModificationHelper {
         return false;
     }
 
-    public static boolean setSustainability(ItemStack itemStack, FrameBlockTile fte, Player player) {
+    public static <V extends IFrameTile> boolean setSustainability(ItemStack itemStack, V fte, Player player) {
         if (FrameInteractionItems.isSustainabilityModifier(itemStack.getItem())) {
             if (!fte.getCanSustainPlant())
                 itemStack.setCount(itemStack.getCount() - 1);
@@ -82,7 +94,7 @@ public class BlockModificationHelper {
         return false;
     }
 
-    public static boolean setEnchantingPower(ItemStack itemStack, FrameBlockTile fte, Player player) {
+    public static <V extends IFrameTile> boolean setEnchantingPower(ItemStack itemStack, V fte, Player player) {
         if (FrameInteractionItems.isEnchantingPowerModifier(itemStack.getItem())) {
             if (fte.getEnchantPowerBonus() != 1)
                 itemStack.setCount(itemStack.getCount() - 1);
