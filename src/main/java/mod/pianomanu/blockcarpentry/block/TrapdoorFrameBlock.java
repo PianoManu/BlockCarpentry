@@ -3,6 +3,7 @@ package mod.pianomanu.blockcarpentry.block;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.LockableFrameTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.IPlantable;
 
 import javax.annotation.Nullable;
 
@@ -26,7 +28,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.6 09/23/23
+ * @version 1.7 09/27/23
  */
 public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock, IFrameBlock {
 
@@ -157,6 +159,11 @@ public class TrapdoorFrameBlock extends TrapDoorBlock implements EntityBlock, IF
         frameBlockEntity.clear();
         frameBlockEntity.setMimic(handBlock);
         levelIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
+    }
+
+    @Override
+    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable) {
+        return IFrameBlock.super.canSustainPlant(state, world, pos, facing);
     }
 }
 //========SOLI DEO GLORIA========//

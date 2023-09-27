@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -15,13 +16,14 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.IPlantable;
 
 /**
  * Basic class for frame blocks (WIP)
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.4 09/23/23
+ * @version 1.5 09/27/23
  */
 public abstract class AbstractFrameBlock extends BaseEntityBlock implements IFrameBlock {
 
@@ -75,6 +77,12 @@ public abstract class AbstractFrameBlock extends BaseEntityBlock implements IFra
     @Override
     public RenderShape getRenderShape(BlockState p_49232_) {
         return RenderShape.MODEL;
+    }
+
+
+    @Override
+    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable) {
+        return IFrameBlock.super.canSustainPlant(state, world, pos, facing, plantable);
     }
 }
 //========SOLI DEO GLORIA========//

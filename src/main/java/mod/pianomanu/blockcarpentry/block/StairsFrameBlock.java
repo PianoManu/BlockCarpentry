@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.StairsShape;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.IPlantable;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
@@ -29,7 +30,7 @@ import java.util.function.Supplier;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 09/23/23
+ * @version 1.5 09/27/23
  */
 public class StairsFrameBlock extends StairBlock implements EntityBlock, IFrameBlock {
 
@@ -68,6 +69,11 @@ public class StairsFrameBlock extends StairBlock implements EntityBlock, IFrameB
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         return IFrameBlock.getLightEmission(state);
+    }
+
+    @Override
+    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable) {
+        return IFrameBlock.super.canSustainPlant(state, world, pos, facing);
     }
 }
 //========SOLI DEO GLORIA========//

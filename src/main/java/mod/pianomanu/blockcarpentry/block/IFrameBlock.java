@@ -6,6 +6,7 @@ import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.IFrameTile;
 import mod.pianomanu.blockcarpentry.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,12 +33,14 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.extensions.IForgeBlock;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * Basic interface for frame blocks (WIP)
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.3 09/24/23
+ * @version 1.4 09/27/23
  */
 public interface IFrameBlock extends IForgeBlock {
     BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -53,7 +56,7 @@ public interface IFrameBlock extends IForgeBlock {
     }
 
     default boolean shouldCallFrameUse(BlockState state, ItemStack itemStack) {
-        return !state.getValue(CONTAINS_BLOCK) || BlockAppearanceHelperItems.isAppearanceModifier(itemStack.getItem()) || (itemStack.getItem() instanceof BCToolItem);
+        return !state.getValue(CONTAINS_BLOCK) || FrameInteractionItems.isModifier(itemStack.getItem()) || (itemStack.getItem() instanceof BCToolItem);
     }
 
     default boolean removeBlock(Level level, BlockPos pos, BlockState state, ItemStack itemStack, Player player) {
@@ -153,7 +156,7 @@ public interface IFrameBlock extends IForgeBlock {
         if (removeBlock(level, pos, state, itemStack, player))
             return InteractionResult.SUCCESS;
         if (state.getValue(CONTAINS_BLOCK)) {
-            if (BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || BlockModificationHelper.setAll(itemStack, getTile(level, pos), player))
+            if (executeModifications(state, level, pos, player, itemStack))
                 return InteractionResult.CONSUME;
         }
         if (itemStack.getItem() instanceof BlockItem) {
@@ -187,12 +190,16 @@ public interface IFrameBlock extends IForgeBlock {
         return blockEntity instanceof FrameBlockTile;
     }
 
-    default FrameBlockTile getTile(BlockGetter level, BlockPos pos) {
+    default <V extends IFrameTile> V getTile(BlockGetter level, BlockPos pos) {
         BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof FrameBlockTile fte) {
-            return fte;
+        if (IFrameTile.class.isAssignableFrom(Objects.requireNonNull(be).getClass())) {
+            return (V) be;
         }
         return null;
+    }
+
+    default boolean executeModifications(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player);
     }
 
     @Override
@@ -204,8 +211,12 @@ public interface IFrameBlock extends IForgeBlock {
 
     @Override
     default boolean canSustainPlant(BlockState state, BlockGetter level, BlockPos pos, Direction facing, IPlantable plantable) {
+        return canSustainPlant(state, level, pos, facing);
+    }
+
+    default boolean canSustainPlant(BlockState state, BlockGetter level, BlockPos pos, Direction facing) {
         if (getTile(level, pos) != null)
-            return getTile(level, pos).getCanSustainPlant();
+            return getTile(level, pos).getCanSustainPlant() && Block.canSupportRigidBlock(level, pos);
         return false;
     }
 

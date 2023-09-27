@@ -1,5 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
+import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
@@ -41,7 +43,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 09/23/23
+ * @version 1.6 09/27/23
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements SimpleWaterloggedBlock, EntityBlock {
@@ -147,7 +149,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
     public boolean changeMimic(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
         boolean isDouble = state.getValue(DOUBLE_SLAB);
 
-        if (isDouble && state.getValue(BCBlockStateProperties.CONTAINS_2ND_BLOCK) || !isDouble && state.getValue(BCBlockStateProperties.CONTAINS_BLOCK)) {
+        if (isDouble && state.getValue(BCBlockStateProperties.CONTAINS_2ND_BLOCK) || !isDouble && state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || itemStack.getItem() instanceof BaseFrameItem || itemStack.getItem() instanceof BaseIllusionItem) {
             return false;
         }
         BlockEntity tileEntity = level.getBlockEntity(pos);
@@ -189,7 +191,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
         if (!levelIn.isClientSide) {
             BlockEntity tileentity = levelIn.getBlockEntity(pos);
             if (tileentity instanceof TwoBlocksFrameBlockTile frameBlockEntity) {
-                BlockState blockState = frameBlockEntity.getMimic_1();
+                BlockState blockState = frameBlockEntity.getMimic();
                 if (!(blockState == null)) {
                     dropItemStackInWorld(levelIn, pos, blockState);
                 }
@@ -208,7 +210,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
             if (!state.getValue(CONTAINS_BLOCK)) {
                 TwoBlocksFrameBlockTile frameBlockEntity = (TwoBlocksFrameBlockTile) tileentity;
                 frameBlockEntity.clear();
-                frameBlockEntity.setMimic_1(handBlock);
+                frameBlockEntity.setMimic(handBlock);
                 levelIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
             } else if (state.getValue(DOUBLE_SLAB)) {
                 TwoBlocksFrameBlockTile frameBlockEntity = (TwoBlocksFrameBlockTile) tileentity;

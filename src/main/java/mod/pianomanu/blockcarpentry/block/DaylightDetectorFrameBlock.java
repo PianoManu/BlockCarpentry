@@ -2,6 +2,8 @@ package mod.pianomanu.blockcarpentry.block;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.DaylightDetectorFrameTileEntity;
+import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
+import mod.pianomanu.blockcarpentry.util.BlockModificationHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -29,7 +31,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 09/23/23
+ * @version 1.6 09/27/23
  */
 public class DaylightDetectorFrameBlock extends DaylightDetectorBlock implements IFrameBlock {
 
@@ -125,6 +127,11 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock implements
             return !level.isClientSide && level.dimensionType().hasSkyLight() ? createTickerHelper(entityType, Registration.DAYLIGHT_DETECTOR_ILLUSION_TILE.get(), DaylightDetectorFrameBlock::tickEntity) : null;
         else
             throw new IllegalStateException("Block " + this.getName() + " is neither frame or illusion block! BlockState: " + state);
+    }
+
+    @Override
+    public boolean executeModifications(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player, false, false);
     }
 }
 //========SOLI DEO GLORIA========//
