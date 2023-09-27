@@ -42,7 +42,7 @@
   "item.blockcarpentry.chisel": "Chisel",
   "item.blockcarpentry.paintbrush": "Paintbrush",
   "item.blockcarpentry.block_entity_debug_item": "Block Entity Debug Wand",
-  "item.blockcarpentry.explosion_resistance_ball": "Obsidian Compound Clump",
+  "item.blockcarpentry.explosion_resistance_ball": "Obsidian Compound Chunk",
   "message.blockcarpentry.light_level": "Light Level: %s",
   "message.blockcarpentry.texture": "Texture: %s",
   "message.blockcarpentry.design": "Design: %s",
