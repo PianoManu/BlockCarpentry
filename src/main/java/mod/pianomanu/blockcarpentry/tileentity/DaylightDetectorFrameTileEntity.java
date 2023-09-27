@@ -6,9 +6,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nonnull;
 
 /**
  * TileEntity for {@link mod.pianomanu.blockcarpentry.block.DaylightDetectorFrameBlock}
@@ -54,5 +57,34 @@ public class DaylightDetectorFrameTileEntity extends FrameBlockTile {
         onDataPacket(pkt, DaylightDetectorFrameTileEntity.class, level, this.worldPosition, getBlockState());
     }
 
+    @Nonnull
+    @Override
+    public ModelData getModelData() {
+        return ModelData.builder()
+                .with(MIMIC, mimic)
+                .with(TEXTURE, texture)
+                .with(DESIGN, design)
+                .with(DESIGN_TEXTURE, designTexture)
+                .with(GLASS_COLOR, glassColor)
+                .with(OVERLAY, overlay)
+                .with(ROTATION, rotation)
+                .with(NORTH_VISIBLE, northVisible)
+                .with(EAST_VISIBLE, eastVisible)
+                .with(SOUTH_VISIBLE, southVisible)
+                .with(WEST_VISIBLE, westVisible)
+                .with(UP_VISIBLE, upVisible)
+                .with(DOWN_VISIBLE, downVisible)
+                .build();
+    }
+
+    @Override
+    public void load(CompoundTag tag) {
+        super.load(tag);
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+    }
 }
 //========SOLI DEO GLORIA========//
