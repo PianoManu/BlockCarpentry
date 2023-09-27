@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.util;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -14,7 +15,7 @@ import java.util.List;
  * things like light level and textures.
  *
  * @author PianoManu
- * @version 1.0 11/12/22
+ * @version 1.2 09/27/23
  */
 public class FrameInteractionItems {
     public static boolean isModifier(Item item) {
@@ -35,7 +36,7 @@ public class FrameInteractionItems {
         lightLevelModifiers.add(Items.COAL);
         lightLevelModifiers.add(Items.CHARCOAL);
 
-        return lightLevelModifiers.contains(item);
+        return lightLevelModifiers.contains(item) && BCModConfig.LIGHTING_ENABLED.get();
     }
 
     public static boolean isOverlayModifier(Item item) {
@@ -112,27 +113,27 @@ public class FrameInteractionItems {
     }
 
     public static boolean isSustainabilityModifier(Item item) {
-        return item == Items.BONE_MEAL;
+        return item == Items.BONE_MEAL && BCModConfig.SUSTAINABILITY_ENABLED.get();
     }
 
     public static boolean isEnchantingPowerModifier(Item item) {
-        return item == Items.EXPERIENCE_BOTTLE;
+        return item == Items.EXPERIENCE_BOTTLE && BCModConfig.ENCHANT_POWER_ENABLED.get();
     }
 
     public static boolean isFrictionModifierNegative(Item item) {
-        return item == Items.BLUE_ICE;
+        return item == Items.BLUE_ICE && BCModConfig.FRICTION_ENABLED.get();
     }
 
     public static boolean isFrictionModifierPositive(Item item) {
-        return item == Items.HONEY_BLOCK;
+        return item == Items.HONEY_BLOCK && BCModConfig.FRICTION_ENABLED.get();
     }
 
     public static boolean isExplosionResistanceModifierSingle(Item item) {
-        return item == Items.FLINT;
+        return item == Items.FLINT && BCModConfig.EXPLOSION_RESISTANCE_ENABLED.get();
     }
 
     public static boolean isExplosionResistanceModifierUltra(Item item) {
-        return item == Registration.EXPLOSION_RESISTANCE_BALL.get();
+        return item == Registration.EXPLOSION_RESISTANCE_BALL.get() && BCModConfig.EXPLOSION_RESISTANCE_ENABLED.get();
     }
 
 

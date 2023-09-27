@@ -45,11 +45,13 @@ public class BlockModificationHelper {
     }
 
     public static <V extends IFrameTile> boolean setFriction(ItemStack itemStack, V frameBlockTile, Player player) {
-        if (FrameInteractionItems.isFrictionModifierNegative(itemStack.getItem())) {
-            return setFriction(itemStack, frameBlockTile, player, false);
-        }
-        if (FrameInteractionItems.isFrictionModifierPositive(itemStack.getItem())) {
-            return setFriction(itemStack, frameBlockTile, player, true);
+        if (BCModConfig.FRICTION_ENABLED.get()) {
+            if (FrameInteractionItems.isFrictionModifierNegative(itemStack.getItem())) {
+                return setFriction(itemStack, frameBlockTile, player, false);
+            }
+            if (FrameInteractionItems.isFrictionModifierPositive(itemStack.getItem())) {
+                return setFriction(itemStack, frameBlockTile, player, true);
+            }
         }
         return false;
     }
@@ -70,42 +72,48 @@ public class BlockModificationHelper {
     }
 
     public static <V extends IFrameTile> boolean setExplosionResistance(ItemStack itemStack, V fte, Player player) {
-        if (FrameInteractionItems.isExplosionResistanceModifierSingle(itemStack.getItem())) {
-            if (fte.getExplosionResistance() < EXPLOSION_RESISTANCE_MAX)
-                itemStack.setCount(itemStack.getCount() - 1);
-            float min = Math.min(fte.getExplosionResistance() * EXPLOSION_RESISTANCE_MODIFIER, EXPLOSION_RESISTANCE_MAX);
-            fte.setExplosionResistance(min);
-            player.displayClientMessage(Component.translatable("message.blockcarpentry.strength", (Math.round(fte.getExplosionResistance() * 1000) / 1000f)), true);
-            return true;
-        }
-        if (FrameInteractionItems.isExplosionResistanceModifierUltra(itemStack.getItem())) {
-            if (fte.getExplosionResistance() < EXPLOSION_RESISTANCE_MAX)
-                itemStack.setCount(itemStack.getCount() - 1);
-            fte.setExplosionResistance(EXPLOSION_RESISTANCE_MAX);
-            player.displayClientMessage(Component.translatable("message.blockcarpentry.strength_max", (Math.round(fte.getExplosionResistance() * 1000) / 1000f)), true);
-            return true;
+        if (BCModConfig.EXPLOSION_RESISTANCE_ENABLED.get()) {
+            if (FrameInteractionItems.isExplosionResistanceModifierSingle(itemStack.getItem())) {
+                if (fte.getExplosionResistance() < EXPLOSION_RESISTANCE_MAX)
+                    itemStack.setCount(itemStack.getCount() - 1);
+                float min = Math.min(fte.getExplosionResistance() * EXPLOSION_RESISTANCE_MODIFIER, EXPLOSION_RESISTANCE_MAX);
+                fte.setExplosionResistance(min);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.strength", (Math.round(fte.getExplosionResistance() * 1000) / 1000f)), true);
+                return true;
+            }
+            if (FrameInteractionItems.isExplosionResistanceModifierUltra(itemStack.getItem())) {
+                if (fte.getExplosionResistance() < EXPLOSION_RESISTANCE_MAX)
+                    itemStack.setCount(itemStack.getCount() - 1);
+                fte.setExplosionResistance(EXPLOSION_RESISTANCE_MAX);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.strength_max", (Math.round(fte.getExplosionResistance() * 1000) / 1000f)), true);
+                return true;
+            }
         }
         return false;
     }
 
     public static <V extends IFrameTile> boolean setSustainability(ItemStack itemStack, V fte, Player player) {
-        if (FrameInteractionItems.isSustainabilityModifier(itemStack.getItem())) {
-            if (!fte.getCanSustainPlant())
-                itemStack.setCount(itemStack.getCount() - 1);
-            fte.setCanSustainPlant(true);
-            player.displayClientMessage(Component.translatable("message.blockcarpentry.sustainability"), true);
-            return true;
+        if (BCModConfig.SUSTAINABILITY_ENABLED.get()) {
+            if (FrameInteractionItems.isSustainabilityModifier(itemStack.getItem())) {
+                if (!fte.getCanSustainPlant())
+                    itemStack.setCount(itemStack.getCount() - 1);
+                fte.setCanSustainPlant(true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.sustainability"), true);
+                return true;
+            }
         }
         return false;
     }
 
     public static <V extends IFrameTile> boolean setEnchantingPower(ItemStack itemStack, V fte, Player player) {
-        if (FrameInteractionItems.isEnchantingPowerModifier(itemStack.getItem())) {
-            if (fte.getEnchantPowerBonus() != 1)
-                itemStack.setCount(itemStack.getCount() - 1);
-            fte.setEnchantPowerBonus(1);
-            player.displayClientMessage(Component.translatable("message.blockcarpentry.enchanting_power"), true);
-            return true;
+        if (BCModConfig.ENCHANT_POWER_ENABLED.get()) {
+            if (FrameInteractionItems.isEnchantingPowerModifier(itemStack.getItem())) {
+                if (fte.getEnchantPowerBonus() != 1)
+                    itemStack.setCount(itemStack.getCount() - 1);
+                fte.setEnchantPowerBonus(1);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.enchanting_power"), true);
+                return true;
+            }
         }
         return false;
     }

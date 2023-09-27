@@ -3,6 +3,7 @@ package mod.pianomanu.blockcarpentry.util;
 import mod.pianomanu.blockcarpentry.block.BedFrameBlock;
 import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
 import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -42,25 +43,27 @@ public class BlockAppearanceHelper {
     }
 
     public static boolean setLightLevel(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player) {
-        if (itemStack.getItem() == Items.GLOWSTONE_DUST && state.getValue(LIGHT_LEVEL) < 13) {
-            int count = itemStack.getCount();
-            level.setBlock(pos, state.setValue(LIGHT_LEVEL, state.getBlock().getLightEmission(state, level, pos) + 3), 3);
-            itemStack.setCount(count - 1);
-            player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", (state.getValue(LIGHT_LEVEL) + 3)), true);
-            return true;
-        }
-        if ((itemStack.getItem() == Items.COAL || itemStack.getItem() == Items.CHARCOAL) && state.getValue(LIGHT_LEVEL) < 15) {
-            int count = itemStack.getCount();
-            level.setBlock(pos, state.setValue(LIGHT_LEVEL, state.getBlock().getLightEmission(state, level, pos) + 1), 3);
-            itemStack.setCount(count - 1);
-            player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", (state.getValue(LIGHT_LEVEL) + 1)), true);
-            return true;
-        }
-        if (itemStack.getItem() == Items.GLOWSTONE_DUST && state.getValue(LIGHT_LEVEL) >= 13) {
-            player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", state.getValue(LIGHT_LEVEL)), true);
-        }
-        if ((itemStack.getItem() == Items.COAL || itemStack.getItem() == Items.CHARCOAL) && state.getValue(LIGHT_LEVEL) == 15) {
-            player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", state.getValue(LIGHT_LEVEL)), true);
+        if (BCModConfig.LIGHTING_ENABLED.get()) {
+            if (itemStack.getItem() == Items.GLOWSTONE_DUST && state.getValue(LIGHT_LEVEL) < 13) {
+                int count = itemStack.getCount();
+                level.setBlock(pos, state.setValue(LIGHT_LEVEL, state.getBlock().getLightEmission(state, level, pos) + 3), 3);
+                itemStack.setCount(count - 1);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", (state.getValue(LIGHT_LEVEL) + 3)), true);
+                return true;
+            }
+            if ((itemStack.getItem() == Items.COAL || itemStack.getItem() == Items.CHARCOAL) && state.getValue(LIGHT_LEVEL) < 15) {
+                int count = itemStack.getCount();
+                level.setBlock(pos, state.setValue(LIGHT_LEVEL, state.getBlock().getLightEmission(state, level, pos) + 1), 3);
+                itemStack.setCount(count - 1);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", (state.getValue(LIGHT_LEVEL) + 1)), true);
+                return true;
+            }
+            if (itemStack.getItem() == Items.GLOWSTONE_DUST && state.getValue(LIGHT_LEVEL) >= 13) {
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", state.getValue(LIGHT_LEVEL)), true);
+            }
+            if ((itemStack.getItem() == Items.COAL || itemStack.getItem() == Items.CHARCOAL) && state.getValue(LIGHT_LEVEL) == 15) {
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.light_level", state.getValue(LIGHT_LEVEL)), true);
+            }
         }
         return false;
     }
