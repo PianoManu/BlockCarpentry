@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
  * Util class for frame block overlays
  *
  * @author PianoManu
- * @version 1.2 09/23/23
+ * @version 1.3 09/27/23
  */
 public class OverlayHelper {
     private static final String[] messageStrings = {
@@ -40,7 +40,7 @@ public class OverlayHelper {
             return true;
         }
         if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
-            boolean condition = fte.getOverlay_1() < upperBound && fte.getOverlay_1() >= lowerBound && !fte.applyToUpper() || fte.getOverlay_2() < upperBound && fte.getOverlay_2() >= lowerBound && fte.applyToUpper();
+            boolean condition = fte.getOverlay() < upperBound && fte.getOverlay() >= lowerBound && !fte.applyToUpper() || fte.getOverlay_2() < upperBound && fte.getOverlay_2() >= lowerBound && fte.applyToUpper();
             setOverlayTwoBlocksFrameCycle(condition, fte, player, lowerBound, messageIndexOffset);
             return true;
         }
@@ -57,7 +57,7 @@ public class OverlayHelper {
 
     private static void setOverlayTwoBlocksFrameCycle(boolean condition, TwoBlocksFrameBlockTile fte, Player player, int lowerBound, int messageIndexOffset) {
         if (condition) {
-            setOverlayTwoBlocksFrame(fte, player, !fte.applyToUpper() ? fte.getOverlay_1() + 1 : fte.getOverlay_2() + 1, messageIndexOffset);
+            setOverlayTwoBlocksFrame(fte, player, !fte.applyToUpper() ? fte.getOverlay() + 1 : fte.getOverlay_2() + 1, messageIndexOffset);
         } else {
             setOverlayTwoBlocksFrame(fte, player, lowerBound, messageIndexOffset);
         }
@@ -71,7 +71,7 @@ public class OverlayHelper {
 
     private static void setOverlayTwoBlocksFrame(TwoBlocksFrameBlockTile fte, Player player, int newOverlay, int messageIndexOffset) {
         if (!fte.applyToUpper()) {
-            fte.setOverlay_1(newOverlay);
+            fte.setOverlay(newOverlay);
         } else {
             fte.setOverlay_2(newOverlay);
         }

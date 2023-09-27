@@ -28,7 +28,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.4 09/23/23
+ * @version 1.5 09/27/23
  */
 public class BlockAppearanceHelper {
     public static boolean setAll(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player) {
@@ -94,12 +94,12 @@ public class BlockAppearanceHelper {
             }
             if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
                 if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    if (fte.getTexture_1() < 5) {
-                        fte.setTexture_1(fte.getTexture_1() + 1);
+                    if (fte.getTexture() < 5) {
+                        fte.setTexture(fte.getTexture() + 1);
                     } else {
-                        fte.setTexture_1(0);
+                        fte.setTexture(0);
                     }
-                    player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture_1()), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture()), true);
                 } else {
                     if (fte.getTexture_2() < 5) {
                         fte.setTexture_2(fte.getTexture_2() + 1);
@@ -152,12 +152,12 @@ public class BlockAppearanceHelper {
             if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
                 BlockState state = level.getBlockState(pos);
                 if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    if (fte.getDesign_1() < fte.maxDesigns) {
-                        fte.setDesign_1(fte.getDesign_1() + 1);
+                    if (fte.getDesign() < fte.maxDesigns) {
+                        fte.setDesign(fte.getDesign() + 1);
                     } else {
-                        fte.setDesign_1(0);
+                        fte.setDesign(0);
                     }
-                    player.displayClientMessage(Component.translatable("message.blockcarpentry.design", fte.getDesign_1()), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.design", fte.getDesign()), true);
                 } else {
                     if (fte.getDesign_2() < fte.maxDesigns) {
                         fte.setDesign_2(fte.getDesign_2() + 1);
@@ -304,12 +304,12 @@ public class BlockAppearanceHelper {
             if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
                 BlockState state = level.getBlockState(pos);
                 if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    if (fte.getRotation_1() < 11) {
-                        fte.setRotation_1(fte.getRotation_1() + 1);
+                    if (fte.getRotation() < 11) {
+                        fte.setRotation(fte.getRotation() + 1);
                     } else {
-                        fte.setRotation_1(0);
+                        fte.setRotation(0);
                     }
-                    player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation", fte.getRotation_1()), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation", fte.getRotation()), true);
                 } else {
                     if (fte.getRotation_2() < 11) {
                         fte.setRotation_2(fte.getRotation_2() + 1);
