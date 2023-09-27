@@ -18,13 +18,13 @@ import java.util.Objects;
  * can change the state of the block.
  *
  * @author PianoManu
- * @version 1.2 09/23/23
+ * @version 1.3 09/27/23
  */
 public class LockableFrameTile extends FrameBlockTile {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private boolean canBeOpenedByPlayers;
-    private boolean canBeOpenedByRedstoneSignal;
+    public boolean canBeOpenedByPlayers;
+    public boolean canBeOpenedByRedstoneSignal;
 
     public LockableFrameTile(BlockPos pos, BlockState state) {
         super(Registration.DOOR_FRAME_TILE.get(), pos, state);
@@ -112,10 +112,6 @@ public class LockableFrameTile extends FrameBlockTile {
         super.saveAdditional(tag);
         tag.put("canBeOpenedByPlayers", writeBool(canBeOpenedByPlayers));
         tag.put("canBeOpenedByRedstoneSignal", writeBool(canBeOpenedByRedstoneSignal));
-    }
-
-    public void clear() {
-        super.clear();
     }
 
     public void addFromOutdatedTileEntity(FrameBlockTile tile) {

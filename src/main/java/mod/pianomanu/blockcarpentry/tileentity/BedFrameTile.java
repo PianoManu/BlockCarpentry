@@ -1,8 +1,8 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
+import mod.pianomanu.blockcarpentry.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
@@ -10,12 +10,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
 
@@ -23,9 +22,9 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
  * BlockEntity for frame beds, you can customize both pillow and blanket
  *
  * @author PianoManu
- * @version 1.2 09/23/23
+ * @version 1.3 09/27/23
  */
-public class BedFrameTile extends BlockEntity {
+public class BedFrameTile extends BlockEntity implements IFrameTile {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
     public static final ModelProperty<Integer> PILLOW = new ModelProperty<>();
@@ -37,41 +36,36 @@ public class BedFrameTile extends BlockEntity {
     public final int maxTextures = 6;
     public final int maxDesigns = 4;
 
-    private BlockState mimic;
-    private Integer texture = 0;
-    private Integer pillowColor = 0;
-    private Integer blanketColor = 0;
-    private Integer design = 0;
-    private Integer designTexture = 0;
-    private Integer rotation = 0;
+    public static final List<FrameBlockTile.TagPacket<?>> TAG_PACKETS = initTagPackets();
+    public BlockState mimic;
+    public Integer texture = 0;
+    public Integer pillowColor = 0;
+    public Integer blanketColor = 0;
+    public Integer design = 0;
+    public Integer designTexture = 0;
+    public Integer rotation = 0;
+    public Float friction = Registration.FRAMEBLOCK.get().getFriction();
+    public Float explosionResistance = Registration.FRAMEBLOCK.get().getExplosionResistance();
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static List<FrameBlockTile.TagPacket<?>> initTagPackets() {
+        List<FrameBlockTile.TagPacket<?>> packets = new ArrayList<>(IFrameTile.TAG_PACKETS);
+        packets.add(new FrameBlockTile.TagPacket<>("pillowColor", Integer.class, 0));
+        packets.add(new FrameBlockTile.TagPacket<>("blanketColor", Integer.class, 0));
+        return packets;
+    }
 
     public BedFrameTile(BlockPos pos, BlockState state) {
         super(BED_FRAME_TILE.get(), pos, state);
     }
 
-    private static Integer readInteger(CompoundTag tag) {
-        if (!tag.contains("number", 8)) {
-            return 0;
-        } else {
-            try {
-                return Integer.parseInt(tag.getString("number"));
-            } catch (NumberFormatException e) {
-                LOGGER.error("Not a valid Number Format: " + tag.getString("number"));
-                return 0;
-            }
-        }
+    public <V> V set(V newValue) {
+        setChanged();
+        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        return newValue;
     }
 
     public BlockState getMimic() {
         return this.mimic;
-    }
-
-    private static CompoundTag writeInteger(Integer tag) {
-        CompoundTag compoundnbt = new CompoundTag();
-        compoundnbt.putString("number", tag.toString());
-        return compoundnbt;
     }
 
     public Integer getPillowColor() {
@@ -79,9 +73,7 @@ public class BedFrameTile extends BlockEntity {
     }
 
     public void setMimic(BlockState mimic) {
-        this.mimic = mimic;
-        setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        this.mimic = set(mimic);
     }
 
     public Integer getBlanketColor() {
@@ -89,9 +81,7 @@ public class BedFrameTile extends BlockEntity {
     }
 
     public void setPillowColor(Integer pillowColor) {
-        this.pillowColor = pillowColor;
-        setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        this.pillowColor = set(pillowColor);
     }
 
     public Integer getDesign() {
@@ -99,9 +89,7 @@ public class BedFrameTile extends BlockEntity {
     }
 
     public void setBlanketColor(Integer blanketColor) {
-        this.blanketColor = blanketColor;
-        setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        this.blanketColor = set(blanketColor);
     }
 
     public Integer getDesignTexture() {
@@ -109,9 +97,7 @@ public class BedFrameTile extends BlockEntity {
     }
 
     public void setDesign(Integer design) {
-        this.design = design;
-        setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        this.design = set(design);
     }
 
     public Integer getTexture() {
@@ -119,7 +105,7 @@ public class BedFrameTile extends BlockEntity {
     }
 
     public void setTexture(Integer texture) {
-        this.texture = texture;
+        this.texture = set(texture);
     }
 
     public Integer getRotation() {
@@ -127,13 +113,66 @@ public class BedFrameTile extends BlockEntity {
     }
 
     public void setRotation(Integer rotation) {
-        this.rotation = rotation;
+        this.rotation = set(rotation);
+    }
+
+    @Override
+    public Integer getOverlay() {
+        return 0;
+    }
+
+    @Override
+    public void setOverlay(Integer newVal) {
+
     }
 
     public void setDesignTexture(Integer designTexture) {
-        this.designTexture = designTexture;
-        setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        this.designTexture = set(designTexture);
+    }
+
+    @Override
+    public Integer getGlassColor() {
+        return 0;
+    }
+
+    @Override
+    public void setGlassColor(Integer newVal) {
+
+    }
+
+    public Float getFriction() {
+        return friction;
+    }
+
+    public void setFriction(Float friction) {
+        this.friction = set(friction);
+    }
+
+    public Float getExplosionResistance() {
+        return explosionResistance;
+    }
+
+    public void setExplosionResistance(Float explosionResistance) {
+        this.explosionResistance = set(explosionResistance);
+    }
+
+    @Override
+    public Boolean getCanSustainPlant() {
+        return false;
+    }
+
+    @Override
+    public void setCanSustainPlant(Boolean newVal) {
+
+    }
+
+    @Override
+    public Integer getEnchantPowerBonus() {
+        return 0;
+    }
+
+    @Override
+    public void setEnchantPowerBonus(Integer newVal) {
     }
 
     @Nullable
@@ -142,67 +181,11 @@ public class BedFrameTile extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    //TODO
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        BlockState oldMimic = mimic;
-        Integer oldTexture = texture;
-        Integer oldPillow = pillowColor;
-        Integer oldBlanket = blanketColor;
-        Integer oldDesign = design;
-        Integer oldDesignTexture = designTexture;
-        Integer oldRotation = rotation;
-        CompoundTag tag = pkt.getTag();
-        if (tag.contains("mimic")) {
-            mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
-            if (!Objects.equals(oldMimic, mimic)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("texture")) {
-            texture = readInteger(tag.getCompound("texture"));
-            if (!Objects.equals(oldTexture, texture)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("blanket")) {
-            blanketColor = readInteger(tag.getCompound("blanket"));
-            if (!Objects.equals(oldBlanket, blanketColor)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("pillow")) {
-            pillowColor = readInteger(tag.getCompound("pillow"));
-            if (!Objects.equals(oldPillow, pillowColor)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design")) {
-            design = readInteger(tag.getCompound("design"));
-            if (!Objects.equals(oldDesign, design)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design_texture")) {
-            designTexture = readInteger(tag.getCompound("design_texture"));
-            if (!Objects.equals(oldDesignTexture, designTexture)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("rotation")) {
-            rotation = readInteger(tag.getCompound("rotation"));
-            if (!Objects.equals(oldRotation, rotation)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
+        onDataPacket(pkt, BedFrameTile.class, level, this.worldPosition, getBlockState());
     }
+
 
     @Nonnull
     @Override
@@ -221,84 +204,19 @@ public class BedFrameTile extends BlockEntity {
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
-        if (mimic != null) {
-            tag.put("mimic", NbtUtils.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            tag.put("texture", writeInteger(texture));
-        }
-        if (blanketColor != null) {
-            tag.put("blanket", writeInteger(blanketColor));
-        }
-        if (pillowColor != null) {
-            tag.put("pillow", writeInteger(pillowColor));
-        }
-        if (design != null) {
-            tag.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            tag.put("design_texture", writeInteger(designTexture));
-        }
-        if (rotation != null) {
-            tag.put("rotation", writeInteger(rotation));
-        }
-        return tag;
+        return getUpdateTag(tag, BedFrameTile.class);
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        if (tag.contains("mimic")) {
-            mimic = NbtUtils.readBlockState(tag.getCompound("mimic"));
-        }
-        if (tag.contains("texture")) {
-            texture = readInteger(tag.getCompound("texture"));
-        }
-        if (tag.contains("blanket")) {
-            blanketColor = readInteger(tag.getCompound("blanket"));
-        }
-        if (tag.contains("pillow")) {
-            pillowColor = readInteger(tag.getCompound("pillow"));
-        }
-        if (tag.contains("design")) {
-            design = readInteger(tag.getCompound("design"));
-        }
-        if (tag.contains("design_texture")) {
-            designTexture = readInteger(tag.getCompound("design_texture"));
-        }
-        if (tag.contains("rotation")) {
-            rotation = readInteger(tag.getCompound("rotation"));
-        }
+        IFrameTile.super.load(tag, BedFrameTile.class);
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if (mimic != null) {
-            tag.put("mimic", NbtUtils.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            tag.put("texture", writeInteger(texture));
-        }
-        if (blanketColor != null) {
-            tag.put("blanket", writeInteger(blanketColor));
-        }
-        if (pillowColor != null) {
-            tag.put("pillow", writeInteger(pillowColor));
-        }
-        if (design != null) {
-            tag.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            tag.put("design_texture", writeInteger(designTexture));
-        }
-        if (rotation != null) {
-            tag.put("rotation", writeInteger(rotation));
-        }
-    }
-
-    public void clear() {
-        this.setMimic(null);
+        IFrameTile.super.saveAdditional(tag, BedFrameTile.class);
     }
 }
 //========SOLI DEO GLORIA========//
