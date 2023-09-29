@@ -63,6 +63,8 @@
   "message.blockcarpentry.strength_max": "Block is upgraded to maximum Explosion Resistance: %s",
   "message.blockcarpentry.sustainability": "This block can now sustain Plants!",
   "message.blockcarpentry.enchanting_power": "This block has now Enchanting Power!",
+  "message.blockcarpentry.can_entity_destroy": "This block can no longer be destroyed by entities!",
+  "message.blockcarpentry.can_entity_destroy_already": "This block is already immune to the destructiveness of entities!",
   "message.blockcarpentry.block_not_available": "We're sorry, but this block can't be displayed",
   "message.blockcarpentry.block_error": "An error occured with this block, please report to the mod author (PianoManu)",
   "message.blockcarpentry.converting_outdated_block": "This block had an outdated tile entity, I've fixed that for you! :)",

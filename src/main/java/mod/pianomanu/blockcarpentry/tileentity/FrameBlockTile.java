@@ -59,6 +59,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     public Float explosionResistance = Registration.FRAMEBLOCK.get().getExplosionResistance();
     public Boolean canSustainPlant = false;
     public Integer enchantPowerBonus = 0;
+    public Boolean canEntityDestroy = true;
 
     public Boolean northVisible = true;
     public Boolean eastVisible = true;
@@ -209,6 +210,16 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
 
     public void setEnchantPowerBonus(Integer enchantPowerBonus) {
         this.enchantPowerBonus = set(enchantPowerBonus);
+    }
+
+    @Override
+    public Boolean getCanEntityDestroy() {
+        return this.canEntityDestroy;
+    }
+
+    @Override
+    public void setCanEntityDestroy(Boolean canEntityDestroy) {
+        this.canEntityDestroy = set(canEntityDestroy);
     }
 
     @Nullable

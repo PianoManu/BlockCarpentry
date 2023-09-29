@@ -39,6 +39,7 @@ public class BlockModificationHelper {
                 set |= setSustainability(itemStack, blockEntity, player);
             if (applyEnchantingPower)
                 set |= setEnchantingPower(itemStack, blockEntity, player);
+            set |= setCanEntityDestroy(itemStack, blockEntity, player);
             return set;
         }
         return false;
@@ -112,6 +113,22 @@ public class BlockModificationHelper {
                     itemStack.setCount(itemStack.getCount() - 1);
                 fte.setEnchantPowerBonus(1);
                 player.displayClientMessage(Component.translatable("message.blockcarpentry.enchanting_power"), true);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static <V extends IFrameTile> boolean setCanEntityDestroy(ItemStack itemStack, V fte, Player player) {
+        if (BCModConfig.CAN_ENTITY_DESTROY_ENABLED.get()) {
+            if (FrameInteractionItems.isEntityDestroyModifier(itemStack.getItem())) {
+                if (fte.getCanEntityDestroy()) {
+                    itemStack.setCount(itemStack.getCount() - 1);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.can_entity_destroy"), true);
+                } else
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.can_entity_destroy_already"), true);
+                fte.setCanEntityDestroy(false);
+
                 return true;
             }
         }

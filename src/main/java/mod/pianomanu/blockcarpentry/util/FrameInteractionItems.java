@@ -27,7 +27,8 @@ public class FrameInteractionItems {
                 || isExplosionResistanceModifierSingle(item)
                 || isExplosionResistanceModifierUltra(item)
                 || isEnchantingPowerModifier(item)
-                || isSustainabilityModifier(item);
+                || isSustainabilityModifier(item)
+                || isEntityDestroyModifier(item);
     }
 
     public static boolean isLightLevelModifier(Item item) {
@@ -134,6 +135,10 @@ public class FrameInteractionItems {
 
     public static boolean isExplosionResistanceModifierUltra(Item item) {
         return item == Registration.EXPLOSION_RESISTANCE_BALL.get() && BCModConfig.EXPLOSION_RESISTANCE_ENABLED.get();
+    }
+
+    public static boolean isEntityDestroyModifier(Item item) {
+        return item == Items.NETHER_STAR && BCModConfig.CAN_ENTITY_DESTROY_ENABLED.get();
     }
 
 

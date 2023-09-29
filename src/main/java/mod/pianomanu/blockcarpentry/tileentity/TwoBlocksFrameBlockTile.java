@@ -65,6 +65,7 @@ public class TwoBlocksFrameBlockTile extends BlockEntity implements IFrameTile {
     public Float explosionResistance = Registration.FRAMEBLOCK.get().getExplosionResistance();
     public Boolean canSustainPlant = false;
     public Integer enchantPowerBonus = 0;
+    public Boolean canEntityDestroy = true;
     public BlockState mimic_2;
     public Integer texture_2 = 0;
     public Integer design_2 = 0;
@@ -203,6 +204,16 @@ public class TwoBlocksFrameBlockTile extends BlockEntity implements IFrameTile {
     @Override
     public void setEnchantPowerBonus(Integer enchantPowerBonus) {
         this.enchantPowerBonus = set(enchantPowerBonus);
+    }
+
+    @Override
+    public Boolean getCanEntityDestroy() {
+        return this.canEntityDestroy;
+    }
+
+    @Override
+    public void setCanEntityDestroy(Boolean canEntityDestroy) {
+        this.canEntityDestroy = set(canEntityDestroy);
     }
 
     public BlockState getMimic_2() {

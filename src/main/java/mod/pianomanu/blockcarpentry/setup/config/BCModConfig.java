@@ -25,6 +25,7 @@ public class BCModConfig {
     public static ForgeConfigSpec.BooleanValue EXPLOSION_RESISTANCE_ENABLED;
     public static ForgeConfigSpec.BooleanValue SUSTAINABILITY_ENABLED;
     public static ForgeConfigSpec.BooleanValue ENCHANT_POWER_ENABLED;
+    public static ForgeConfigSpec.BooleanValue CAN_ENTITY_DESTROY_ENABLED;
     public static ForgeConfigSpec.DoubleValue FRICTION_MIN_BOUNDARY;
     public static ForgeConfigSpec.DoubleValue FRICTION_MAX_BOUNDARY;
     public static ForgeConfigSpec.DoubleValue FRICTION_MODIFIER;
@@ -64,6 +65,8 @@ public class BCModConfig {
         SUSTAINABILITY_ENABLED = COMMON_BUILDER.comment("Determines whether the player can use bone meal to allow for plants planted on top of frame or illusion blocks.").define("sustainability_enabled", true);
 
         ENCHANT_POWER_ENABLED = COMMON_BUILDER.comment("Determines whether the player can use experience bottles to give frame or illusion blocks the same enchanting power that bookshelves have.").define("enchant_power_enabled", true);
+
+        CAN_ENTITY_DESTROY_ENABLED = COMMON_BUILDER.comment("Determines whether the player can use nether stars on frame or illusion blocks such that certain entities (such as the Ender Dragon and the Wither) can no longer destroy frame or illusion blocks.").define("entity_destroy_modifier_enabled", true);
     }
 }
 //========SOLI DEO GLORIA========//

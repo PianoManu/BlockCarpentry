@@ -123,6 +123,10 @@ public interface IFrameTile extends IForgeBlockEntity {
 
     void setEnchantPowerBonus(Integer enchantPowerBonus);
 
+    Boolean getCanEntityDestroy();
+
+    void setCanEntityDestroy(Boolean canEntityDestroy);
+
     default <V> V read(CompoundTag tag, String tagElement, Class<V> classType, V defaultValue) {
         if (!tag.contains(tagElement)) {
             return defaultValue;

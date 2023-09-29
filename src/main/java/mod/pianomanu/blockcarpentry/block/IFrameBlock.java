@@ -233,6 +233,13 @@ public interface IFrameBlock extends IForgeBlock {
             return getTile(level, pos).getEnchantPowerBonus();
         return IForgeBlock.super.getEnchantPowerBonus(state, level, pos);
     }
+
+    @Override
+    default boolean canEntityDestroy(BlockState state, BlockGetter level, BlockPos pos, Entity entity) {
+        if (getTile(level, pos) != null)
+            return getTile(level, pos).getCanEntityDestroy();
+        return IForgeBlock.super.canEntityDestroy(state, level, pos, entity);
+    }
 }
 
 //========SOLI DEO GLORIA========//

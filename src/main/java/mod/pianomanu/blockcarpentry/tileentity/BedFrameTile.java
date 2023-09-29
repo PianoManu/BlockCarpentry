@@ -46,6 +46,7 @@ public class BedFrameTile extends BlockEntity implements IFrameTile {
     public Integer rotation = 0;
     public Float friction = Registration.FRAMEBLOCK.get().getFriction();
     public Float explosionResistance = Registration.FRAMEBLOCK.get().getExplosionResistance();
+    public Boolean canEntityDestroy = true;
 
     private static List<FrameBlockTile.TagPacket<?>> initTagPackets() {
         List<FrameBlockTile.TagPacket<?>> packets = new ArrayList<>(IFrameTile.TAG_PACKETS);
@@ -173,6 +174,16 @@ public class BedFrameTile extends BlockEntity implements IFrameTile {
 
     @Override
     public void setEnchantPowerBonus(Integer newVal) {
+    }
+
+    @Override
+    public Boolean getCanEntityDestroy() {
+        return this.canEntityDestroy;
+    }
+
+    @Override
+    public void setCanEntityDestroy(Boolean canEntityDestroy) {
+        this.canEntityDestroy = set(canEntityDestroy);
     }
 
     @Nullable

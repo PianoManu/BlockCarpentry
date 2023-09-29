@@ -127,6 +127,7 @@ public class ChestFrameBlockEntity extends ChestBlockEntity implements IFrameTil
     public Float explosionResistance = Registration.FRAMEBLOCK.get().getExplosionResistance();
     public Boolean canSustainPlant = false;
     public Integer enchantPowerBonus = 0;
+    public Boolean canEntityDestroy = true;
 
     @Override
     public void startOpen(Player player) {
@@ -261,6 +262,16 @@ public class ChestFrameBlockEntity extends ChestBlockEntity implements IFrameTil
     @Override
     public void setEnchantPowerBonus(Integer enchantPowerBonus) {
         this.enchantPowerBonus = set(enchantPowerBonus);
+    }
+
+    @Override
+    public Boolean getCanEntityDestroy() {
+        return this.canEntityDestroy;
+    }
+
+    @Override
+    public void setCanEntityDestroy(Boolean canEntityDestroy) {
+        this.canEntityDestroy = set(canEntityDestroy);
     }
 
     @Override
