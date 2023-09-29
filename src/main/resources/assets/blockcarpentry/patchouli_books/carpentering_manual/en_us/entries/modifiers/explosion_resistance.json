@@ -1,6 +1,6 @@
 {
   "name": "Stalwart!",
-  "icon": "minecraft:bedrock",
+  "icon": "minecraft:obsidian",
   "category": "blockcarpentry:modifiers",
   "sortnum": 102,
   "pages": [
@@ -21,7 +21,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Hint: Frame or Illusion blocks with sufficiently large explosion resistance absorb any explosion waves sent in this direction, making them very useful for creeper, ghast and wither farms. Time to make your mob farms fancy!"
+      "text": "Hint: Frame or Illusion blocks with sufficiently large explosion resistance absorb any explosion waves sent in this direction, making them very useful for creeper and ghast farms. Time to make your mob farms fancy! $(l)$(#f00)This does not work for the Wither and the Ender Dragon!$() Both can still destroy these blocks"
     }
   ]
 }

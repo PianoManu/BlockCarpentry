@@ -2,7 +2,7 @@
   "name": "Smoothly sticky!",
   "icon": "minecraft:honeycomb",
   "category": "blockcarpentry:modifiers",
-  "sortnum": 103,
+  "sortnum": 104,
   "pages": [
     {
       "type": "patchouli:spotlight",

@@ -2,7 +2,7 @@
   "name": "Environmentally friendly!",
   "icon": "minecraft:oak_sapling",
   "category": "blockcarpentry:modifiers",
-  "sortnum": 104,
+  "sortnum": 105,
   "pages": [
     {
       "type": "patchouli:spotlight",

@@ -2,7 +2,7 @@
   "name": "Enchanting Capacities!",
   "icon": "minecraft:experience_bottle",
   "category": "blockcarpentry:modifiers",
-  "sortnum": 105,
+  "sortnum": 106,
   "pages": [
     {
       "type": "patchouli:spotlight",
