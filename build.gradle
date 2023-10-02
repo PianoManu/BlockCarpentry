@@ -16,7 +16,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 
 
-version = '1.18-0.3.0'
+version = '1.18-0.4.0'
 group = 'mod.pianomanu.blockcarpentry' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'blockcarpentry'
 
@@ -62,6 +62,9 @@ minecraft {
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', 'blockcarpentry'
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             mods {
                 blockcarpentry {
@@ -145,6 +148,7 @@ repositories {
     // flatDir {
     //     dir 'libs'
     // }
+    maven { url 'https://maven.blamejared.com' }
 }
 
 dependencies {
@@ -164,6 +168,8 @@ dependencies {
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-70:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-70")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

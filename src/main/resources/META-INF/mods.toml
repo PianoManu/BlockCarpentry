@@ -60,9 +60,17 @@ ordering = "NONE"
 side = "BOTH"
 # Here's another dependency
 [[dependencies.blockcarpentry]]
-    modId="minecraft"
-    mandatory=true
+modId = "minecraft"
+mandatory = true
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
-    versionRange="[1.18,1.19)"
-    ordering="NONE"
-    side="BOTH"
+versionRange = "[1.18,1.19)"
+ordering = "NONE"
+side = "BOTH"
+
+# Here's another dependency
+[[dependencies.blockcarpentry]]
+modId = "patchouli"
+mandatory = true
+versionRange = "[1.18.2,)"
+ordering = "NONE"
+side = "BOTH"
