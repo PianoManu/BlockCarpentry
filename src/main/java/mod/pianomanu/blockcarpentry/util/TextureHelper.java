@@ -4,22 +4,25 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 10/02/23
  */
 public class TextureHelper {
 
@@ -130,6 +133,22 @@ public class TextureHelper {
 
     private static ResourceLocation loc(String path) {
         return new ResourceLocation("minecraft", path);
+    }
+
+    public static ResourceLocation textureLocation(BlockState state) {
+        String id = state.getBlock().getDescriptionId();
+        String[] id_parted = id.split("\\.");
+        if (id_parted.length != 3)
+            System.out.println("Suspicious string list " + Arrays.toString(id_parted));
+        try {
+            String category = id_parted[0];
+            String namespace = id_parted[1];
+            String element = id_parted[2];
+            return new ResourceLocation(namespace, category + "/" + element);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+            return MissingTextureAtlasSprite.getLocation();
+        }
     }
 }
 //========SOLI DEO GLORIA========//

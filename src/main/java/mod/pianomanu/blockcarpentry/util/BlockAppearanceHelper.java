@@ -29,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.5 09/27/23
+ * @version 1.6 10/02/23
  */
 public class BlockAppearanceHelper {
     public static boolean setAll(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player) {
@@ -220,19 +220,23 @@ public class BlockAppearanceHelper {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile fte) {
                 fte.setGlassColor(dyeItemToInt(itemStack.getItem()) + 1); //plus 1, because 0 is undyed glass
+                return true;
             }
             if (tileEntity instanceof DaylightDetectorFrameTileEntity fte) {
                 fte.setGlassColor(dyeItemToInt(itemStack.getItem()) + 1); //plus 1, because 0 is undyed glass
+                return true;
             }
             if (tileEntity instanceof BedFrameTile fte) {
                 if (level.getBlockState(pos).getValue(BedFrameBlock.PART) == BedPart.FOOT) {
                     fte.setBlanketColor(dyeItemToInt(itemStack.getItem()));
+                    return true;
                 }
                 if (level.getBlockState(pos).getValue(BedFrameBlock.PART) == BedPart.HEAD) {
                     fte.setPillowColor(dyeItemToInt(itemStack.getItem()));
+                    return true;
                 }
             }
-            return true;
+
         }
         return false;
     }

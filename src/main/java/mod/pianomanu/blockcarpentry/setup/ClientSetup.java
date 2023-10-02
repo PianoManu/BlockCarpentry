@@ -2,7 +2,9 @@ package mod.pianomanu.blockcarpentry.setup;
 
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.model.*;
+import mod.pianomanu.blockcarpentry.renderer.block.FrameSignRenderer;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -12,7 +14,7 @@ import net.minecraftforge.fml.common.Mod;
  * Things like model loaders are registered here
  *
  * @author PianoManu
- * @version 1.2 09/20/23
+ * @version 1.3 10/02/23
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
@@ -56,6 +58,11 @@ public class ClientSetup {
         event.register("illusion_pane_loader", new IllusionPaneModelLoader());
         event.register("illusion_daylight_detector_loader", new IllusionDaylightDetectorModelLoader());
         event.register("illusion_layered_block_loader", new IllusionLayeredBlockModelLoader());
+    }
+
+    @SubscribeEvent
+    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(Registration.SIGN_FRAME_TILE.get(), FrameSignRenderer::new);
     }
 }
 //========SOLI DEO GLORIA========//
