@@ -34,7 +34,7 @@ public class BlockEntityDebugItem extends BCToolItem {
             if (blockEntity != null) {
                 Objects.requireNonNull(context.getPlayer()).displayClientMessage(Component.literal(formatText(blockEntity.serializeNBT(), blockName)), false);
             } else {
-                Objects.requireNonNull(context.getPlayer()).displayClientMessage(Component.literal("Block \"" + blockName + "\" does not have a BlockEntity"), false);
+                Objects.requireNonNull(context.getPlayer()).displayClientMessage(Component.literal("§bBlock \"§c" + blockName + "§b\" does not have a BlockEntity"), false);
             }
             return InteractionResult.CONSUME;
         }
