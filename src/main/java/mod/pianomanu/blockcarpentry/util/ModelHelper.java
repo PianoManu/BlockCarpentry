@@ -88,6 +88,7 @@ public class ModelHelper {
         builder.setSprite(sprite);
         builder.setDirection(Direction.getNearest(normal.x, normal.y, normal.z));
         builder.setTintIndex(tintIndex);
+        builder.setShade(true);
 
         putVertex(builder, normal, v1.x, v1.y, v1.z, ulow, vlow, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
         putVertex(builder, normal, v2.x, v2.y, v2.z, ulow, vhigh, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
