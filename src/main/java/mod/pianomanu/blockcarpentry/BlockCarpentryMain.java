@@ -67,8 +67,6 @@ public class BlockCarpentryMain
      */
     private void setup(final FMLCommonSetupEvent event) {
         LOGGER.info("Setting up BlockCarpentry mod");
-        Sheets.addWoodType(BCWoodType.FRAME);
-        Sheets.addWoodType(BCWoodType.ILLUSION);
     }
 
     /**
@@ -76,6 +74,8 @@ public class BlockCarpentryMain
      */
     private void doClientStuff(final FMLClientSetupEvent event) {
         RenderSetup.setup();
+        Sheets.addWoodType(BCWoodType.FRAME);
+        Sheets.addWoodType(BCWoodType.ILLUSION);
         BlockColorHandler.registerBlockColors();
         LOGGER.info("Setting up client things for BlockCarpentry");
     }

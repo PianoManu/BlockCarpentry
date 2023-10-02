@@ -66,7 +66,6 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
         }
 
         BlockState mimic = extraData.get(FrameBlockTile.MIMIC);
-        int tex = extraData.get(FrameBlockTile.TEXTURE);
         if (mimic != null && state != null) {
             //get texture from block in tile entity and apply it to the quads
             List<TextureAtlasSprite> glassBlockList = TextureHelper.getGlassTextures();
