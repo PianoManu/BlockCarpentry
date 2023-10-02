@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.item;
 
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +18,7 @@ import java.util.Objects;
  * This class is used as a base class for the block entity debug item
  *
  * @author PianoManu
- * @version 1.0 09/24/23
+ * @version 1.1 10/02/23
  */
 public class BlockEntityDebugItem extends BCToolItem {
     public BlockEntityDebugItem(Properties properties) {
@@ -29,10 +30,11 @@ public class BlockEntityDebugItem extends BCToolItem {
         Level level = context.getLevel();
         if (level.isClientSide) {
             BlockEntity blockEntity = level.getBlockEntity(context.getClickedPos());
+            String blockName = level.getBlockState(context.getClickedPos()).getBlock().getName().getString();
             if (blockEntity != null) {
-                Objects.requireNonNull(context.getPlayer()).displayClientMessage(Component.literal(blockEntity.serializeNBT().toString()), false);
+                Objects.requireNonNull(context.getPlayer()).displayClientMessage(Component.literal(formatText(blockEntity.serializeNBT(), blockName)), false);
             } else {
-                Objects.requireNonNull(context.getPlayer()).displayClientMessage(Component.literal("Block \"" + level.getBlockState(context.getClickedPos()).getBlock().getName().getString() + "\" does not have a BlockEntity"), false);
+                Objects.requireNonNull(context.getPlayer()).displayClientMessage(Component.literal("Block \"" + blockName + "\" does not have a BlockEntity"), false);
             }
             return InteractionResult.CONSUME;
         }
@@ -54,6 +56,14 @@ public class BlockEntityDebugItem extends BCToolItem {
         } else {
             component.add(Component.translatable("tooltip.blockcarpentry.shift"));
         }
+    }
+
+    private String formatText(CompoundTag tag, String blockName) {
+        StringBuilder formattedText = new StringBuilder("§bBlock \"§c" + blockName + "§b\" has following BlockEntityData:");
+        for (String s : tag.getAllKeys()) {
+            formattedText.append("\n§d    ").append(s).append("§f: §6").append(tag.get(s));
+        }
+        return formattedText.toString();
     }
 }
 //========SOLI DEO GLORIA========//
