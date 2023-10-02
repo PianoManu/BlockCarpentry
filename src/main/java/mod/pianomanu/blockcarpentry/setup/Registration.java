@@ -220,12 +220,12 @@ public class Registration {
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> LAYERED_ILLUSION_TILE = BLOCK_ENTITY_TYPES.register("illusion_layered_block", () -> BlockEntityType.Builder.of(FrameBlockTile::new, LAYERED_ILLUSIONBLOCK.get()).build(null));
 
 
-    public static final RegistryObject<StandingSignFrameBlock> STANDING_SIGN_FRAMEBLOCK = BLOCKS.register("standing_frame_sign", () -> new StandingSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<StandingSignFrameBlock> STANDING_SIGN_FRAMEBLOCK = BLOCKS.register("standing_frame_sign", () -> new StandingSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get()).noCollission()));
     public static final RegistryObject<WallSignFrameBlock> WALL_SIGN_FRAMEBLOCK = BLOCKS.register("wall_frame_sign", () -> new WallSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> SIGN_FRAME_ITEM = ITEMS.register("frame_sign", () -> new FrameSignItem((new Item.Properties()).stacksTo(16).tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY), Registration.STANDING_SIGN_FRAMEBLOCK.get(), Registration.WALL_SIGN_FRAMEBLOCK.get()));
     public static final RegistryObject<BlockEntityType<SignFrameTile>> SIGN_FRAME_TILE = BLOCK_ENTITY_TYPES.register("frame_sign", () -> BlockEntityType.Builder.of(SignFrameTile::new, STANDING_SIGN_FRAMEBLOCK.get(), WALL_SIGN_FRAMEBLOCK.get()).build(null));
 
-    public static final RegistryObject<StandingSignFrameBlock> STANDING_SIGN_ILLUSIONBLOCK = BLOCKS.register("standing_illusion_sign", () -> new StandingSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<StandingSignFrameBlock> STANDING_SIGN_ILLUSIONBLOCK = BLOCKS.register("standing_illusion_sign", () -> new StandingSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get()).noCollission()));
     public static final RegistryObject<WallSignFrameBlock> WALL_SIGN_ILLUSION_BLOCK = BLOCKS.register("wall_illusion_sign", () -> new WallSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> SIGN_ILLUSION_ITEM = ITEMS.register("illusion_sign", () -> new FrameSignItem((new Item.Properties()).stacksTo(16).tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY), Registration.STANDING_SIGN_ILLUSIONBLOCK.get(), Registration.WALL_SIGN_ILLUSION_BLOCK.get()));
     public static final RegistryObject<BlockEntityType<SignFrameTile>> SIGN_ILLUSION_TILE = BLOCK_ENTITY_TYPES.register("illusion_sign", () -> BlockEntityType.Builder.of(SignFrameTile::new, STANDING_SIGN_ILLUSIONBLOCK.get(), WALL_SIGN_ILLUSION_BLOCK.get()).build(null));
