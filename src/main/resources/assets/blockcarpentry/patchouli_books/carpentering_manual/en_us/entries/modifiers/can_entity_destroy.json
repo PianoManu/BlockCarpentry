@@ -1,0 +1,18 @@
+{
+  "name": "Stalwart the 2nd!",
+  "icon": "minecraft:bedrock",
+  "category": "blockcarpentry:modifiers",
+  "sortnum": 103,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "An addon to the explosion resistance modifier: use a Nether Star on a frame or illusion block to make it immune to entity destruction, such as the destructiveness of the Wither and the Ender Dragon. $(l)However, the nether star does not increase the explosion resistance of the affected block.$() This has to be done with the explosion resistance modifiers!"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:nether_star",
+      "title": "Unstoppable!",
+      "text": "$(l)$(#f00)The nether Star will be consumed in the action!$() However, the prerequisite for this is that the frame or illusion block has already been \"filled\" with a block and imitates it. You cannot make an empty frame resist the power of the bosses."
+    }
+  ]
+}

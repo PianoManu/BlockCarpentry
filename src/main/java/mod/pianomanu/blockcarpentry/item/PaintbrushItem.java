@@ -3,7 +3,6 @@ package mod.pianomanu.blockcarpentry.item;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -17,7 +16,7 @@ import java.util.List;
  * @author PianoManu
  * @version 1.0 05/31/22
  */
-public class PaintbrushItem extends Item {
+public class PaintbrushItem extends BCToolItem {
 
     /**
      * Standard constructor for Minecraft items

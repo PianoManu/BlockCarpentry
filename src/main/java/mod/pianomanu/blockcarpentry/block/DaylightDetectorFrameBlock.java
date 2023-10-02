@@ -1,53 +1,62 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.DaylightDetectorFrameTileEntity;
-import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
+import mod.pianomanu.blockcarpentry.util.BlockModificationHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DaylightDetectorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 /**
  * Main class for frame carpets - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.6 09/27/23
  */
-public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
-    public static final BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
-    public static final IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
+public class DaylightDetectorFrameBlock extends DaylightDetectorBlock implements IFrameBlock {
 
     public DaylightDetectorFrameBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(CONTAINS_BLOCK, Boolean.FALSE).setValue(LIGHT_LEVEL, 0).setValue(POWER, 0).setValue(INVERTED, false));
     }
 
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(POWER, INVERTED, CONTAINS_BLOCK, LIGHT_LEVEL);
+    private static void updateSignalStrength(BlockState state, Level level, BlockPos pos) {
+        int i = level.getBrightness(LightLayer.SKY, pos) - level.getSkyDarken();
+        float f = level.getSunAngle(1.0F);
+        boolean inverted = state.getValue(INVERTED);
+        if (inverted) {
+            i = 15 - i;
+        } else if (i > 0) {
+            float f1 = f < (float) Math.PI ? 0.0F : ((float) Math.PI * 2F);
+            f += (f1 - f) * 0.2F;
+            i = Math.round((float) i * Mth.cos(f));
+        }
+
+        i = Mth.clamp(i, 0, 15);
+        if (state.getValue(POWER) != i) {
+            level.setBlock(pos, state.setValue(POWER, i), 3);
+        }
+
     }
 
     @Nullable
@@ -56,79 +65,11 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
         return new DaylightDetectorFrameTileEntity(pos, state);
     }
 
-    @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        ItemStack item = player.getItemInHand(hand);
-        if (!level.isClientSide) {
-            if (state.getValue(CONTAINS_BLOCK) && !Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                super.use(state, level, pos, player, hand, hitresult);
-            }
-            if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
-                    BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
-                    BlockAppearanceHelper.setDesign(level, pos, player, item) ||
-                    BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
-                    BlockAppearanceHelper.setGlassColor(level, pos, player, hand) ||
-                    BlockAppearanceHelper.setOverlay(level, pos, player, item) ||
-                    BlockAppearanceHelper.setRotation(level, pos, player, item))
-                return InteractionResult.CONSUME;
-            if (item.getItem() instanceof BlockItem) {
-                if (state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                    return InteractionResult.PASS;
-                }
-                BlockEntity tileEntity = level.getBlockEntity(pos);
-                int count = player.getItemInHand(hand).getCount();
-                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof DaylightDetectorFrameTileEntity && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
-                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
-                    insertBlock(level, pos, state, handBlockState);
-                    if (!player.isCreative())
-                        player.getItemInHand(hand).setCount(count - 1);
-                }
-            } else {
-                //hammer is needed to remove the block from the frame - you can change it in the config
-                if (state.getValue(CONTAINS_BLOCK) && (player.getItemInHand(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching()))) {
-                    if (!player.isCreative())
-                        this.dropContainedBlock(level, pos);
-                    state = state.setValue(CONTAINS_BLOCK, Boolean.FALSE);
-                    level.setBlock(pos, state, 2);
-                    return InteractionResult.SUCCESS;
-                }
-            }
+    private static void tickEntity(Level level, BlockPos pos, BlockState state, DaylightDetectorFrameTileEntity detectorEntity) {
+        if (level.getGameTime() % 20L == 0L) {
+            updateSignalStrength(state, level, pos);
         }
-        return InteractionResult.SUCCESS;
-    }
 
-    protected void dropContainedBlock(Level level, BlockPos pos) {
-        if (!level.isClientSide) {
-            BlockEntity tileentity = level.getBlockEntity(pos);
-            if (tileentity instanceof DaylightDetectorFrameTileEntity) {
-                DaylightDetectorFrameTileEntity frameTileEntity = (DaylightDetectorFrameTileEntity) tileentity;
-                BlockState blockState = frameTileEntity.getMimic();
-                if (!(blockState == null)) {
-                    level.levelEvent(1010, pos, 0);
-                    frameTileEntity.clear();
-                    float f = 0.7F;
-                    double d0 = (double) (level.random.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (level.random.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (level.random.nextFloat() * 0.7F) + (double) 0.15F;
-                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
-                    ItemEntity itementity = new ItemEntity(level, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickUpDelay();
-                    level.addFreshEntity(itementity);
-                    frameTileEntity.clear();
-                }
-            }
-        }
-    }
-
-    public void insertBlock(Level level, BlockPos pos, BlockState state, BlockState handBlock) {
-        BlockEntity tileentity = level.getBlockEntity(pos);
-        if (tileentity instanceof DaylightDetectorFrameTileEntity) {
-            DaylightDetectorFrameTileEntity frameTileEntity = (DaylightDetectorFrameTileEntity) tileentity;
-            frameTileEntity.clear();
-            frameTileEntity.setMimic(handBlock);
-            level.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
-        }
     }
 
     @Override
@@ -141,12 +82,56 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock {
         }
     }
 
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(CONTAINS_BLOCK, LIGHT_LEVEL);
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (hand == InteractionHand.MAIN_HAND) {
+            if (!level.isClientSide) {
+                if (shouldCallFrameUse(state, itemStack)) {
+                    return frameUseServer(state, level, pos, player, itemStack, hitresult);
+                }
+                return super.use(state, level, pos, player, hand, hitresult);
+            }
+            return frameUseClient(state, level, pos, player, itemStack, hitresult);
+        }
+        return InteractionResult.FAIL;
+    }
+
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        if (state.getValue(LIGHT_LEVEL) > 15) {
-            return 15;
-        }
-        return state.getValue(LIGHT_LEVEL);
+        return IFrameBlock.getLightEmission(state);
+    }
+
+    @Override
+    public boolean isCorrectTileInstance(BlockEntity blockEntity) {
+        return blockEntity instanceof DaylightDetectorFrameTileEntity;
+    }
+
+    public void fillBlockEntity(Level levelIn, BlockPos pos, BlockState state, BlockState handBlock, BlockEntity blockEntity) {
+        DaylightDetectorFrameTileEntity frameBlockEntity = (DaylightDetectorFrameTileEntity) blockEntity;
+        frameBlockEntity.clear();
+        frameBlockEntity.setMimic(handBlock);
+        levelIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
+    }
+
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> entityType) {
+        if (this.getName().equals(Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get().getName()))
+            return !level.isClientSide && level.dimensionType().hasSkyLight() ? createTickerHelper(entityType, Registration.DAYLIGHT_DETECTOR_FRAME_TILE.get(), DaylightDetectorFrameBlock::tickEntity) : null;
+        else if (this.getName().equals(Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get().getName()))
+            return !level.isClientSide && level.dimensionType().hasSkyLight() ? createTickerHelper(entityType, Registration.DAYLIGHT_DETECTOR_ILLUSION_TILE.get(), DaylightDetectorFrameBlock::tickEntity) : null;
+        else
+            throw new IllegalStateException("Block " + this.getName() + " is neither frame or illusion block! BlockState: " + state);
+    }
+
+    @Override
+    public boolean executeModifications(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player, false, false);
     }
 }
 //========SOLI DEO GLORIA========//

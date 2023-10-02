@@ -7,7 +7,6 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.ModelDataManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,13 +18,13 @@ import java.util.Objects;
  * can change the state of the block.
  *
  * @author PianoManu
- * @version 1.0 05/31/22
+ * @version 1.3 09/27/23
  */
 public class LockableFrameTile extends FrameBlockTile {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private boolean canBeOpenedByPlayers;
-    private boolean canBeOpenedByRedstoneSignal;
+    public boolean canBeOpenedByPlayers;
+    public boolean canBeOpenedByRedstoneSignal;
 
     public LockableFrameTile(BlockPos pos, BlockState state) {
         super(Registration.DOOR_FRAME_TILE.get(), pos, state);
@@ -75,14 +74,14 @@ public class LockableFrameTile extends FrameBlockTile {
         if (tag.contains("canBeOpenedByPlayers")) {
             canBeOpenedByPlayers = readBool(tag.getCompound("canBeOpenedByPlayers"), true);
             if (!Objects.equals(oldCanBeOpenedByPlayers, canBeOpenedByPlayers)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
         if (tag.contains("canBeOpenedByRedstoneSignal")) {
             canBeOpenedByRedstoneSignal = readBool(tag.getCompound("canBeOpenedByRedstoneSignal"), true);
             if (!Objects.equals(oldCanBeOpenedByRedstoneSignal, canBeOpenedByRedstoneSignal)) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelDataUpdate();
                 level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
             }
         }
@@ -113,12 +112,6 @@ public class LockableFrameTile extends FrameBlockTile {
         super.saveAdditional(tag);
         tag.put("canBeOpenedByPlayers", writeBool(canBeOpenedByPlayers));
         tag.put("canBeOpenedByRedstoneSignal", writeBool(canBeOpenedByRedstoneSignal));
-    }
-
-    public void clear() {
-        super.clear();
-        this.canBeOpenedByPlayers = true;
-        this.canBeOpenedByRedstoneSignal = true;
     }
 
     public void addFromOutdatedTileEntity(FrameBlockTile tile) {

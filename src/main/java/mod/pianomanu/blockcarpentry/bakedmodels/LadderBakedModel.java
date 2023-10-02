@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.LadderBlock;
@@ -32,7 +31,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.3 09/20/23
  */
 public class LadderBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -59,24 +58,11 @@ public class LadderBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        int tex = extraData.getData(FrameBlockTile.TEXTURE);
         if (mimic != null && state != null) {
-            List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
+            TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
             List<TextureAtlasSprite> designTextureList = new ArrayList<>();
-            if (textureList.size() == 0) {
-                if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_not_available"), true);
-                }
-                return Collections.emptyList();
-            }
-            designTextureList.add(textureList.get(0));
+            designTextureList.add(texture);
             designTextureList.addAll(TextureHelper.getMetalTextures());
-            TextureAtlasSprite texture;
-            if (textureList.size() <= tex) {
-                extraData.setData(FrameBlockTile.TEXTURE, 0);
-                tex = 0;
-            }
-            texture = textureList.get(tex);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             int design = extraData.getData(FrameBlockTile.DESIGN);
             int desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE);

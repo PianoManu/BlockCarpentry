@@ -28,5 +28,10 @@
         ]
       }
     }
+  },
+  "rewards": {
+    "loot": [
+      "blockcarpentry:give_manual"
+    ]
   }
 }

@@ -1,13 +1,13 @@
 package mod.pianomanu.blockcarpentry.block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Half;
@@ -19,14 +19,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.Supplier;
 
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
-
 /**
  * Main class for frame slopes - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 05/28/22
+ * @version 1.2 09/27/23
  */
 public class SlopeFrameBlock extends StairsFrameBlock {
     private static final VoxelShape[] SHAPES_BOTTOM = makeShapes(false);
@@ -34,7 +32,7 @@ public class SlopeFrameBlock extends StairsFrameBlock {
 
     public SlopeFrameBlock(Supplier<BlockState> state, Properties properties) {
         super(state, properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(CONTAINS_BLOCK, Boolean.FALSE).setValue(FACING, Direction.NORTH).setValue(HALF, Half.BOTTOM).setValue(SHAPE, StairsShape.STRAIGHT).setValue(WATERLOGGED, Boolean.valueOf(false)).setValue(LIGHT_LEVEL, 0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(CONTAINS_BLOCK, Boolean.FALSE).setValue(HALF, Half.BOTTOM).setValue(SHAPE, StairsShape.STRAIGHT).setValue(LIGHT_LEVEL, 0));
     }
 
     private static VoxelShape[] makeShapes(boolean isTop) {
@@ -186,11 +184,11 @@ public class SlopeFrameBlock extends StairsFrameBlock {
     }
 
     private int getShapeIndex(BlockState state) {
-        return state.getValue(SHAPE).ordinal() * 4 + state.getValue(FACING).get2DDataValue();
+        return state.getValue(SHAPE).ordinal() * 4 + state.getValue(StairBlock.FACING).get2DDataValue();
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK, FACING, HALF, SHAPE, WATERLOGGED, LIGHT_LEVEL);
+        super.createBlockStateDefinition(builder);
     }
 
     @Override

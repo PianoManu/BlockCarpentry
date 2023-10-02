@@ -3,7 +3,6 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -12,7 +11,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.StairBlock;
@@ -33,7 +31,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.3 09/20/23
  */
 public class StairsBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -68,21 +66,8 @@ public class StairsBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        int tex = extraData.getData(FrameBlockTile.TEXTURE);
         if (mimic != null && state != null) {
-            List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
-            TextureAtlasSprite texture;
-            if (textureList.size() <= tex) {
-                extraData.setData(FrameBlockTile.TEXTURE, 0);
-                tex = 0;
-            }
-            if (textureList.size() == 0) {
-                if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_not_available"), true);
-                }
-                return Collections.emptyList();
-            }
-            texture = textureList.get(tex);
+            TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             List<BakedQuad> quads = new ArrayList<>();
             float yl = 0f;

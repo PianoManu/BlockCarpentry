@@ -1,0 +1,29 @@
+{
+  "name": "Becoming a painter",
+  "icon": "blockcarpentry:paintbrush",
+  "category": "blockcarpentry:chiseling",
+  "sortnum": 13,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "blockcarpentry:paintbrush",
+      "text": "Some blocks have designs with parts that can be repainted. For this, the paintbrush can be used. On the right side, this is visualized for a ladder, whose design has repaintable parts."
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/paintbrush_1.png"
+      ],
+      "title": "Colored ladder struts",
+      "border": true
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "blockcarpentry:paintbrush"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Currently, that's all. The paintbrush does not have any further functionality. This might change in the future, though. Stay excited!"
+    }
+  ]
+}

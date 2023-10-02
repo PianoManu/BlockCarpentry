@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,7 +32,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.3 09/20/23
  */
 public class ChestBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -60,26 +59,14 @@ public class ChestBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
         BlockState mimic = extraData.getData(ChestFrameBlockEntity.MIMIC);
-        int tex = extraData.getData(ChestFrameBlockEntity.TEXTURE);
         if (mimic != null && state != null) {
-            List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
+            TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, ChestFrameBlockEntity.TEXTURE);
             List<TextureAtlasSprite> designTextureList = new ArrayList<>(TextureHelper.getMetalTextures());
-            if (textureList.size() == 0) {
-                if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_not_available"), true);
-                }
-                return Collections.emptyList();
-            }
             designTextureList.add(Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/shulker_box")));
             TextureAtlasSprite chestFront = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chest_front"));
             TextureAtlasSprite chestSide = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chest_side"));
             TextureAtlasSprite chestTop = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chest_top"));
-            TextureAtlasSprite texture;
-            if (textureList.size() <= tex) {
-                extraData.setData(ChestFrameBlockEntity.TEXTURE, 0);
-                tex = 0;
-            }
-            texture = textureList.get(tex);
+
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             int design = extraData.getData(ChestFrameBlockEntity.DESIGN);
             int desTex = extraData.getData(ChestFrameBlockEntity.DESIGN_TEXTURE);

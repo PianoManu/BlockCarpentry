@@ -3,9 +3,11 @@ package mod.pianomanu.blockcarpentry;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.RenderSetup;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
+import mod.pianomanu.blockcarpentry.util.BCWoodType;
 import mod.pianomanu.blockcarpentry.util.BlockColorHandler;
 import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
 import mod.pianomanu.blockcarpentry.util.Tags;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,7 +32,7 @@ import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
  * Main class of the BlockCarpentry mod
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.1 10/02/22
  */
 @Mod(MOD_ID)
 public class BlockCarpentryMain
@@ -42,7 +44,7 @@ public class BlockCarpentryMain
 
     public BlockCarpentryMain() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BCModConfig.COMMON_CONFIG);
-        //ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, BCModConfig.CLIENT_CONFIG);
+
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -63,8 +65,7 @@ public class BlockCarpentryMain
     /**
      * doing setup stuff (currently unused)
      */
-    private void setup(final FMLCommonSetupEvent event)
-    {
+    private void setup(final FMLCommonSetupEvent event) {
         LOGGER.info("Setting up BlockCarpentry mod");
     }
 
@@ -72,11 +73,9 @@ public class BlockCarpentryMain
      * client stuff, i.e. things that can only be done client-side, like rendering
      */
     private void doClientStuff(final FMLClientSetupEvent event) {
-        /*if (!BCModConfig.OPAQUE_BLOCKS.get()) {
-            LOGGER.warn("Config value \"Opaque Blocks\" is set to false. When using OptiFine, frame and illusion blocks may appear invisible. If that is the case, change the value of \"Opaque Blocks\" to \"true\" in the mod config");
-            RenderSetup.setup();
-        }*/
         RenderSetup.setup();
+        Sheets.addWoodType(BCWoodType.FRAME);
+        Sheets.addWoodType(BCWoodType.ILLUSION);
         BlockColorHandler.registerBlockColors();
         LOGGER.info("Setting up client things for BlockCarpentry");
     }

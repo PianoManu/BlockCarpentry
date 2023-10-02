@@ -1,8 +1,10 @@
 {
   "variants": {
-    "contains_block=false,powered=false": { "model": "blockcarpentry:block/frame_pressure_plate_empty" },
-    "contains_block=false,powered=true": { "model": "blockcarpentry:block/frame_pressure_plate_pressed_empty" },
-    "contains_block=true,powered=false": { "model": "blockcarpentry:block/frame_pressure_plate" },
-    "contains_block=true,powered=true": { "model": "blockcarpentry:block/frame_pressure_plate_pressed" }
+    "contains_block=false": {
+      "model": "blockcarpentry:block/frame_pressure_plate_empty"
+    },
+    "contains_block=true": {
+      "model": "blockcarpentry:block/frame_pressure_plate"
+    }
   }
 }

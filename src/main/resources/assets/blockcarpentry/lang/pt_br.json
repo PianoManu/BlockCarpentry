@@ -81,10 +81,10 @@
 	"advancements.blockcarpentry.fence.description": "One day it'll all make perfect fence",
 	"advancements.blockcarpentry.gate.title": "The Gate Gatsby",
   "advancements.blockcarpentry.gate.description": "'Behind every gate man there's a gate woman' a wise asian monk once said",
-  "advancements.blockcarpentry.ladder.title": "How to climb a ladder",
-  "advancements.blockcarpentry.ladder.description": "Step 1: Step 1\nStep 2: Step 2\nStep 3: Step 3\nStep 4: Step 4",
-  "advancements.blockcarpentry.wall.title": "To wall intents and purposes",
-  "advancements.blockcarpentry.wall.description": "I'd rather play 'Wall of Duty: Modern Wallfare' or Wallout 76",
+	"advancements.blockcarpentry.ladder.title": "How to climb a ladder",
+	"advancements.blockcarpentry.ladder.description": "Step 1: Step 1\nStep 2: Step 2\nStep 3: Step 3\nStep 4: Step 4",
+	"advancements.blockcarpentry.wall.title": "To wall intents and purposes",
+	"advancements.blockcarpentry.wall.description": "I'd rather play 'Wall of Duty: Modern Wallfare' or Wallout 76",
 	"advancements.blockcarpentry.pressure_plate.title": "Passion, Pain and Pressure",
 	"advancements.blockcarpentry.pressure_plate.description": "New album feat. DJ Push and Lil Plate",
 	"advancements.blockcarpentry.chest.title": "I need to get something off my chest",
@@ -101,5 +101,6 @@
 	"tooltip.blockcarpentry.vanilla_like": "\n§6§oThe frame behaves like its vanilla counterpart, but it won't take over attributes of the mimicked block",
 	"tooltip.blockcarpentry.layered": "\n§6§oThis block can be placed in all six directions and can be stacked similar to snow",
 	"tooltip.blockcarpentry.slope": "\n§6§oThe slope and edged slope behave like normal vanilla stairs but with more stages per block",
-	"tooltip.blockcarpentry.locking": "\n§6§oRight-click this block with an iron ingot to lock its state (open or closed, players won't be able to open or close this block anymore), or with a piece of redstone dust to make it ignore redstone signals\nRight-click again to undo"
+	"tooltip.blockcarpentry.locking": "\n§6§oRight-click this block with an iron ingot to lock its state (open or closed, players won't be able to open or close this block anymore), or with a piece of redstone dust to make it ignore redstone signals\nRight-click again to undo",
+	"tooltip.blockcarpentry.rotatable": "\n§6§oSneak when placing this block to create a vertical version"
 }

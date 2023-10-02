@@ -1,0 +1,25 @@
+{
+  "name": "Deco yet functional",
+  "icon": "blockcarpentry:frame_chest",
+  "category": "blockcarpentry:frame_blocks",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "There are some blocks with real functionality besides looking fancy. These include the pressure plates, buttons and daylight detectors, which emit redstone signals for given circumstances, just like their vanilla counterparts."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Analogously, the doors, trapdoors and fence gates can be opened and closed via right-click as well as with redstone signals. Furthermore, fences and walls behave like $(o)fences and walls$()! (Who would've guessed it?)"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Finally, the bed and chest have the same functionality as their vanilla counterparts. However, there is currently a bug, that villagers do not want to sleep in frame beds, no matter how hard I force them..."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Maybe they $(o)really really really$() do not want to touch those dirt beds. This would be incomprehensible!"
+    }
+  ]
+}
+

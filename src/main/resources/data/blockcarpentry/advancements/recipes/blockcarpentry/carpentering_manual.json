@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "blockcarpentry:carpentering_manual"
+    ]
+  },
+  "criteria": {
+    "has_frame": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "blockcarpentry:frameblock"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "blockcarpentry:carpentering_manual"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_frame",
+      "has_the_recipe"
+    ]
+  ]
+}

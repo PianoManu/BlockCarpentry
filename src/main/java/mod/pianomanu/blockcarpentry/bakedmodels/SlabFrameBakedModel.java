@@ -4,7 +4,6 @@ import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -13,9 +12,9 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
@@ -32,7 +31,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.4 09/23/23
  */
 public class SlabFrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -65,42 +64,19 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
         BlockState mimic_1 = extraData.getData(TwoBlocksFrameBlockTile.MIMIC_1);
         BlockState mimic_2 = extraData.getData(TwoBlocksFrameBlockTile.MIMIC_2);
         boolean sameBlocks;
-        if (mimic_1 != null && mimic_2 != null)
+        if (mimic_1 != null && mimic_2 != null && mimic_2 != Blocks.AIR.defaultBlockState())
             sameBlocks = mimic_1.is(mimic_2.getBlock());
         else
             sameBlocks = false; //no second block in slab: not the same, we can render the face between the two slabs - prevents crash, if only one slab is filled
-        int tex_1 = extraData.getData(TwoBlocksFrameBlockTile.TEXTURE_1);
-        int tex_2 = extraData.getData(TwoBlocksFrameBlockTile.TEXTURE_2);
         if (mimic_1 != null && state != null) {
-            List<TextureAtlasSprite> textureList_1 = TextureHelper.getTextureFromModel(model, extraData, rand);
-            List<TextureAtlasSprite> textureList_2 = new ArrayList<>();
+            TextureAtlasSprite texture_1 = QuadUtils.getTexture(model, rand, extraData, TwoBlocksFrameBlockTile.TEXTURE_1);
+            TextureAtlasSprite texture_2 = null;
 
-            if (mimic_2 != null) {
+            if (mimic_2 != null && mimic_2 != Blocks.AIR.defaultBlockState()) {
                 ModelResourceLocation location_2 = BlockModelShaper.stateToModelLocation(mimic_2);
                 BakedModel model_2 = Minecraft.getInstance().getModelManager().getModel(location_2);
-                textureList_2 = TextureHelper.getTextureFromModel(model_2, extraData, rand);
+                texture_2 = QuadUtils.getTexture(model_2, rand, extraData, TwoBlocksFrameBlockTile.TEXTURE_2);
             }
-
-            TextureAtlasSprite texture_1;
-            TextureAtlasSprite texture_2;
-            if (textureList_1.size() <= tex_1) {
-                extraData.setData(TwoBlocksFrameBlockTile.TEXTURE_1, 0);
-                tex_1 = 0;
-            }
-            if (textureList_2.size() <= tex_2) {
-                extraData.setData(TwoBlocksFrameBlockTile.TEXTURE_2, 0);
-                tex_2 = 0;
-            }
-            if (textureList_1.size() == 0) {
-                if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_not_available"), true);
-                }
-                return Collections.emptyList();
-            }
-            texture_1 = textureList_1.get(tex_1);
-            if (textureList_2.size() > 0)
-                texture_2 = textureList_2.get(tex_2);
-            else texture_2 = null;
             int tintIndex_1 = BlockAppearanceHelper.setTintIndex(mimic_1);
             int tintIndex_2 = mimic_2 == null ? -1 : BlockAppearanceHelper.setTintIndex(mimic_2);
             boolean renderNorth = side == Direction.NORTH && extraData.getData(TwoBlocksFrameBlockTile.NORTH_VISIBLE);

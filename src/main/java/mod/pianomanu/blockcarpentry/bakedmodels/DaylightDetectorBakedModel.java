@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,7 +31,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.4 09/21/23
  */
 public class DaylightDetectorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -54,8 +53,7 @@ public class DaylightDetectorBakedModel implements IDynamicBakedModel {
             ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
             if (state != null) {
                 BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
-                TextureAtlasSprite texture;
+                TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, DaylightDetectorFrameTileEntity.TEXTURE);
                 TextureAtlasSprite sensor;
                 TextureAtlasSprite sensor_side = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/daylight_detector_side"));
                 TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.getData(DaylightDetectorFrameTileEntity.GLASS_COLOR));
@@ -64,21 +62,6 @@ public class DaylightDetectorBakedModel implements IDynamicBakedModel {
                 } else {
                     sensor = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/daylight_detector_top"));
                 }
-                Integer tex = extraData.getData(DaylightDetectorFrameTileEntity.TEXTURE);
-                if (textureList.size() <= tex) {
-                    extraData.setData(DaylightDetectorFrameTileEntity.TEXTURE, 0);
-                    tex = 0;
-                }
-                if (textureList.size() == 0) {
-                    if (Minecraft.getInstance().player != null) {
-                        Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_not_available"), true);
-                    }
-                    for (int i = 0; i < 6; i++) {
-                        textureList.add(Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("missing")));
-                    }
-                    //return Collections.emptyList();
-                }
-                texture = textureList.get(tex);
                 int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
                 List<BakedQuad> quads = new ArrayList<>();
                 if (design == 0) {
@@ -116,10 +99,6 @@ public class DaylightDetectorBakedModel implements IDynamicBakedModel {
 
                     quads.addAll(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 1 / 16f, 5 / 16f, 1 / 16f, 15 / 16f, -1, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
 
-                    /*quads.addAll(ModelHelper.createSixFaceCuboid(5/16f, 6/16f, 5/16f, 6/16f, 1/16f, 15/16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(10/16f, 11/16f, 5/16f, 6/16f, 1/16f, 15/16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(1/16f, 15/16f, 5/16f, 6/16f, 5/16f, 6/16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));
-                    quads.addAll(ModelHelper.createSixFaceCuboid(1/16f, 15/16f, 5/16f, 6/16f, 10/16f, 11/16f, tintIndex, sensor_side, sensor_side, sensor_side, sensor_side, sensor, sensor_side, 0));*/
                     quads.addAll(ModelHelper.createCuboid(5 / 16f, 6 / 16f, 5 / 16f, 6 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(10 / 16f, 11 / 16f, 5 / 16f, 6 / 16f, 1 / 16f, 15 / 16f, texture, tintIndex));
                     quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 5 / 16f, 6 / 16f, 5 / 16f, 6 / 16f, texture, tintIndex));
@@ -127,7 +106,7 @@ public class DaylightDetectorBakedModel implements IDynamicBakedModel {
                 }
                 int overlayIndex = extraData.getData(DaylightDetectorFrameTileEntity.OVERLAY);
                 if (overlayIndex != 0) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 6 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));
+                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 6 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, true));
                 }
                 return quads;
             }

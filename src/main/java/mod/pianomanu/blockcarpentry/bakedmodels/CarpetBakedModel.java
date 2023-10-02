@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,7 +30,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.0 05/23/22
+ * @version 1.3 09/20/23
  */
 public class CarpetBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -53,28 +52,14 @@ public class CarpetBakedModel implements IDynamicBakedModel {
             ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
             if (state != null) {
                 BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
-                TextureAtlasSprite texture;
+                TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
                 TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.getData(FrameBlockTile.GLASS_COLOR));
                 int woolInt = extraData.getData(FrameBlockTile.GLASS_COLOR) - 1;
                 if (woolInt < 0)
                     woolInt = 0;
                 TextureAtlasSprite wool = TextureHelper.getWoolTextures().get(woolInt);
-                Integer tex = extraData.getData(FrameBlockTile.TEXTURE);
-                if (textureList.size() <= tex) {
-                    extraData.setData(FrameBlockTile.TEXTURE, 0);
-                    tex = 0;
-                }
-                if (textureList.size() == 0) {
-                    if (Minecraft.getInstance().player != null) {
-                        Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_not_available"), true);
-                    }
-                    for (int i = 0; i < 6; i++) {
-                        textureList.add(Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("missing")));
-                    }
-                    //return Collections.emptyList();
-                }
-                texture = textureList.get(tex);
+
+
                 boolean renderNorth = extraData.getData(FrameBlockTile.NORTH_VISIBLE);
                 boolean renderEast = extraData.getData(FrameBlockTile.EAST_VISIBLE);
                 boolean renderSouth = extraData.getData(FrameBlockTile.SOUTH_VISIBLE);
@@ -114,7 +99,7 @@ public class CarpetBakedModel implements IDynamicBakedModel {
                 }
                 int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
                 if (overlayIndex != 0) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));
+                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, true));
                 }
                 return quads;
             }

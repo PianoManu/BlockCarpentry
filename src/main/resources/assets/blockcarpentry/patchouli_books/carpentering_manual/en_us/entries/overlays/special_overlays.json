@@ -1,0 +1,22 @@
+{
+  "name": "More masonry than carpentry",
+  "icon": "minecraft:stone_bricks",
+  "category": "blockcarpentry:overlays",
+  "sortnum": 1001,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:gunpowder",
+      "text": "Using a piece of creeper dust (aka. gunpowder), you can draw different structures onto frame and illusion blocks. This will make it seem, like you are an expert in wool masonry, although it was just a right-click. Currently, there are five versions supported. Cycle through them by right-clicking the block with gunpowder."
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/special_overlay_1.png"
+      ],
+      "border": true,
+      "title": "Special overlays",
+      "text": "The gunpowder $(o)will not be consumed$() in the process!"
+    }
+  ]
+}
