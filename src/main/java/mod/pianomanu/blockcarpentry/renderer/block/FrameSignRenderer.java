@@ -192,7 +192,7 @@ public class FrameSignRenderer implements BlockEntityRenderer<SignFrameTile> {
         public final ModelPart stick;
 
         public FrameSignModel(ModelPart part) {
-            super(RenderType::entityCutoutNoCull);
+            super(RenderType::entityTranslucent);
             this.root = part;
             this.stick = part.getChild(STICK);
         }

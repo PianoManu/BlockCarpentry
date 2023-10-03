@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -14,9 +15,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Basic interface for all Frame BlockEntities mainly containing methods that
@@ -44,6 +48,8 @@ public interface IFrameTile extends IForgeBlockEntity {
         packets.add(new FrameBlockTile.TagPacket<>("explosionResistance", Float.class, Registration.FRAMEBLOCK.get().getExplosionResistance()));
         packets.add(new FrameBlockTile.TagPacket<>("canSustainPlant", Boolean.class, false));
         packets.add(new FrameBlockTile.TagPacket<>("enchantPowerBonus", Integer.class, 0));
+        packets.add(new FrameBlockTile.TagPacket<>("color", DyeColor.class, DyeColor.BLACK));
+        packets.add(new FrameBlockTile.TagPacket<>("hasGlowingText", Boolean.class, false));
         return packets;
     }
 
@@ -61,6 +67,9 @@ public interface IFrameTile extends IForgeBlockEntity {
         }
         if (classType == Boolean.class) {
             return (V) (Boolean) tag.getBoolean(tagElement);
+        }
+        if (classType == DyeColor.class) {
+            return (V) DyeColor.valueOf(tag.getString(tagElement).toUpperCase());
         }
         return defaultValue;
     }
@@ -154,13 +163,15 @@ public interface IFrameTile extends IForgeBlockEntity {
                 tag.putBoolean(tagElement, (boolean) newElement);
             if (newElement.getClass() == BlockState.class)
                 tag.put(tagElement, NbtUtils.writeBlockState((BlockState) newElement));
+            if (newElement.getClass() == DyeColor.class)
+                tag.putString(tagElement, ((DyeColor) newElement).getName());
         }
     }
 
     default <V> void onDataPacket(ClientboundBlockEntityDataPacket pkt, Class<?> cls, Level level, BlockPos pos, BlockState state) {
         CompoundTag tag = pkt.getTag();
         for (FrameBlockTile.TagPacket<?> tagPacket : TAG_PACKETS) {
-            Field[] fs = cls.getDeclaredFields();
+            List<Field> fs = Arrays.stream(cls.getFields()).filter(f -> (!Modifier.isStatic(f.getModifiers()) && Modifier.isPublic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers()))).collect(Collectors.toList());
             for (Field f : fs) {
                 if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
                     try {
@@ -189,7 +200,7 @@ public interface IFrameTile extends IForgeBlockEntity {
 
     default CompoundTag getUpdateTag(CompoundTag tag, Class<?> cls) {
         for (FrameBlockTile.TagPacket<?> tagPacket : TAG_PACKETS) {
-            Field[] fs = cls.getDeclaredFields();
+            List<Field> fs = Arrays.stream(cls.getFields()).filter(f -> (!Modifier.isStatic(f.getModifiers()) && Modifier.isPublic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers()))).collect(Collectors.toList());
             for (Field f : fs) {
                 if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
                     try {
@@ -205,7 +216,7 @@ public interface IFrameTile extends IForgeBlockEntity {
 
     default void load(CompoundTag tag, Class<?> cls) {
         for (FrameBlockTile.TagPacket<?> tagPacket : TAG_PACKETS) {
-            Field[] fs = cls.getDeclaredFields();
+            List<Field> fs = Arrays.stream(cls.getFields()).filter(f -> (!Modifier.isStatic(f.getModifiers()) && Modifier.isPublic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers()))).collect(Collectors.toList());
             for (Field f : fs) {
                 if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
                     try {
@@ -220,7 +231,7 @@ public interface IFrameTile extends IForgeBlockEntity {
 
     default void saveAdditional(CompoundTag tag, Class<?> cls) {
         for (FrameBlockTile.TagPacket<?> tagPacket : TAG_PACKETS) {
-            Field[] fs = cls.getDeclaredFields();
+            List<Field> fs = Arrays.stream(cls.getFields()).filter(f -> (!Modifier.isStatic(f.getModifiers()) && Modifier.isPublic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers()))).collect(Collectors.toList());
             for (Field f : fs) {
                 if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
                     try {

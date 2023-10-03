@@ -45,8 +45,8 @@ public class SignFrameTile extends SignBlockEntity implements IFrameTile {
     public Integer enchantPowerBonus = 0;
     public Boolean canEntityDestroy = true;
 
-    private DyeColor color = DyeColor.BLACK;
-    private boolean hasGlowingText;
+    public DyeColor color = DyeColor.BLACK;
+    public boolean hasGlowingText;
 
     public SignFrameTile(BlockPos pos, BlockState state) {
         super(pos, state);

@@ -4,7 +4,6 @@ import mod.pianomanu.blockcarpentry.tileentity.SignFrameTile;
 import mod.pianomanu.blockcarpentry.util.BCWoodType;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -123,7 +122,6 @@ public class StandingSignFrameBlock extends StandingSignBlock implements IFrameB
                             }
 
                             player.awardStat(Stats.ITEM_USED.get(item));
-                            player.displayClientMessage(Component.translatable("message.blockcarpentry.sign_bug"), false);
                         }
                         tile.executeClickCommands((ServerPlayer) player);
                         return true;
@@ -132,6 +130,31 @@ public class StandingSignFrameBlock extends StandingSignBlock implements IFrameB
             }
         }
         return false;
+    }
+
+    public void clearTile(Level level, BlockPos pos) {
+        if (!level.isClientSide) {
+            BlockEntity tileentity = level.getBlockEntity(pos);
+            if (tileentity instanceof SignFrameTile frameBlockEntity) {
+                BlockState blockState = frameBlockEntity.getMimic();
+                if (!(blockState == null)) {
+                    frameBlockEntity.clear();
+                }
+            }
+        }
+    }
+
+    public void dropContainedBlock(Level level, BlockPos pos) {
+        if (!level.isClientSide) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof SignFrameTile frameBlockEntity) {
+                BlockState blockState = frameBlockEntity.getMimic();
+                if (!(blockState == null)) {
+                    dropItemStackInWorld(level, pos, blockState);
+                    frameBlockEntity.clear();
+                }
+            }
+        }
     }
 }
 //========SOLI DEO GLORIA========//

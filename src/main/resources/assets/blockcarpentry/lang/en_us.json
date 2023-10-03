@@ -70,7 +70,6 @@
   "message.blockcarpentry.block_not_available": "We're sorry, but this block can't be displayed",
   "message.blockcarpentry.block_error": "An error occured with this block, please report to the mod author (PianoManu)",
   "message.blockcarpentry.converting_outdated_block": "This block had an outdated tile entity, I've fixed that for you! :)",
-  "message.blockcarpentry.sign_bug": "If the text on the sign does not appear correctly, please restart the world.",
   "itemGroup.blockcarpentry": "BlockCarpentry",
   "advancements.blockcarpentry.root.description": "Right-click with a block of your choice and rejoice",
   "advancements.blockcarpentry.illusion_blocks.title": "WhAt'S tHe dIfFeReNcE??????",
