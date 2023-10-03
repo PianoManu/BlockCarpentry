@@ -131,5 +131,30 @@ public class StandingSignFrameBlock extends StandingSignBlock implements IFrameB
         }
         return false;
     }
+
+    public void clearTile(Level level, BlockPos pos) {
+        if (!level.isClientSide) {
+            BlockEntity tileentity = level.getBlockEntity(pos);
+            if (tileentity instanceof SignFrameTile frameBlockEntity) {
+                BlockState blockState = frameBlockEntity.getMimic();
+                if (!(blockState == null)) {
+                    frameBlockEntity.clear();
+                }
+            }
+        }
+    }
+
+    public void dropContainedBlock(Level level, BlockPos pos) {
+        if (!level.isClientSide) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof SignFrameTile frameBlockEntity) {
+                BlockState blockState = frameBlockEntity.getMimic();
+                if (!(blockState == null)) {
+                    dropItemStackInWorld(level, pos, blockState);
+                    frameBlockEntity.clear();
+                }
+            }
+        }
+    }
 }
 //========SOLI DEO GLORIA========//
