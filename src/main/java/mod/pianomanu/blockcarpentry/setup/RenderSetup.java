@@ -35,6 +35,8 @@ public class RenderSetup {
         ItemBlockRenderTypes.setRenderLayer(Registration.PANE_FRAMEBLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(Registration.LAYERED_FRAMEBLOCK.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(Registration.STANDING_SIGN_FRAMEBLOCK.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(Registration.WALL_SIGN_FRAMEBLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(Registration.EDGED_SLOPE_FRAMEBLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(Registration.SLOPE_FRAMEBLOCK.get(), RenderType.translucent());
 
@@ -55,6 +57,8 @@ public class RenderSetup {
         ItemBlockRenderTypes.setRenderLayer(Registration.PANE_ILLUSIONBLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(Registration.LAYERED_ILLUSIONBLOCK.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(Registration.STANDING_SIGN_ILLUSIONBLOCK.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(Registration.WALL_SIGN_ILLUSION_BLOCK.get(), RenderType.translucent());
 
 
         //ScreenManager.registerFactory(Registration.STANDING_SIGN_FRAME_CONTAINER.get(), EditSignScreen::new);

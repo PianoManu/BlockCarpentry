@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.0 10/02/23
+ * @version 1.1 10/03/23
  */
 public class SignFrameTile extends SignBlockEntity implements IFrameTile {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -46,8 +46,8 @@ public class SignFrameTile extends SignBlockEntity implements IFrameTile {
     public Integer enchantPowerBonus = 0;
     public Boolean canEntityDestroy = true;
 
-    private DyeColor color = DyeColor.BLACK;
-    private boolean hasGlowingText;
+    public DyeColor color = DyeColor.BLACK;
+    public Boolean hasGlowingText;
 
     public SignFrameTile(BlockPos pos, BlockState state) {
         super(pos, state);

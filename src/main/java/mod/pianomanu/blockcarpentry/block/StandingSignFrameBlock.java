@@ -4,7 +4,6 @@ import mod.pianomanu.blockcarpentry.tileentity.SignFrameTile;
 import mod.pianomanu.blockcarpentry.util.BCWoodType;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -123,7 +122,6 @@ public class StandingSignFrameBlock extends StandingSignBlock implements IFrameB
                             }
 
                             player.awardStat(Stats.ITEM_USED.get(item));
-                            player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.sign_bug"), false);
                         }
                         tile.executeClickCommands((ServerPlayer) player);
                         return true;
