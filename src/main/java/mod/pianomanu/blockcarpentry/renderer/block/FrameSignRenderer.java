@@ -45,7 +45,7 @@ import java.util.List;
  * the text displayed on the sign.
  *
  * @author PianoManu
- * @version 1.0 10/02/23
+ * @version 1.0 10/03/23
  */
 public class FrameSignRenderer implements BlockEntityRenderer<SignFrameTile> {
     public static final int MAX_LINE_WIDTH = 90;
@@ -116,10 +116,14 @@ public class FrameSignRenderer implements BlockEntityRenderer<SignFrameTile> {
         Material material = new Material(TextureAtlas.LOCATION_BLOCKS, TextureHelper.textureLocation(mimic));
         LayerDefinition layerDefinition = createSignLayer(tile.getBlockState());
         FrameSignRenderer.FrameSignModel signrenderer$signmodel = new FrameSignRenderer.FrameSignModel(layerDefinition.bakeRoot());
-        VertexConsumer vertexconsumer = material.buffer(buffer, signrenderer$signmodel::renderType);
+        VertexConsumer vertexconsumer = material.buffer(buffer, RenderType::entityTranslucent);
         signrenderer$signmodel.root.render(stack, vertexconsumer, combinedOverlay, packedLight);
 
-        drawText(tile, stack, buffer, combinedOverlay);
+        try {
+            drawText(tile, stack, buffer, combinedOverlay);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void renderEmpty(SignFrameTile tile, PoseStack stack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
@@ -131,7 +135,11 @@ public class FrameSignRenderer implements BlockEntityRenderer<SignFrameTile> {
         VertexConsumer vertexconsumer = material.buffer(buffer, signrenderer$signmodel::renderType);
         signrenderer$signmodel.root.render(stack, vertexconsumer, combinedOverlay, packedLight);
 
-        drawText(tile, stack, buffer, combinedOverlay);
+        try {
+            drawText(tile, stack, buffer, combinedOverlay);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void prepareStack(BlockState state, PoseStack stack) {
@@ -192,7 +200,7 @@ public class FrameSignRenderer implements BlockEntityRenderer<SignFrameTile> {
         public final ModelPart stick;
 
         public FrameSignModel(ModelPart part) {
-            super(RenderType::entityCutoutNoCull);
+            super(RenderType::entityTranslucent);
             this.root = part;
             this.stick = part.getChild(STICK);
         }
