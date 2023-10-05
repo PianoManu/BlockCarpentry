@@ -56,6 +56,7 @@ public class ChestFrameTileEntity extends ChestTileEntity implements IFrameTile 
      */
     protected int numPlayersUsing;
     public static final ModelProperty<Integer> ROTATION = new ModelProperty<>();
+    private final IItemHandlerModifiable items = createHandler();
     private LazyOptional<IItemHandlerModifiable> itemHandler = LazyOptional.of(() -> items);
 
     public ChestFrameTileEntity(TileEntityType<?> typeIn) {
@@ -109,8 +110,6 @@ public class ChestFrameTileEntity extends ChestTileEntity implements IFrameTile 
     protected Container createMenu(int id, PlayerInventory player) {
         return new ChestFrameContainer(id, player, this);
     }
-
-    private final IItemHandlerModifiable items = createHandler();
 
     @Override
     public boolean receiveClientEvent(int id, int type) {
