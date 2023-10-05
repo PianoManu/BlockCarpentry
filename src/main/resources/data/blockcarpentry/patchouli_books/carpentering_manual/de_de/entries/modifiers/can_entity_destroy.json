@@ -1,0 +1,18 @@
+{
+  "name": "Standhaft der 2.!",
+  "icon": "minecraft:bedrock",
+  "category": "modifiers",
+  "sortnum": 103,
+  "pages": [
+    {
+      "type": "text",
+      "text": "Ein Zusatz zum Explosionswiderstand-Modifikator: Verwende einen Nether-Stern auf einem Rahmen- oder Illusionsblock, um ihn immun gegen die Zerstörung durch Wesen zu machen, wie z.B. die Zerstörungskraft des Wither und des Ender Dragon. $(l)Allerdings erhöht der Netherstern nicht die Explosionsresistenz des betroffenen Blocks.$()"
+    },
+    {
+      "type": "spotlight",
+      "item": "minecraft:nether_star",
+      "title": "Unaufhaltsam!",
+      "text": "Dies muss mit den Explosionsresistenz-Modifikatoren gemacht werden! $(l)$(#f00)Der Nether-Stern wird bei der Aktion verbraucht!$() Voraussetzung dafür ist allerdings, dass der Rahmen oder Illusionsblock bereits mit einem Block \"gefüllt\" wurde und diesen imitiert. Ein leerer Rahmen kann der Macht der Bosse nicht widerstehen."
+    }
+  ]
+}

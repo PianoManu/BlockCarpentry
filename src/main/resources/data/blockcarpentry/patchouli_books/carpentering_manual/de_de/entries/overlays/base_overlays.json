@@ -1,0 +1,47 @@
+{
+  "name": "Sorge für Belebung!",
+  "icon": "minecraft:grass",
+  "category": "overlays",
+  "sortnum": 1000,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "minecraft:grass",
+      "text": "Füge ein Gras-Overlay zu einem Block hinzu, indem du ihn mit einem Gras-Item rechtsklickst. Derzeit werden zwei Versionen von Gras-Overlays unterstützt, eine kurze und eine lange, wie in der Abbildung rechts gezeigt. Das Gras $(o)wird dabei nicht verbraucht$()!"
+    },
+    {
+      "type": "image",
+      "images": [
+        "blockcarpentry:textures/book/base_overlay_1.png"
+      ],
+      "border": true,
+      "title": "Gras-Overlays"
+    },
+    {
+      "type": "spotlight",
+      "item": "minecraft:snowball",
+      "text": "Füge einen Schnee-Overlay zu einem Block hinzu, indem du ihn mit einem Schneeball-Item rechtsklickst. Derzeit werden zwei Versionen von Schnee-Overlays unterstützt, eine lange und eine kurze, wie im Bild rechts zu sehen. Der Schneeball $(o)wird dabei nicht verbraucht$()!"
+    },
+    {
+      "type": "image",
+      "images": [
+        "blockcarpentry:textures/book/base_overlay_2.png"
+      ],
+      "border": true,
+      "title": "Schnee-Overlays"
+    },
+    {
+      "type": "spotlight",
+      "item": "minecraft:vine",
+      "text": "Füge ein Lianen-Overlay zu einem Block hinzu, indem du ihn mit einem Lianen-Item rechtsklickst. Derzeit gibt es nur eine Overlay-Version, die auf dem Bild rechts zu sehen ist. Die Ranke $(o)wird dabei nicht verbraucht$()!"
+    },
+    {
+      "type": "image",
+      "images": [
+        "blockcarpentry:textures/book/base_overlay_3.png"
+      ],
+      "border": true,
+      "title": "Lianen-Overlay"
+    }
+  ]
+}

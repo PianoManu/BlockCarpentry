@@ -1,0 +1,25 @@
+{
+  "name": "Dekorativ und funktional",
+  "icon": "blockcarpentry:frame_chest",
+  "category": "frame_blocks",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "text",
+      "text": "Es gibt einige Blöcke, die nicht nur schick aussehen, sondern auch echte Funktionen haben. Dazu gehören die Druckplatten, Knöpfe und Tageslichtsensoren, die unter bestimmten Umständen Redstone-Signale aussenden, genau wie ihre Vanilla-Pendants."
+    },
+    {
+      "type": "text",
+      "text": "Analog dazu können die Türen, Falltüren und Zauntore sowohl per Rechtsklick als auch mit Redstone-Signalen geöffnet und geschlossen werden. Außerdem verhalten sich Zäune und Mauern wie $(o)Zäune und Mauern$()! (Wer hätte das gedacht?)"
+    },
+    {
+      "type": "text",
+      "text": "Schließlich haben das Bett und die Truhe die gleiche Funktionalität wie ihre Vanilla-Pendants. Allerdings gibt es derzeit einen Bug, dass Dorfbewohner nicht in Rahmenbetten schlafen wollen, egal wie hart ich sie zwingen will..."
+    },
+    {
+      "type": "text",
+      "text": "Vielleicht wollen sie $(o)wirklich wirklich wirklich$() diese Drecksbetten nicht anfassen. Das wäre unverständlich!"
+    }
+  ]
+}
+

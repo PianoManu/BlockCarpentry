@@ -1,0 +1,26 @@
+{
+  "name": "Logic locking!",
+  "icon": "minecraft:tripwire_hook",
+  "category": "modifiers",
+  "sortnum": 101,
+  "pages": [
+    {
+      "type": "text",
+      "text": "Oh nein! Diese Mod bietet keine Eisentüren, eiserne Falltüren oder eiserne Zauntore, $(#333)(warte, gibt es das überhaupt?)$() wie soll ich dann meine Basis gegen Bösewichte, Schurken, Schelme, Gauner, Übeltäter, Halunken, Spitzbuben, Witzbolde, Narren und Strolche sichern? Nun, zum Glück gibt es eine einfache Methode, um Türen, Falltüren und Zauntore zu verriegeln. Klicke einfach mit der rechten Maustaste z.B."
+    },
+    {
+      "type": "spotlight",
+      "item": "minecraft:iron_ingot",
+      "text": "auf eine Tür mit einem Eisenbarren. Ein weiterer Rechtsklick entriegelt den Block. Der Eisenbarren $(o)wird dabei nicht verbraucht$()! Voraussetzung dafür ist allerdings, dass der Rahmen oder Illusionsblock bereits mit einem Block \"gefüllt\" wurde und diesen imitiert. Einen leeren Rahmen kann man nicht sperren."
+    },
+    {
+      "type": "text",
+      "text": "Diese Funktion wird von Rahmen- und Illusionstüren, Falltüren und Zauntoren unterstützt. Um deine Basis weiter zu sichern, kannst du diese Blöcke immun gegen Redstone-Signale machen. Klicke dazu mit der rechten Maustaste zum Beispiel auf eine Tür mit einem Stück Redstone-Staub. Das Signal kann so stark sein, wie es will, der Tür ist es egal! Ein erneuter Rechtsklick macht den Block wieder empfindlich für Redstone-Signale. Der Redstone-Staub $(o)wird dabei nicht verbraucht$()!"
+    },
+    {
+      "type": "spotlight",
+      "item": "minecraft:redstone",
+      "text": "Voraussetzung dafür ist jedoch, dass der Rahmen oder Illusionsblock bereits mit einem Block \"gefüllt\" wurde und diesen imitiert. Man kann einen leeren Rahmen nicht davon überzeugen, Redstone-Signale zu ignorieren. Diese Funktion wird von Rahmen- und Illusionstüren, Falltüren und Zauntoren unterstützt."
+    }
+  ]
+}

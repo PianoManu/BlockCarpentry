@@ -1,0 +1,28 @@
+{
+  "name": "Geschmeidig klebrig!",
+  "icon": "minecraft:honeycomb",
+  "category": "modifiers",
+  "sortnum": 104,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "minecraft:blue_ice",
+      "title": "Aalglatt!",
+      "text": "Mit Blaueis können Sie die Reibung eines Rahmenblocks verringern, wenn ein Wesen über ihn läuft, bis zu einem bestimmten Punkt. Der Betrag ist konfigurierbar. $(l)$(#f00)Das Blaueis wird in der Aktion verbraucht!$()"
+    },
+    {
+      "type": "text",
+      "text": "Voraussetzung dafür ist allerdings, dass der Rahmen oder Illusionsblock bereits mit einem Block \"gefüllt\" wurde und diesen imitiert. Die Reibung eines leeren Rahmens kann nicht verändert werden. Diese Funktion wird von allen Rahmen- und Illusionsblöcken unterstützt, deren Oberseite die Blockhöhe erreicht (z. B. der obere Teil von Treppen, Leitern oder Falltüren, nicht aber Knöpfe, Druckplatten, Teppiche oder Tageslichtsensoren)."
+    },
+    {
+      "type": "spotlight",
+      "item": "minecraft:honey_block",
+      "title": "Schmierig!",
+      "text": "Mit Honigblöcken (nicht Wabenblöcken) können Sie die Reibung eines Rahmenblocks erhöhen, wenn ein Wesen über ihn läuft, bis zu einem bestimmten Punkt. Der Betrag ist konfigurierbar. $(l)$(#f00) Der Honigblock wird in der Aktion verbraucht!$()"
+    },
+    {
+      "type": "text",
+      "text": "Voraussetzung dafür ist allerdings, dass der Rahmen oder Illusionsblock bereits mit einem Block \"gefüllt\" wurde und diesen imitiert. Die Reibung eines leeren Rahmens kann nicht verändert werden. Diese Funktion wird von allen Rahmen- und Illusionsblöcken unterstützt, deren Oberseite die Blockhöhe erreicht (z. B. der obere Teil von Treppen, Leitern oder Falltüren, nicht aber Knöpfe, Druckplatten, Teppiche oder Tageslichtsensoren)."
+    }
+  ]
+}

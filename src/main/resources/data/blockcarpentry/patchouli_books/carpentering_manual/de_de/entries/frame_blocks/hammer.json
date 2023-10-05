@@ -1,0 +1,20 @@
+{
+  "name": "Hammer time!",
+  "icon": "blockcarpentry:hammer",
+  "category": "frame_blocks",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": {
+        "item": "blockcarpentry:hammer"
+      },
+      "text": "Ups! Du hast versehentlich einen Diamantblock statt eines Schmutzblocks für einen Rahmenblock verwendet. Aber keine Sorge, du kannst dir einen Hammer basteln. Klicke mit der rechten Maustaste auf einen gefüllten Rahmen- oder Illusionsblock, damit er den Block, den er nachahmt, herausrückt. Der Vorteil, den Rahmen- oder Illusionsblock mit einem Hammer zu entfernen, ist im Vergleich zum einfachen"
+    },
+    {
+      "type": "crafting",
+      "text": "Zerstören des Blocks, dass alle vorgenommenen Änderungen unverändert bleiben. Wenn das Konzept des Hammers dir nicht gefällt, kannst du die Konfigurationsoption $(o)hammer_needed$() in der Konfigurationsdatei der Mod deaktivieren.",
+      "recipe": "blockcarpentry:hammer"
+    }
+  ]
+}
