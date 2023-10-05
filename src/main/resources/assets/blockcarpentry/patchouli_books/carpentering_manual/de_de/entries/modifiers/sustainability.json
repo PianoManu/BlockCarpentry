@@ -1,0 +1,18 @@
+{
+  "name": "Umweltfreundlich!",
+  "icon": "minecraft:oak_sapling",
+  "category": "blockcarpentry:modifiers",
+  "sortnum": 105,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:bone_meal",
+      "title": "Nachhaltig!",
+      "text": "Mit Knochenmehl kannst du jetzt jede Pflanze auf einen Rahmen oder einen Illusionsblock setzen. Und sie werden auch wachsen! Du kannst jetzt Weizensamen auf Steinblöcke setzen, und sie werden wachsen, aber langsamer als auf gepflügter Erde. Wer danach gefragt hat? Weiß ich nicht, aber hier ist es!"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Voraussetzung dafür ist allerdings, dass der Rahmen oder Illusionsblock bereits mit einem Block \"gefüllt\" wurde und diesen imitiert. Einen leeren Rahmen kann man nicht nachhaltig gestalten. Diese Eigenschaft wird von allen Rahmen- und Illusionsblöcken mit einer stabilen Oberseite unterstützt (z. B. Stufen auf der oberen Hälfte, umgedrehte Treppen oder geschlossene Falltüren). $(l)$(#f00)Der Gegenstand \"Knochenmehl\" wird in der Aktion verbraucht!$()"
+    }
+  ]
+}

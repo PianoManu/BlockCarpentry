@@ -120,6 +120,14 @@ public class BlockAppearanceHelper {
                 }
                 player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture()), true);
             }
+            if (tileEntity instanceof SignFrameTile fte) {
+                if (fte.getTexture() < 5) { //six sides possible
+                    fte.setTexture(fte.getTexture() + 1);
+                } else {
+                    fte.setTexture(0);
+                }
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture()), true);
+            }
             return true;
         }
         return false;
@@ -327,6 +335,14 @@ public class BlockAppearanceHelper {
                 }
             }
             if (tileEntity instanceof DaylightDetectorFrameTileEntity fte) {
+                if (fte.getRotation() < 7) {
+                    fte.setRotation(fte.getRotation() + 1);
+                } else {
+                    fte.setRotation(0);
+                }
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation", fte.getRotation()), true);
+            }
+            if (tileEntity instanceof SignFrameTile fte) {
                 if (fte.getRotation() < 7) {
                     fte.setRotation(fte.getRotation() + 1);
                 } else {

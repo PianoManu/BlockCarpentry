@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -112,8 +113,8 @@ public class FrameSignRenderer implements BlockEntityRenderer<SignFrameTile> {
     private void renderSign(SignFrameTile tile, PoseStack stack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
         prepareStack(tile.getBlockState(), stack);
 
-        BlockState mimic = tile.getMimic();
-        Material material = new Material(TextureAtlas.LOCATION_BLOCKS, TextureHelper.textureLocation(mimic));
+        TextureAtlasSprite sprite = TextureHelper.getTextureFromTileEntity(tile);
+        Material material = new Material(TextureAtlas.LOCATION_BLOCKS, sprite.getName());
         LayerDefinition layerDefinition = createSignLayer(tile.getBlockState());
         FrameSignRenderer.FrameSignModel signrenderer$signmodel = new FrameSignRenderer.FrameSignModel(layerDefinition.bakeRoot());
         VertexConsumer vertexconsumer = material.buffer(buffer, signrenderer$signmodel::renderType);

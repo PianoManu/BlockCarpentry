@@ -1,8 +1,9 @@
 package mod.pianomanu.blockcarpentry.util;
 
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.IFrameTile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -14,9 +15,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
@@ -97,38 +96,56 @@ public class TextureHelper {
     }
 
     public static List<TextureAtlasSprite> getTextureFromModel(BakedModel model, ModelData extraData, RandomSource rand) {
+        return getTextureFromModel(model, extraData.get(FrameBlockTile.MIMIC), rand);
+    }
+
+    public static List<TextureAtlasSprite> getTextureFromModel(BakedModel model, BlockState state, RandomSource rand) {
         List<TextureAtlasSprite> textureList = new ArrayList<>();
-        for (BakedQuad quad : model.getQuads(extraData.get(FrameBlockTile.MIMIC), Direction.UP, rand, extraData, RenderType.translucent())) {
-            if (!textureList.contains(quad.getSprite())) {
-                textureList.add(quad.getSprite());
+        try {
+            for (BakedQuad quad : model.getQuads(state, Direction.UP, rand, null, null)) {
+                if (!textureList.contains(quad.getSprite())) {
+                    textureList.add(quad.getSprite());
+                }
             }
-        }
-        for (BakedQuad quad : model.getQuads(extraData.get(FrameBlockTile.MIMIC), Direction.DOWN, rand, extraData, RenderType.translucent())) {
-            if (!textureList.contains(quad.getSprite())) {
-                textureList.add(quad.getSprite());
+            for (BakedQuad quad : model.getQuads(state, Direction.DOWN, rand, null, null)) {
+                if (!textureList.contains(quad.getSprite())) {
+                    textureList.add(quad.getSprite());
+                }
             }
-        }
-        for (BakedQuad quad : model.getQuads(extraData.get(FrameBlockTile.MIMIC), Direction.NORTH, rand, extraData, RenderType.translucent())) {
-            if (!textureList.contains(quad.getSprite())) {
-                textureList.add(quad.getSprite());
+            for (BakedQuad quad : model.getQuads(state, Direction.NORTH, rand, null, null)) {
+                if (!textureList.contains(quad.getSprite())) {
+                    textureList.add(quad.getSprite());
+                }
             }
-        }
-        for (BakedQuad quad : model.getQuads(extraData.get(FrameBlockTile.MIMIC), Direction.EAST, rand, extraData, RenderType.translucent())) {
-            if (!textureList.contains(quad.getSprite())) {
-                textureList.add(quad.getSprite());
+            for (BakedQuad quad : model.getQuads(state, Direction.EAST, rand, null, null)) {
+                if (!textureList.contains(quad.getSprite())) {
+                    textureList.add(quad.getSprite());
+                }
             }
-        }
-        for (BakedQuad quad : model.getQuads(extraData.get(FrameBlockTile.MIMIC), Direction.SOUTH, rand, extraData, RenderType.translucent())) {
-            if (!textureList.contains(quad.getSprite())) {
-                textureList.add(quad.getSprite());
+            for (BakedQuad quad : model.getQuads(state, Direction.SOUTH, rand, null, null)) {
+                if (!textureList.contains(quad.getSprite())) {
+                    textureList.add(quad.getSprite());
+                }
             }
-        }
-        for (BakedQuad quad : model.getQuads(extraData.get(FrameBlockTile.MIMIC), Direction.WEST, rand, extraData, RenderType.translucent())) {
-            if (!textureList.contains(quad.getSprite())) {
-                textureList.add(quad.getSprite());
+            for (BakedQuad quad : model.getQuads(state, Direction.WEST, rand, null, null)) {
+                if (!textureList.contains(quad.getSprite())) {
+                    textureList.add(quad.getSprite());
+                }
             }
+            return textureList;
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
         }
-        return textureList;
+    }
+
+    public static TextureAtlasSprite getTextureFromTileEntity(IFrameTile tile) {
+        BlockState mimic = tile.getMimic();
+        BakedModel model = Minecraft.getInstance().getModelManager().getModel(BlockModelShaper.stateToModelLocation(mimic));
+        List<TextureAtlasSprite> sprites = TextureHelper.getTextureFromModel(model, mimic, Objects.requireNonNull(Minecraft.getInstance().level).random);
+        if (sprites.size() > 0 && tile.getTexture() < sprites.size())
+            return sprites.get(tile.getTexture());
+        return sprites.size() > 0 ? sprites.get(0) : Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(MissingTextureAtlasSprite.getLocation());
     }
 
     private static ResourceLocation loc(String path) {

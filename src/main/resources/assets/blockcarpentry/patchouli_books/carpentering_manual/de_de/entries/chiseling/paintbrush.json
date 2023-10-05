@@ -1,0 +1,29 @@
+{
+  "name": "Der Weg zum Malermeister",
+  "icon": "blockcarpentry:paintbrush",
+  "category": "blockcarpentry:chiseling",
+  "sortnum": 13,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "blockcarpentry:paintbrush",
+      "text": "Einige Blöcke haben Motive mit Teilen, die neu bemalt werden können. Hierfür kann der Pinsel verwendet werden. Auf der rechten Seite wird dies für eine Leiter veranschaulicht, deren Design übermalbare Teile hat."
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/paintbrush_1.png"
+      ],
+      "title": "Bunte Leiterstreben",
+      "border": true
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "blockcarpentry:paintbrush"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Das ist derzeit alles. Der Pinsel hat keine weiteren Funktionen. Das könnte sich aber in Zukunft ändern. Bleib gespannt!"
+    }
+  ]
+}
