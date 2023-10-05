@@ -21,9 +21,8 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "blockcarpentry:frame_trapdoor"
-            ]
+            "item":"blockcarpentry:frame_trapdoor"
+
           }
         ]
       }

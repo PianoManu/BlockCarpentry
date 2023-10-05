@@ -21,9 +21,8 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:scaffolding"
-            ],
+            "item":"minecraft:scaffolding"
+,
             "count": 64
           }
         ]

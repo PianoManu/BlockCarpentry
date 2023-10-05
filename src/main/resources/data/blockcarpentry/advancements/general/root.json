@@ -21,9 +21,8 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "blockcarpentry:frameblock"
-            ]
+            "item":"blockcarpentry:frameblock"
+
           }
         ]
       }

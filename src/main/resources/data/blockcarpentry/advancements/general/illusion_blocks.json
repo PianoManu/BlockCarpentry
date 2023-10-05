@@ -21,9 +21,8 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "blockcarpentry:illusion_block"
-            ]
+            "item":"blockcarpentry:illusion_block"
+
           }
         ]
       }

@@ -21,9 +21,8 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "blockcarpentry:frame_door"
-            ]
+            "item":"blockcarpentry:frame_door"
+
           }
         ]
       }

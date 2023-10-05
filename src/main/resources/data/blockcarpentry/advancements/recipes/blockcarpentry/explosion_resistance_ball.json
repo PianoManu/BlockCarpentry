@@ -11,9 +11,8 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:nether_star"
-            ]
+            "item":"minecraft:nether_star"
+
           }
         ]
       }

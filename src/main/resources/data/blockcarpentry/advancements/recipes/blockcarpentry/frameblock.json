@@ -11,9 +11,8 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:scaffolding"
-            ]
+            "item":"minecraft:scaffolding"
+
           }
         ]
       }

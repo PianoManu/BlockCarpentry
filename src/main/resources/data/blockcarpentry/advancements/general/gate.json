@@ -21,9 +21,8 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "blockcarpentry:frame_fence_gate"
-            ]
+            "item":"blockcarpentry:frame_fence_gate"
+
           }
         ]
       }

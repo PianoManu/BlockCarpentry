@@ -21,9 +21,8 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "blockcarpentry:frame_pressure_plate"
-            ]
+            "item":"blockcarpentry:frame_pressure_plate"
+
           }
         ]
       }

@@ -21,9 +21,8 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "blockcarpentry:frame_slab"
-            ]
+            "item":"blockcarpentry:frame_slab"
+
           }
         ]
       }
