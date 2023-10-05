@@ -1,25 +1,29 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
+import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
+import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.ChestFrameTileEntity;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
+import mod.pianomanu.blockcarpentry.util.BlockModificationHelper;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.IWaterLoggable;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.piglin.PiglinTasks;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
+import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -31,20 +35,18 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
-
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
-import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 
 /**
  * Main class for frame chests - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.8 02/08/22
+ * @version 1.6 09/27/23
  */
 public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
     private static final VoxelShape INNER_CUBE = Block.makeCuboidShape(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
@@ -64,11 +66,11 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
 
     public ChestFrameBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(LIGHT_LEVEL, 0).with(HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false));
+        this.setDefaultState(this.getDefaultState().with(CONTAINS_BLOCK, false).with(LIGHT_LEVEL, 0).with(HorizontalBlock.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false));
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED, HORIZONTAL_FACING, CONTAINS_BLOCK, LIGHT_LEVEL);
+        builder.add(WATERLOGGED, HorizontalBlock.HORIZONTAL_FACING, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
     @Override
@@ -76,93 +78,102 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
         BlockPos blockpos = context.getPos();
         FluidState fluidstate = context.getWorld().getFluidState(blockpos);
         if (fluidstate.getFluid() == Fluids.WATER) {
-            return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite()).with(WATERLOGGED, fluidstate.isSource());
+            return this.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite()).with(WATERLOGGED, fluidstate.isSource());
         } else {
-            return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+            return this.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
         }
-    }
-
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
     }
 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return Registration.CHEST_FRAME_TILE.get().create();
+        return new ChestFrameTileEntity(Registration.CHEST_FRAME_TILE.get());
     }
 
-    /**
-     * Called by ItemBlocks after a block is set in the world, to allow post-place logic
-     */
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof ChestFrameTileEntity) {
-                ((ChestFrameTileEntity) tileentity).setCustomName(stack.getDisplayName());
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hitresult) {
+        ItemStack itemStack = player.getHeldItem(hand);
+        if (hand == Hand.MAIN_HAND) {
+            if (!level.isRemote) {
+                return frameUseServer(state, level, pos, player, itemStack, hitresult);
             }
+            return frameUseClient(state, level, pos, player, itemStack, hitresult);
+        }
+        return ActionResultType.FAIL;
+    }
+
+    public ActionResultType frameUseServer(BlockState state, World level, BlockPos pos, PlayerEntity player, ItemStack itemStack, BlockRayTraceResult hitresult) {
+        if (removeBlock(level, pos, state, itemStack, player))
+            return ActionResultType.SUCCESS;
+        if (state.get(CONTAINS_BLOCK)) {
+            if (BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || BlockModificationHelper.setAll(itemStack, (ChestFrameTileEntity) Objects.requireNonNull(level.getTileEntity(pos)), player))
+                return ActionResultType.CONSUME;
+        }
+        if (itemStack.getItem() instanceof BlockItem) {
+            if (changeMimic(state, level, pos, player, itemStack))
+                return ActionResultType.SUCCESS;
+        }
+        TileEntity tileEntity = level.getTileEntity(pos);
+        if (tileEntity instanceof ChestFrameTileEntity && state.get(CONTAINS_BLOCK)) {
+            return chestBehavior(state, level, pos, player, itemStack);
+        }
+        return ActionResultType.FAIL;
+    }
+
+    private ActionResultType chestBehavior(BlockState state, World level, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
+        if (level.isRemote) {
+            return ActionResultType.SUCCESS;
+        } else {
+            INamedContainerProvider inamedcontainerprovider = this.getContainer(state, level, pos);
+            if (inamedcontainerprovider != null) {
+                player.openContainer(inamedcontainerprovider);
+                player.addStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
+                PiglinTasks.func_234478_a_(player, true);
+            }
+
+            return ActionResultType.CONSUME;
         }
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
-                                             Hand hand, BlockRayTraceResult result) {
-        ItemStack item = player.getHeldItem(hand);
-        if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(pos);
-            if (item.getItem() instanceof BlockItem) {
-                if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                    return ActionResultType.PASS;
-                }
-                int count = player.getHeldItem(hand).getCount();
-                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof ChestFrameTileEntity && !item.isEmpty() && heldBlock.getRenderType(heldBlock.getDefaultState()).equals(BlockRenderType.MODEL) && !state.get(CONTAINS_BLOCK)) {
-                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                    insertBlock(world, pos, state, handBlockState);
-                    if (!player.isCreative())
-                        player.getHeldItem(hand).setCount(count - 1);
-                }
-            }
-            //hammer is needed to remove the block from the frame - you can change it in the config
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
-                if (!player.isCreative())
-                    this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos, state, 2);
-            }
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setRotation(world, pos, player, item);
-            if (tileEntity instanceof ChestFrameTileEntity && state.get(CONTAINS_BLOCK)) {
-                if (!(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
-                    NetworkHooks.openGui((ServerPlayerEntity) player, (ChestFrameTileEntity) tileEntity, pos);
-                    return ActionResultType.SUCCESS;
-                }
+    public ActionResultType frameUseClient(BlockState state, World level, BlockPos pos, PlayerEntity player, ItemStack itemStack, BlockRayTraceResult hitresult) {
+        TileEntity TileEntity = level.getTileEntity(pos);
+        if (TileEntity instanceof ChestFrameTileEntity && state.get(CONTAINS_BLOCK)) {
+            if (!(itemStack.getItem() instanceof BaseFrameItem || itemStack.getItem() instanceof BaseIllusionItem)) {
+                return ActionResultType.CONSUME;
             }
         }
-        return ActionResultType.SUCCESS;
+        return super.frameUseClient(state, level, pos, player, itemStack, hitresult);
+    }
+
+    public boolean removeBlock(World level, BlockPos pos, BlockState state, ItemStack itemStack, PlayerEntity player) {
+        if (itemStack.getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isCrouching())) {
+            if (!player.isCreative())
+                this.dropContainedBlock(level, pos);
+            state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
+            level.setBlockState(pos, state, 2);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    protected void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isRemote) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+    public void dropContainedBlock(World level, BlockPos pos) {
+        if (!level.isRemote) {
+            TileEntity tileentity = level.getTileEntity(pos);
             if (tileentity instanceof ChestFrameTileEntity) {
                 ChestFrameTileEntity frameTileEntity = (ChestFrameTileEntity) tileentity;
                 BlockState blockState = frameTileEntity.getMimic();
                 if (!(blockState == null)) {
-                    worldIn.playEvent(1010, pos, 0);
+                    level.playEvent(1010, pos, 0);
                     frameTileEntity.clear();
                     float f = 0.7F;
-                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d0 = (double) (level.rand.nextFloat() * 0.7F) + (double) 0.15F;
+                    double d1 = (level.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
+                    double d2 = (double) (level.rand.nextFloat() * 0.7F) + (double) 0.15F;
                     ItemStack itemstack1 = new ItemStack(blockState.getBlock());
-                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
+                    ItemEntity itementity = new ItemEntity(level, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
                     itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
+                    level.addEntity(itementity);
                     frameTileEntity.clear();
                 }
             }
@@ -170,23 +181,23 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
     }
 
     @Override
-    public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+    public void insertBlock(World level, BlockPos pos, BlockState state, BlockState handBlock) {
+        TileEntity tileentity = level.getTileEntity(pos);
         if (tileentity instanceof ChestFrameTileEntity) {
             ChestFrameTileEntity frameTileEntity = (ChestFrameTileEntity) tileentity;
             frameTileEntity.clear();
             frameTileEntity.setMimic(handBlock);
-            worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
+            level.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
         }
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onReplaced(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity te = worldIn.getTileEntity(pos);
+            TileEntity te = level.getTileEntity(pos);
             if (te instanceof ChestFrameTileEntity) {
-                dropContainedBlock(worldIn, pos);
-                InventoryHelper.dropItems(worldIn, pos, ((ChestFrameTileEntity) te).getItems());
+                dropContainedBlock(level, pos);
+                InventoryHelper.dropItems(level, pos, ((ChestFrameTileEntity) te).getItems());
             }
         }
     }
@@ -208,8 +219,23 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context) {
         return CHEST;
+    }
+
+    @Override
+    public boolean isCorrectTileInstance(TileEntity TileEntity) {
+        return TileEntity instanceof ChestFrameTileEntity;
+    }
+
+    @Override
+    public float getSlipperiness(BlockState state, IWorldReader level, BlockPos pos, @Nullable Entity entity) {
+        return super.getSlipperiness(state, level, pos, entity);
+    }
+
+    @Override
+    public boolean executeModifications(BlockState state, World level, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
+        return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player, true, false);
     }
 }
 //========SOLI DEO GLORIA========//

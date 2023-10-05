@@ -1,27 +1,30 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import net.minecraft.block.StairsBlock;
+import net.minecraft.state.properties.Half;
+import net.minecraft.state.properties.StairsShape;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.Half;
-import net.minecraft.state.properties.StairsShape;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
 
 import java.util.function.Supplier;
-
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
 
 /**
  * Main class for frame slopes - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 05/30/22
+ * @version 1.2 09/27/23
  */
 public class SlopeFrameBlock extends StairsFrameBlock {
     private static final VoxelShape[] SHAPES_BOTTOM = makeShapes(false);
@@ -29,7 +32,7 @@ public class SlopeFrameBlock extends StairsFrameBlock {
 
     public SlopeFrameBlock(Supplier<BlockState> state, Properties properties) {
         super(state, properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(FACING, Direction.NORTH).with(HALF, Half.BOTTOM).with(SHAPE, StairsShape.STRAIGHT).with(WATERLOGGED, Boolean.valueOf(false)).with(LIGHT_LEVEL, 0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(HALF, Half.BOTTOM).with(SHAPE, StairsShape.STRAIGHT).with(LIGHT_LEVEL, 0));
     }
 
     private static VoxelShape[] makeShapes(boolean isTop) {
@@ -176,16 +179,21 @@ public class SlopeFrameBlock extends StairsFrameBlock {
         return straightShapes;
     }
 
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, IBlockReader IBlockReader, BlockPos pos, ISelectionContext context) {
         return (state.get(HALF) == Half.TOP ? SHAPES_TOP : SHAPES_BOTTOM)[this.getShapeIndex(state)];
     }
 
     private int getShapeIndex(BlockState state) {
-        return state.get(SHAPE).ordinal() * 4 + state.get(FACING).getHorizontalIndex();
+        return state.get(SHAPE).ordinal() * 4 + state.get(StairsBlock.FACING).getHorizontalIndex();
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(CONTAINS_BLOCK, FACING, HALF, SHAPE, WATERLOGGED, LIGHT_LEVEL);
+        super.fillStateContainer(builder);
+    }
+
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hitresult) {
+        return super.onBlockActivated(state, level, pos, player, hand, hitresult);
     }
 }
 //========SOLI DEO GLORIA========//

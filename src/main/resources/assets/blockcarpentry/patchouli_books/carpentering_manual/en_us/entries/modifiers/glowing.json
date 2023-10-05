@@ -1,0 +1,30 @@
+{
+  "name": "Nasty torches!",
+  "icon": "minecraft:glowstone_dust",
+  "category": "modifiers",
+  "sortnum": 100,
+  "pages": [
+    {
+      "type": "text",
+      "text": "Have you ever wondered how you could get rid of all those nasty torches disfiguring your great base? Then here is the solution for you. Right-click on a frame or illusion block with coal, charcoal or glowstone dust to increase the light level it is emitting. $(l)$(#f00)The item will be consumed in the action!$()"
+    },
+    {
+      "type": "image",
+      "images": [
+        "blockcarpentry:textures/book/glowing_1.png"
+      ],
+      "border": true,
+      "title": "Glowing dirtfence!"
+    },
+    {
+      "type": "spotlight",
+      "item": "minecraft:glowstone_dust,minecraft:coal,minecraft:charcoal",
+      "title": "Light sources",
+      "text": "However, the prerequisite for this is that the frame or illusion block has already been \"filled\" with a block and imitates it. You cannot make an empty frame glow. This feature is supported by all frame and illusion blocks."
+    },
+    {
+      "type": "text",
+      "text": "Also, breaking the frame or illusion block will not return any glowstone dust, coal or charcoal put into it. Those items will be lost. Please keep this in mind. Here, the hammer comes in handy, because you can remove a falsely selected block and reapply an new one without destroying the frame or illusion block."
+    }
+  ]
+}

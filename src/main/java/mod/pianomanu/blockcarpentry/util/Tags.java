@@ -10,7 +10,7 @@ import java.util.List;
  * Just some tag stuff, might be migrated to another class later on...
  *
  * @author PianoManu
- * @version 1.0 05/02/21
+ * @version 1.0 05/23/22
  */
 public class Tags {
     private static final List<Block> frameBlocks = new ArrayList<>();
@@ -29,7 +29,7 @@ public class Tags {
         createIllusionBlockList();
     }
 
-    public static List<Block> createFrameBlockList() {
+    public static void createFrameBlockList() {
         frameBlocks.clear();
         frameBlocks.add(Registration.FRAMEBLOCK.get());
         frameBlocks.add(Registration.SLAB_FRAMEBLOCK.get());
@@ -44,12 +44,17 @@ public class Tags {
         frameBlocks.add(Registration.LADDER_FRAMEBLOCK.get());
         frameBlocks.add(Registration.CHEST_FRAMEBLOCK.get());
         frameBlocks.add(Registration.FENCE_GATE_FRAMEBLOCK.get());
+        frameBlocks.add(Registration.CARPET_FRAMEBLOCK.get());
+        frameBlocks.add(Registration.PANE_FRAMEBLOCK.get());
+        frameBlocks.add(Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get());
+        frameBlocks.add(Registration.LAYERED_FRAMEBLOCK.get());
+        frameBlocks.add(Registration.STANDING_SIGN_FRAMEBLOCK.get());
+        frameBlocks.add(Registration.WALL_SIGN_FRAMEBLOCK.get());
         frameBlocks.add(Registration.SLOPE_FRAMEBLOCK.get());
         frameBlocks.add(Registration.EDGED_SLOPE_FRAMEBLOCK.get());
-        return frameBlocks;
     }
 
-    public static List<Block> createIllusionBlockList() {
+    public static void createIllusionBlockList() {
         illusionBlocks.clear();
         illusionBlocks.add(Registration.ILLUSION_BLOCK.get());
         illusionBlocks.add(Registration.SLAB_ILLUSIONBLOCK.get());
@@ -64,6 +69,11 @@ public class Tags {
         illusionBlocks.add(Registration.LADDER_ILLUSIONBLOCK.get());
         illusionBlocks.add(Registration.CHEST_ILLUSIONBLOCK.get());
         illusionBlocks.add(Registration.FENCE_GATE_ILLUSIONBLOCK.get());
-        return illusionBlocks;
+        illusionBlocks.add(Registration.CARPET_ILLUSIONBLOCK.get());
+        illusionBlocks.add(Registration.PANE_ILLUSIONBLOCK.get());
+        illusionBlocks.add(Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get());
+        illusionBlocks.add(Registration.LAYERED_ILLUSIONBLOCK.get());
+        illusionBlocks.add(Registration.STANDING_SIGN_ILLUSIONBLOCK.get());
+        illusionBlocks.add(Registration.WALL_SIGN_ILLUSIONBLOCK.get());
     }
 }

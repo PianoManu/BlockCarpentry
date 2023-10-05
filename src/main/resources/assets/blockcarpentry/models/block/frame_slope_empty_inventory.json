@@ -1,15 +1,32 @@
 {
-	"credit": "Made with Blockbench",
-	"display": {
-        "gui": {
-            "rotation": [ 30, 45, 0 ],
-            "scale":[ 0.625, 0.625, 0.625 ]
-        },
-        "fixed": {
-            "rotation": [ 0, 90, 0 ],
-            "scale":[ 0.5, 0.5, 0.5 ]
-        }
+  "parent": "block/block",
+  "credit": "Made with Blockbench",
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        45,
+        0
+      ],
+      "scale": [
+        0.625,
+        0.625,
+        0.625
+      ]
     },
+    "fixed": {
+      "rotation": [
+        0,
+        90,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    }
+  },
 	"textures": {
 		"1": "block/spruce_trapdoor",
 		"2": "block/oak_planks",

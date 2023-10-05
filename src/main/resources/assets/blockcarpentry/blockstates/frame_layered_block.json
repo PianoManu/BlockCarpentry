@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "blockcarpentry:block/frame_layered_block"
+    }
+  }
+}

@@ -4,16 +4,18 @@ import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
-import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.block.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -29,7 +31,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.13 05/30/22
+ * @version 1.4 09/23/23
  */
 public class SlabFrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -54,58 +56,35 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
     }
 
     //supresses "Unboxing of "extraData..." may produce NullPointerException
-    @SuppressWarnings("all")
+    //@SuppressWarnings("all")
     public List<BakedQuad> getMimicQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData, IBakedModel model) {
-        if (side != null) {
+        if (side == null) {
             return Collections.emptyList();
         }
         BlockState mimic_1 = extraData.getData(TwoBlocksFrameBlockTile.MIMIC_1);
         BlockState mimic_2 = extraData.getData(TwoBlocksFrameBlockTile.MIMIC_2);
         boolean sameBlocks;
-        if (mimic_1 != null && mimic_2 != null)
-            sameBlocks = mimic_1.getBlock().equals(mimic_2.getBlock());
+        if (mimic_1 != null && mimic_2 != null && mimic_2 != Blocks.AIR.getDefaultState())
+            sameBlocks = mimic_1.isIn(mimic_2.getBlock());
         else
             sameBlocks = false; //no second block in slab: not the same, we can render the face between the two slabs - prevents crash, if only one slab is filled
-        int tex_1 = extraData.getData(TwoBlocksFrameBlockTile.TEXTURE_1);
-        int tex_2 = extraData.getData(TwoBlocksFrameBlockTile.TEXTURE_2);
         if (mimic_1 != null && state != null) {
-            List<TextureAtlasSprite> textureList_1 = TextureHelper.getTextureFromModel(model, extraData, rand);
-            List<TextureAtlasSprite> textureList_2 = new ArrayList<>();
+            TextureAtlasSprite texture_1 = QuadUtils.getTexture(model, rand, extraData, TwoBlocksFrameBlockTile.TEXTURE_1);
+            TextureAtlasSprite texture_2 = null;
 
-            if (mimic_2 != null) {
+            if (mimic_2 != null && mimic_2 != Blocks.AIR.getDefaultState()) {
                 ModelResourceLocation location_2 = BlockModelShapes.getModelLocation(mimic_2);
                 IBakedModel model_2 = Minecraft.getInstance().getModelManager().getModel(location_2);
-                textureList_2 = TextureHelper.getSlabTextureFromModel2(model_2, extraData, rand);
+                texture_2 = QuadUtils.getTexture(model_2, rand, extraData, TwoBlocksFrameBlockTile.TEXTURE_2);
             }
-
-            TextureAtlasSprite texture_1;
-            TextureAtlasSprite texture_2;
-            if (textureList_1.size() <= tex_1) {
-                extraData.setData(TwoBlocksFrameBlockTile.TEXTURE_1, 0);
-                tex_1 = 0;
-            }
-            if (textureList_2.size() <= tex_2) {
-                extraData.setData(TwoBlocksFrameBlockTile.TEXTURE_2, 0);
-                tex_2 = 0;
-            }
-            if (textureList_1.size() == 0) {
-                if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
-                }
-                return Collections.emptyList();
-            }
-            texture_1 = textureList_1.get(tex_1);
-            if (textureList_2.size() > 0)
-                texture_2 = textureList_2.get(tex_2);
-            else texture_2 = null;
             int tintIndex_1 = BlockAppearanceHelper.setTintIndex(mimic_1);
             int tintIndex_2 = mimic_2 == null ? -1 : BlockAppearanceHelper.setTintIndex(mimic_2);
-            boolean renderNorth = extraData.getData(TwoBlocksFrameBlockTile.NORTH_VISIBLE);
-            boolean renderEast = extraData.getData(TwoBlocksFrameBlockTile.EAST_VISIBLE);
-            boolean renderSouth = extraData.getData(TwoBlocksFrameBlockTile.SOUTH_VISIBLE);
-            boolean renderWest = extraData.getData(TwoBlocksFrameBlockTile.WEST_VISIBLE);
-            boolean renderUp = extraData.getData(TwoBlocksFrameBlockTile.UP_VISIBLE);
-            boolean renderDown = extraData.getData(TwoBlocksFrameBlockTile.DOWN_VISIBLE);
+            boolean renderNorth = side == Direction.NORTH && extraData.getData(TwoBlocksFrameBlockTile.NORTH_VISIBLE);
+            boolean renderEast = side == Direction.EAST && extraData.getData(TwoBlocksFrameBlockTile.EAST_VISIBLE);
+            boolean renderSouth = side == Direction.SOUTH && extraData.getData(TwoBlocksFrameBlockTile.SOUTH_VISIBLE);
+            boolean renderWest = side == Direction.WEST && extraData.getData(TwoBlocksFrameBlockTile.WEST_VISIBLE);
+            boolean renderUp = side == Direction.UP && extraData.getData(TwoBlocksFrameBlockTile.UP_VISIBLE);
+            boolean renderDown = side == Direction.DOWN && extraData.getData(TwoBlocksFrameBlockTile.DOWN_VISIBLE);
             List<BakedQuad> quads = new ArrayList<>();
             switch (state.get(SixWaySlabFrameBlock.FACING)) {
                 case UP:
@@ -229,13 +208,11 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    @Nonnull
     public ItemOverrideList getOverrides() {
         return ItemOverrideList.EMPTY;
     }
 
     @Override
-    @Nonnull
     public ItemCameraTransforms getItemCameraTransforms() {
         return ItemCameraTransforms.DEFAULT;
     }

@@ -5,6 +5,7 @@ import mod.pianomanu.blockcarpentry.container.ChestFrameContainer;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.audio.SoundSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -20,6 +21,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -42,17 +44,18 @@ import java.util.Objects;
 /**
  * TileEntity for {@link mod.pianomanu.blockcarpentry.block.ChestFrameBlock} and all sorts of frame/illusion chest blocks
  * Contains all information about the block and the mimicked block, as well as the inventory size and stored items
+ *
  * @author PianoManu
  * @version 1.2 05/01/21
  */
-public class ChestFrameTileEntity extends ChestTileEntity {
+public class ChestFrameTileEntity extends ChestTileEntity implements IFrameTile {
 
     private NonNullList<ItemStack> chestContents = NonNullList.withSize(27, ItemStack.EMPTY);
     /**
      * The number of players currently using this chest
      */
     protected int numPlayersUsing;
-    private IItemHandlerModifiable items = createHandler();
+    public static final ModelProperty<Integer> ROTATION = new ModelProperty<>();
     private LazyOptional<IItemHandlerModifiable> itemHandler = LazyOptional.of(() -> items);
 
     public ChestFrameTileEntity(TileEntityType<?> typeIn) {
@@ -107,16 +110,7 @@ public class ChestFrameTileEntity extends ChestTileEntity {
         return new ChestFrameContainer(id, player, this);
     }
 
-    public static final ModelProperty<Integer> ROTATION = new ModelProperty<>();
-    private Integer rotation = 0;
-
-    private void playSound(SoundEvent sound) {
-        double dx = (double) this.pos.getX() + 0.5D;
-        double dy = (double) this.pos.getY() + 0.5D;
-        double dz = (double) this.pos.getZ() + 0.5D;
-        this.world.playSound((PlayerEntity) null, dx, dy, dz, sound, SoundCategory.BLOCKS, 0.5f,
-                this.world.rand.nextFloat() * 0.1f + 0.9f);
-    }
+    private final IItemHandlerModifiable items = createHandler();
 
     @Override
     public boolean receiveClientEvent(int id, int type) {
@@ -128,17 +122,7 @@ public class ChestFrameTileEntity extends ChestTileEntity {
         }
     }
 
-    @Override
-    public void openInventory(PlayerEntity player) {
-        if (!player.isSpectator()) {
-            if (this.numPlayersUsing < 0) {
-                this.numPlayersUsing = 0;
-            }
-
-            ++this.numPlayersUsing;
-            this.onOpenOrClose();
-        }
-    }
+    public BlockState mimic;
 
     public static int getPlayersUsing(IBlockReader reader, BlockPos pos) {
         BlockState blockstate = reader.getBlockState(pos);
@@ -151,21 +135,8 @@ public class ChestFrameTileEntity extends ChestTileEntity {
         return 0;
     }
 
-    @Override
-    public void closeInventory(PlayerEntity player) {
-        if (!player.isSpectator()) {
-            --this.numPlayersUsing;
-            this.onOpenOrClose();
-        }
-    }
-
-    protected void onOpenOrClose() {
-        Block block = this.getBlockState().getBlock();
-        if (block instanceof ChestFrameBlock) {
-            this.world.addBlockEvent(this.pos, block, 1, this.numPlayersUsing);
-            this.world.notifyNeighborsOfStateChange(this.pos, block);
-        }
-    }
+    public Integer texture = 0;
+    public Integer design = 0;
 
     @Override
     public void updateContainingBlockInfo() {
@@ -181,9 +152,7 @@ public class ChestFrameTileEntity extends ChestTileEntity {
     }
 
 
-
     //=======================================FRAME STUFF=======================================//
-
 
 
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -192,82 +161,73 @@ public class ChestFrameTileEntity extends ChestTileEntity {
     public static final ModelProperty<Integer> DESIGN_TEXTURE = new ModelProperty<>();
     //currently only for doors and trapdoors
     public static final ModelProperty<Integer> GLASS_COLOR = new ModelProperty<>();
-
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        //FRAME BEGIN
-        if (mimic != null) {
-            compound.put("mimic", NBTUtil.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            compound.put("texture", writeInteger(texture));
-        }
-        if (design != null) {
-            compound.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            compound.put("design_texture", writeInteger(designTexture));
-        }
-        if (glassColor != null) {
-            compound.put("glass_color", writeInteger(glassColor));
-        }
-        if (rotation != null) {
-            compound.put("rotation", writeInteger(rotation));
-        }
-        //FRAME END
-        super.write(compound);
-        if (!this.checkLootAndWrite(compound)) {
-            ItemStackHelper.saveAllItems(compound, this.chestContents);
-        }
-        return compound;
-    }
+    public Integer designTexture = 0;
+    public Integer glassColor = 0;
 
     public final int maxTextures = 8;
     public final int maxDesignTextures = 4;
     public final int maxDesigns = 4;
+    public Integer overlay = 0;
+    public Integer rotation = 0;
+    public Float slipperiness = Registration.FRAMEBLOCK.get().getSlipperiness();
+    public Float explosionResistance = Registration.FRAMEBLOCK.get().getExplosionResistance();
+    public Boolean canSustainPlant = false;
+    public Integer enchantPowerBonus = 0;
+    public Boolean canEntityDestroy = true;
 
-    private BlockState mimic;
-    private Integer texture = 0;
-    private Integer design = 0;
-    private Integer designTexture = 0;
-    private Integer glassColor = 0;
+    private void playSound(SoundEvent sound) {
+        double dx = (double) this.pos.getX() + 0.5D;
+        double dy = (double) this.pos.getY() + 0.5D;
+        double dz = (double) this.pos.getZ() + 0.5D;
+        this.world.playSound(null, dx, dy, dz, sound, SoundCategory.BLOCKS, 0.5f,
+                this.world.rand.nextFloat() * 0.1f + 0.9f);
+    }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
-        //FRAME BEGIN
-        if (compound.contains("mimic")) {
-            mimic = NBTUtil.readBlockState(compound.getCompound("mimic"));
+    public void openInventory(PlayerEntity player) {
+        if (!player.isSpectator()) {
+            if (this.numPlayersUsing < 0) {
+                this.numPlayersUsing = 0;
+            }
+
+            ++this.numPlayersUsing;
+            this.onOpenOrClose(true);
         }
-        if (compound.contains("texture")) {
-            texture = readInteger(compound.getCompound("texture"));
+    }
+
+    @Override
+    public void closeInventory(PlayerEntity player) {
+        if (!player.isSpectator()) {
+            --this.numPlayersUsing;
+            this.onOpenOrClose(false);
         }
-        if (compound.contains("design")) {
-            design = readInteger(compound.getCompound("design"));
+    }
+
+    protected void onOpenOrClose(boolean startOpen) {
+        Block block = this.getBlockState().getBlock();
+        if (block instanceof ChestFrameBlock) {
+            this.world.addBlockEvent(this.pos, block, 1, this.numPlayersUsing);
+            this.world.playSound(null, this.pos, startOpen ? SoundEvents.BLOCK_BARREL_OPEN : SoundEvents.BLOCK_BARREL_CLOSE, SoundCategory.BLOCKS, 1f, 1f);
+            this.world.notifyNeighborsOfStateChange(this.pos, block);
         }
-        if (compound.contains("design_texture")) {
-            designTexture = readInteger(compound.getCompound("design_texture"));
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        if (this.itemHandler != null) {
+            this.itemHandler.invalidate();
+            this.itemHandler = null;
         }
-        if (compound.contains("glass_color")) {
-            glassColor = readInteger(compound.getCompound("glass_color"));
-        }
-        if (compound.contains("rotation")) {
-            rotation = readInteger(compound.getCompound("rotation"));
-        }
-        //FRAME END
-        this.chestContents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        if (!this.checkLootAndRead(compound)) {
-            ItemStackHelper.loadAllItems(compound, this.chestContents);
-        }
+    }
+
+    public <V> V set(V newValue) {
+        markDirty();
+        world.notifyBlockUpdate(this.pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        return newValue;
     }
 
     private static final Logger LOGGER = LogManager.getLogger();
-
-    public void setMimic(BlockState mimic) {
-        this.mimic = mimic;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-    }
 
     public BlockState getMimic() {
         return this.mimic;
@@ -277,133 +237,133 @@ public class ChestFrameTileEntity extends ChestTileEntity {
         return this.design;
     }
 
-    public void setDesign(Integer design) {
-        this.design = design;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    public void setMimic(BlockState mimic) {
+        this.mimic = set(mimic);
     }
 
     public Integer getDesignTexture() {
         return this.designTexture;
     }
 
-    public void setDesignTexture(Integer designTexture) {
-        this.designTexture = designTexture;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    public void setDesign(Integer design) {
+        this.design = set(design);
     }
 
     public Integer getTexture() {
         return this.texture;
     }
 
-    public void setTexture(Integer texture) {
-        this.texture = texture;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    public void setDesignTexture(Integer designTexture) {
+        this.designTexture = set(designTexture);
     }
 
     public Integer getGlassColor() {
         return this.glassColor;
     }
 
-    public void setGlassColor(Integer colorNumber) {
-        this.glassColor = colorNumber;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    public void setTexture(Integer texture) {
+        this.texture = set(texture);
     }
 
     public Integer getRotation() {
         return rotation;
     }
 
+    public void setGlassColor(Integer colorNumber) {
+        this.glassColor = set(colorNumber);
+    }
+
     public void setRotation(Integer rotation) {
-        this.rotation = rotation;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        this.rotation = set(rotation);
+    }
+
+    @Override
+    public Integer getOverlay() {
+        return this.overlay;
+    }
+
+    @Override
+    public void setOverlay(Integer overlay) {
+        this.overlay = set(overlay);
+    }
+
+    @Override
+    public Float getSlipperiness() {
+        return this.slipperiness;
+    }
+
+    @Override
+    public void setSlipperiness(Float slipperiness) {
+        this.slipperiness = set(slipperiness);
+    }
+
+    @Override
+    public Float getExplosionResistance() {
+        return this.explosionResistance;
+    }
+
+    @Override
+    public void setExplosionResistance(Float explosionResistance) {
+        this.explosionResistance = set(explosionResistance);
+    }
+
+    @Override
+    public Boolean getCanSustainPlant() {
+        return this.canSustainPlant;
+    }
+
+    @Override
+    public void setCanSustainPlant(Boolean canSustainPlant) {
+        this.canSustainPlant = set(canSustainPlant);
+    }
+
+    @Override
+    public Integer getEnchantPowerBonus() {
+        return this.enchantPowerBonus;
+    }
+
+    @Override
+    public void setEnchantPowerBonus(Integer enchantPowerBonus) {
+        this.enchantPowerBonus = set(enchantPowerBonus);
+    }
+
+    @Override
+    public Boolean getCanEntityDestroy() {
+        return this.canEntityDestroy;
+    }
+
+    @Override
+    public void setCanEntityDestroy(Boolean canEntityDestroy) {
+        this.canEntityDestroy = set(canEntityDestroy);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        onDataPacket(pkt, ChestFrameTileEntity.class, world, this.pos, getBlockState());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT tag = super.getUpdateTag();
-        if (mimic != null) {
-            tag.put("mimic", NBTUtil.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            tag.put("texture", writeInteger(texture));
-        }
-        if (design != null) {
-            tag.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            tag.put("design_texture", writeInteger(designTexture));
-        }
-        if (glassColor != null) {
-            tag.put("glass_color", writeInteger(glassColor));
-        }
-        if (rotation != null) {
-            tag.put("rotation", writeInteger(rotation));
-        }
+        return getUpdateTag(tag, ChestFrameTileEntity.class);
+    }
+
+    @Override
+    public void read(BlockState state, CompoundNBT tag) {
+        super.read(state, tag);
+        //FRAME BEGIN
+        IFrameTile.super.read(tag, ChestFrameTileEntity.class);
+        //FRAME END
+        this.chestContents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+    }
+
+    @Override
+    public CompoundNBT write(CompoundNBT tag) {
+        super.write(tag);
+        //FRAME BEGIN
+        IFrameTile.super.write(tag, ChestFrameTileEntity.class);
+        //FRAME END
         return tag;
-    }
-
-    @Nullable
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(pos, 1, getUpdateTag());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        BlockState oldMimic = mimic;
-        Integer oldTexture = texture;
-        Integer oldDesign = design;
-        Integer oldDesignTexture = designTexture;
-        Integer oldGlassColor = glassColor;
-        Integer oldRotation = rotation;
-        CompoundNBT tag = pkt.getNbtCompound();
-        if (tag.contains("mimic")) {
-            mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
-            if (!Objects.equals(oldMimic, mimic)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("texture")) {
-            texture = readInteger(tag.getCompound("texture"));
-            if (!Objects.equals(oldTexture, texture)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design")) {
-            design = readInteger(tag.getCompound("design"));
-            if (!Objects.equals(oldDesign, design)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design_texture")) {
-            designTexture = readInteger(tag.getCompound("design_texture"));
-            if (!Objects.equals(oldDesignTexture, designTexture)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("glass_color")) {
-            glassColor = readInteger(tag.getCompound("glass_color"));
-            if (!Objects.equals(oldGlassColor, glassColor)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("rotation")) {
-            rotation = readInteger(tag.getCompound("rotation"));
-            if (!Objects.equals(oldRotation, rotation)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
     }
 
     @Nonnull
@@ -417,21 +377,6 @@ public class ChestFrameTileEntity extends ChestTileEntity {
                 .withInitial(GLASS_COLOR, glassColor)
                 .withInitial(ROTATION, rotation)
                 .build();
-    }
-
-    public void clear() {
-        this.setMimic(null);
-        this.setDesign(0);
-        this.setDesign(0);
-        this.setDesign(0);
-        this.setGlassColor(0);
-        this.setRotation(0);
-    }
-
-    private static CompoundNBT writeInteger(Integer tag) {
-        CompoundNBT compoundnbt = new CompoundNBT();
-        compoundnbt.putString("number", tag.toString());
-        return compoundnbt;
     }
 
     @Override

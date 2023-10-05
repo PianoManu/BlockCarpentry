@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.16-0.4.1'
+version = '1.16-0.5.0'
 group = 'mod.pianomanu.blockcarpentry' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'blockcarpentry'
 
@@ -44,10 +44,13 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                blockcarpentry {
                     source sourceSets.main
                 }
             }
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
         }
 
         server {
@@ -60,7 +63,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                blockcarpentry {
                     source sourceSets.main
                 }
             }
@@ -78,12 +81,23 @@ minecraft {
             args '--mod', 'blockcarpentry', '--all', '--output', file('src/generated/resources/')
 
             mods {
-                examplemod {
+                blockcarpentry {
                     source sourceSets.main
                 }
             }
         }
     }
+}
+
+repositories {
+    // Put repositories for dependencies here
+    // ForgeGradle automatically adds the Forge maven and Maven Central for you
+
+    // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
+    // flatDir {
+    //     dir 'libs'
+    // }
+    maven { url 'https://maven.blamejared.com' }
 }
 
 dependencies {
@@ -109,7 +123,8 @@ dependencies {
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16-42:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16-42")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

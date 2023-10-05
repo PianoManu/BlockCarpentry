@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "O#O",
+    "#+#",
+    "O#O"
+  ],
+  "key": {
+    "#": {
+      "item": "blockcarpentry:frameblock"
+    },
+    "+": {
+      "item": "minecraft:nether_star"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "result": {
+    "item": "blockcarpentry:explosion_resistance_ball",
+    "count": 4
+  }
+}

@@ -1,11 +1,11 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
-import mod.pianomanu.blockcarpentry.block.FrameBlock;
+import mod.pianomanu.blockcarpentry.block.ButtonFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
-import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.WoodButtonBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -31,7 +30,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.7 08/18/21
+ * @version 1.3 09/20/23
  */
 public class ButtonBakedModel implements IDynamicBakedModel {
 
@@ -39,14 +38,10 @@ public class ButtonBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
+        if (mimic != null) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
-            if (location != null) {
-                IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                if (model != null) {
-                    return getMimicQuads(state, side, rand, extraData, model);
-                }
-            }
+            IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+            return getMimicQuads(state, side, rand, extraData, model);
         }
         return Collections.emptyList();
     }
@@ -56,45 +51,34 @@ public class ButtonBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        int tex = extraData.getData(FrameBlockTile.TEXTURE);
         if (mimic != null && state != null) {
-            List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
-            TextureAtlasSprite texture;
-            if (textureList.size() <= tex) {
-                extraData.setData(FrameBlockTile.TEXTURE, 0);
-                tex = 0;
-            }
-            if (textureList.size() == 0) {
-                if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
-                }
-                texture = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing"));
-                //return Collections.emptyList();
-            } else {
-                texture = textureList.get(tex);
-            }
+            TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
+            boolean isPowered = state.get(ButtonFrameBlock.POWERED);
+            float thickness = isPowered ? 1 / 16f : 2 / 16f;
+
             float yl = 0f;
-            float yh = 2 / 16f;
+            float yh = thickness;
             if (state.get(WoodButtonBlock.FACE).equals(AttachFace.CEILING)) {
-                yl = 14 / 16f;
+                yl = 1 - thickness;
                 yh = 1f;
             }
+
             List<BakedQuad> quads = new ArrayList<>();
             switch (state.get(WoodButtonBlock.FACE)) {
                 case WALL:
-                    switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
+                    switch (state.get(HorizontalBlock.HORIZONTAL_FACING)) {
                         case NORTH:
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 14 / 16f, 1f, texture, tintIndex));
+                            quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 1 - thickness, 1f, texture, tintIndex));
                             break;
                         case EAST:
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(0f, 2 / 16f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, texture, tintIndex));
+                            quads.addAll(ModelHelper.createCuboid(0f, thickness, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, texture, tintIndex));
                             break;
                         case WEST:
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(14 / 16f, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, texture, tintIndex));
+                            quads.addAll(ModelHelper.createCuboid(1 - thickness, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, texture, tintIndex));
                             break;
                         case SOUTH:
-                            quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 0f, 2 / 16f, texture, tintIndex));
+                            quads.addAll(ModelHelper.createCuboid(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 0f, thickness, texture, tintIndex));
                             break;
                     }
                     break;
@@ -115,24 +99,24 @@ public class ButtonBakedModel implements IDynamicBakedModel {
             if (overlayIndex != 0) {
                 switch (state.get(WoodButtonBlock.FACE)) {
                     case WALL:
-                        switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
+                        switch (state.get(HorizontalBlock.HORIZONTAL_FACING)) {
                             case NORTH:
-                                quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlay(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 14 / 16f, 1f, overlayIndex));
+                                quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 1 - thickness, 1f, overlayIndex));
                                 break;
                             case EAST:
-                                quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlay(0f, 2 / 16f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
+                                quads.addAll(ModelHelper.createOverlay(0f, thickness, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
                                 break;
                             case WEST:
-                                quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlay(14 / 16f, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
+                                quads.addAll(ModelHelper.createOverlay(1 - thickness, 1f, 6 / 16f, 10 / 16f, 5 / 16f, 11 / 16f, overlayIndex));
                                 break;
                             case SOUTH:
-                                quads.addAll(mod.pianomanu.blockcarpentry.util.ModelHelper.createOverlay(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 0f, 2 / 16f, overlayIndex));
+                                quads.addAll(ModelHelper.createOverlay(5 / 16f, 11 / 16f, 6 / 16f, 10 / 16f, 0f, thickness, overlayIndex));
                                 break;
                         }
                         break;
                     case FLOOR:
                     case CEILING:
-                        switch (state.get(WoodButtonBlock.HORIZONTAL_FACING)) {
+                        switch (state.get(HorizontalBlock.HORIZONTAL_FACING)) {
                             case EAST:
                             case WEST:
                                 quads.addAll(ModelHelper.createOverlay(6 / 16f, 10 / 16f, yl, yh, 5 / 16f, 11 / 16f, overlayIndex));
@@ -170,6 +154,7 @@ public class ButtonBakedModel implements IDynamicBakedModel {
     }
 
     @Override
+    @Nonnull
     public TextureAtlasSprite getParticleTexture() {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/oak_planks"));
     }

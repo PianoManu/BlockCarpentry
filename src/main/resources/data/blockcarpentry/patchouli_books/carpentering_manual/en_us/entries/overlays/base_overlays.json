@@ -1,0 +1,47 @@
+{
+  "name": "Make them look alive!",
+  "icon": "minecraft:grass",
+  "category": "overlays",
+  "sortnum": 1000,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "minecraft:grass",
+      "text": "Add a grass overlay to a block by right-clicking it with a grass item. Currently, there are two grass overlay versions supported, a short and a long one, as shown in the image to the right. The grass $(o)will not be consumed$() in the process!"
+    },
+    {
+      "type": "image",
+      "images": [
+        "blockcarpentry:textures/book/base_overlay_1.png"
+      ],
+      "border": true,
+      "title": "Grass overlays"
+    },
+    {
+      "type": "spotlight",
+      "item": "minecraft:snowball",
+      "text": "Add a snow overlay to a block by right-clicking it with a snowball item. Currently, there are two snow overlay versions supported, a long and a short one, as shown in the image to the right. The snowball $(o)will not be consumed$() in the process!"
+    },
+    {
+      "type": "image",
+      "images": [
+        "blockcarpentry:textures/book/base_overlay_2.png"
+      ],
+      "border": true,
+      "title": "Snow overlays"
+    },
+    {
+      "type": "spotlight",
+      "item": "minecraft:vine",
+      "text": "Add a vine overlay to a block by right-clicking it with a vine item. There is only one overlay version currently, which is shown in the image to the right. The vine $(o)will not be consumed$() in the process!"
+    },
+    {
+      "type": "image",
+      "images": [
+        "blockcarpentry:textures/book/base_overlay_3.png"
+      ],
+      "border": true,
+      "title": "Vine overlay"
+    }
+  ]
+}

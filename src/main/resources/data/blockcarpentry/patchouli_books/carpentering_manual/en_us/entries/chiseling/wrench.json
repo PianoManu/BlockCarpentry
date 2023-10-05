@@ -1,0 +1,32 @@
+{
+  "name": "Of course, a wrench",
+  "icon": "blockcarpentry:texture_wrench",
+  "category": "chiseling",
+  "sortnum": 11,
+  "pages": [
+    {
+      "type": "text",
+      "text": "The texture wrench is a multi-functional tool, which can be used to cycle through different textures of a block. Take a furnace, for example. This block has 3 different textures: one for the front face, one for the three side faces and one for the top and bottom faces. By right-clicking a frame block mimicking a furnace with the wrench, you "
+    },
+    {
+      "type": "image",
+      "images": [
+        "blockcarpentry:textures/book/wrench_1.png"
+      ],
+      "border": true,
+      "text": "can cycle through all available textures."
+    },
+    {
+      "type": "crafting",
+      "text": "For illusion blocks, you will instead rotate the whole model, like you would turn over the block. Here again shown with the furnace as an example.",
+      "recipe": "blockcarpentry:chisel"
+    },
+    {
+      "type": "image",
+      "images": [
+        "blockcarpentry:textures/book/wrench_2.png"
+      ],
+      "border": true
+    }
+  ]
+}

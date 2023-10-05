@@ -1,25 +1,23 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
-import net.minecraft.block.BlockState;
+import mod.pianomanu.blockcarpentry.setup.Registration;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraftforge.client.model.ModelDataManager;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.block.BlockState;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.common.extensions.IForgeTileEntity;
 import net.minecraftforge.common.util.Constants;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
 
@@ -28,9 +26,9 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.4 06/06/21
+ * @version 1.5 09/27/23
  */
-public class FrameBlockTile extends TileEntity {
+public class FrameBlockTile extends TileEntity implements IForgeTileEntity, IFrameTile {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN = new ModelProperty<>();
@@ -50,31 +48,38 @@ public class FrameBlockTile extends TileEntity {
     public final int maxDesignTextures = 4;
     public final int maxDesigns = 4;
 
-    private BlockState mimic;
-    private Integer texture = 0;
-    private Integer design = 0;
-    private Integer designTexture = 0;
-    private Integer glassColor = 0;
-    private Integer overlay = 0;
-    private Integer rotation = 0;
+    public BlockState mimic;
+    public Integer texture = 0;
+    public Integer design = 0;
+    public Integer designTexture = 0;
+    public Integer glassColor = 0;
+    public Integer overlay = 0;
+    public Integer rotation = 0;
+    public Float friction = Registration.FRAMEBLOCK.get().getSlipperiness();
+    public Float explosionResistance = Registration.FRAMEBLOCK.get().getExplosionResistance();
+    public Boolean canSustainPlant = false;
+    public Integer enchantPowerBonus = 0;
+    public Boolean canEntityDestroy = true;
 
-    private Boolean northVisible = true;
-    private Boolean eastVisible = true;
-    private Boolean southVisible = true;
-    private Boolean westVisible = true;
-    private Boolean upVisible = true;
-    private Boolean downVisible = true;
+    public Boolean northVisible = true;
+    public Boolean eastVisible = true;
+    public Boolean southVisible = true;
+    public Boolean westVisible = true;
+    public Boolean upVisible = true;
+    public Boolean downVisible = true;
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    public FrameBlockTile(TileEntityType<?> tileEntityTypeIn) {
+        super(tileEntityTypeIn);
+    }
 
     public FrameBlockTile() {
         super(FRAMEBLOCK_TILE.get());
     }
 
-    public void setMimic(BlockState mimic) {
-        this.mimic = mimic;
+    public <V> V set(V newValue) {
         markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        world.notifyBlockUpdate(this.pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        return newValue;
     }
 
     public BlockState getMimic() {
@@ -85,53 +90,39 @@ public class FrameBlockTile extends TileEntity {
         return this.design;
     }
 
-    public void setDesign(Integer design) {
-        this.design = design;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-    }
-
     public Integer getDesignTexture() {
         return this.designTexture;
     }
 
-    public void setDesignTexture(Integer designTexture) {
-        this.designTexture = designTexture;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    public void setMimic(BlockState mimic) {
+        this.mimic = set(mimic);
     }
 
     public Integer getTexture() {
         return this.texture;
     }
 
-    public void setTexture(Integer texture) {
-        this.texture = texture;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    public void setDesign(Integer design) {
+        this.design = set(design);
     }
 
     public Integer getGlassColor() {
         return this.glassColor;
     }
 
-    public void setGlassColor(Integer colorNumber) {
-        this.glassColor = colorNumber;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    public void setDesignTexture(Integer designTexture) {
+        this.designTexture = set(designTexture);
     }
 
     public Integer getRotation() {
         return rotation;
     }
 
-    public void setRotation(Integer rotation) {
-        this.rotation = rotation;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    public void setTexture(Integer texture) {
+        this.texture = set(texture);
     }
 
-    public void setVisibileSides(Direction dir, boolean isVisible) {
+    public void setVisibleSides(Direction dir, boolean isVisible) {
         switch (dir) {
             case DOWN:
                 downVisible = isVisible;
@@ -173,27 +164,57 @@ public class FrameBlockTile extends TileEntity {
         return dir;
     }
 
-    private static Integer readInteger(CompoundNBT tag) {
-        if (!tag.contains("number", 8)) {
-            return 0;
-        } else {
-            try {
-                return Integer.parseInt(tag.getString("number"));
-            } catch (NumberFormatException e) {
-                LOGGER.error("Not a valid Number Format: " + tag.getString("number"));
-                return 0;
-            }
-        }
+    public void setGlassColor(Integer colorNumber) {
+        this.glassColor = set(colorNumber);
     }
 
     public Integer getOverlay() {
         return this.overlay;
     }
 
+    public void setRotation(Integer rotation) {
+        this.rotation = set(rotation);
+    }
+
     public void setOverlay(Integer overlay) {
-        this.overlay = overlay;
-        markDirty();
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        this.overlay = set(overlay);
+    }
+
+    public Float getSlipperiness() {
+        return friction;
+    }
+
+    public void setSlipperiness(Float friction) {
+        this.friction = set(friction);
+    }
+
+    public Float getExplosionResistance() {
+        return explosionResistance;
+    }
+
+    public void setExplosionResistance(Float explosionResistance) {
+        this.explosionResistance = set(explosionResistance);
+    }
+
+    public Boolean getCanSustainPlant() {
+        return canSustainPlant;
+    }
+
+    public void setCanSustainPlant(Boolean canSustainPlant) {
+        this.canSustainPlant = set(canSustainPlant);
+    }
+
+    public Integer getEnchantPowerBonus() {
+        return enchantPowerBonus;
+    }
+
+    public void setEnchantPowerBonus(Integer enchantPowerBonus) {
+        this.enchantPowerBonus = set(enchantPowerBonus);
+    }
+
+    @Override
+    public Boolean getCanEntityDestroy() {
+        return this.canEntityDestroy;
     }
 
     @Nullable
@@ -203,91 +224,13 @@ public class FrameBlockTile extends TileEntity {
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT tag = super.getUpdateTag();
-        if (mimic != null) {
-            tag.put("mimic", NBTUtil.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            tag.put("texture", writeInteger(texture));
-        }
-        if (design != null) {
-            tag.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            tag.put("design_texture", writeInteger(designTexture));
-        }
-        if (glassColor != null) {
-            tag.put("glass_color", writeInteger(glassColor));
-        }
-        if (overlay != null) {
-            tag.put("overlay", writeInteger(overlay));
-        }
-        if (rotation != null) {
-            tag.put("rotation", writeInteger(rotation));
-        }
-        return tag;
+    public void setCanEntityDestroy(Boolean canEntityDestroy) {
+        this.canEntityDestroy = set(canEntityDestroy);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        BlockState oldMimic = mimic;
-        Integer oldTexture = texture;
-        Integer oldDesign = design;
-        Integer oldDesignTexture = designTexture;
-        Integer oldGlassColor = glassColor;
-        Integer oldOverlay = overlay;
-        Integer oldRotation = rotation;
-        CompoundNBT tag = pkt.getNbtCompound();
-        if (tag.contains("mimic")) {
-            mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
-            if (!Objects.equals(oldMimic, mimic)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("texture")) {
-            texture = readInteger(tag.getCompound("texture"));
-            if (!Objects.equals(oldTexture, texture)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design")) {
-            design = readInteger(tag.getCompound("design"));
-            if (!Objects.equals(oldDesign, design)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design_texture")) {
-            designTexture = readInteger(tag.getCompound("design_texture"));
-            if (!Objects.equals(oldDesignTexture, designTexture)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("glass_color")) {
-            glassColor = readInteger(tag.getCompound("glass_color"));
-            if (!Objects.equals(oldGlassColor, glassColor)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("overlay")) {
-            overlay = readInteger(tag.getCompound("overlay"));
-            if (!Objects.equals(oldOverlay, overlay)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
-        if (tag.contains("rotation")) {
-            rotation = readInteger(tag.getCompound("rotation"));
-            if (!Objects.equals(oldRotation, rotation)) {
-                ModelDataManager.requestModelDataRefresh(this);
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-            }
-        }
+        onDataPacket(pkt, FrameBlockTile.class, world, this.pos, getBlockState());
     }
 
     @Nonnull
@@ -311,71 +254,23 @@ public class FrameBlockTile extends TileEntity {
     }
 
     @Override
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT tag = super.getUpdateTag();
+        return getUpdateTag(tag, FrameBlockTile.class);
+    }
+
+    @Override
     public void read(BlockState state, CompoundNBT tag) {
         super.read(state, tag);
-        if (tag.contains("mimic")) {
-            mimic = NBTUtil.readBlockState(tag.getCompound("mimic"));
-        }
-        if (tag.contains("texture")) {
-            texture = readInteger(tag.getCompound("texture"));
-        }
-        if (tag.contains("design")) {
-            design = readInteger(tag.getCompound("design"));
-        }
-        if (tag.contains("design_texture")) {
-            designTexture = readInteger(tag.getCompound("design_texture"));
-        }
-        if (tag.contains("glass_color")) {
-            glassColor = readInteger(tag.getCompound("glass_color"));
-        }
-        if (tag.contains("overlay")) {
-            overlay = readInteger(tag.getCompound("overlay"));
-        }
-        if (tag.contains("rotation")) {
-            rotation = readInteger(tag.getCompound("rotation"));
-        }
+        IFrameTile.super.read(tag, FrameBlockTile.class);
     }
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {
-        if (mimic != null) {
-            tag.put("mimic", NBTUtil.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            tag.put("texture", writeInteger(texture));
-        }
-        if (design != null) {
-            tag.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            tag.put("design_texture", writeInteger(designTexture));
-        }
-        if (glassColor != null) {
-            tag.put("glass_color", writeInteger(glassColor));
-        }
-        if (overlay != null) {
-            tag.put("overlay", writeInteger(overlay));
-        }
-        if (rotation != null) {
-            tag.put("rotation", writeInteger(rotation));
-        }
-        return super.write(tag);
+        super.write(tag);
+        IFrameTile.super.write(tag, FrameBlockTile.class);
+        return tag;
     }
 
-    private static CompoundNBT writeInteger(Integer tag) {
-        CompoundNBT compoundnbt = new CompoundNBT();
-        compoundnbt.putString("number", tag.toString());
-        return compoundnbt;
-    }
-
-    public void clear() {
-        this.setMimic(null);
-        this.setDesign(0);
-        this.setDesign(0);
-        this.setDesign(0);
-        this.setGlassColor(0);
-        this.setOverlay(0);
-        this.setRotation(0);
-    }
 }
 //========SOLI DEO GLORIA========//

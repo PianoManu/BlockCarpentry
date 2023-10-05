@@ -1,18 +1,19 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
-import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.tileentity.LockableFrameTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import net.minecraft.block.*;
-import net.minecraft.entity.item.ItemEntity;
+import mod.pianomanu.blockcarpentry.util.BlockModificationHelper;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.FenceGateBlock;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -20,25 +21,23 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IPlantable;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
-
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.CONTAINS_BLOCK;
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
-import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 
 /**
  * Main class for frame fence gates - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.6 02/08/22
+ * @version 1.7 09/27/23
  */
-public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggable {
+public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggable, IFrameBlock {
     public FenceGateFrameBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(OPEN, Boolean.FALSE).with(POWERED, Boolean.FALSE).with(IN_WALL, Boolean.FALSE).with(CONTAINS_BLOCK, false).with(LIGHT_LEVEL, 0).with(WATERLOGGED, false));
@@ -46,7 +45,8 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED, HORIZONTAL_FACING, OPEN, POWERED, IN_WALL, CONTAINS_BLOCK, LIGHT_LEVEL);
+        super.fillStateContainer(builder);
+        builder.add(WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
     }
 
     @Override
@@ -57,109 +57,120 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FrameBlockTile();
+        return new LockableFrameTile();
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        ItemStack item = player.getHeldItem(hand);
-        if (!world.isRemote) {
-            if ((state.get(CONTAINS_BLOCK) || !(item.getItem() instanceof BlockItem)) && !(Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID))) {
-                if (state.get(OPEN)) {
-                    state = state.with(OPEN, Boolean.FALSE);
+    public ActionResultType onBlockActivated(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hitresult) {
+        return frameUse(state, level, pos, player, hand, hitresult);
+    }
+
+    @Override
+    public ActionResultType frameUseServer(BlockState state, World level, BlockPos pos, PlayerEntity player, ItemStack itemStack, BlockRayTraceResult hitresult) {
+        convertOutdatedTile(state, level, pos, player);
+        if (shouldCallFrameUse(state, itemStack))
+            return IFrameBlock.super.frameUseServer(state, level, pos, player, itemStack, hitresult);
+        if (lockRedstoneSignal(state, level, pos, player, itemStack) || lockOpenClose(state, level, pos, player, itemStack))
+            return ActionResultType.CONSUME;
+        if (state.get(CONTAINS_BLOCK)) {
+            return fenceGateBehavior(state, level, pos, player, hitresult);
+        }
+        return ActionResultType.FAIL;
+    }
+
+    private ActionResultType fenceGateBehavior(BlockState state, World level, BlockPos pos, PlayerEntity player, BlockRayTraceResult hitresult) {
+        TileEntity tileEntity = level.getTileEntity(pos);
+        if (tileEntity instanceof LockableFrameTile) {
+            LockableFrameTile fenceGateTileEntity = (LockableFrameTile) tileEntity;
+            if (fenceGateTileEntity.canBeOpenedByPlayers()) {
+                super.onBlockActivated(state, level, pos, player, Hand.MAIN_HAND, hitresult);
+                level.playEvent(null, state.get(OPEN) ? 1014 : 1008, pos, 0);
+                return ActionResultType.SUCCESS;
+            }
+        }
+        return ActionResultType.CONSUME;
+    }
+
+    private void convertOutdatedTile(BlockState state, World level, BlockPos pos, PlayerEntity player) {
+        TileEntity tileEntity = level.getTileEntity(pos);
+        if (!(tileEntity instanceof LockableFrameTile) && (tileEntity instanceof FrameBlockTile)) {
+            LockableFrameTile newTile = (LockableFrameTile) createTileEntity(state, level);
+            if (newTile != null) {
+                newTile.addFromOutdatedTileEntity((FrameBlockTile) tileEntity);
+                level.setTileEntity(pos, newTile);
+                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.converting_outdated_block"), true);
+            }
+        }
+    }
+
+    private boolean lockRedstoneSignal(BlockState state, World level, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
+        if (itemStack.getItem() == Items.REDSTONE) {
+            TileEntity tileEntity = level.getTileEntity(pos);
+            if (tileEntity instanceof LockableFrameTile) {
+                LockableFrameTile fenceGateTileEntity = (LockableFrameTile) tileEntity;
+                if (fenceGateTileEntity.canBeOpenedByRedstoneSignal()) {
+                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.redstone_off"), true);
                 } else {
-                    Direction direction = player.getHorizontalFacing();
-                    if (state.get(HORIZONTAL_FACING) == direction.getOpposite()) {
-                        state = state.with(HORIZONTAL_FACING, direction);
-                    }
-                    state = state.with(OPEN, Boolean.TRUE);
+                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.redstone_on"), true);
                 }
-                world.setBlockState(pos, state, 10);
-                world.playEvent(player, state.get(OPEN) ? 1008 : 1014, pos, 0);
-                //return ActionResultType.SUCCESS;
+                fenceGateTileEntity.setCanBeOpenedByRedstoneSignal(!fenceGateTileEntity.canBeOpenedByRedstoneSignal());
             } else {
-                if (item.getItem() instanceof BlockItem) {
-                    if (Objects.requireNonNull(item.getItem().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID)) {
-                        return ActionResultType.PASS;
-                    }
-                    TileEntity tileEntity = world.getTileEntity(pos);
-                    int count = player.getHeldItem(hand).getCount();
-                    Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                    if (tileEntity instanceof FrameBlockTile && !item.isEmpty() && heldBlock.getRenderType(heldBlock.getDefaultState()).equals(BlockRenderType.MODEL) && !state.get(CONTAINS_BLOCK)) {
-                        ((FrameBlockTile) tileEntity).clear();
-                        BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-                        ((FrameBlockTile) tileEntity).setMimic(handBlockState);
-                        insertBlock(world, pos, state, handBlockState);
-                        if (!player.isCreative())
-                            player.getHeldItem(hand).setCount(count - 1);
-
-                    }
-                }
+                convertOutdatedTile(state, level, pos, player);
             }
-            if (player.getHeldItem(hand).getItem() == Registration.HAMMER.get() || (!BCModConfig.HAMMER_NEEDED.get() && player.isSneaking())) {
-                if (!player.isCreative())
-                    this.dropContainedBlock(world, pos);
-                state = state.with(CONTAINS_BLOCK, Boolean.FALSE);
-                world.setBlockState(pos, state, 2);
-            }
-            BlockAppearanceHelper.setLightLevel(item, state, world, pos, player, hand);
-            BlockAppearanceHelper.setTexture(item, state, world, player, pos);
-            BlockAppearanceHelper.setDesign(world, pos, player, item);
-            BlockAppearanceHelper.setDesignTexture(world, pos, player, item);
-            BlockAppearanceHelper.setRotation(world, pos, player, item);
+            return true;
         }
-        return ActionResultType.SUCCESS;
+        return false;
     }
 
-    protected void dropContainedBlock(World worldIn, BlockPos pos) {
-        if (!worldIn.isRemote) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof FrameBlockTile) {
-                FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
-                BlockState blockState = frameTileEntity.getMimic();
-                if (!(blockState == null)) {
-                    worldIn.playEvent(1010, pos, 0);
-                    frameTileEntity.clear();
-                    float f = 0.7F;
-                    double d0 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    double d1 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.060000002F + 0.6D;
-                    double d2 = (double) (worldIn.rand.nextFloat() * 0.7F) + (double) 0.15F;
-                    ItemStack itemstack1 = new ItemStack(blockState.getBlock());
-                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + d0, (double) pos.getY() + d1, (double) pos.getZ() + d2, itemstack1);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
-                    frameTileEntity.clear();
+    private boolean lockOpenClose(BlockState state, World level, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
+        if (itemStack.getItem() == Items.IRON_INGOT) {
+            TileEntity tileEntity = level.getTileEntity(pos);
+            if (tileEntity instanceof LockableFrameTile) {
+                LockableFrameTile fenceGateTileEntity = (LockableFrameTile) tileEntity;
+                if (fenceGateTileEntity.canBeOpenedByPlayers()) {
+                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.lock"), true);
+                } else {
+                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.unlock"), true);
+                }
+                fenceGateTileEntity.setCanBeOpenedByPlayers(!fenceGateTileEntity.canBeOpenedByPlayers());
+            } else if (tileEntity instanceof FrameBlockTile) {
+                LockableFrameTile newTile = (LockableFrameTile) createTileEntity(state, level);
+                if (newTile != null) {
+                    newTile.addFromOutdatedTileEntity((FrameBlockTile) tileEntity);
+                    level.setTileEntity(pos, newTile);
+                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.converting_outdated_block"), true);
                 }
             }
+            return true;
         }
+        return false;
     }
 
-    public void insertBlock(IWorld worldIn, BlockPos pos, BlockState state, BlockState handBlock) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof FrameBlockTile) {
-            FrameBlockTile frameTileEntity = (FrameBlockTile) tileentity;
-            frameTileEntity.clear();
-            frameTileEntity.setMimic(handBlock);
-            worldIn.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
-        }
+    @Override
+    public boolean isCorrectTileInstance(TileEntity TileEntity) {
+        return TileEntity instanceof LockableFrameTile;
+    }
+
+    public void fillTileEntity(World level, BlockPos pos, BlockState state, BlockState handBlock, TileEntity TileEntity) {
+        LockableFrameTile frameTileEntity = (LockableFrameTile) TileEntity;
+        frameTileEntity.clear();
+        frameTileEntity.setMimic(handBlock);
+        level.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onReplaced(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            dropContainedBlock(worldIn, pos);
+            dropContainedBlock(level, pos);
 
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onReplaced(state, level, pos, newState, isMoving);
         }
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        if (state.get(LIGHT_LEVEL) > 15) {
-            return 15;
-        }
-        return state.get(LIGHT_LEVEL);
+    public int getLightValue(BlockState state, IBlockReader level, BlockPos pos) {
+        return IFrameBlock.getLightValue(state);
     }
 
     @Override
@@ -187,6 +198,26 @@ public class FenceGateFrameBlock extends FenceGateBlock implements IWaterLoggabl
         } else {
             return state;
         }
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, World level, BlockPos pos, Block block, BlockPos pos2, boolean update) {
+        TileEntity tileEntity = level.getTileEntity(pos);
+        if (tileEntity instanceof LockableFrameTile) {
+            LockableFrameTile fenceGateTileEntity = (LockableFrameTile) tileEntity;
+            if (fenceGateTileEntity.canBeOpenedByRedstoneSignal())
+                super.neighborChanged(state, level, pos, block, pos2, update);
+        }
+    }
+
+    @Override
+    public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, IPlantable plantable) {
+        return IFrameBlock.super.canSustainPlant(world, pos, facing);
+    }
+
+    @Override
+    public boolean executeModifications(BlockState state, World level, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
+        return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player, true, false);
     }
 }
 //========SOLI DEO GLORIA========//

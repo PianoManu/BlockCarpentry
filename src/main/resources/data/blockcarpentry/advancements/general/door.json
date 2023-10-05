@@ -16,20 +16,17 @@
     "hidden": false
   },
   "criteria": {
-    "frame_door": {
+    "requirement": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "blockcarpentry:frame_door"
+            "items": [
+              "blockcarpentry:frame_door"
+            ]
           }
         ]
       }
     }
-  },
-  "requirements": [
-    [
-      "frame_door"
-    ]
-  ]
+  }
 }

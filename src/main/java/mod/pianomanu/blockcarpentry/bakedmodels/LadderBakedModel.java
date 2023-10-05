@@ -1,20 +1,21 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
-import mod.pianomanu.blockcarpentry.block.FrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.LadderBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.block.BlockState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -30,9 +31,8 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.5 08/18/21
+ * @version 1.3 09/20/23
  */
-@SuppressWarnings("deprecation")
 public class LadderBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
 
@@ -44,15 +44,10 @@ public class LadderBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (mimic != null && !(mimic.getBlock() instanceof FrameBlock)) {
+        if (mimic != null) {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
-            if (location != null) {
-                IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                model.getBakedModel().getQuads(mimic, side, rand, extraData);
-                if (model != null) {
-                    return getMimicQuads(state, side, rand, extraData, model);
-                }
-            }
+            IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+            return getMimicQuads(state, side, rand, extraData, model);
         }
 
         return Collections.emptyList();
@@ -63,27 +58,11 @@ public class LadderBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        int tex = extraData.getData(FrameBlockTile.TEXTURE);
         if (mimic != null && state != null) {
-            List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
+            TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
             List<TextureAtlasSprite> designTextureList = new ArrayList<>();
-            if (textureList.size() == 0) {
-                if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
-                }
-                for (int i = 0; i < 6; i++) {
-                    textureList.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing")));
-                }
-                //return Collections.emptyList();
-            }
-            designTextureList.add(textureList.get(0));
+            designTextureList.add(texture);
             designTextureList.addAll(TextureHelper.getMetalTextures());
-            TextureAtlasSprite texture;
-            if (textureList.size() <= tex) {
-                extraData.setData(FrameBlockTile.TEXTURE, 0);
-                tex = 0;
-            }
-            texture = textureList.get(tex);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             int design = extraData.getData(FrameBlockTile.DESIGN);
             int desTex = extraData.getData(FrameBlockTile.DESIGN_TEXTURE);
@@ -212,36 +191,32 @@ public class LadderBakedModel implements IDynamicBakedModel {
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 5 / 16f, 7 / 16f, 0f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 9 / 16f, 11 / 16f, 0f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 1f, 13 / 16f, 15 / 16f, 0f, 1f, texture, tintIndex));
-
-                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, -1));
                         break;
                     case SOUTH:
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 1 / 16f, 3 / 16f, 0f, 3 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 7 / 16f, 0f, 3 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 9 / 16f, 11 / 16f, 0f, 3 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 15 / 16f, 0f, 3 / 16f, texture, tintIndex));
-
-                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, -1));
                         break;
                     case NORTH:
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 1 / 16f, 3 / 16f, 13 / 16f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 7 / 16f, 13 / 16f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 9 / 16f, 11 / 16f, 13 / 16f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 15 / 16f, 13 / 16f, 1f, texture, tintIndex));
-
-                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, -1));
                         break;
                     case EAST:
                         quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 1 / 16f, 3 / 16f, 0f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 5 / 16f, 7 / 16f, 0f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 9 / 16f, 11 / 16f, 0f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 3 / 16f, 13 / 16f, 15 / 16f, 0f, 1f, texture, tintIndex));
-
-                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, -1));
                         break;
                 }
             }
@@ -252,36 +227,32 @@ public class LadderBakedModel implements IDynamicBakedModel {
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 14 / 16f, 5 / 16f, 7 / 16f, 0f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 14 / 16f, 9 / 16f, 11 / 16f, 0f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(13 / 16f, 14 / 16f, 13 / 16f, 15 / 16f, 0f, 1f, texture, tintIndex));
-
-                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(14 / 16f, 1f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, -1));
                         break;
                     case SOUTH:
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 1 / 16f, 3 / 16f, 2 / 16f, 3 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 7 / 16f, 2 / 16f, 3 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 9 / 16f, 11 / 16f, 2 / 16f, 3 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 15 / 16f, 2 / 16f, 3 / 16f, texture, tintIndex));
-
-                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 0f, 2 / 16f, designTexture, -1));
                         break;
                     case NORTH:
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 1 / 16f, 3 / 16f, 13 / 16f, 14 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 5 / 16f, 7 / 16f, 13 / 16f, 14 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 9 / 16f, 11 / 16f, 13 / 16f, 14 / 16f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(0f, 1f, 13 / 16f, 15 / 16f, 13 / 16f, 14 / 16f, texture, tintIndex));
-
-                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(2 / 16f, 4 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(12 / 16f, 14 / 16f, 0f, 1f, 14 / 16f, 1f, designTexture, -1));
                         break;
                     case EAST:
                         quads.addAll(ModelHelper.createCuboid(2 / 16f, 3 / 16f, 1 / 16f, 3 / 16f, 0f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(2 / 16f, 3 / 16f, 5 / 16f, 7 / 16f, 0f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(2 / 16f, 3 / 16f, 9 / 16f, 11 / 16f, 0f, 1f, texture, tintIndex));
                         quads.addAll(ModelHelper.createCuboid(2 / 16f, 3 / 16f, 13 / 16f, 15 / 16f, 0f, 1f, texture, tintIndex));
-
-                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, tintIndex));
-                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, tintIndex));
+                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 2 / 16f, 4 / 16f, designTexture, -1));
+                        quads.addAll(ModelHelper.createCuboid(0f, 2 / 16f, 0f, 1f, 12 / 16f, 14 / 16f, designTexture, -1));
                         break;
                 }
             }
@@ -328,6 +299,7 @@ public class LadderBakedModel implements IDynamicBakedModel {
     }
 
     @Override
+    @Nonnull
     public TextureAtlasSprite getParticleTexture() {
         return getTexture();
     }

@@ -16,20 +16,17 @@
     "hidden": false
   },
   "criteria": {
-    "frame_trapdoor": {
+    "requirement": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "blockcarpentry:frame_trapdoor"
+            "items": [
+              "blockcarpentry:frame_trapdoor"
+            ]
           }
         ]
       }
     }
-  },
-  "requirements": [
-    [
-      "frame_trapdoor"
-    ]
-  ]
+  }
 }

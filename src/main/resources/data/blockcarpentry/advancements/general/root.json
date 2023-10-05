@@ -16,15 +16,22 @@
     "background": "minecraft:textures/block/oak_log.png"
   },
   "criteria": {
-    "controller_in_inventory": {
+    "requirement": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "blockcarpentry:frameblock"
+            "items": [
+              "blockcarpentry:frameblock"
+            ]
           }
         ]
       }
     }
+  },
+  "rewards": {
+    "loot": [
+      "blockcarpentry:give_manual"
+    ]
   }
 }

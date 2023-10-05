@@ -16,20 +16,17 @@
     "hidden": false
   },
   "criteria": {
-    "frame_fence": {
+    "requirement": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "blockcarpentry:frame_fence"
+            "items": [
+              "blockcarpentry:frame_fence"
+            ]
           }
         ]
       }
     }
-  },
-  "requirements": [
-    [
-      "frame_fence"
-    ]
-  ]
+  }
 }

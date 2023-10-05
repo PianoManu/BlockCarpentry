@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "blockcarpentry:illusion_layered_block",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "blockcarpentry:illusion_carpet",
+    "count": 1
+  }
+}

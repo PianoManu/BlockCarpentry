@@ -1,0 +1,48 @@
+{
+  "name": "It's a colorful world!",
+  "icon": "minecraft:red_dye",
+  "category": "chiseling",
+  "sortnum": 12,
+  "pages": [
+    {
+      "type": "text",
+      "text": "You maybe have realized some blocks contain transparent parts in some designs, such as doors, trapdoors, carpets, panes and daylight detectors. You can color them as you like. Simply right-click the frame or illusion block with a piece of dye to change the color of this section. The dye item $(o)will not be consumed$() in the process!"
+    },
+    {
+      "type": "image",
+      "images": [
+        "blockcarpentry:textures/book/coloring_1.png"
+      ],
+      "border": true,
+      "title": "Colored glass!"
+    },
+    {
+      "type": "spotlight",
+      "item": {
+        "tag": "forge:dyes"
+      },
+      "title": "Dyes",
+      "text": "However, the prerequisite for this is that the frame or illusion block has already been \"filled\" with a block and imitates it, and a design with transparent parts is selected. This feature is supported by frame and illusion doors, trapdoors, carpets, panes and daylight detectors."
+    },
+    {
+      "type": "image",
+      "images": [
+        "blockcarpentry:textures/book/coloring_3.png"
+      ],
+      "border": true,
+      "title": "Dirt house windows!"
+    },
+    {
+      "type": "text",
+      "text": "The same approach goes for blocks that have wool-like parts, such as beds or carpets. Also, since beds are two blocks large, you can dye pillow and blanket independently."
+    },
+    {
+      "type": "image",
+      "images": [
+        "blockcarpentry:textures/book/coloring_2.png"
+      ],
+      "border": true,
+      "title": "Colorful beds"
+    }
+  ]
+}

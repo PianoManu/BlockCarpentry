@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "blockcarpentry:frameblock"
+    }
+  ],
+  "result": {
+    "item": "patchouli:guide_book",
+    "id": "blockcarpentry:carpentering_manual",
+    "count": 1
+  }
+}

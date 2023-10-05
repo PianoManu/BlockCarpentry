@@ -16,20 +16,17 @@
     "hidden": false
   },
   "criteria": {
-    "frame_pressure_plate": {
+    "requirement": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "blockcarpentry:frame_pressure_plate"
+            "items": [
+              "blockcarpentry:frame_pressure_plate"
+            ]
           }
         ]
       }
     }
-  },
-  "requirements": [
-    [
-      "frame_pressure_plate"
-    ]
-  ]
+  }
 }

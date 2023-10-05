@@ -16,20 +16,17 @@
     "hidden": false
   },
   "criteria": {
-    "illusion_block": {
+    "requirement": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "blockcarpentry:illusion_block"
+            "items": [
+              "blockcarpentry:illusion_block"
+            ]
           }
         ]
       }
     }
-  },
-  "requirements": [
-    [
-      "illusion_block"
-    ]
-  ]
+  }
 }

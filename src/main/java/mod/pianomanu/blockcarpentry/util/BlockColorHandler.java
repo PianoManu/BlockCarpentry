@@ -23,7 +23,7 @@ import java.util.Objects;
  * This class ensures that blocks of grass take on the correct color
  *
  * @author PianoManu
- * @version 1.7 08/19/21
+ * @version 1.1 06/11/22
  */
 public class BlockColorHandler implements IBlockColor {
     public static final IBlockColor INSTANCE = new BlockColorHandler();
@@ -50,6 +50,9 @@ public class BlockColorHandler implements IBlockColor {
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CARPET_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.PANE_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.LAYERED_FRAMEBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.STANDING_SIGN_FRAMEBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.WALL_SIGN_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.SLOPE_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.EDGED_SLOPE_FRAMEBLOCK.get());
 
@@ -66,28 +69,31 @@ public class BlockColorHandler implements IBlockColor {
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.LADDER_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CHEST_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.FENCE_GATE_ILLUSIONBLOCK.get());
-        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CARPET_ILLUSION_BLOCK.get());
-        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.PANE_ILLUSION_BLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.CARPET_ILLUSIONBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.PANE_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.LAYERED_ILLUSIONBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.STANDING_SIGN_ILLUSIONBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.WALL_SIGN_ILLUSIONBLOCK.get());
 
         LOGGER.info("Registered block color handler");
     }
 
     @Override
     public int getColor(@Nonnull BlockState state, @Nullable IBlockDisplayReader lightReader, @Nullable BlockPos pos, int tintIndex) {
-        //TODO does this work?
         if (Objects.requireNonNull(state.getBlock().getRegistryName()).getNamespace().equals(BlockCarpentryMain.MOD_ID) && lightReader != null && pos != null) {
             TileEntity te = lightReader.getTileEntity(pos);
             if (te instanceof FrameBlockTile && state.get(BCBlockStateProperties.CONTAINS_BLOCK)) {
                 BlockState containedBlock = ((FrameBlockTile) te).getMimic();
-                if (containedBlock != null) {
+                try {
                     if (containedBlock.getBlock() instanceof GrassBlock) {
                         return BiomeColors.getGrassColor(lightReader, pos);
                     } else if (containedBlock.getBlock() instanceof LeavesBlock) {
                         return BiomeColors.getFoliageColor(lightReader, pos);
                     }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
                 }
-                //return Minecraft.getInstance().getBlockColors().getColor(containedBlock, lightReader, pos, tintIndex);
             }
         }
         return BiomeColors.getGrassColor(Objects.requireNonNull(lightReader), Objects.requireNonNull(pos));

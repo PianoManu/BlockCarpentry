@@ -1,40 +1,32 @@
 package mod.pianomanu.blockcarpentry.block;
 
 import mod.pianomanu.blockcarpentry.tileentity.SignFrameTile;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.StandingSignBlock;
-import net.minecraft.block.WoodType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
+import mod.pianomanu.blockcarpentry.util.BCWoodType;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.*;
+import net.minecraft.item.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.CONTAINS_BLOCK;
-import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEVEL;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.state.StateContainer;
+import net.minecraft.util.math.BlockRayTraceResult;
 
 /**
  * Main class for standing frame signs - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
+ *
  * @author PianoManu
- * @version 1.1 09/25/20
+ * @version 1.0 10/02/23
  */
-public class StandingSignFrameBlock extends StandingSignBlock {
+public class StandingSignFrameBlock extends StandingSignBlock implements IFrameBlock {
+
     public StandingSignFrameBlock(Properties properties) {
         super(properties, WoodType.OAK);
-        this.setDefaultState(this.stateContainer.getBaseState().with(ROTATION, 0).with(WATERLOGGED, Boolean.FALSE).with(CONTAINS_BLOCK, false).with(LIGHT_LEVEL, 0));
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(ROTATION, WATERLOGGED, CONTAINS_BLOCK, LIGHT_LEVEL);
+        this.setDefaultState(this.stateContainer.getBaseState().with(CONTAINS_BLOCK, Boolean.FALSE).with(LIGHT_LEVEL, 0).with(AbstractSignBlock.WATERLOGGED, false));
     }
 
     @Override
@@ -42,22 +34,79 @@ public class StandingSignFrameBlock extends StandingSignBlock {
         return true;
     }
 
-    @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        System.out.println("new tile");
         return new SignFrameTile();
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        TileEntity tile = worldIn.getTileEntity(pos);
-        if (tile instanceof SignFrameTile) {
-            SignFrameTile signTile = (SignFrameTile) tile;
-            player.openSignEditor(signTile);
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        super.fillStateContainer(builder);
+        builder.add(CONTAINS_BLOCK, LIGHT_LEVEL);
+    }
+
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hitresult) {
+        return frameUse(state, level, pos, player, hand, hitresult);
+    }
+
+    public ActionResultType frameUseServer(BlockState state, World level, BlockPos pos, PlayerEntity player, ItemStack itemStack, BlockRayTraceResult hitresult) {
+        if (removeBlock(level, pos, state, itemStack, player))
             return ActionResultType.SUCCESS;
+        if (state.get(CONTAINS_BLOCK)) {
+            if (executeModifications(state, level, pos, player, itemStack))
+                return ActionResultType.CONSUME;
+            super.onBlockActivated(state, level, pos, player, Hand.MAIN_HAND, hitresult);
         }
-        return ActionResultType.FAIL;
+        if (itemStack.getItem() instanceof BlockItem) {
+            if (changeMimic(state, level, pos, player, itemStack))
+                return ActionResultType.SUCCESS;
+        }
+        return itemStack.getItem() instanceof BlockItem ? ActionResultType.PASS : ActionResultType.CONSUME;
+    }
+
+    public void fillTileEntity(World level, BlockPos pos, BlockState state, BlockState handBlock, TileEntity TileEntity) {
+        SignFrameTile signFrameTile = (SignFrameTile) TileEntity;
+        signFrameTile.clear();
+        signFrameTile.setMimic(handBlock);
+        level.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
+    }
+
+    @Override
+    public int getLightValue(BlockState state, IBlockReader level, BlockPos pos) {
+        return IFrameBlock.getLightValue(state);
+    }
+
+    @Override
+    public boolean isCorrectTileInstance(TileEntity TileEntity) {
+        return TileEntity instanceof SignFrameTile;
+    }
+
+    public void clearTile(World level, BlockPos pos) {
+        if (!level.isRemote) {
+            TileEntity tileEntity = level.getTileEntity(pos);
+            if (tileEntity instanceof SignFrameTile) {
+                SignFrameTile frameTileEntity = (SignFrameTile) tileEntity;
+                BlockState blockState = frameTileEntity.getMimic();
+                if (!(blockState == null)) {
+                    frameTileEntity.clear();
+                }
+            }
+        }
+    }
+
+    public void dropContainedBlock(World level, BlockPos pos) {
+        if (!level.isRemote) {
+            TileEntity tileEntity = level.getTileEntity(pos);
+            if (tileEntity instanceof SignFrameTile) {
+                SignFrameTile frameTileEntity = (SignFrameTile) tileEntity;
+                BlockState blockState = frameTileEntity.getMimic();
+                if (!(blockState == null)) {
+                    dropItemStackInWorld(level, pos, blockState);
+                    frameTileEntity.clear();
+                }
+            }
+        }
     }
 }
 //========SOLI DEO GLORIA========//
