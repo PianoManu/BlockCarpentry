@@ -40,7 +40,7 @@ import java.util.Objects;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.4 09/27/23
+ * @version 1.5 10/06/23
  */
 public interface IFrameBlock extends IForgeBlock {
     BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -192,14 +192,23 @@ public interface IFrameBlock extends IForgeBlock {
 
     default <V extends IFrameTile> V getTile(BlockGetter level, BlockPos pos) {
         BlockEntity be = level.getBlockEntity(pos);
-        if (IFrameTile.class.isAssignableFrom(Objects.requireNonNull(be).getClass())) {
-            return (V) be;
+        try {
+            if (IFrameTile.class.isAssignableFrom(Objects.requireNonNull(be).getClass())) {
+                return (V) be;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
     default boolean executeModifications(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
-        return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player);
+        try {
+            return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

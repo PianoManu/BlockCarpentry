@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * interface.
  *
  * @author PianoManu
- * @version 1.0 09/27/23
+ * @version 1.1 10/06/23
  */
 public interface IFrameTile extends IForgeBlockEntity {
     Logger LOGGER = LogManager.getLogger();
@@ -54,22 +54,26 @@ public interface IFrameTile extends IForgeBlockEntity {
     }
 
     private static <V> V readDataType(CompoundTag tag, String tagElement, Class<V> classType, V defaultValue) {
-        if (classType == BlockState.class) {
-            return (V) NbtUtils.readBlockState(tag.getCompound(tagElement));
-        }
-        if (classType == Integer.class) {
-            if (readInteger(tag) != 0)
-                return (V) readInteger(tag);
-            return (V) (Integer) tag.getInt(tagElement);
-        }
-        if (classType == Float.class) {
-            return (V) (Float) tag.getFloat(tagElement);
-        }
-        if (classType == Boolean.class) {
-            return (V) (Boolean) tag.getBoolean(tagElement);
-        }
-        if (classType == DyeColor.class) {
-            return (V) DyeColor.valueOf(tag.getString(tagElement).toUpperCase());
+        try {
+            if (classType == BlockState.class) {
+                return (V) NbtUtils.readBlockState(tag.getCompound(tagElement));
+            }
+            if (classType == Integer.class) {
+                if (readInteger(tag) != 0)
+                    return (V) readInteger(tag);
+                return (V) (Integer) tag.getInt(tagElement);
+            }
+            if (classType == Float.class) {
+                return (V) (Float) tag.getFloat(tagElement);
+            }
+            if (classType == Boolean.class) {
+                return (V) (Boolean) tag.getBoolean(tagElement);
+            }
+            if (classType == DyeColor.class) {
+                return (V) DyeColor.valueOf(tag.getString(tagElement).toUpperCase());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return defaultValue;
     }
