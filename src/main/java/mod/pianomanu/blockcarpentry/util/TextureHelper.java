@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,7 +23,7 @@ import java.util.Objects;
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
  *
  * @author PianoManu
- * @version 1.4 10/06/23
+ * @version 1.5 10/07/23
  */
 public class TextureHelper {
 
@@ -99,46 +98,28 @@ public class TextureHelper {
     }
 
     public static List<TextureAtlasSprite> getTextureFromModel(BakedModel model, ModelData extraData, RandomSource rand) {
-        return getTextureFromModel(model, extraData.get(FrameBlockTile.MIMIC), rand);
+        return getTextureFromModel(model, extraData.get(FrameBlockTile.MIMIC), extraData, rand);
     }
 
     public static List<TextureAtlasSprite> getTextureFromModel(BakedModel model, BlockState state, RandomSource rand) {
+        return getTextureFromModel(model, state, null, rand);
+    }
+
+    public static List<TextureAtlasSprite> getTextureFromModel(BakedModel model, BlockState state, ModelData extraData, RandomSource rand) {
         List<TextureAtlasSprite> textureList = new ArrayList<>();
         try {
-            for (BakedQuad quad : model.getQuads(state, Direction.UP, rand, null, null)) {
-                if (!textureList.contains(quad.getSprite())) {
-                    textureList.add(quad.getSprite());
-                }
-            }
-            for (BakedQuad quad : model.getQuads(state, Direction.DOWN, rand, null, null)) {
-                if (!textureList.contains(quad.getSprite())) {
-                    textureList.add(quad.getSprite());
-                }
-            }
-            for (BakedQuad quad : model.getQuads(state, Direction.NORTH, rand, null, null)) {
-                if (!textureList.contains(quad.getSprite())) {
-                    textureList.add(quad.getSprite());
-                }
-            }
-            for (BakedQuad quad : model.getQuads(state, Direction.EAST, rand, null, null)) {
-                if (!textureList.contains(quad.getSprite())) {
-                    textureList.add(quad.getSprite());
-                }
-            }
-            for (BakedQuad quad : model.getQuads(state, Direction.SOUTH, rand, null, null)) {
-                if (!textureList.contains(quad.getSprite())) {
-                    textureList.add(quad.getSprite());
-                }
-            }
-            for (BakedQuad quad : model.getQuads(state, Direction.WEST, rand, null, null)) {
-                if (!textureList.contains(quad.getSprite())) {
-                    textureList.add(quad.getSprite());
+            for (Direction dir :
+                    Direction.values()) {
+                for (BakedQuad quad : model.getQuads(state, dir, rand, extraData, null)) {
+                    if (!textureList.contains(quad.getSprite())) {
+                        textureList.add(quad.getSprite());
+                    }
                 }
             }
             return textureList;
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
     }
 
