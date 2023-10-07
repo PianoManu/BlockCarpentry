@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
  * Just a normal registering class. See Forge-Documentation on how to register objects
  *
  * @author PianoManu
- * @version 1.4 10/02/23
+ * @version 1.5 10/07/23
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("all") //only warning: datafixer for build()-method is null, but method is annotated as "NotNull"
@@ -38,16 +38,13 @@ public class Registration {
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, BlockCarpentryMain.MOD_ID);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BlockCarpentryMain.MOD_ID);
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, BlockCarpentryMain.MOD_ID);
-    //WHAT THE FACK???
     private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, BlockCarpentryMain.MOD_ID);
-    //private static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, BlockCarpentryMain.MOD_ID);
-    //private static final DeferredRegister<ModDimension> DIMENSIONS = new DeferredRegister<>(ForgeRegistries.MOD_DIMENSIONS, BlockCarpentryMain.MOD_ID);
     private static final DeferredRegister<PoiType> POI_TYPES = DeferredRegister.create(ForgeRegistries.POI_TYPES, BlockCarpentryMain.MOD_ID);
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final RegistryObject<FrameBlock> FRAMEBLOCK = BLOCKS.register("frameblock", () -> new FrameBlock(Block.Properties.of(Material.WOOD)
             .sound(SoundType.WOOD)
-            .strength(Blocks.OAK_PLANKS.getExplosionResistance())
+            .strength(Blocks.OAK_PLANKS.defaultDestroyTime(), Blocks.OAK_PLANKS.getExplosionResistance())
             .friction(Blocks.OAK_PLANKS.getFriction())
             .noOcclusion()));
     public static final RegistryObject<Item> FRAMEBLOCK_ITEM = ITEMS.register("frameblock", () -> new BaseFrameItem(FRAMEBLOCK.get(), new Item.Properties().tab(BlockCarpentryMain.BlockCarpentryItemGroup.BLOCK_CARPENTRY)));
