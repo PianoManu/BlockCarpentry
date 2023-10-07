@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 
 /**
@@ -28,7 +29,7 @@ import net.minecraft.world.phys.BlockHitResult;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.0 10/02/23
+ * @version 1.1 10/07/23
  */
 public class WallSignFrameBlock extends WallSignBlock implements IFrameBlock {
     public WallSignFrameBlock(Properties properties) {
@@ -143,6 +144,7 @@ public class WallSignFrameBlock extends WallSignBlock implements IFrameBlock {
         }
     }
 
+    @Override
     public void dropContainedBlock(Level level, BlockPos pos) {
         if (!level.isClientSide) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
@@ -153,6 +155,18 @@ public class WallSignFrameBlock extends WallSignBlock implements IFrameBlock {
                     frameBlockEntity.clear();
                 }
             }
+        }
+    }
+
+    @Override
+    public void onRemove(BlockState state, Level levelIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            dropContainedBlock(levelIn, pos);
+
+            super.onRemove(state, levelIn, pos, newState, isMoving);
+        }
+        if (state.getValue(SignBlock.WATERLOGGED)) {
+            levelIn.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
         }
     }
 }
