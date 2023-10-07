@@ -126,6 +126,7 @@ public class FrameSignRenderer implements BlockEntityRenderer<SignFrameTile> {
     private void renderEmpty(SignFrameTile tile, PoseStack stack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
         WoodType woodtype = tile.getBlockState().getBlock().equals(Registration.STANDING_SIGN_FRAMEBLOCK.get()) ? BCWoodType.FRAME : BCWoodType.ILLUSION;
         SignRenderer.SignModel signrenderer$signmodel = new SignRenderer.SignModel(context.bakeLayer(ModelLayers.createSignModelName(woodtype)));
+        signrenderer$signmodel.stick.visible = tile.getBlockState().getBlock() instanceof StandingSignBlock;
         prepareStack(tile.getBlockState(), stack);
 
         Material material = Sheets.getSignMaterial(woodtype);
