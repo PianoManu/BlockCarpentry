@@ -10,7 +10,7 @@ import java.util.List;
  * Just some tag stuff, might be migrated to another class later on...
  *
  * @author PianoManu
- * @version 1.1 10/05/23
+ * @version 1.2 10/07/23
  */
 public class Tags {
     private static final List<Block> frameBlocks = new ArrayList<>();
@@ -72,8 +72,16 @@ public class Tags {
         illusionBlocks.add(Registration.CARPET_ILLUSIONBLOCK.get());
         illusionBlocks.add(Registration.PANE_ILLUSIONBLOCK.get());
         illusionBlocks.add(Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get());
-        frameBlocks.add(Registration.LAYERED_ILLUSIONBLOCK.get());
-        frameBlocks.add(Registration.STANDING_SIGN_ILLUSIONBLOCK.get());
-        frameBlocks.add(Registration.WALL_SIGN_ILLUSIONBLOCK.get());
+        illusionBlocks.add(Registration.LAYERED_ILLUSIONBLOCK.get());
+        illusionBlocks.add(Registration.STANDING_SIGN_ILLUSIONBLOCK.get());
+        illusionBlocks.add(Registration.WALL_SIGN_ILLUSIONBLOCK.get());
+    }
+
+    public static List<Block> getFrameBlocks() {
+        return frameBlocks;
+    }
+
+    public static List<Block> getIllusionBlocks() {
+        return illusionBlocks;
     }
 }
