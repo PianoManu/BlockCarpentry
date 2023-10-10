@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
  * resistance, etc.
  *
  * @author PianoManu
- * @version 1.1 09/27/23
+ * @version 1.2 10/10/23
  */
 public class BlockModificationHelper {
     private static final float FRICTION_MAX_BOUNDARY = BCModConfig.FRICTION_MAX_BOUNDARY.get().floatValue();
@@ -30,7 +30,7 @@ public class BlockModificationHelper {
 
 
     public static <V extends IFrameTile> boolean setAll(ItemStack itemStack, V TileEntity, PlayerEntity player, boolean applyFriction, boolean applySustainability, boolean applyEnchantingPower) {
-        if (IFrameTile.class.isAssignableFrom(TileEntity.getClass())) {
+        try {
             boolean set = false;
             if (applyFriction)
                 set = setFriction(itemStack, TileEntity, player);
@@ -41,8 +41,10 @@ public class BlockModificationHelper {
                 set |= setEnchantingPower(itemStack, TileEntity, player);
             set |= setCanEntityDestroy(itemStack, TileEntity, player);
             return set;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     public static <V extends IFrameTile> boolean setFriction(ItemStack itemStack, V frameBlockTile, PlayerEntity player) {

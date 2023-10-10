@@ -29,17 +29,22 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.6 10/02/23
+ * @version 1.7 10/10/23
  */
 public class BlockAppearanceHelper {
     public static boolean setAll(ItemStack itemStack, BlockState state, World level, BlockPos pos, PlayerEntity player) {
-        return BlockAppearanceHelper.setLightLevel(itemStack, state, level, pos, player) ||
-                BlockAppearanceHelper.setTexture(itemStack, state, level, player, pos) ||
-                BlockAppearanceHelper.setDesign(level, pos, player, itemStack) ||
-                BlockAppearanceHelper.setDesignTexture(level, pos, player, itemStack) ||
-                BlockAppearanceHelper.setColor(level, pos, itemStack) ||
-                BlockAppearanceHelper.setOverlay(level, pos, player, itemStack) ||
-                BlockAppearanceHelper.setRotation(level, pos, player, itemStack);
+        try {
+            return BlockAppearanceHelper.setLightLevel(itemStack, state, level, pos, player) ||
+                    BlockAppearanceHelper.setTexture(itemStack, state, level, player, pos) ||
+                    BlockAppearanceHelper.setDesign(level, pos, player, itemStack) ||
+                    BlockAppearanceHelper.setDesignTexture(level, pos, player, itemStack) ||
+                    BlockAppearanceHelper.setColor(level, pos, itemStack) ||
+                    BlockAppearanceHelper.setOverlay(level, pos, player, itemStack) ||
+                    BlockAppearanceHelper.setRotation(level, pos, player, itemStack);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static boolean setLightLevel(ItemStack itemStack, BlockState state, World level, BlockPos pos, PlayerEntity player) {

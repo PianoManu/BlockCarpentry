@@ -21,7 +21,7 @@ import java.util.*;
  * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
  *
  * @author PianoManu
- * @version 1.3 10/02/23
+ * @version 1.4 10/10/23
  */
 public class TextureHelper {
 
@@ -96,46 +96,28 @@ public class TextureHelper {
     }
 
     public static List<TextureAtlasSprite> getTextureFromModel(IBakedModel model, IModelData extraData, Random rand) {
-        return getTextureFromModel(model, extraData.getData(FrameBlockTile.MIMIC), rand);
+        return getTextureFromModel(model, extraData.getData(FrameBlockTile.MIMIC), extraData, rand);
     }
 
     public static List<TextureAtlasSprite> getTextureFromModel(IBakedModel model, BlockState state, Random rand) {
+        return getTextureFromModel(model, state, null, rand);
+    }
+
+    public static List<TextureAtlasSprite> getTextureFromModel(IBakedModel model, BlockState state, IModelData extraData, Random rand) {
         List<TextureAtlasSprite> textureList = new ArrayList<>();
         try {
-            for (BakedQuad quad : model.getQuads(state, Direction.UP, rand, null)) {
-                if (!textureList.contains(quad.func_187508_a())) {
-                    textureList.add(quad.func_187508_a());
-                }
-            }
-            for (BakedQuad quad : model.getQuads(state, Direction.DOWN, rand, null)) {
-                if (!textureList.contains(quad.func_187508_a())) {
-                    textureList.add(quad.func_187508_a());
-                }
-            }
-            for (BakedQuad quad : model.getQuads(state, Direction.NORTH, rand, null)) {
-                if (!textureList.contains(quad.func_187508_a())) {
-                    textureList.add(quad.func_187508_a());
-                }
-            }
-            for (BakedQuad quad : model.getQuads(state, Direction.EAST, rand, null)) {
-                if (!textureList.contains(quad.func_187508_a())) {
-                    textureList.add(quad.func_187508_a());
-                }
-            }
-            for (BakedQuad quad : model.getQuads(state, Direction.SOUTH, rand, null)) {
-                if (!textureList.contains(quad.func_187508_a())) {
-                    textureList.add(quad.func_187508_a());
-                }
-            }
-            for (BakedQuad quad : model.getQuads(state, Direction.WEST, rand, null)) {
-                if (!textureList.contains(quad.func_187508_a())) {
-                    textureList.add(quad.func_187508_a());
+            for (Direction dir :
+                    Direction.values()) {
+                for (BakedQuad quad : model.getQuads(state, dir, rand, extraData)) {
+                    if (!textureList.contains(quad.func_187508_a())) {
+                        textureList.add(quad.func_187508_a());
+                    }
                 }
             }
             return textureList;
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
     }
 
@@ -150,22 +132,6 @@ public class TextureHelper {
 
     private static ResourceLocation loc(String path) {
         return new ResourceLocation("minecraft", path);
-    }
-
-    public static ResourceLocation textureLocation(BlockState state) {
-        String id = state.getBlock().getTranslationKey();
-        String[] id_parted = id.split("\\.");
-        if (id_parted.length != 3)
-            System.out.println("Suspicious string list " + Arrays.toString(id_parted));
-        try {
-            String category = id_parted[0];
-            String namespace = id_parted[1];
-            String element = id_parted[2];
-            return new ResourceLocation(namespace, category + "/" + element);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-            return MissingTextureSprite.getLocation();
-        }
     }
 }
 //========SOLI DEO GLORIA========//

@@ -21,7 +21,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.1 09/21/23
+ * @version 1.2 10/10/23
  */
 public class QuadUtils {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -33,8 +33,8 @@ public class QuadUtils {
         Integer tex = extraData.getData(modelPropertyTexture);
         if (tex == null) {
             LOGGER.error("Cannot determine model texture for model " + model);
-        }
-        if (textureList.size() <= tex) {
+            return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing"));
+        } else if (textureList.size() <= tex) {
             extraData.setData(modelPropertyTexture, 0);
             tex = 0;
         }
@@ -42,9 +42,7 @@ public class QuadUtils {
             if (Minecraft.getInstance().player != null) {
                 Minecraft.getInstance().player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
             }
-            for (int i = 0; i < 6; i++) {
-                textureList.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing")));
-            }
+            return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("missing"));
         }
         texture = textureList.get(tex);
         return texture;
