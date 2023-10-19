@@ -45,6 +45,8 @@
   "item.blockcarpentry.paintbrush": "Paintbrush",
   "item.blockcarpentry.block_entity_debug_item": "Block Entity Debug Wand",
   "item.blockcarpentry.explosion_resistance_ball": "Obsidian Compound Chunk",
+  "message.blockcarpentry.discord": "§6[BlockCarpentry]§r Feel free to visit our §3Discord server§r.\nIf you are not sure how some features work, or if you have suggestions, you can share them with us there!",
+  "message.blockcarpentry.discord_disable": "§6[BlockCarpentry]§r You can disable this message in the BlockCarpentry config file.",
   "message.blockcarpentry.light_level": "Light Level: %s",
   "message.blockcarpentry.texture": "Texture: %s",
   "message.blockcarpentry.design": "Design: %s",

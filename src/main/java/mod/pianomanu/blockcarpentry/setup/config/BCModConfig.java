@@ -4,19 +4,23 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * Config class for customizable values, values can be found and changed in the corresponding file at /config/blockcarpentry-common.toml and /config/blockcarpentry-client.toml
+ * Config class for customizable values, values can be found and changed in /config/blockcarpentry-common.toml
  *
  * @author PianoManu
- * @version 1.5 09/27/23
+ * @version 1.6 10/19/23
  */
 @Mod.EventBusSubscriber
 public class BCModConfig {
+    public static final String CATEGORY_CLIENT = "client";
     public static final String CATEGORY_TOOLS = "tools";
     public static final String CATEGORY_BLOCKS = "blocks";
 
     private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
 
     public static ForgeConfigSpec COMMON_CONFIG;
+
+    public static ForgeConfigSpec.BooleanValue SHOW_DISCORD_INVITATION;
+    public static ForgeConfigSpec.BooleanValue ONLY_SHOW_INVITATION_ONCE;
 
     public static ForgeConfigSpec.BooleanValue HAMMER_NEEDED;
     public static ForgeConfigSpec.BooleanValue SNEAK_FOR_VERTICAL_SLABS;
@@ -33,6 +37,10 @@ public class BCModConfig {
     public static ForgeConfigSpec.DoubleValue EXPLOSION_RESISTANCE_MODIFIER;
 
     static {
+        COMMON_BUILDER.comment("Tool settings").push(CATEGORY_CLIENT);
+        setupClientSettings();
+        COMMON_BUILDER.pop();
+
         COMMON_BUILDER.comment("Tool settings").push(CATEGORY_TOOLS);
         setupToolSettings();
         COMMON_BUILDER.pop();
@@ -67,6 +75,11 @@ public class BCModConfig {
         ENCHANT_POWER_ENABLED = COMMON_BUILDER.comment("Determines whether the player can use experience bottles to give frame or illusion blocks the same enchanting power that bookshelves have.").define("enchant_power_enabled", true);
 
         CAN_ENTITY_DESTROY_ENABLED = COMMON_BUILDER.comment("Determines whether the player can use nether stars on frame or illusion blocks such that certain entities (such as the Ender Dragon and the Wither) can no longer destroy frame or illusion blocks.").define("entity_destroy_modifier_enabled", true);
+    }
+
+    private static void setupClientSettings() {
+        SHOW_DISCORD_INVITATION = COMMON_BUILDER.comment("Whether the discord server invitation should be displayed when entering a world.").define("show_discord_invitation", true);
+        ONLY_SHOW_INVITATION_ONCE = COMMON_BUILDER.comment("Set to true, if the discord server invitation message should only be shown once. If set to false, you can manually disable the message via the \"show_discord_message\" config entry.").define("only_show_invitation_once", false);
     }
 }
 //========SOLI DEO GLORIA========//
