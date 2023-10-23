@@ -27,7 +27,7 @@ import java.util.List;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.4 09/20/23
+ * @version 1.5 10/23/23
  */
 public class ModelHelper {
 
@@ -95,6 +95,27 @@ public class ModelHelper {
         putVertex(builder, normal, v3.x, v3.y, v3.z, uhigh, vhigh, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
         putVertex(builder, normal, v4.x, v4.y, v4.z, uhigh, vlow, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
         return quad[0];
+    }
+
+    public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, int tintIndex) {
+        Vec3 normal = v3.subtract(v2).cross(v1.subtract(v2)).normalize();
+
+        BakedQuad[] quad = new BakedQuad[1];
+        QuadBakingVertexConsumer builder = new QuadBakingVertexConsumer(q -> quad[0] = q);
+        builder.setSprite(sprite);
+        builder.setDirection(Direction.getNearest(normal.x, normal.y, normal.z));
+        builder.setTintIndex(tintIndex);
+        builder.setShade(true);
+
+        putVertex(builder, normal, v1.x, v1.y, v1.z, 0, 0, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v2.x, v2.y, v2.z, 0, 16, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v3.x, v3.y, v3.z, 16, 16, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v4.x, v4.y, v4.z, 16, 0, sprite, 1.0f, 1.0f, 1.0f, 1.0f);
+        return quad[0];
+    }
+
+    private static float meanUV(double uv1, double uv2) {
+        return (float) (uv1 + uv2) * 16 / 2;
     }
 
     public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex, boolean invert) {
@@ -178,7 +199,6 @@ public class ModelHelper {
     }
 
     public static List<BakedQuad> createCuboid(float xl, float xh, float yl, float yh, float zl, float zh, TextureAtlasSprite texture, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down) {
-        List<BakedQuad> quads = new ArrayList<>();
         //Eight corners of the block
         Vec3 NWU = v(xl, yh, zl); //North-West-Up
         Vec3 SWU = v(xl, yh, zh); //...
@@ -188,6 +208,17 @@ public class ModelHelper {
         Vec3 SEU = v(xh, yh, zh);
         Vec3 NED = v(xh, yl, zl);
         Vec3 SED = v(xh, yl, zh); //South-East-Down
+        return createCuboid(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, texture, tintIndex, north, south, east, west, up, down);
+    }
+
+    public static List<BakedQuad> createCuboid(Vec3 NWU, Vec3 SWU, Vec3 NWD, Vec3 SWD, Vec3 NEU, Vec3 SEU, Vec3 NED, Vec3 SED, TextureAtlasSprite texture, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, boolean keepDefaultUV016) {
+        float xl = (float) NWD.x;
+        float yl = (float) NWD.y;
+        float zl = (float) NWD.z;
+        float xh = (float) SEU.x;
+        float yh = (float) SEU.y;
+        float zh = (float) SEU.z;
+        List<BakedQuad> quads = new ArrayList<>();
         if (xh - xl > 1 || yh - yl > 1 || zh - zl > 1) {
             if (Minecraft.getInstance().player != null) {
                 Minecraft.getInstance().player.displayClientMessage(Component.translatable("message.blockcarpentry.block_error"), true);
@@ -218,18 +249,47 @@ public class ModelHelper {
             zh--;
             zl--;
         }
-        if (up) quads.add(createQuad(NWU, SWU, SEU, NEU, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
-        if (down)
-            quads.add(createQuad(NED, SED, SWD, NWD, texture, xh * 16, xl * 16, 16 - zl * 16, 16 - zh * 16, tintIndex));
-        if (west)
-            quads.add(createQuad(NWU, NWD, SWD, SWU, texture, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-        if (east)
-            quads.add(createQuad(SEU, SED, NED, NEU, texture, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-        if (north)
-            quads.add(createQuad(NEU, NED, NWD, NWU, texture, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
-        if (south)
-            quads.add(createQuad(SWU, SWD, SED, SEU, texture, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        if (keepDefaultUV016) {
+            /*if (up) quads.add(createQuad(NWU, SWU, SEU, NEU, texture, 0, 16, 0, 16, tintIndex));
+            if (down)
+                quads.add(createQuad(NED, SED, SWD, NWD, texture, 16, 0, 16, 0, tintIndex));
+            if (west)
+                quads.add(createQuad(NWU, NWD, SWD, SWU, texture, 0, 16, 0, 16, tintIndex));
+            if (east)
+                quads.add(createQuad(SEU, SED, NED, NEU, texture, 0, 16, 0, 16, tintIndex));
+            if (north)
+                quads.add(createQuad(NEU, NED, NWD, NWU, texture, 0, 16, 0, 16, tintIndex));
+            if (south)
+                quads.add(createQuad(SWU, SWD, SED, SEU, texture, 0, 16, 0, 16, tintIndex));*/
+            if (up) quads.add(createQuad(NWU, SWU, SEU, NEU, texture, tintIndex));
+            if (down)
+                quads.add(createQuad(NED, SED, SWD, NWD, texture, tintIndex));
+            if (west)
+                quads.add(createQuad(NWU, NWD, SWD, SWU, texture, tintIndex));
+            if (east)
+                quads.add(createQuad(SEU, SED, NED, NEU, texture, tintIndex));
+            if (north)
+                quads.add(createQuad(NEU, NED, NWD, NWU, texture, tintIndex));
+            if (south)
+                quads.add(createQuad(SWU, SWD, SED, SEU, texture, tintIndex));
+        } else {
+            if (up) quads.add(createQuad(NWU, SWU, SEU, NEU, texture, xl * 16, xh * 16, zl * 16, zh * 16, tintIndex));
+            if (down)
+                quads.add(createQuad(NED, SED, SWD, NWD, texture, xh * 16, xl * 16, 16 - zl * 16, 16 - zh * 16, tintIndex));
+            if (west)
+                quads.add(createQuad(NWU, NWD, SWD, SWU, texture, zl * 16, zh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (east)
+                quads.add(createQuad(SEU, SED, NED, NEU, texture, 16 - zh * 16, 16 - zl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (north)
+                quads.add(createQuad(NEU, NED, NWD, NWU, texture, 16 - xh * 16, 16 - xl * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+            if (south)
+                quads.add(createQuad(SWU, SWD, SED, SEU, texture, xl * 16, xh * 16, 16 - yh * 16, 16 - yl * 16, tintIndex));
+        }
         return quads;
+    }
+
+    public static List<BakedQuad> createCuboid(Vec3 NWU, Vec3 SWU, Vec3 NWD, Vec3 SWD, Vec3 NEU, Vec3 SEU, Vec3 NED, Vec3 SED, TextureAtlasSprite texture, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down) {
+        return createCuboid(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, texture, tintIndex, north, south, east, west, up, down, false);
     }
 
     public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, BakedModel model, ModelData extraData, RandomSource rand, int tintIndex, int rotation) {

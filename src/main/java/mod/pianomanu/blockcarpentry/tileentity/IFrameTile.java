@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.util.CornerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.extensions.IForgeBlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +33,7 @@ import java.util.stream.Collectors;
  * interface.
  *
  * @author PianoManu
- * @version 1.2 10/21/23
+ * @version 1.3 10/23/23
  */
 public interface IFrameTile extends IForgeBlockEntity {
     Logger LOGGER = LogManager.getLogger();
@@ -53,6 +55,14 @@ public interface IFrameTile extends IForgeBlockEntity {
         packets.add(new FrameBlockTile.TagPacket<>("enchantPowerBonus", Integer.class, 0));
         packets.add(new FrameBlockTile.TagPacket<>("color", DyeColor.class, DyeColor.BLACK));
         packets.add(new FrameBlockTile.TagPacket<>("hasGlowingText", Boolean.class, false));
+        packets.add(new FrameBlockTile.TagPacket<>("NWU", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("NEU", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("NWD", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("NED", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SWU", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SEU", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SWD", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SED", Vec3.class, Vec3.ZERO));
         return packets;
     }
 
@@ -74,6 +84,9 @@ public interface IFrameTile extends IForgeBlockEntity {
             }
             if (classType == DyeColor.class) {
                 return (V) DyeColor.valueOf(tag.getString(tagElement).toUpperCase());
+            }
+            if (classType == Vec3.class) {
+                return (V) CornerUtils.readVec(tag.getString(tagElement));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -172,6 +185,8 @@ public interface IFrameTile extends IForgeBlockEntity {
                 tag.put(tagElement, NbtUtils.writeBlockState((BlockState) newElement));
             if (newElement.getClass() == DyeColor.class)
                 tag.putString(tagElement, ((DyeColor) newElement).getName());
+            if (newElement.getClass() == Vec3.class)
+                tag.putString(tagElement, ((Vec3) newElement).toString());
         }
     }
 

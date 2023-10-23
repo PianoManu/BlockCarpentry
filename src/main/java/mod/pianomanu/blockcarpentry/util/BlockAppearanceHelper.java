@@ -29,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.6 10/02/23
+ * @version 1.7 10/23/23
  */
 public class BlockAppearanceHelper {
     public static boolean setAll(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player) {
@@ -137,12 +137,15 @@ public class BlockAppearanceHelper {
         if (itemStack.getItem() == Registration.CHISEL.get() && !player.isCrouching()) {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile fte) {
-                if (fte.getDesign() < fte.maxDesigns) {
-                    fte.setDesign(fte.getDesign() + 1);
-                } else {
-                    fte.setDesign(0);
+                //Ugly workaround so that "Design: " is not shown on frame blocks
+                if (level.getBlockState(pos).getBlock() != Registration.FRAMEBLOCK.get() && level.getBlockState(pos).getBlock() != Registration.ILLUSION_BLOCK.get()) {
+                    if (fte.getDesign() < fte.maxDesigns) {
+                        fte.setDesign(fte.getDesign() + 1);
+                    } else {
+                        fte.setDesign(0);
+                    }
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.design", fte.getDesign()), true);
                 }
-                player.displayClientMessage(Component.translatable("message.blockcarpentry.design", fte.getDesign()), true);
             }
             if (tileEntity instanceof BedFrameTile fte) {
                 if (fte.getDesign() < fte.maxDesigns) {

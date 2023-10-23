@@ -1,0 +1,170 @@
+package mod.pianomanu.blockcarpentry.util;
+
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Arrays;
+
+/**
+ * Some utility functions for messing around with the 8 corners of a block
+ *
+ * @author PianoManu
+ * @version 1.0 10/23/23
+ */
+public class CornerUtils {
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    public static void changeBoxSize(BlockState state, Level level, BlockPos pos, Player player, Vec3 location, Direction clicked_face, boolean shrink) {
+        Vec3 corner = getNearestCorner(location);
+
+        BlockEntity entity = level.getBlockEntity(pos);
+        if (entity instanceof FrameBlockTile fte) {
+            Vec3[] cornerPlusAdjacents = getCorrespondingCornerList(fte, corner, getVec(pos));
+            Vec3 old_corner = cornerPlusAdjacents[0];
+            if (checkCanChange(cornerPlusAdjacents, clicked_face, shrink)) {
+                setCorrespondingCorner(fte, corner, getVec(pos), modify(old_corner, clicked_face, shrink));
+                fte.updateVecList();
+                writeNBT(fte);
+                fte.requestModelDataUpdate();
+                level.setBlockEntity(fte);
+            }
+        }
+    }
+
+    private static Vec3 getNearestCorner(Vec3 vec) {
+        return new Vec3(Math.round(vec.x), Math.round(vec.y), Math.round(vec.z));
+    }
+
+    private static Vec3[] getCorrespondingCornerList(FrameBlockTile tile, Vec3 corner, Vec3 blockpos) {
+        if (corner.x == blockpos.x && corner.y == blockpos.y && corner.z == blockpos.z)
+            return tile.corners.get(0); //NWD
+        if (corner.x == blockpos.x && corner.y == blockpos.y + 1 && corner.z == blockpos.z)
+            return tile.corners.get(1);//NWU
+        if (corner.x == blockpos.x + 1 && corner.y == blockpos.y && corner.z == blockpos.z)
+            return tile.corners.get(2);//NED
+        if (corner.x == blockpos.x + 1 && corner.y == blockpos.y + 1 && corner.z == blockpos.z)
+            return tile.corners.get(3);//NEU
+        if (corner.x == blockpos.x && corner.y == blockpos.y && corner.z == blockpos.z + 1)
+            return tile.corners.get(4);//SWD
+        if (corner.x == blockpos.x && corner.y == blockpos.y + 1 && corner.z == blockpos.z + 1)
+            return tile.corners.get(5);//SWU
+        if (corner.x == blockpos.x + 1 && corner.y == blockpos.y && corner.z == blockpos.z + 1)
+            return tile.corners.get(6);//SED
+        if (corner.x == blockpos.x + 1 && corner.y == blockpos.y + 1 && corner.z == blockpos.z + 1)
+            return tile.corners.get(7);//SEU
+        return new Vec3[]{getNearestCorner(corner)};
+    }
+
+    private static void setCorrespondingCorner(FrameBlockTile tile, Vec3 corner, Vec3 blockpos, Vec3 new_corner) {
+        if (corner.x == blockpos.x && corner.y == blockpos.y && corner.z == blockpos.z)
+            tile.setNWD(new_corner);
+        if (corner.x == blockpos.x && corner.y == blockpos.y + 1 && corner.z == blockpos.z)
+            tile.setNWU(new_corner);
+        if (corner.x == blockpos.x + 1 && corner.y == blockpos.y && corner.z == blockpos.z)
+            tile.setNED(new_corner);
+        if (corner.x == blockpos.x + 1 && corner.y == blockpos.y + 1 && corner.z == blockpos.z)
+            tile.setNEU(new_corner);
+        if (corner.x == blockpos.x && corner.y == blockpos.y && corner.z == blockpos.z + 1)
+            tile.setSWD(new_corner);
+        if (corner.x == blockpos.x && corner.y == blockpos.y + 1 && corner.z == blockpos.z + 1)
+            tile.setSWU(new_corner);
+        if (corner.x == blockpos.x + 1 && corner.y == blockpos.y && corner.z == blockpos.z + 1)
+            tile.setSED(new_corner);
+        if (corner.x == blockpos.x + 1 && corner.y == blockpos.y + 1 && corner.z == blockpos.z + 1)
+            tile.setSEU(new_corner);
+    }
+
+    private static Vec3 getVec(BlockPos pos) {
+        return new Vec3((double) pos.getX(), (double) pos.getY(), (double) pos.getZ());
+    }
+
+    private static Vec3 modify(Vec3 vec, Direction direction, boolean shrink) {
+        double change = shrink ? -1 : 1;
+        return switch (direction) {
+            case DOWN -> new Vec3(vec.x, vec.y - change, vec.z);
+            case UP -> new Vec3(vec.x, vec.y + change, vec.z);
+            case NORTH -> new Vec3(vec.x, vec.y, vec.z - change);
+            case WEST -> new Vec3(vec.x - change, vec.y, vec.z);
+            case SOUTH -> new Vec3(vec.x, vec.y, vec.z + change);
+            case EAST -> new Vec3(vec.x + change, vec.y, vec.z);
+        };
+    }
+
+    private static boolean checkCanChange(Vec3[] cornerVec, Direction direction, boolean shrink) {
+        int min = shrink ? 0 : 1;
+        int max = shrink ? 15 : 16;
+        try {
+            Vec3 opposing = getOpposingCorner(cornerVec, direction);
+            return checkVectorOverlap(cornerVec[0], opposing, min, max, direction);
+        } catch (Exception e) {
+            LOGGER.error("Unable to check changeability in FrameBlockTile with corners " + Arrays.toString(cornerVec));
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private static boolean checkVectorOverlap(Vec3 vec1, Vec3 vec2, int min, int max, Direction direction) {
+        double v1, v2;
+        switch (direction) {
+            case EAST, WEST -> {
+                v1 = vec1.x;
+                v2 = vec2.x;
+            }
+            case UP, DOWN -> {
+                v1 = vec1.y;
+                v2 = vec2.y;
+            }
+            case NORTH, SOUTH -> {
+                v1 = vec1.z;
+                v2 = vec2.z;
+            }
+            default -> {
+                v1 = 0;
+                v2 = 0;
+            }
+        }
+        double dif = Math.abs(v1) + Math.abs(v2);
+        return dif >= min && dif <= max;
+    }
+
+    private static Vec3 getOpposingCorner(Vec3[] corners, Direction direction) {
+        return switch (direction) {
+            case EAST, WEST -> corners[1];
+            case UP, DOWN -> corners[2];
+            case NORTH, SOUTH -> corners[3];
+        };
+    }
+
+    private static void writeNBT(FrameBlockTile fte) {
+        CompoundTag tag = fte.getUpdateTag();
+        for (int i = 0; i < fte.corners.size(); i++) {
+            fte.write(tag, FrameBlockTile.TAG_PACKETS.get(i).TAG_ELEMENT, fte.corners.get(i)[0]);
+        }
+        fte.getUpdateTag(tag, FrameBlockTile.class);
+    }
+
+    public static Vec3 readVec(String tagElement) {
+        try {
+            int firstComma = tagElement.indexOf(',');
+            int secondComma = tagElement.indexOf(',', firstComma + 1);
+            if (tagElement.charAt(0) != '(' || firstComma == -1 || secondComma == -1)
+                return Vec3.ZERO;
+            double x = Double.parseDouble(tagElement.substring(1, firstComma));
+            double y = Double.parseDouble(tagElement.substring(firstComma + 1, secondComma));
+            double z = Double.parseDouble(tagElement.substring(secondComma + 1, tagElement.length() - 2));
+            return new Vec3(x, y, z);
+
+        } catch (Exception e) {
+            return Vec3.ZERO;
+        }
+    }
+}

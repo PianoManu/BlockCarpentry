@@ -2,6 +2,9 @@ package mod.pianomanu.blockcarpentry.item;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -13,9 +16,11 @@ import java.util.List;
  * This class is used to add a tooltip to the chisel item
  *
  * @author PianoManu
- * @version 1.2 11/12/22
+ * @version 1.3 10/23/23
  */
 public class ChiselItem extends BCToolItem {
+
+    private boolean shrink = true;
 
     /**
      * Standard constructor for Minecraft items
@@ -41,6 +46,19 @@ public class ChiselItem extends BCToolItem {
         } else {
             component.add(Component.translatable("tooltip.blockcarpentry.shift"));
         }
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if (level.isClientSide && player.isCrouching()) {
+            this.shrink = !this.shrink;
+            player.displayClientMessage(Component.translatable("message.blockcarpentry.chisel.mode", this.shrink ? Component.translatable("message.blockcarpentry.chisel.shrink") : Component.translatable("message.blockcarpentry.chisel.enlarge")), true);
+        }
+        return super.use(level, player, hand);
+    }
+
+    public boolean shouldShrink() {
+        return this.shrink;
     }
 }
 //========SOLI DEO GLORIA========//

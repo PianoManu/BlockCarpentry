@@ -157,7 +157,7 @@ public interface IFrameBlock extends IForgeBlock {
             return InteractionResult.SUCCESS;
         if (state.getValue(CONTAINS_BLOCK)) {
             if (executeModifications(state, level, pos, player, itemStack))
-                return InteractionResult.CONSUME;
+                return InteractionResult.PASS;
         }
         if (itemStack.getItem() instanceof BlockItem) {
             if (changeMimic(state, level, pos, player, itemStack))

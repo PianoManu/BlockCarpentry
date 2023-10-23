@@ -2,7 +2,6 @@ package mod.pianomanu.blockcarpentry.tileentity;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -10,6 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.extensions.IForgeBlockEntity;
@@ -26,9 +26,24 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.5 09/27/23
+ * @version 1.6 10/23/23
  */
 public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IFrameTile {
+    public static final List<IFrameTile.TagPacket<?>> TAG_PACKETS = initTagPackets();
+
+    private static List<FrameBlockTile.TagPacket<?>> initTagPackets() {
+        List<FrameBlockTile.TagPacket<?>> packets = new ArrayList<>();
+        packets.add(new FrameBlockTile.TagPacket<>("NWD", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("NWU", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("NED", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("NEU", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SWD", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SWU", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SED", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SEU", Vec3.class, Vec3.ZERO));
+        return packets;
+    }
+
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN = new ModelProperty<>();
@@ -43,6 +58,15 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     public static final ModelProperty<Boolean> WEST_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> UP_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> DOWN_VISIBLE = new ModelProperty<>();
+
+    public static final ModelProperty<Vec3> NWU_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> NEU_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> NWD_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> NED_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> SWU_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> SEU_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> SWD_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> SED_prop = new ModelProperty<>();
 
     public final int maxTextures = 8;
     public final int maxDesignTextures = 4;
@@ -68,12 +92,37 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     public Boolean upVisible = true;
     public Boolean downVisible = true;
 
+    public Vec3 NWU = new Vec3(0, 0, 0);
+    public Vec3 NEU = new Vec3(0, 0, 0);
+    public Vec3 NWD = new Vec3(0, 0, 0);
+    public Vec3 NED = new Vec3(0, 0, 0);
+    public Vec3 SWU = new Vec3(0, 0, 0);
+    public Vec3 SEU = new Vec3(0, 0, 0);
+    public Vec3 SWD = new Vec3(0, 0, 0);
+    public Vec3 SED = new Vec3(0, 0, 0);
+
+    public List<Vec3[]> corners = new ArrayList<>();
+
     public FrameBlockTile(BlockPos pos, BlockState state) {
         super(FRAMEBLOCK_TILE.get(), pos, state);
+
+        updateVecList();
     }
 
     public FrameBlockTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    public void updateVecList() {
+        this.corners = new ArrayList<>();
+        this.corners.add(new Vec3[]{this.NWD, this.NED, this.NWU, this.SWD});
+        this.corners.add(new Vec3[]{this.NWU, this.NEU, this.NWD, this.SWU});
+        this.corners.add(new Vec3[]{this.NED, this.NWD, this.NEU, this.SED});
+        this.corners.add(new Vec3[]{this.NEU, this.NWU, this.NED, this.SEU});
+        this.corners.add(new Vec3[]{this.SWD, this.SED, this.SWU, this.NWD});
+        this.corners.add(new Vec3[]{this.SWU, this.SEU, this.SWD, this.NWU});
+        this.corners.add(new Vec3[]{this.SED, this.SWD, this.SEU, this.NED});
+        this.corners.add(new Vec3[]{this.SEU, this.SWU, this.SED, this.NEU});
     }
 
     public <V> V set(V newValue) {
@@ -122,46 +171,36 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
         this.texture = set(texture);
     }
 
-    public void setVisibleSides(Direction dir, boolean isVisible) {
-        switch (dir) {
-            case DOWN:
-                downVisible = isVisible;
-                break;
-            case UP:
-                upVisible = isVisible;
-                break;
-            case NORTH:
-                northVisible = isVisible;
-                break;
-            case WEST:
-                westVisible = isVisible;
-                break;
-            case SOUTH:
-                southVisible = isVisible;
-                break;
-            case EAST:
-                eastVisible = isVisible;
-                break;
-            default:
-                break;
-        }
+    public void setNWU(Vec3 NWU) {
+        this.NWU = set(NWU);
     }
 
-    public List<Direction> getVisibleSides() {
-        List<Direction> dir = new ArrayList<>();
-        if (northVisible)
-            dir.add(Direction.NORTH);
-        if (eastVisible)
-            dir.add(Direction.EAST);
-        if (southVisible)
-            dir.add(Direction.SOUTH);
-        if (westVisible)
-            dir.add(Direction.WEST);
-        if (upVisible)
-            dir.add(Direction.UP);
-        if (downVisible)
-            dir.add(Direction.DOWN);
-        return dir;
+    public void setNEU(Vec3 NEU) {
+        this.NEU = set(NEU);
+    }
+
+    public void setNWD(Vec3 NWD) {
+        this.NWD = set(NWD);
+    }
+
+    public void setNED(Vec3 NED) {
+        this.NED = set(NED);
+    }
+
+    public void setSWU(Vec3 SWU) {
+        this.SWU = set(SWU);
+    }
+
+    public void setSEU(Vec3 SEU) {
+        this.SEU = set(SEU);
+    }
+
+    public void setSWD(Vec3 SWD) {
+        this.SWD = set(SWD);
+    }
+
+    public void setSED(Vec3 SED) {
+        this.SED = set(SED);
     }
 
     public void setGlassColor(Integer colorNumber) {
@@ -250,6 +289,14 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
                 .with(WEST_VISIBLE, westVisible)
                 .with(UP_VISIBLE, upVisible)
                 .with(DOWN_VISIBLE, downVisible)
+                .with(NWU_prop, NWU)
+                .with(NEU_prop, NEU)
+                .with(NWD_prop, NWD)
+                .with(NED_prop, NED)
+                .with(SWU_prop, SWU)
+                .with(SEU_prop, SEU)
+                .with(SWD_prop, SWD)
+                .with(SED_prop, SED)
                 .build();
     }
 
