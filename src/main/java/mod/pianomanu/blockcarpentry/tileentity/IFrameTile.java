@@ -1,7 +1,7 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
-import mod.pianomanu.blockcarpentry.util.CornerUtils;
+import mod.pianomanu.blockcarpentry.util.BCNBTUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -63,6 +63,7 @@ public interface IFrameTile extends IForgeBlockEntity {
         packets.add(new FrameBlockTile.TagPacket<>("SEU", Vec3.class, Vec3.ZERO));
         packets.add(new FrameBlockTile.TagPacket<>("SWD", Vec3.class, Vec3.ZERO));
         packets.add(new FrameBlockTile.TagPacket<>("SED", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("directions", List.class, new ArrayList<>()));
         return packets;
     }
 
@@ -86,7 +87,10 @@ public interface IFrameTile extends IForgeBlockEntity {
                 return (V) DyeColor.valueOf(tag.getString(tagElement).toUpperCase());
             }
             if (classType == Vec3.class) {
-                return (V) CornerUtils.readVec(tag.getString(tagElement));
+                return (V) BCNBTUtils.readVec(tag.getString(tagElement));
+            }
+            if (classType == List.class) {
+                return (V) BCNBTUtils.readDirectionList(tag.getIntArray(tagElement));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -177,16 +181,18 @@ public interface IFrameTile extends IForgeBlockEntity {
         if (newElement != null) {
             if (newElement.getClass() == Integer.class)
                 tag.putInt(tagElement, (int) newElement);
-            if (newElement.getClass() == Float.class)
+            else if (newElement.getClass() == Float.class)
                 tag.putFloat(tagElement, (float) newElement);
-            if (newElement.getClass() == Boolean.class)
+            else if (newElement.getClass() == Boolean.class)
                 tag.putBoolean(tagElement, (boolean) newElement);
-            if (newElement.getClass() == BlockState.class)
+            else if (newElement.getClass() == BlockState.class)
                 tag.put(tagElement, NbtUtils.writeBlockState((BlockState) newElement));
-            if (newElement.getClass() == DyeColor.class)
+            else if (newElement.getClass() == DyeColor.class)
                 tag.putString(tagElement, ((DyeColor) newElement).getName());
-            if (newElement.getClass() == Vec3.class)
+            else if (newElement.getClass() == Vec3.class)
                 tag.putString(tagElement, ((Vec3) newElement).toString());
+            else if (newElement instanceof List)
+                BCNBTUtils.writeDirectionList(tag, (List<?>) newElement);
         }
     }
 

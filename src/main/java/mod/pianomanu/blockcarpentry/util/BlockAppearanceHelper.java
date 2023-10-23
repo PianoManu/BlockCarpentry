@@ -296,12 +296,14 @@ public class BlockAppearanceHelper {
         if (itemStack.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isCrouching() && mod.pianomanu.blockcarpentry.util.Tags.isIllusionBlock(level.getBlockState(pos).getBlock())) {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile fte) {
-                if (fte.getRotation() < 11) {
-                    fte.setRotation(fte.getRotation() + 1);
-                } else {
-                    fte.setRotation(0);
+                if (!level.getBlockState(pos).getBlock().equals(Registration.ILLUSION_BLOCK.get())) {
+                    if (fte.getRotation() < 11) {
+                        fte.setRotation(fte.getRotation() + 1);
+                    } else {
+                        fte.setRotation(0);
+                    }
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation", fte.getRotation()), true);
                 }
-                player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation", fte.getRotation()), true);
             }
             if (tileEntity instanceof BedFrameTile fte) {
                 if (fte.getRotation() < 11) {

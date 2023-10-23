@@ -2,6 +2,7 @@ package mod.pianomanu.blockcarpentry.tileentity;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -17,6 +18,7 @@ import net.minecraftforge.common.extensions.IForgeBlockEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
@@ -41,6 +43,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
         packets.add(new FrameBlockTile.TagPacket<>("SWU", Vec3.class, Vec3.ZERO));
         packets.add(new FrameBlockTile.TagPacket<>("SED", Vec3.class, Vec3.ZERO));
         packets.add(new FrameBlockTile.TagPacket<>("SEU", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("directions", List.class, Collections.emptyList()));
         return packets;
     }
 
@@ -58,6 +61,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     public static final ModelProperty<Boolean> WEST_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> UP_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> DOWN_VISIBLE = new ModelProperty<>();
+    public static final ModelProperty<List<Direction>> DIRECTIONS = new ModelProperty<>();
 
     public static final ModelProperty<Vec3> NWU_prop = new ModelProperty<>();
     public static final ModelProperty<Vec3> NEU_prop = new ModelProperty<>();
@@ -100,6 +104,8 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     public Vec3 SEU = new Vec3(0, 0, 0);
     public Vec3 SWD = new Vec3(0, 0, 0);
     public Vec3 SED = new Vec3(0, 0, 0);
+
+    public List<Direction> directions = new ArrayList<>();
 
     public List<Vec3[]> corners = new ArrayList<>();
 
@@ -261,6 +267,44 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
         this.canEntityDestroy = set(canEntityDestroy);
     }
 
+    public void addDirection(Direction direction) {
+        this.directions.add(set(direction));
+        this.trySimplifyDirections();
+    }
+
+    private void trySimplifyDirections() {
+        int i = 0;
+        Direction prev = null;
+        List<Direction> newDirections = new ArrayList<>();
+        for (Direction d :
+                this.directions) {
+            newDirections.add(d);
+            if (d != prev) {
+                if (d.getOpposite() == prev) {
+                    this.removeLastNEntries(newDirections, 2);
+                    prev = newDirections.get(newDirections.size() - 1);
+                } else {
+                    prev = d;
+                }
+                i = 0;
+            } else {
+                i++;
+                if (i == 3) {
+                    this.removeLastNEntries(newDirections, 4);
+                    i = 0;
+                }
+            }
+        }
+        this.directions = set(newDirections);
+    }
+
+    private void removeLastNEntries(List<Direction> directions, int iters) {
+        int size = directions.size();
+        for (int i = 1; i <= iters; i++) {
+            directions.remove(size - iters);
+        }
+    }
+
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -297,6 +341,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
                 .with(SEU_prop, SEU)
                 .with(SWD_prop, SWD)
                 .with(SED_prop, SED)
+                .with(DIRECTIONS, directions)
                 .build();
     }
 

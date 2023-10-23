@@ -75,6 +75,7 @@
   "message.blockcarpentry.chisel.mode": "Chisel mode when right-clicking full Blocks: %s",
   "message.blockcarpentry.chisel.shrink": "Shrink",
   "message.blockcarpentry.chisel.enlarge": "Enlarge",
+  "message.blockcarpentry.rotation.axis": "Rotating along the %s axis",
   "message.blockcarpentry.block_not_available": "We're sorry, but this block can't be displayed",
   "message.blockcarpentry.block_error": "An error occurred with this block, please report to the mod author (PianoManu)",
   "message.blockcarpentry.converting_outdated_block": "This block had an outdated block entity, I've fixed that for you! :)",

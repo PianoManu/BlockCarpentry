@@ -152,19 +152,17 @@ public class CornerUtils {
         fte.getUpdateTag(tag, FrameBlockTile.class);
     }
 
-    public static Vec3 readVec(String tagElement) {
-        try {
-            int firstComma = tagElement.indexOf(',');
-            int secondComma = tagElement.indexOf(',', firstComma + 1);
-            if (tagElement.charAt(0) != '(' || firstComma == -1 || secondComma == -1)
-                return Vec3.ZERO;
-            double x = Double.parseDouble(tagElement.substring(1, firstComma));
-            double y = Double.parseDouble(tagElement.substring(firstComma + 1, secondComma));
-            double z = Double.parseDouble(tagElement.substring(secondComma + 1, tagElement.length() - 2));
-            return new Vec3(x, y, z);
-
-        } catch (Exception e) {
-            return Vec3.ZERO;
-        }
+    public static Vec3[] rotateVec3s(Vec3 NWU, Vec3 NEU, Vec3 SWU, Vec3 SEU, Vec3 NWD, Vec3 NED, Vec3 SWD, Vec3 SED, Direction direction) {
+        // EAST/WEST: x
+        // UP/DOWN: y
+        // NORTH/SOUTH: z
+        return switch (direction) {
+            case UP -> new Vec3[]{NEU, SEU, NWU, SWU, NED, SED, NWD, SWD};
+            case DOWN -> new Vec3[]{SWU, NWU, SEU, NEU, SWD, NWD, SED, NED};
+            case EAST -> new Vec3[]{SWU, SEU, SWD, SED, NWU, NEU, NWD, NED};
+            case WEST -> new Vec3[]{NWD, NED, NWU, NEU, SWD, SED, SWU, SEU};
+            case SOUTH -> new Vec3[]{NWD, NWU, SWD, SWU, NED, NEU, SED, SEU};
+            case NORTH -> new Vec3[]{NEU, NED, SEU, SED, NWU, NWD, SWU, SWD};
+        };
     }
 }
