@@ -18,6 +18,7 @@ import net.minecraftforge.common.extensions.IForgeBlockEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.6 10/23/23
+ * @version 1.6 10/30/23
  */
 public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IFrameTile {
     public static final List<IFrameTile.TagPacket<?>> TAG_PACKETS = initTagPackets();
@@ -55,6 +56,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     public static final ModelProperty<Integer> GLASS_COLOR = new ModelProperty<>();
     public static final ModelProperty<Integer> OVERLAY = new ModelProperty<>();
     public static final ModelProperty<Integer> ROTATION = new ModelProperty<>();
+    public static final ModelProperty<Boolean> KEEP_UV = new ModelProperty<>();
     public static final ModelProperty<Boolean> NORTH_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> EAST_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> SOUTH_VISIBLE = new ModelProperty<>();
@@ -72,6 +74,8 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     public static final ModelProperty<Vec3> SWD_prop = new ModelProperty<>();
     public static final ModelProperty<Vec3> SED_prop = new ModelProperty<>();
 
+    public static final ModelProperty<List<Integer>> ROTATIONS = new ModelProperty<>();
+
     public final int maxTextures = 8;
     public final int maxDesignTextures = 4;
     public final int maxDesigns = 4;
@@ -83,6 +87,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     public Integer glassColor = 0;
     public Integer overlay = 0;
     public Integer rotation = 0;
+    public Boolean keepUV = true;
     public Float friction = Registration.FRAMEBLOCK.get().getFriction();
     public Float explosionResistance = Registration.FRAMEBLOCK.get().getExplosionResistance();
     public Boolean canSustainPlant = false;
@@ -95,6 +100,8 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     public Boolean westVisible = true;
     public Boolean upVisible = true;
     public Boolean downVisible = true;
+
+    public List<Integer> rotations = Arrays.asList(0, 0, 0, 0, 0, 0);
 
     public Vec3 NWU = new Vec3(0, 0, 0);
     public Vec3 NEU = new Vec3(0, 0, 0);
@@ -178,35 +185,49 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     }
 
     public void setNWU(Vec3 NWU) {
-        this.NWU = set(NWU);
+        if (inRange(NWU.x, 16) && inRange(NWU.y, -16) && inRange(NWU.z, 16))
+            this.NWU = set(NWU);
     }
 
     public void setNEU(Vec3 NEU) {
-        this.NEU = set(NEU);
+        if (inRange(NEU.x, -16) && inRange(NEU.y, -16) && inRange(NEU.z, 16))
+            this.NEU = set(NEU);
     }
 
     public void setNWD(Vec3 NWD) {
-        this.NWD = set(NWD);
+        if (inRange(NWD.x, 16) && inRange(NWD.y, 16) && inRange(NWD.z, 16))
+            this.NWD = set(NWD);
     }
 
     public void setNED(Vec3 NED) {
-        this.NED = set(NED);
+        if (inRange(NED.x, -16) && inRange(NED.y, 16) && inRange(NED.z, 16))
+            this.NED = set(NED);
     }
 
     public void setSWU(Vec3 SWU) {
-        this.SWU = set(SWU);
+        if (inRange(SWU.x, 16) && inRange(SWU.y, -16) && inRange(SWU.z, -16))
+            this.SWU = set(SWU);
     }
 
     public void setSEU(Vec3 SEU) {
-        this.SEU = set(SEU);
+        if (inRange(SEU.x, -16) && inRange(SEU.y, -16) && inRange(SEU.z, -16))
+            this.SEU = set(SEU);
     }
 
     public void setSWD(Vec3 SWD) {
-        this.SWD = set(SWD);
+        if (inRange(SWD.x, 16) && inRange(SWD.y, 16) && inRange(SWD.z, -16))
+            this.SWD = set(SWD);
     }
 
     public void setSED(Vec3 SED) {
-        this.SED = set(SED);
+        if (inRange(SED.x, -16) && inRange(SED.y, 16) && inRange(SED.z, -16))
+            this.SED = set(SED);
+    }
+
+    private boolean inRange(double val, int limit) {
+        int min = Math.min(0, limit);
+        int max = Math.max(0, limit);
+        return val >= min && val <= max;
     }
 
     public void setGlassColor(Integer colorNumber) {
@@ -305,6 +326,29 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
         }
     }
 
+    public Integer getRotation(Direction direction) {
+        return rotations.get(direction.ordinal());
+    }
+
+    public void addRotation(Direction direction) {
+        if (this.rotations.size() != 6) {
+            this.rotations = new ArrayList<>();
+            this.rotations.addAll(Arrays.asList(0, 0, 0, 0, 0, 0));
+        }
+        if (this.rotations.get(direction.ordinal()) >= 3)
+            this.rotations.set(direction.ordinal(), set(0));
+        else
+            this.rotations.set(direction.ordinal(), set(this.rotations.get(direction.ordinal()) + 1));
+    }
+
+    public Boolean getKeepUV() {
+        return this.keepUV;
+    }
+
+    public void setKeepUV(Boolean keepUV) {
+        this.keepUV = set(keepUV);
+    }
+
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -327,6 +371,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
                 .with(GLASS_COLOR, glassColor)
                 .with(OVERLAY, overlay)
                 .with(ROTATION, rotation)
+                .with(KEEP_UV, keepUV)
                 .with(NORTH_VISIBLE, northVisible)
                 .with(EAST_VISIBLE, eastVisible)
                 .with(SOUTH_VISIBLE, southVisible)
@@ -342,6 +387,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
                 .with(SWD_prop, SWD)
                 .with(SED_prop, SED)
                 .with(DIRECTIONS, directions)
+                .with(ROTATIONS, rotations)
                 .build();
     }
 

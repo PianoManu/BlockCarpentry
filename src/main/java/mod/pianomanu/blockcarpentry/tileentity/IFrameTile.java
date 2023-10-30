@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * interface.
  *
  * @author PianoManu
- * @version 1.3 10/23/23
+ * @version 1.4 10/30/23
  */
 public interface IFrameTile extends IForgeBlockEntity {
     Logger LOGGER = LogManager.getLogger();
@@ -49,6 +49,7 @@ public interface IFrameTile extends IForgeBlockEntity {
         packets.add(new FrameBlockTile.TagPacket<>("glassColor", Integer.class, 0));
         packets.add(new FrameBlockTile.TagPacket<>("overlay", Integer.class, 0));
         packets.add(new FrameBlockTile.TagPacket<>("rotation", Integer.class, 0));
+        packets.add(new FrameBlockTile.TagPacket<>("keepUV", Boolean.class, true));
         packets.add(new FrameBlockTile.TagPacket<>("friction", Float.class, Registration.FRAMEBLOCK.get().getFriction()));
         packets.add(new FrameBlockTile.TagPacket<>("explosionResistance", Float.class, Registration.FRAMEBLOCK.get().getExplosionResistance()));
         packets.add(new FrameBlockTile.TagPacket<>("canSustainPlant", Boolean.class, false));
@@ -64,6 +65,7 @@ public interface IFrameTile extends IForgeBlockEntity {
         packets.add(new FrameBlockTile.TagPacket<>("SWD", Vec3.class, Vec3.ZERO));
         packets.add(new FrameBlockTile.TagPacket<>("SED", Vec3.class, Vec3.ZERO));
         packets.add(new FrameBlockTile.TagPacket<>("directions", List.class, new ArrayList<>()));
+        packets.add(new FrameBlockTile.TagPacket<>("rotations", List.class, Arrays.asList(0, 0, 0, 0, 0, 0)));
         return packets;
     }
 
@@ -89,8 +91,11 @@ public interface IFrameTile extends IForgeBlockEntity {
             if (classType == Vec3.class) {
                 return (V) BCNBTUtils.readVec(tag.getString(tagElement));
             }
-            if (classType == List.class) {
+            if (Objects.equals(tagElement, "directions")) {
                 return (V) BCNBTUtils.readDirectionList(tag.getIntArray(tagElement));
+            }
+            if (Objects.equals(tagElement, "rotations")) {
+                return (V) BCNBTUtils.readRotationsList(tag.getIntArray(tagElement));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -191,8 +196,10 @@ public interface IFrameTile extends IForgeBlockEntity {
                 tag.putString(tagElement, ((DyeColor) newElement).getName());
             else if (newElement.getClass() == Vec3.class)
                 tag.putString(tagElement, ((Vec3) newElement).toString());
-            else if (newElement instanceof List)
+            else if (Objects.equals(tagElement, "directions"))
                 BCNBTUtils.writeDirectionList(tag, (List<?>) newElement);
+            else if (Objects.equals(tagElement, "rotations"))
+                BCNBTUtils.writeRotationsList(tag, (List<?>) newElement);
         }
     }
 

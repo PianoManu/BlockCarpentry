@@ -11,7 +11,7 @@ import java.util.List;
  * Utility class for NBT stuff
  *
  * @author PianoManu
- * @version 1.0 10/23/23
+ * @version 1.1 10/30/23
  */
 public class BCNBTUtils {
     public static Vec3 readVec(String tagElement) {
@@ -39,6 +39,15 @@ public class BCNBTUtils {
         return directions;
     }
 
+    public static List<?> readRotationsList(int[] tagList) {
+        List<Integer> rotations = new ArrayList<>();
+        for (int i :
+                tagList) {
+            rotations.add(i);
+        }
+        return rotations;
+    }
+
     public static CompoundTag writeDirectionList(CompoundTag tag, List<?> list) {
         List<Integer> directionsToInt = new ArrayList<>();
         for (Object o : list) {
@@ -47,6 +56,17 @@ public class BCNBTUtils {
             }
         }
         tag.putIntArray("directions", directionsToInt);
+        return tag;
+    }
+
+    public static CompoundTag writeRotationsList(CompoundTag tag, List<?> list) {
+        List<Integer> rotations = new ArrayList<>();
+        for (Object o : list) {
+            if (o instanceof Integer i) {
+                rotations.add(i);
+            }
+        }
+        tag.putIntArray("rotations", rotations);
         return tag;
     }
 }
