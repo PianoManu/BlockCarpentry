@@ -18,7 +18,7 @@ import java.util.Arrays;
  * Some utility functions for messing around with the 8 corners of a block
  *
  * @author PianoManu
- * @version 1.0 10/23/23
+ * @version 1.1 10/30/23
  */
 public class CornerUtils {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -163,6 +163,18 @@ public class CornerUtils {
             case WEST -> new Vec3[]{NWD, NED, NWU, NEU, SWD, SED, SWU, SEU};
             case SOUTH -> new Vec3[]{NWD, NWU, SWD, SWU, NED, NEU, SED, SEU};
             case NORTH -> new Vec3[]{NEU, NED, SEU, SED, NWU, NWD, SWU, SWD};
+        };
+    }
+
+    public static Direction[] getRotatedDirection(Direction up, Direction down, Direction north, Direction east, Direction south, Direction west, Direction direction) {
+        //original: {UP, DOWN, NORTH, EAST, SOUTH, WEST}
+        return switch (direction) {
+            case UP -> new Direction[]{up, down, east, south, west, north};
+            case DOWN -> new Direction[]{up, down, west, north, east, south};
+            case NORTH -> new Direction[]{west, east, north, up, south, down};
+            case EAST -> new Direction[]{south, north, up, east, down, west};
+            case SOUTH -> new Direction[]{east, west, north, down, south, up};
+            case WEST -> new Direction[]{north, south, down, east, up, west};
         };
     }
 }
