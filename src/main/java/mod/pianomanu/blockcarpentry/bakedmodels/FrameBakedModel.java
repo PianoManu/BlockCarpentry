@@ -2,7 +2,7 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.ModelHelper;
+import mod.pianomanu.blockcarpentry.util.SimpleBox;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
@@ -24,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +32,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.4 10/23/23
+ * @version 1.5 10/30/23
  */
 public class FrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -54,12 +53,6 @@ public class FrameBakedModel implements IDynamicBakedModel {
             if (state != null) {
                 BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
-                boolean renderNorth = side == Direction.NORTH && extraData.get(FrameBlockTile.NORTH_VISIBLE);
-                boolean renderEast = side == Direction.EAST && extraData.get(FrameBlockTile.EAST_VISIBLE);
-                boolean renderSouth = side == Direction.SOUTH && extraData.get(FrameBlockTile.SOUTH_VISIBLE);
-                boolean renderWest = side == Direction.WEST && extraData.get(FrameBlockTile.WEST_VISIBLE);
-                boolean renderUp = side == Direction.UP && extraData.get(FrameBlockTile.UP_VISIBLE);
-                boolean renderDown = side == Direction.DOWN && extraData.get(FrameBlockTile.DOWN_VISIBLE);
                 int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
                 Vec3 NWU;
                 Vec3 SWU;
@@ -88,13 +81,11 @@ public class FrameBakedModel implements IDynamicBakedModel {
                     NED = new Vec3(1, 0, 0);
                     SED = new Vec3(1, 0, 1); //South-East-Down
                 }
-                List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown, true));
-                //List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown));
-                int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
-                if (overlayIndex != 0) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown, true));
-                }
-                return quads;
+                List<Direction> directions = extraData.get(FrameBlockTile.DIRECTIONS);
+                List<Integer> rotations = extraData.get(FrameBlockTile.ROTATIONS);
+                boolean keepUV = extraData.get(FrameBlockTile.KEEP_UV);
+                SimpleBox box = SimpleBox.create(NWU, NWD, NEU, NED, SWU, SWD, SEU, SED, extraData, model, rand, texture, directions, rotations, tintIndex, keepUV);
+                return box.getQuads();
             }
         }
         return Collections.emptyList();
