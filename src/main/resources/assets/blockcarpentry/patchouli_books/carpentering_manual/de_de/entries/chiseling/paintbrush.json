@@ -23,7 +23,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Das ist derzeit alles. Der Pinsel hat keine weiteren Funktionen. Das könnte sich aber in Zukunft ändern. Bleib gespannt!"
+      "text": "Der Pinsel hat eine weitere Funktion, die im Kapitel $(o)Blockkollaps$() erklärt wird. Abgesehen davon hat der Pinsel derzeit keine weiteren Funktionen, aber das könnte sich in Zukunft ändern. Bleib also gespannt!"
     }
   ]
 }

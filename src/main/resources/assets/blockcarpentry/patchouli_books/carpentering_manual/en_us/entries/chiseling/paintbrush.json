@@ -23,7 +23,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Currently, that's all. The paintbrush does not have any further functionality. This might change in the future, though. Stay excited!"
+      "text": "The paintbrush has an additional functionality, which is explained in the $(o)Block Collapse$() chapter. Aside from that, the paintbrush currently does not have any other functionality, but this might change in the future. Stay excited!"
     }
   ]
 }
