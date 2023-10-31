@@ -29,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.7 10/23/23
+ * @version 1.8 10/31/23
  */
 public class BlockAppearanceHelper {
     public static boolean setAll(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player) {
@@ -71,62 +71,29 @@ public class BlockAppearanceHelper {
     public static boolean setTexture(ItemStack itemStack, BlockState state, Level level, Player player, BlockPos pos) {
         if (itemStack.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isCrouching() && state.getValue(CONTAINS_BLOCK) && mod.pianomanu.blockcarpentry.util.Tags.isFrameBlock(state.getBlock())) {
             BlockEntity tileEntity = level.getBlockEntity(pos);
-            if (tileEntity instanceof FrameBlockTile fte) {
-                if (fte.getTexture() < 5) { //six sides possible
-                    fte.setTexture(fte.getTexture() + 1);
-                } else {
-                    fte.setTexture(0);
-                }
-                player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture()), true);
-            }
-            if (tileEntity instanceof BedFrameTile fte) {
-                if (fte.getTexture() < 5) { //six sides possible
-                    fte.setTexture(fte.getTexture() + 1);
-                } else {
-                    fte.setTexture(0);
-                }
-                player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture()), true);
-            }
-            if (tileEntity instanceof ChestFrameBlockEntity fte) {
-                if (fte.getTexture() < 5) { //six sides possible
-                    fte.setTexture(fte.getTexture() + 1);
-                } else {
-                    fte.setTexture(0);
-                }
-                player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture()), true);
-            }
             if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
                 if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    if (fte.getTexture() < 5) {
+                    if (fte.getTexture() < TextureHelper.getTextures(fte.getMimic()).size() - 1) {
                         fte.setTexture(fte.getTexture() + 1);
                     } else {
                         fte.setTexture(0);
                     }
-                    player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture()), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture() + 1), true);
                 } else {
-                    if (fte.getTexture_2() < 5) {
+                    if (fte.getTexture_2() < TextureHelper.getTextures(fte.getMimic_2()).size() - 1) {
                         fte.setTexture_2(fte.getTexture_2() + 1);
                     } else {
                         fte.setTexture_2(0);
                     }
-                    player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture_2()), true);
+                    player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture_2() + 1), true);
                 }
-            }
-            if (tileEntity instanceof DaylightDetectorFrameTileEntity fte) {
-                if (fte.getTexture() < 5) { //six sides possible
+            } else if (tileEntity instanceof IFrameTile fte) {
+                if (fte.getTexture() < TextureHelper.getTextures(fte).size() - 1) {
                     fte.setTexture(fte.getTexture() + 1);
                 } else {
                     fte.setTexture(0);
                 }
-                player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture()), true);
-            }
-            if (tileEntity instanceof SignFrameTile fte) {
-                if (fte.getTexture() < 5) { //six sides possible
-                    fte.setTexture(fte.getTexture() + 1);
-                } else {
-                    fte.setTexture(0);
-                }
-                player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture()), true);
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture() + 1), true);
             }
             return true;
         }
