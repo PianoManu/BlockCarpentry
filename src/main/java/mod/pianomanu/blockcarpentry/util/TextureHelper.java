@@ -135,10 +135,17 @@ public class TextureHelper {
         }
     }
 
+    public static List<TextureAtlasSprite> getTextures(BlockState state) {
+        BakedModel model = Minecraft.getInstance().getModelManager().getModel(BlockModelShaper.stateToModelLocation(state));
+        return TextureHelper.getTextureFromModel(model, state, Objects.requireNonNull(Minecraft.getInstance().level).random);
+    }
+
+    public static List<TextureAtlasSprite> getTextures(IFrameTile tile) {
+        return getTextures(tile.getMimic());
+    }
+
     public static TextureAtlasSprite getTextureFromTileEntity(IFrameTile tile) {
-        BlockState mimic = tile.getMimic();
-        BakedModel model = Minecraft.getInstance().getModelManager().getModel(BlockModelShaper.stateToModelLocation(mimic));
-        List<TextureAtlasSprite> sprites = TextureHelper.getTextureFromModel(model, mimic, Objects.requireNonNull(Minecraft.getInstance().level).random);
+        List<TextureAtlasSprite> sprites = getTextures(tile);
         if (sprites.size() > 0 && tile.getTexture() < sprites.size())
             return sprites.get(tile.getTexture());
         return sprites.size() > 0 ? sprites.get(0) : Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(MissingTextureAtlasSprite.getLocation());
