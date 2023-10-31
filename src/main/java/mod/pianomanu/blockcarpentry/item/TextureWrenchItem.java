@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
@@ -21,7 +22,7 @@ import java.util.List;
  * This class is used to add a tooltip to the texture wrench item
  *
  * @author PianoManu
- * @version 1.3 10/23/23
+ * @version 1.4 10/31/23
  */
 public class TextureWrenchItem extends BCToolItem {
 
@@ -57,15 +58,22 @@ public class TextureWrenchItem extends BCToolItem {
         BlockPos pos = context.getClickedPos();
         BlockState state = level.getBlockState(pos);
         BlockEntity entity = level.getBlockEntity(pos);
+        Player player = context.getPlayer();
         if (!level.isClientSide && state.getBlock().equals(Registration.ILLUSION_BLOCK.get())) {
             if (entity instanceof FrameBlockTile fte) {
                 Direction direction = context.getClickedFace();
                 Direction.Axis axis = direction.getAxis() == Direction.Axis.Y ? direction.getAxis() : direction.getAxis() == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
                 String axisStr = axis.getName().toUpperCase();
-                fte.addDirection(direction);
-                if (context.getPlayer() != null)
-                    context.getPlayer().displayClientMessage(Component.translatable("message.blockcarpentry.rotation.axis", axisStr), true);
-                return InteractionResult.SUCCESS;
+                if (player != null) {
+                    if (player.isCrouching()) {
+                        fte.addRotation(direction);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation.face", axisStr), true);
+                    } else {
+                        fte.addDirection(direction);
+                        player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation.axis", axisStr), true);
+                        return InteractionResult.SUCCESS;
+                    }
+                }
             }
         }
         return super.useOn(context);
