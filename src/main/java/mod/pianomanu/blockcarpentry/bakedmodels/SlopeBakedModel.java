@@ -36,7 +36,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.4 09/21/23
+ * @version 1.5 10/31/23
  */
 public class SlopeBakedModel implements IDynamicBakedModel {
     private static Vec3 v(double x, double y, double z) {
@@ -73,11 +73,11 @@ public class SlopeBakedModel implements IDynamicBakedModel {
         if (overlaySideIndex == 5)
             texture = m.downTexture;
         if (overlayIndex > 0 && texture != null) {
-            if (invert) {
-                quads.add(QuadUtils.createQuadInverted(v1, v2, v3, v4, texture, ulow, uhigh, vlow, vhigh, m.tintIndex));
-            } else {
-                quads.add(QuadUtils.createQuad(v1, v2, v3, v4, texture, ulow, uhigh, vlow, vhigh, m.tintIndex));
-            }
+            //if (invert) {
+            //quads.add(QuadUtils.createQuadInverted(v1, v2, v3, v4, texture, ulow, uhigh, vlow, vhigh, m.tintIndex));
+            //} else {
+            quads.add(QuadUtils.createQuad(v1, v2, v3, v4, texture, ulow, uhigh, vlow, vhigh, m.tintIndex));
+            //}
         }
     }
 

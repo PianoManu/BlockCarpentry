@@ -142,7 +142,7 @@ public class QuadUtils {
     }
 
     public static BakedQuad createQuadInverted(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex) {
-        return createQuad(v1, v2, v3, v4, sprite, ulow, uhigh, vlow, vhigh, tintIndex, true);
+        return createQuad(v1, v2, v3, v4, sprite, tintIndex);
     }
 }
 //========SOLI DEO GLORIA========//
