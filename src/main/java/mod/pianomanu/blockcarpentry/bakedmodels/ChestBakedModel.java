@@ -63,7 +63,7 @@ public class ChestBakedModel implements IDynamicBakedModel {
         }
         BlockState mimic = extraData.get(ChestFrameBlockEntity.MIMIC);
         if (mimic != null && state != null) {
-            TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, ChestFrameBlockEntity.TEXTURE);
+            TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, ChestFrameBlockEntity.TEXTURE);
             List<TextureAtlasSprite> designTextureList = new ArrayList<>(TextureHelper.getMetalTextures());
             designTextureList.add(Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/shulker_box")));
             TextureAtlasSprite chestFront = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chest_front"));

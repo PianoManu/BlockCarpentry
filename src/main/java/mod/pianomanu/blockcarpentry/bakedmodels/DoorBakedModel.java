@@ -69,7 +69,7 @@ public class DoorBakedModel implements IDynamicBakedModel {
             //get texture from block in tile entity and apply it to the quads
             List<TextureAtlasSprite> glassBlockList = TextureHelper.getGlassTextures();
             TextureAtlasSprite glass = glassBlockList.get(extraData.get(FrameBlockTile.GLASS_COLOR));
-            TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
+            TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
             List<BakedQuad> quads = new ArrayList<>();
             Direction dir = state.getValue(DoorBlock.FACING);
             boolean open = state.getValue(DoorFrameBlock.OPEN);

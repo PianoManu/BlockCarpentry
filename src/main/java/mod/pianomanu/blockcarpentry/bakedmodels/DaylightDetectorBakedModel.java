@@ -56,7 +56,7 @@ public class DaylightDetectorBakedModel implements IDynamicBakedModel {
             ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
             if (state != null) {
                 BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, DaylightDetectorFrameTileEntity.TEXTURE);
+                TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, DaylightDetectorFrameTileEntity.TEXTURE);
                 TextureAtlasSprite sensor;
                 TextureAtlasSprite sensor_side = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/daylight_detector_side"));
                 TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.get(DaylightDetectorFrameTileEntity.GLASS_COLOR));

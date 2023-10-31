@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.ModelData;
@@ -50,14 +51,43 @@ public class IllusionBlockBakedModel implements IDynamicBakedModel {
             ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
             BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
+            boolean keepUV = extraData.get(FrameBlockTile.KEEP_UV);
             boolean renderNorth = extraData.get(FrameBlockTile.NORTH_VISIBLE);
             boolean renderEast = extraData.get(FrameBlockTile.EAST_VISIBLE);
             boolean renderSouth = extraData.get(FrameBlockTile.SOUTH_VISIBLE);
             boolean renderWest = extraData.get(FrameBlockTile.WEST_VISIBLE);
             boolean renderUp = extraData.get(FrameBlockTile.UP_VISIBLE);
             boolean renderDown = extraData.get(FrameBlockTile.DOWN_VISIBLE);
+            Vec3 NWU;
+            Vec3 SWU;
+            Vec3 NEU;
+            Vec3 SEU;
+            Vec3 NWD;
+            Vec3 SWD;
+            Vec3 NED;
+            Vec3 SED;
+            try {
+                NWU = new Vec3(0, 1, 0).add(extraData.get(FrameBlockTile.NWU_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d)); //North-West-Up
+                SWU = new Vec3(0, 1, 1).add(extraData.get(FrameBlockTile.SWU_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d)); //...
+                NWD = new Vec3(0, 0, 0).add(extraData.get(FrameBlockTile.NWD_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d));
+                SWD = new Vec3(0, 0, 1).add(extraData.get(FrameBlockTile.SWD_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d));
+                NEU = new Vec3(1, 1, 0).add(extraData.get(FrameBlockTile.NEU_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d));
+                SEU = new Vec3(1, 1, 1).add(extraData.get(FrameBlockTile.SEU_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d));
+                NED = new Vec3(1, 0, 0).add(extraData.get(FrameBlockTile.NED_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d));
+                SED = new Vec3(1, 0, 1).add(extraData.get(FrameBlockTile.SED_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d)); //South-East-Down
+            } catch (NullPointerException e) {
+                NWU = new Vec3(0, 1, 0); //North-West-Up
+                SWU = new Vec3(0, 1, 1); //...
+                NWD = new Vec3(0, 0, 0);
+                SWD = new Vec3(0, 0, 1);
+                NEU = new Vec3(1, 1, 0);
+                SEU = new Vec3(1, 1, 1);
+                NED = new Vec3(1, 0, 0);
+                SED = new Vec3(1, 0, 1); //South-East-Down
+            }
             List<Direction> directions = extraData.get(FrameBlockTile.DIRECTIONS);
-            List<BakedQuad> quads = new ArrayList<>(ModelHelper.createSixFaceCuboid(0f, 1f, 0f, 1f, 0f, 1f, mimic, model, extraData, rand, tintIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown, directions));
+            List<Integer> rotations = extraData.get(FrameBlockTile.ROTATIONS);
+            List<BakedQuad> quads = new ArrayList<>(ModelHelper.createSixFaceCuboid(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, mimic, model, extraData, rand, tintIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown, directions, rotations, keepUV, false));
             int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
                 quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown, true));

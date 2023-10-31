@@ -4,6 +4,7 @@ import mod.pianomanu.blockcarpentry.block.PressurePlateFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
+import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
@@ -60,7 +61,7 @@ public class PressurePlateFrameBakedModel implements IDynamicBakedModel {
         }
         BlockState mimic = extraData.get(FrameBlockTile.MIMIC);
         if (mimic != null) {
-            TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
+            TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             boolean isPowered = state.getValue(PressurePlateFrameBlock.POWERED);
             float height = isPowered ? 1 / 32f : 1 / 16f;

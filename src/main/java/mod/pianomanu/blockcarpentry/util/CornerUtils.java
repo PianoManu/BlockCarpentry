@@ -12,7 +12,9 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Some utility functions for messing around with the 8 corners of a block
@@ -176,5 +178,39 @@ public class CornerUtils {
             case SOUTH -> new Direction[]{east, west, north, down, south, up};
             case WEST -> new Direction[]{north, south, down, east, up, west};
         };
+    }
+
+    public static boolean[] getRotatedVisibility(boolean up, boolean down, boolean north, boolean east, boolean south, boolean west, Direction direction) {
+        //original: {UP, DOWN, NORTH, EAST, SOUTH, WEST}
+        return switch (direction) {
+            case UP -> new boolean[]{up, down, east, south, west, north};
+            case DOWN -> new boolean[]{up, down, west, north, east, south};
+            case NORTH -> new boolean[]{west, east, north, up, south, down};
+            case EAST -> new boolean[]{south, north, up, east, down, west};
+            case SOUTH -> new boolean[]{east, west, north, down, south, up};
+            case WEST -> new boolean[]{north, south, down, east, up, west};
+        };
+    }
+
+    public static List<Direction> legacyRotation(int rotation) {
+        List<Direction> rotations = new ArrayList<>();
+        if (rotation < 4) {
+            for (int i = 0; i < rotation; i++) {
+                rotations.add(Direction.UP);
+            }
+        } else if (rotation < 8) {
+            rotations.add(Direction.WEST);
+            for (int i = 4; i < rotation; i++) {
+                rotations.add(Direction.NORTH);
+            }
+        } else {
+            rotations.add(Direction.NORTH);
+            rotations.add(Direction.NORTH);
+            rotations.add(Direction.WEST);
+            for (int i = 8; i < rotation; i++) {
+                rotations.add(Direction.SOUTH);
+            }
+        }
+        return rotations;
     }
 }
