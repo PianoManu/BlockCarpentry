@@ -2,13 +2,10 @@ package mod.pianomanu.blockcarpentry.tileentity;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.util.BCNBTUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -301,10 +298,10 @@ public interface IFrameTile extends IForgeBlockEntity {
     }
 
     private static void handleException(Exception e, CompoundTag tag, String phase) {
-        Player player = Minecraft.getInstance().player;
-        if (player != null) {
-            player.displayClientMessage(Component.translatable("message.blockcarpentry.exception"), false);
-        }
+        //Player player = Minecraft.getInstance().player;
+        //if (player != null) {
+        //    player.displayClientMessage(Component.translatable("message.blockcarpentry.exception"), false);
+        //}
         LOGGER.error("An exception occurred with CompoundTag " + tag.toString() + " during the " + phase + " phase!");
         e.printStackTrace();
     }
