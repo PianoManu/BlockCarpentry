@@ -74,7 +74,7 @@ public class SimpleBox {
     }
 
     public static SimpleBox create(Vec3 NWU, Vec3 NWD, Vec3 NEU, Vec3 NED, Vec3 SWU, Vec3 SWD, Vec3 SEU, Vec3 SED, ModelData extraData, BakedModel model, RandomSource rand) {
-        TextureAtlasSprite sprite = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
+        TextureAtlasSprite sprite = TextureHelper.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
         return create(NWU, NWD, NEU, NED, SWU, SWD, SEU, SED, extraData, model, rand, sprite, -1);
     }
 
@@ -139,7 +139,7 @@ public class SimpleBox {
 
     private void updateOverlay() {
         this.overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
-        this.modelInformation = ModelHelper.getOverlayModelInformation(overlayIndex);
+        this.modelInformation = TextureHelper.getOverlayModelInformation(overlayIndex);
     }
 
     public List<BakedQuad> getQuads() {
@@ -190,13 +190,13 @@ public class SimpleBox {
     }
 
     private List<BakedQuad> createQuadsEmpty() {
-        return ModelHelper.createCuboid(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, QuadUtils.getMissingTexture());
+        return ModelHelper.createCuboid(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, TextureHelper.getMissingTexture());
     }
 
     private void createQuadFace(List<BakedQuad> quads, Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, Direction originalDirection, Direction newDirection, int rotation, boolean invert) {
-        quads.add(ModelHelper.createQuad(v1, v2, v3, v4, sprite, newDirection, tintIndex, rotation, keepDefaultUV, invert));
+        quads.add(QuadUtils.createQuad(v1, v2, v3, v4, sprite, newDirection, tintIndex, rotation, keepDefaultUV, invert));
         if (overlayIndex > 0 && overlayTexture(originalDirection) != null)
-            quads.add(ModelHelper.createQuad(v1, v2, v3, v4, overlayTexture(originalDirection), originalDirection, modelInformation.tintIndex, 0, doNotMoveOverlay, false));
+            quads.add(QuadUtils.createQuad(v1, v2, v3, v4, overlayTexture(originalDirection), originalDirection, modelInformation.tintIndex, 0, doNotMoveOverlay, false));
     }
 
     private TextureAtlasSprite overlayTexture(Direction direction) {

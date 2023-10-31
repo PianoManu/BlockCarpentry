@@ -1,31 +1,43 @@
 package mod.pianomanu.blockcarpentry.util;
 
+import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
+import mod.pianomanu.blockcarpentry.bakedmodels.ModelInformation;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.IFrameTile;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.ModelProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Util class for picking the right texture of a block. Pretty stupid at the moment (May be removed and rewritten in the future)
+ * Util class for picking the right texture of a block given certain inputs.
+ * Those functions are useful when creating cuboids and determining the texture for each face.
+ * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.5 10/07/23
+ * @version 1.6 10/31/23
  */
 public class TextureHelper {
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     /**
      * Used for dyed glass doors, trapdoors etc
@@ -134,6 +146,112 @@ public class TextureHelper {
 
     private static ResourceLocation loc(String path) {
         return new ResourceLocation("minecraft", path);
+    }
+
+    public static TextureAtlasSprite getTexture(BakedModel model, @Nonnull RandomSource rand, @Nonnull ModelData extraData, ModelProperty<Integer> modelPropertyTexture) {
+        List<TextureAtlasSprite> textureList = getTextureFromModel(model, extraData, rand);
+        if (badTextureList(textureList))
+            return getMissingTexture();
+        TextureAtlasSprite texture;
+        Integer tex = extraData.get(modelPropertyTexture);
+        if (tex == null) {
+            LOGGER.error("Cannot determine model texture for model " + model);
+            return getMissingTexture();
+        } else if (textureList.size() <= tex) {
+            extraData.derive().with(modelPropertyTexture, 0);
+            tex = 0;
+        }
+
+        texture = textureList.get(tex);
+        return texture;
+    }
+
+    public static TextureAtlasSprite getTexture(BakedModel model, ModelData extraData, RandomSource rand, Direction direction) {
+        List<TextureAtlasSprite> textureList = getTextureFromModel(model, extraData, rand);
+        if (badTextureList(textureList))
+            return getMissingTexture();
+
+        TextureAtlasSprite texture = textureList.get(0);
+        for (BakedQuad quad : model.getQuads(extraData.get(FrameBlockTile.MIMIC), direction, rand, extraData, RenderType.translucent())) {
+            texture = quad.getSprite();
+        }
+        return texture;
+    }
+
+    private static boolean badTextureList(List<TextureAtlasSprite> textureList) {
+        if (textureList.size() == 0) {
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.displayClientMessage(Component.translatable("message.blockcarpentry.block_not_available"), true);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public static TextureAtlasSprite getMissingTexture() {
+        return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("missing"));
+    }
+
+    public static ModelInformation getOverlayModelInformation(int overlayIndex) {
+        int tintIndex = -1;
+        TextureAtlasSprite overlay = null;
+        TextureAtlasSprite upOverlay = null;
+        TextureAtlasSprite downOverlay = null;
+        if (overlayIndex == 1) {
+            tintIndex = 1;
+            overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/grass_block_side_overlay"));
+            upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/grass_block_top"));
+        }
+        if (overlayIndex == 2) {
+            tintIndex = 1;
+            overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_side_overlay_large"));
+            upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/grass_block_top"));
+        }
+        if (overlayIndex == 3) {
+            overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay"));
+            upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/snow"));
+        }
+        if (overlayIndex == 4) {
+            overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/grass_block_snow_overlay_small"));
+            upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/snow"));
+        }
+        if (overlayIndex == 5) {
+            tintIndex = 1;
+            overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/vine"));
+        }
+        if (overlayIndex >= 6 && overlayIndex <= 10) {
+            if (overlayIndex == 6) {
+                overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
+                upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
+                downOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/stone_brick_overlay"));
+            }
+            if (overlayIndex == 7) {
+                overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/brick_overlay"));
+                upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/brick_overlay"));
+                downOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/brick_overlay"));
+            }
+            if (overlayIndex == 8) {
+                overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_sandstone_overlay"));
+            }
+            if (overlayIndex == 9) {
+                overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/boundary_overlay"));
+                upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/boundary_overlay"));
+                downOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/boundary_overlay"));
+            }
+            if (overlayIndex == 10) {
+                overlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
+                upOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
+                downOverlay = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chiseled_stone_overlay"));
+            }
+        }
+        List<TextureAtlasSprite> textures = new ArrayList<>();
+        textures.add(overlay);
+        textures.add(overlay);
+        textures.add(overlay);
+        textures.add(overlay);
+        textures.add(upOverlay);
+        textures.add(downOverlay);
+        return new ModelInformation(textures, tintIndex, overlayIndex);
     }
 }
 //========SOLI DEO GLORIA========//
