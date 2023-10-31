@@ -59,6 +59,19 @@ public class ModelHelper {
         return new Float[]{xl, xh, yl, yh, zl, zh};
     }
 
+    private static Vec3[] convertFloatsToVec(float xl, float xh, float yl, float yh, float zl, float zh) {
+        //Eight corners of the block
+        Vec3 NWU = v(xl, yh, zl); //North-West-Up
+        Vec3 SWU = v(xl, yh, zh); //...
+        Vec3 NWD = v(xl, yl, zl);
+        Vec3 SWD = v(xl, yl, zh);
+        Vec3 NEU = v(xh, yh, zl);
+        Vec3 SEU = v(xh, yh, zh);
+        Vec3 NED = v(xh, yl, zl);
+        Vec3 SED = v(xh, yl, zh); //South-East-Down
+        return new Vec3[]{NWU, SWU, NWD, SWD, NEU, SEU, NED, SED};
+    }
+
     /**
      * This method is used to create a cuboid from six faces. Input values determine
      * the dimensions of the cuboid and the texture to apply.
@@ -84,16 +97,8 @@ public class ModelHelper {
     }
 
     public static List<BakedQuad> createCuboid(float xl, float xh, float yl, float yh, float zl, float zh, TextureAtlasSprite texture, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down) {
-        //Eight corners of the block
-        Vec3 NWU = v(xl, yh, zl); //North-West-Up
-        Vec3 SWU = v(xl, yh, zh); //...
-        Vec3 NWD = v(xl, yl, zl);
-        Vec3 SWD = v(xl, yl, zh);
-        Vec3 NEU = v(xh, yh, zl);
-        Vec3 SEU = v(xh, yh, zh);
-        Vec3 NED = v(xh, yl, zl);
-        Vec3 SED = v(xh, yl, zh); //South-East-Down
-        return createCuboid(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, texture, tintIndex, north, south, east, west, up, down);
+        Vec3[] vecs = convertFloatsToVec(xl, xh, yl, yh, zl, zh);
+        return createCuboid(vecs[0], vecs[1], vecs[2], vecs[3], vecs[4], vecs[5], vecs[6], vecs[7], texture, tintIndex, north, south, east, west, up, down);
     }
 
     public static List<BakedQuad> createCuboid(Vec3 NWU, Vec3 SWU, Vec3 NWD, Vec3 SWD, Vec3 NEU, Vec3 SEU, Vec3 NED, Vec3 SED, TextureAtlasSprite texture, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, boolean keepDefaultUV016) {
@@ -272,17 +277,8 @@ public class ModelHelper {
         zl = floats[4];
         zh = floats[5];
 
-        //Eight corners of the block
-        Vec3 NWU = v(xl, yh, zl); //North-West-Up
-        Vec3 SWU = v(xl, yh, zh); //...
-        Vec3 NWD = v(xl, yl, zl);
-        Vec3 SWD = v(xl, yl, zh);
-        Vec3 NEU = v(xh, yh, zl);
-        Vec3 SEU = v(xh, yh, zh);
-        Vec3 NED = v(xh, yl, zl);
-        Vec3 SED = v(xh, yl, zh); //South-East-Down
-
-        return createSixFaceCuboid(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, mimic, model, extraData, rand, tintIndex, north, south, east, west, up, down, directions, rotations, false, false);
+        Vec3[] vecs = convertFloatsToVec(xl, xh, yl, yh, zl, zh);
+        return createSixFaceCuboid(vecs[0], vecs[1], vecs[2], vecs[3], vecs[4], vecs[5], vecs[6], vecs[7], mimic, model, extraData, rand, tintIndex, north, south, east, west, up, down, directions, rotations, false, false);
     }
 
     public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, BlockState mimic, BakedModel model, ModelData extraData, RandomSource rand, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, int rotation) {
@@ -296,16 +292,6 @@ public class ModelHelper {
         zl = floats[4];
         zh = floats[5];
 
-        //Eight corners of the block
-        Vec3 NWU = v(xl, yh, zl); //North-West-Up
-        Vec3 SWU = v(xl, yh, zh); //...
-        Vec3 NWD = v(xl, yl, zl);
-        Vec3 SWD = v(xl, yl, zh);
-        Vec3 NEU = v(xh, yh, zl);
-        Vec3 SEU = v(xh, yh, zh);
-        Vec3 NED = v(xh, yl, zl);
-        Vec3 SED = v(xh, yl, zh); //South-East-Down
-
         TextureAtlasSprite textureNorth = TextureHelper.getTexture(model, extraData, rand, Direction.NORTH);
         TextureAtlasSprite textureEast = TextureHelper.getTexture(model, extraData, rand, Direction.EAST);
         TextureAtlasSprite textureSouth = TextureHelper.getTexture(model, extraData, rand, Direction.SOUTH);
@@ -314,7 +300,8 @@ public class ModelHelper {
         TextureAtlasSprite textureDown = TextureHelper.getTexture(model, extraData, rand, Direction.DOWN);
 
         List<Direction> directions = CornerUtils.legacyRotation(rotation);
-        return createSixFaceCuboid(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, tintIndex, north, south, east, west, up, down, directions, Collections.emptyList(), false, false);
+        Vec3[] vecs = convertFloatsToVec(xl, xh, yl, yh, zl, zh);
+        return createSixFaceCuboid(vecs[0], vecs[1], vecs[2], vecs[3], vecs[4], vecs[5], vecs[6], vecs[7], textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, tintIndex, north, south, east, west, up, down, directions, Collections.emptyList(), false, false);
     }
 
     public static List<BakedQuad> createSixFaceVoxel(float x, float y, float z, BlockState mimic, BakedModel model, ModelData extraData, RandomSource rand, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, int rotation) {
@@ -336,20 +323,11 @@ public class ModelHelper {
         zl = floats[4];
         zh = floats[5];
 
-        //Eight corners of the block
-        Vec3 NWU = v(xl, yh, zl); //North-West-Up
-        Vec3 SWU = v(xl, yh, zh); //...
-        Vec3 NWD = v(xl, yl, zl);
-        Vec3 SWD = v(xl, yl, zh);
-        Vec3 NEU = v(xh, yh, zl);
-        Vec3 SEU = v(xh, yh, zh);
-        Vec3 NED = v(xh, yl, zl);
-        Vec3 SED = v(xh, yl, zh); //South-East-Down
-        //return createSixFaceCuboid(xl, xh, yl, yh, zl, zh, tintIndex, true, true, true, true, true, true, textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, true, rotation);
-        return createSixFaceCuboid(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, tintIndex, true, true, true, true, true, true, CornerUtils.legacyRotation(rotation), Collections.emptyList(), true, false);
+        Vec3[] vecs = convertFloatsToVec(xl, xh, yl, yh, zl, zh);
+        return createSixFaceCuboid(vecs[0], vecs[1], vecs[2], vecs[3], vecs[4], vecs[5], vecs[6], vecs[7], textureNorth, textureSouth, textureEast, textureWest, textureUp, textureDown, tintIndex, true, true, true, true, true, true, CornerUtils.legacyRotation(rotation), Collections.emptyList(), true, false);
     }
 
-    public static List<BakedQuad> createSixFaceCuboidOverlay(Vec3 NWU, Vec3 SWU, Vec3 NWD, Vec3 SWD, Vec3 NEU, Vec3 SEU, Vec3 NED, Vec3 SED, ModelInformation m, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, boolean moveOverlay) {
+    public static List<BakedQuad> createSixFaceCuboid(Vec3 NWU, Vec3 SWU, Vec3 NWD, Vec3 SWD, Vec3 NEU, Vec3 SEU, Vec3 NED, Vec3 SED, ModelInformation m, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, boolean moveOverlay, boolean keepUV) {
         List<BakedQuad> quads = new ArrayList<>();
         TextureAtlasSprite textureUp = m.upTexture;
         TextureAtlasSprite textureDown = m.downTexture;
@@ -358,98 +336,39 @@ public class ModelHelper {
         TextureAtlasSprite textureSouth = m.southTexture;
         TextureAtlasSprite textureWest = m.westTexture;
         if (up && textureUp != null)
-            quads.add(QuadUtils.createQuad(NWU, SWU, SEU, NEU, textureUp, Direction.UP, m.tintIndex, 0, true, false));
+            quads.add(QuadUtils.createQuad(NWU, SWU, SEU, NEU, textureUp, Direction.UP, m.tintIndex, 0, keepUV, false));
         if (down && textureDown != null)
-            quads.add(QuadUtils.createQuad(NED, SED, SWD, NWD, textureDown, Direction.DOWN, m.tintIndex, 0, true, false));
-
-
+            quads.add(QuadUtils.createQuad(NED, SED, SWD, NWD, textureDown, Direction.DOWN, m.tintIndex, 0, keepUV, false));
         if (west && textureWest != null)
-            //not moved overlay - texture starts from y=1
-            if (!moveOverlay) {
-                quads.add(QuadUtils.createQuad(NWU, NWD, SWD, SWU, textureWest, Direction.WEST, m.tintIndex, 0, true, false));
-            }
-            //moved overlay - texture starts from height of block
-            else {
-                quads.add(QuadUtils.createQuad(NWU, NWD, SWD, SWU, textureWest, Direction.WEST, m.tintIndex, 0, true, false));
-            }
-        if (east && textureEast != null) {
-            //not moved overlay - texture starts from y=1
-            if (!moveOverlay) {
-                quads.add(QuadUtils.createQuad(SEU, SED, NED, NEU, textureEast, Direction.EAST, m.tintIndex, 0, true, false));
-            }
-            //moved overlay - texture starts from height of block
-            else {
-                quads.add(QuadUtils.createQuad(SEU, SED, NED, NEU, textureEast, Direction.EAST, m.tintIndex, 0, true, false));
-            }
-        }
-
-        if (north && textureNorth != null) {
-            //not moved overlay - texture starts from y=1
-            if (!moveOverlay) {
-                quads.add(QuadUtils.createQuad(NEU, NED, NWD, NWU, textureNorth, Direction.NORTH, m.tintIndex, 0, true, false));
-            }
-            //moved overlay - texture starts from height of block
-            else {
-                quads.add(QuadUtils.createQuad(NEU, NED, NWD, NWU, textureNorth, Direction.NORTH, m.tintIndex, 0, true, false));
-            }
-        }
-
-        if (south && textureSouth != null) {
-            //not moved overlay - texture starts from y=1
-            if (!moveOverlay) {
-                quads.add(QuadUtils.createQuad(SWU, SWD, SED, SEU, textureSouth, Direction.SOUTH, m.tintIndex, 0, true, false));
-            }
-            //moved overlay - texture starts from height of block
-            else {
-                quads.add(QuadUtils.createQuad(SWU, SWD, SED, SEU, textureSouth, Direction.SOUTH, m.tintIndex, 0, true, false));
-            }
-        }
+            quads.add(QuadUtils.createQuad(NWU, NWD, SWD, SWU, textureWest, Direction.WEST, m.tintIndex, 0, keepUV, false, false));
+        if (east && textureEast != null)
+            quads.add(QuadUtils.createQuad(SEU, SED, NED, NEU, textureEast, Direction.EAST, m.tintIndex, 0, keepUV, false, false));
+        if (north && textureNorth != null)
+            quads.add(QuadUtils.createQuad(NEU, NED, NWD, NWU, textureNorth, Direction.NORTH, m.tintIndex, 0, keepUV, false, false));
+        if (south && textureSouth != null)
+            quads.add(QuadUtils.createQuad(SWU, SWD, SED, SEU, textureSouth, Direction.SOUTH, m.tintIndex, 0, keepUV, false, false));
         return quads;
     }
 
     public static List<BakedQuad> createSixFaceCuboid(float xl, float xh, float yl, float yh, float zl, float zh, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, ModelInformation m, Boolean moveOverlay, int rotation) {
-        List<BakedQuad> quads = new ArrayList<>();
         Float[] floats = checkWithinBounds(xl, xh, yl, yh, zl, zh);
         if (floats == null)
-            return quads;
-        xl = floats[0];
-        xh = floats[1];
-        yl = floats[2];
-        yh = floats[3];
-        zl = floats[4];
-        zh = floats[5];
+            return createCuboid(xl, xh, yl, yh, zl, zh, TextureHelper.getMissingTexture(), -1);
 
-        //Eight corners of the block
-        Vec3 NWU = v(xl, yh, zl); //North-West-Up
-        Vec3 SWU = v(xl, yh, zh); //...
-        Vec3 NWD = v(xl, yl, zl);
-        Vec3 SWD = v(xl, yl, zh);
-        Vec3 NEU = v(xh, yh, zl);
-        Vec3 SEU = v(xh, yh, zh);
-        Vec3 NED = v(xh, yl, zl);
-        Vec3 SED = v(xh, yl, zh); //South-East-Down
-
-        return createSixFaceCuboidOverlay(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, m, north, south, east, west, up, down, moveOverlay);
+        Vec3[] vecs = convertFloatsToVec(floats[0], floats[1], floats[2], floats[3], floats[4], floats[5]);
+        return createSixFaceCuboid(vecs[0], vecs[1], vecs[2], vecs[3], vecs[4], vecs[5], vecs[6], vecs[7], m, north, south, east, west, up, down, moveOverlay, true);
     }
 
     public static List<BakedQuad> createCuboid(float xl, float xh, float yl, float yh, float zl, float zh, TextureAtlasSprite texture, int tintIndex, int[] ulow, int[] uhigh, int[] vlow, int[] vhigh) {
-        return createCuboid(xl, xh, yl, yh, zl, zh, texture, tintIndex, true, true, true, true, true, true, ulow, uhigh, vlow, vhigh);
+        Vec3[] vecs = convertFloatsToVec(xl, xh, yl, yh, zl, zh);
+        return createCuboid(vecs[0], vecs[1], vecs[2], vecs[3], vecs[4], vecs[5], vecs[6], vecs[7], texture, tintIndex, true, true, true, true, true, true, ulow, uhigh, vlow, vhigh);
     }
 
-    public static List<BakedQuad> createCuboid(float xl, float xh, float yl, float yh, float zl, float zh, TextureAtlasSprite texture, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, int[] ulow, int[] uhigh, int[] vlow, int[] vhigh) {
+    public static List<BakedQuad> createCuboid(Vec3 NWU, Vec3 SWU, Vec3 NWD, Vec3 SWD, Vec3 NEU, Vec3 SEU, Vec3 NED, Vec3 SED, TextureAtlasSprite texture, int tintIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, int[] ulow, int[] uhigh, int[] vlow, int[] vhigh) {
         if (ulow.length != 6 || uhigh.length != 6 || vlow.length != 6 || vhigh.length != 6) {
             return Collections.emptyList();
         }
         List<BakedQuad> quads = new ArrayList<>();
-        //Eight corners of the block
-        Vec3 NWU = v(xl, yh, zl); //North-West-Up
-        Vec3 NEU = v(xl, yh, zh); //...
-        Vec3 NWD = v(xl, yl, zl);
-        Vec3 NED = v(xl, yl, zh);
-        Vec3 SWU = v(xh, yh, zl);
-        Vec3 SEU = v(xh, yh, zh);
-        Vec3 SWD = v(xh, yl, zl);
-        Vec3 SED = v(xh, yl, zh); //South-East-Down
         if (up)
             quads.add(QuadUtils.createQuad(NWU, NEU, SEU, SWU, texture, ulow[0], uhigh[0], vlow[0], vhigh[0], tintIndex));
         if (down)
@@ -515,12 +434,13 @@ public class ModelHelper {
 
     public static List<BakedQuad> createOverlay(Vec3 NWU, Vec3 SWU, Vec3 NWD, Vec3 SWD, Vec3 NEU, Vec3 SEU, Vec3 NED, Vec3 SED, int overlayIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, Boolean doNotMoveOverlay) {
         ModelInformation m = TextureHelper.getOverlayModelInformation(overlayIndex);
-        return ModelHelper.createSixFaceCuboidOverlay(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, m, north, south, east, west, up, down, !doNotMoveOverlay);
+        return ModelHelper.createSixFaceCuboid(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, m, north, south, east, west, up, down, !doNotMoveOverlay, false);
     }
 
     public static List<BakedQuad> createOverlay(float xl, float xh, float yl, float yh, float zl, float zh, int overlayIndex, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, Boolean doNotMoveOverlay) {
         ModelInformation m = TextureHelper.getOverlayModelInformation(overlayIndex);
-        return ModelHelper.createSixFaceCuboid(xl, xh, yl, yh, zl, zh, north, south, east, west, up, down, m, doNotMoveOverlay, 0);
+        Vec3[] vecs = convertFloatsToVec(xl, xh, yl, yh, zl, zh);
+        return ModelHelper.createSixFaceCuboid(vecs[0], vecs[1], vecs[2], vecs[3], vecs[4], vecs[5], vecs[6], vecs[7], m, north, south, east, west, up, down, !doNotMoveOverlay, false);
     }
 
     private static float meanUV(double uv1, double uv2) {
