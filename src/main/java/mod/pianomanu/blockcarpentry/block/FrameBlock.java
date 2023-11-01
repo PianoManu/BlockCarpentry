@@ -57,6 +57,8 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
     private static final VoxelShape MID = Block.box(2.0, 1.0, 2.0, 14.0, 15.0, 14.0);
     private static final VoxelShape CUBE = Shapes.or(MIDDLE_STRIP_EAST, MIDDLE_STRIP_SOUTH, MIDDLE_STRIP_WEST, MIDDLE_STRIP_NORTH, TOP, DOWN, NW_PILLAR, SW_PILLAR, NE_PILLAR, SE_PILLAR, MID);
 
+    private VoxelShape shape = Shapes.block();
+
     /**
      * classic constructor, all default values are set
      *
@@ -113,6 +115,7 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         if (player.getItemInHand(hand).getItem() instanceof ChiselItem chiselItem)
             CornerUtils.changeBoxSize(state, level, pos, player, hitresult.getLocation(), hitresult.getDirection(), chiselItem.shouldShrink());
+        updateShape(state, level, pos);
         return super.use(state, level, pos, player, hand, hitresult);
     }
 
@@ -129,17 +132,19 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
 
     @Override
     public VoxelShape getVisualShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
-        if (!state.getValue(CONTAINS_BLOCK)) {
-            return CUBE;
+        if (state.getValue(CONTAINS_BLOCK) && !context.isHoldingItem(Registration.CHISEL.get())) {
+            return this.shape;
         }
         return Shapes.block();
     }
+
 
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor levelIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
             levelIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelIn));
         }
+        updateShape(stateIn, levelIn, currentPos);
 
         return super.updateShape(stateIn, facing, facingState, levelIn, currentPos, facingPos);
     }
@@ -153,10 +158,50 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
-        if (!state.getValue(CONTAINS_BLOCK)) {
-            return CUBE;
+        if (context.isHoldingItem(Registration.CHISEL.get()))
+            return Shapes.block();
+        return this.getShape(state, getter, pos);
+    }
+
+    private VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos) {
+        if (state.getValue(CONTAINS_BLOCK)) {
+            BlockEntity be = getter.getBlockEntity(pos);
+            if (be instanceof FrameBlockTile fte) {
+                return fte.getShape();
+            }
         }
         return Shapes.block();
     }
+
+    private void updateShape(BlockState state, LevelAccessor level, BlockPos pos) {
+        if (state.getValue(CONTAINS_BLOCK)) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof FrameBlockTile fte) {
+                fte.updateShape();
+            }
+        }
+    }
+
+    @Override
+    public VoxelShape getBlockSupportShape(BlockState state, BlockGetter blockGetter, BlockPos pos) {
+        return this.getShape(state, blockGetter, pos);
+    }
+
+    @Override
+    public VoxelShape getInteractionShape(BlockState state, BlockGetter blockGetter, BlockPos pos) {
+        return this.getShape(state, blockGetter, pos);
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
+        return this.getShape(state, blockGetter, pos);
+    }
+
+    @Override
+    public boolean hasDynamicShape() {
+        return true;
+    }
+
+
 }
 //========SOLI DEO GLORIA========//

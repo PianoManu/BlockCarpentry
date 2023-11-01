@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.util.VoxelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +12,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.extensions.IForgeBlockEntity;
@@ -29,7 +32,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.6 10/30/23
+ * @version 1.7 11/01/23
  */
 public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IFrameTile {
     public static final List<IFrameTile.TagPacket<?>> TAG_PACKETS = initTagPackets();
@@ -47,6 +50,8 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
         packets.add(new FrameBlockTile.TagPacket<>("directions", List.class, Collections.emptyList()));
         return packets;
     }
+
+    private VoxelShape shape = Shapes.block();
 
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
@@ -140,7 +145,8 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
 
     public <V> V set(V newValue) {
         setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        if (level != null)
+            level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
         return newValue;
     }
 
@@ -400,6 +406,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
+        this.updateShape();
         IFrameTile.super.load(tag, FrameBlockTile.class);
     }
 
@@ -409,5 +416,12 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
         IFrameTile.super.saveAdditional(tag, FrameBlockTile.class);
     }
 
+    public VoxelShape getShape() {
+        return shape;
+    }
+
+    public void updateShape() {
+        this.shape = set(VoxelUtils.getShape(this));
+    }
 }
 //========SOLI DEO GLORIA========//
