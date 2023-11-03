@@ -62,31 +62,31 @@ public class VoxelUtils {
     }
 
     private static boolean insideBoundaries(Vec3 currVec, Vec3 NWU, Vec3 SWU, Vec3 NWD, Vec3 SWD, Vec3 NEU, Vec3 SEU, Vec3 NED, Vec3 SED) {
-        Vec3 interpolYhXl = MathUtils.interpolate(NWU, NEU, currVec.x / 16);
-        Vec3 interpolYhXh = MathUtils.interpolate(SWU, SEU, currVec.x / 16);
-        Vec3 interpolYhz = MathUtils.interpolate(interpolYhXl, interpolYhXh, currVec.z / 16);
-        boolean up = interpolYhz.y >= currVec.y + 1;
-        Vec3 interpolYlXl = MathUtils.interpolate(NWD, NED, currVec.x / 16);
-        Vec3 interpolYlXh = MathUtils.interpolate(SWD, SED, currVec.x / 16);
-        Vec3 interpolYlz = MathUtils.interpolate(interpolYlXl, interpolYlXh, currVec.z / 16);
-        boolean down = interpolYlz.y <= currVec.y + 1;
+        Vec3 interpolYhXl = MathUtils.interpolate(NWU, NEU, (currVec.x + 0.5) / 16, false);
+        Vec3 interpolYhXh = MathUtils.interpolate(SWU, SEU, (currVec.x + 0.5) / 16, false);
+        Vec3 interpolYhz = MathUtils.interpolate(interpolYhXl, interpolYhXh, (currVec.z + 0.5) / 16, false);
+        boolean up = interpolYhz.y >= currVec.y + 0.5;
+        Vec3 interpolYlXl = MathUtils.interpolate(NWD, NED, (currVec.x + 0.5) / 16, false);
+        Vec3 interpolYlXh = MathUtils.interpolate(SWD, SED, (currVec.x + 0.5) / 16, false);
+        Vec3 interpolYlz = MathUtils.interpolate(interpolYlXl, interpolYlXh, (currVec.z + 0.5) / 16, false);
+        boolean down = interpolYlz.y < currVec.y + 0.5;
 
-        Vec3 interpolZlYl = MathUtils.interpolate(NWD, NWU, currVec.y / 16);
-        Vec3 interpolZlYh = MathUtils.interpolate(NED, NEU, currVec.y / 16);
-        Vec3 interpolZlx = MathUtils.interpolate(interpolZlYl, interpolZlYh, currVec.x / 16);
-        boolean north = interpolZlx.z <= currVec.z + 1;
-        Vec3 interpolZhYl = MathUtils.interpolate(SWD, SWU, currVec.y / 16);
-        Vec3 interpolZhYh = MathUtils.interpolate(SED, SEU, currVec.y / 16);
-        Vec3 interpolZhx = MathUtils.interpolate(interpolZhYl, interpolZhYh, currVec.x / 16);
-        boolean south = interpolZhx.z >= currVec.z + 1;
-        Vec3 interpolXlYl = MathUtils.interpolate(NWD, NWU, currVec.y / 16);
-        Vec3 interpolXlYh = MathUtils.interpolate(SWD, SWU, currVec.y / 16);
-        Vec3 interpolXlz = MathUtils.interpolate(interpolXlYl, interpolXlYh, currVec.z / 16);
-        boolean west = interpolXlz.x <= currVec.x + 1;
-        Vec3 interpolXhYl = MathUtils.interpolate(NED, NEU, currVec.y / 16);
-        Vec3 interpolXhYh = MathUtils.interpolate(SED, SEU, currVec.y / 16);
-        Vec3 interpolXhz = MathUtils.interpolate(interpolXhYl, interpolXhYh, currVec.z / 16);
-        boolean east = interpolXhz.x >= currVec.x + 1;
+        Vec3 interpolZlYl = MathUtils.interpolate(NWD, NWU, (currVec.y + 0.5) / 16, false);
+        Vec3 interpolZlYh = MathUtils.interpolate(NED, NEU, (currVec.y + 0.5) / 16, false);
+        Vec3 interpolZlx = MathUtils.interpolate(interpolZlYl, interpolZlYh, (currVec.x + 0.5) / 16, false);
+        boolean north = interpolZlx.z < currVec.z + 0.5;
+        Vec3 interpolZhYl = MathUtils.interpolate(SWD, SWU, (currVec.y + 0.5) / 16, false);
+        Vec3 interpolZhYh = MathUtils.interpolate(SED, SEU, (currVec.y + 0.5) / 16, false);
+        Vec3 interpolZhx = MathUtils.interpolate(interpolZhYl, interpolZhYh, (currVec.x + 0.5) / 16, false);
+        boolean south = interpolZhx.z >= currVec.z + 0.5;
+        Vec3 interpolXlYl = MathUtils.interpolate(NWD, NWU, (currVec.y + 0.5) / 16, false);
+        Vec3 interpolXlYh = MathUtils.interpolate(SWD, SWU, (currVec.y + 0.5) / 16, false);
+        Vec3 interpolXlz = MathUtils.interpolate(interpolXlYl, interpolXlYh, (currVec.z + 0.5) / 16, false);
+        boolean west = interpolXlz.x < currVec.x + 0.5;
+        Vec3 interpolXhYl = MathUtils.interpolate(NED, NEU, (currVec.y + 0.5) / 16, false);
+        Vec3 interpolXhYh = MathUtils.interpolate(SED, SEU, (currVec.y + 0.5) / 16, false);
+        Vec3 interpolXhz = MathUtils.interpolate(interpolXhYl, interpolXhYh, (currVec.z + 0.5) / 16, false);
+        boolean east = interpolXhz.x >= currVec.x + 0.5;
 
         return up && down && north && south && west && east;
     }
