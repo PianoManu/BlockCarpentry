@@ -30,24 +30,24 @@ public class VoxelUtils {
     }
 
     private static VoxelShape getFreeShape(Vec3 NWU, Vec3 SWU, Vec3 NWD, Vec3 SWD, Vec3 NEU, Vec3 SEU, Vec3 NED, Vec3 SED) {
-        int maxX = (int) max(NWU.x, SWU.x, NWD.x, SWD.x, NEU.x, SEU.x, NED.x, SED.x);
-        int minX = (int) min(NWU.x, SWU.x, NWD.x, SWD.x, NEU.x, SEU.x, NED.x, SED.x);
-        int maxY = (int) max(NWU.y, SWU.y, NWD.y, SWD.y, NEU.y, SEU.y, NED.y, SED.y);
-        int minY = (int) min(NWU.y, SWU.y, NWD.y, SWD.y, NEU.y, SEU.y, NED.y, SED.y);
-        int maxZ = (int) max(NWU.z, SWU.z, NWD.z, SWD.z, NEU.z, SEU.z, NED.z, SED.z);
-        int minZ = (int) min(NWU.z, SWU.z, NWD.z, SWD.z, NEU.z, SEU.z, NED.z, SED.z);
+        int maxX = (int) MathUtils.max(NWU.x, SWU.x, NWD.x, SWD.x, NEU.x, SEU.x, NED.x, SED.x);
+        int minX = (int) MathUtils.min(NWU.x, SWU.x, NWD.x, SWD.x, NEU.x, SEU.x, NED.x, SED.x);
+        int maxY = (int) MathUtils.max(NWU.y, SWU.y, NWD.y, SWD.y, NEU.y, SEU.y, NED.y, SED.y);
+        int minY = (int) MathUtils.min(NWU.y, SWU.y, NWD.y, SWD.y, NEU.y, SEU.y, NED.y, SED.y);
+        int maxZ = (int) MathUtils.max(NWU.z, SWU.z, NWD.z, SWD.z, NEU.z, SEU.z, NED.z, SED.z);
+        int minZ = (int) MathUtils.min(NWU.z, SWU.z, NWD.z, SWD.z, NEU.z, SEU.z, NED.z, SED.z);
         if (maxX == minX)
             maxX++;
         if (maxY == minY)
             maxY++;
         if (maxZ == minZ)
             maxZ++;
-        minX = Math.max(minX, 0);
-        minY = Math.max(minY, 0);
-        minZ = Math.max(minZ, 0);
-        maxX = Math.min(maxX, 16);
-        maxY = Math.min(maxY, 16);
-        maxZ = Math.min(maxZ, 16);
+        minX = MathUtils.max(minX, 0);
+        minY = MathUtils.max(minY, 0);
+        minZ = MathUtils.max(minZ, 0);
+        maxX = MathUtils.min(maxX, 16);
+        maxY = MathUtils.min(maxY, 16);
+        maxZ = MathUtils.min(maxZ, 16);
 
         VoxelShape combined = Shapes.empty();
         for (int x = minX; x < maxX; x++) {
@@ -61,57 +61,31 @@ public class VoxelUtils {
         return combined.optimize();
     }
 
-    private static Vec3 interpolate(Vec3 v1, Vec3 v2, double factor) {
-        double x = Math.round(Math.abs(v1.x + factor * (v2.x - v1.x)));
-        double y = Math.round(Math.abs(v1.y + factor * (v2.y - v1.y)));
-        double z = Math.round(Math.abs(v1.z + factor * (v2.z - v1.z)));
-
-        return new Vec3(x, y, z);
-    }
-
-    private static double max(double... ds) {
-        double max = ds[0];
-        for (double d : ds) {
-            if (d > max)
-                max = d;
-        }
-        return max;
-    }
-
-    private static double min(double... ds) {
-        double min = ds[0];
-        for (double d : ds) {
-            if (d < min)
-                min = d;
-        }
-        return min;
-    }
-
     private static boolean insideBoundaries(Vec3 currVec, Vec3 NWU, Vec3 SWU, Vec3 NWD, Vec3 SWD, Vec3 NEU, Vec3 SEU, Vec3 NED, Vec3 SED) {
-        Vec3 interpolYhXl = interpolate(NWU, NEU, currVec.x / 16);
-        Vec3 interpolYhXh = interpolate(SWU, SEU, currVec.x / 16);
-        Vec3 interpolYhz = interpolate(interpolYhXl, interpolYhXh, currVec.z / 16);
+        Vec3 interpolYhXl = MathUtils.interpolate(NWU, NEU, currVec.x / 16);
+        Vec3 interpolYhXh = MathUtils.interpolate(SWU, SEU, currVec.x / 16);
+        Vec3 interpolYhz = MathUtils.interpolate(interpolYhXl, interpolYhXh, currVec.z / 16);
         boolean up = interpolYhz.y >= currVec.y + 1;
-        Vec3 interpolYlXl = interpolate(NWD, NED, currVec.x / 16);
-        Vec3 interpolYlXh = interpolate(SWD, SED, currVec.x / 16);
-        Vec3 interpolYlz = interpolate(interpolYlXl, interpolYlXh, currVec.z / 16);
+        Vec3 interpolYlXl = MathUtils.interpolate(NWD, NED, currVec.x / 16);
+        Vec3 interpolYlXh = MathUtils.interpolate(SWD, SED, currVec.x / 16);
+        Vec3 interpolYlz = MathUtils.interpolate(interpolYlXl, interpolYlXh, currVec.z / 16);
         boolean down = interpolYlz.y <= currVec.y + 1;
 
-        Vec3 interpolZlYl = interpolate(NWD, NWU, currVec.y / 16);
-        Vec3 interpolZlYh = interpolate(NED, NEU, currVec.y / 16);
-        Vec3 interpolZlx = interpolate(interpolZlYl, interpolZlYh, currVec.x / 16);
+        Vec3 interpolZlYl = MathUtils.interpolate(NWD, NWU, currVec.y / 16);
+        Vec3 interpolZlYh = MathUtils.interpolate(NED, NEU, currVec.y / 16);
+        Vec3 interpolZlx = MathUtils.interpolate(interpolZlYl, interpolZlYh, currVec.x / 16);
         boolean north = interpolZlx.z <= currVec.z + 1;
-        Vec3 interpolZhYl = interpolate(SWD, SWU, currVec.y / 16);
-        Vec3 interpolZhYh = interpolate(SED, SEU, currVec.y / 16);
-        Vec3 interpolZhx = interpolate(interpolZhYl, interpolZhYh, currVec.x / 16);
+        Vec3 interpolZhYl = MathUtils.interpolate(SWD, SWU, currVec.y / 16);
+        Vec3 interpolZhYh = MathUtils.interpolate(SED, SEU, currVec.y / 16);
+        Vec3 interpolZhx = MathUtils.interpolate(interpolZhYl, interpolZhYh, currVec.x / 16);
         boolean south = interpolZhx.z >= currVec.z + 1;
-        Vec3 interpolXlYl = interpolate(NWD, NWU, currVec.y / 16);
-        Vec3 interpolXlYh = interpolate(SWD, SWU, currVec.y / 16);
-        Vec3 interpolXlz = interpolate(interpolXlYl, interpolXlYh, currVec.z / 16);
+        Vec3 interpolXlYl = MathUtils.interpolate(NWD, NWU, currVec.y / 16);
+        Vec3 interpolXlYh = MathUtils.interpolate(SWD, SWU, currVec.y / 16);
+        Vec3 interpolXlz = MathUtils.interpolate(interpolXlYl, interpolXlYh, currVec.z / 16);
         boolean west = interpolXlz.x <= currVec.x + 1;
-        Vec3 interpolXhYl = interpolate(NED, NEU, currVec.y / 16);
-        Vec3 interpolXhYh = interpolate(SED, SEU, currVec.y / 16);
-        Vec3 interpolXhz = interpolate(interpolXhYl, interpolXhYh, currVec.z / 16);
+        Vec3 interpolXhYl = MathUtils.interpolate(NED, NEU, currVec.y / 16);
+        Vec3 interpolXhYh = MathUtils.interpolate(SED, SEU, currVec.y / 16);
+        Vec3 interpolXhz = MathUtils.interpolate(interpolXhYl, interpolXhYh, currVec.z / 16);
         boolean east = interpolXhz.x >= currVec.x + 1;
 
         return up && down && north && south && west && east;
