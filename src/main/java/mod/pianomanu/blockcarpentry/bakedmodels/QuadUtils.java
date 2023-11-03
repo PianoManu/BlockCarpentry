@@ -1,18 +1,22 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import mod.pianomanu.blockcarpentry.util.MathUtils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Contains helper methods to ease the quad population process
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.4 10/31/23
+ * @version 1.4 11/03/23
  */
 public class QuadUtils {
 
@@ -56,7 +60,7 @@ public class QuadUtils {
         return builder;
     }
 
-    private static void rotateFace(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, int rotation) {
+    private static Vec3[] rotateFace(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, int rotation) {
         Vec3 tmp;
         for (int i = 0; i < rotation; i++) {
             tmp = v1;
@@ -65,6 +69,7 @@ public class QuadUtils {
             v3 = v4;
             v4 = tmp;
         }
+        return new Vec3[]{v1, v2, v3, v4};
     }
 
     /**
@@ -90,12 +95,20 @@ public class QuadUtils {
     }
 
     public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, int tintIndex, int rotation) {
-        rotateFace(v1, v2, v3, v4, rotation);
+        Vec3[] vs = rotateFace(v1, v2, v3, v4, rotation);
+        v1 = vs[0];
+        v2 = vs[1];
+        v3 = vs[2];
+        v4 = vs[3];
         return createQuad(v1, v2, v3, v4, sprite, 0, 0, 0, 16, 16, 16, 16, 0, tintIndex, false);
     }
 
     public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex, int rotation) {
-        rotateFace(v1, v2, v3, v4, rotation);
+        Vec3[] vs = rotateFace(v1, v2, v3, v4, rotation);
+        v1 = vs[0];
+        v2 = vs[1];
+        v3 = vs[2];
+        v4 = vs[3];
         return createQuad(v1, v2, v3, v4, sprite, ulow, uhigh, vlow, vhigh, tintIndex, false);
     }
 
@@ -109,7 +122,11 @@ public class QuadUtils {
 
     public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, Direction direction, int tintIndex, int rotation, boolean keepUV, boolean invert, boolean moveVertically) {
         int verticalOffset = moveVertically ? 16 : 0;
-        rotateFace(v1, v2, v3, v4, rotation);
+        Vec3[] vs = rotateFace(v1, v2, v3, v4, rotation);
+        v1 = vs[0];
+        v2 = vs[1];
+        v3 = vs[2];
+        v4 = vs[3];
         if (keepUV)
             return createQuad(v1, v2, v3, v4, sprite, 0, 0, 0, 16, 16, 16, 16, 0, tintIndex, invert);
         return switch (direction) {
@@ -148,6 +165,16 @@ public class QuadUtils {
 
     public static BakedQuad createQuadInverted(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex) {
         return createQuad(v1, v2, v3, v4, sprite, tintIndex);
+    }
+
+    public static List<BakedQuad> createQuadComplex(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float v1u, float v1v, float v2u, float v2v, float v3u, float v3v, float v4u, float v4v, int tintIndex, boolean invert) {
+        return Collections.emptyList();
+    }
+
+    private static Vec3 centerOfGravityVec(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4) {
+        Vec3 interpol13 = MathUtils.interpolate(v1, v3, 0.5);
+        Vec3 interpol24 = MathUtils.interpolate(v2, v4, 0.5);
+        return MathUtils.interpolate(interpol13, interpol24, 0.5);
     }
 }
 //========SOLI DEO GLORIA========//

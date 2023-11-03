@@ -20,7 +20,7 @@ import java.util.List;
  * used for easier building of BakedModels without hundreds of helper methods.
  *
  * @author PianoManu
- * @version 1.0 10/30/23
+ * @version 1.1 11/03/23
  */
 public class SimpleBox {
     private Vec3 NWU;
@@ -151,18 +151,25 @@ public class SimpleBox {
 
         this.rotate();
 
+        int upRotation = rotations.size() == 6 ? rotations.get(1) : 0;
+        int downRotation = rotations.size() == 6 ? rotations.get(0) : 0;
+        int westRotation = rotations.size() == 6 ? rotations.get(4) : 0;
+        int eastRotation = rotations.size() == 6 ? rotations.get(5) : 0;
+        int northRotation = rotations.size() == 6 ? rotations.get(2) : 0;
+        int southRotation = rotations.size() == 6 ? rotations.get(3) : 0;
+
         if (renderUp)
-            createQuadFace(quads, NWU, SWU, SEU, NEU, Direction.UP, newUp, rotations.get(1), invertUp);
+            createQuadFace(quads, NWU, SWU, SEU, NEU, Direction.UP, newUp, upRotation, invertUp);
         if (renderDown)
-            createQuadFace(quads, NED, SED, SWD, NWD, Direction.DOWN, newDown, rotations.get(0), invertDown);
+            createQuadFace(quads, NED, SED, SWD, NWD, Direction.DOWN, newDown, downRotation, invertDown);
         if (renderWest)
-            createQuadFace(quads, NWU, NWD, SWD, SWU, Direction.WEST, newWest, rotations.get(4), invertWest);
+            createQuadFace(quads, NWU, NWD, SWD, SWU, Direction.WEST, newWest, westRotation, invertWest);
         if (renderEast)
-            createQuadFace(quads, SEU, SED, NED, NEU, Direction.EAST, newEast, rotations.get(5), invertEast);
+            createQuadFace(quads, SEU, SED, NED, NEU, Direction.EAST, newEast, eastRotation, invertEast);
         if (renderNorth)
-            createQuadFace(quads, NEU, NED, NWD, NWU, Direction.NORTH, newNorth, rotations.get(2), invertNorth);
+            createQuadFace(quads, NEU, NED, NWD, NWU, Direction.NORTH, newNorth, northRotation, invertNorth);
         if (renderSouth)
-            createQuadFace(quads, SWU, SWD, SED, SEU, Direction.SOUTH, newSouth, rotations.get(3), invertSouth);
+            createQuadFace(quads, SWU, SWD, SED, SEU, Direction.SOUTH, newSouth, southRotation, invertSouth);
         return quads;
     }
 

@@ -22,7 +22,7 @@ import java.util.List;
  * This class is used to add a tooltip to the texture wrench item
  *
  * @author PianoManu
- * @version 1.4 10/31/23
+ * @version 1.5 11/03/23
  */
 public class TextureWrenchItem extends BCToolItem {
 
@@ -59,7 +59,7 @@ public class TextureWrenchItem extends BCToolItem {
         BlockState state = level.getBlockState(pos);
         BlockEntity entity = level.getBlockEntity(pos);
         Player player = context.getPlayer();
-        if (!level.isClientSide && state.getBlock().equals(Registration.ILLUSION_BLOCK.get())) {
+        if (!level.isClientSide && (state.getBlock().equals(Registration.FRAMEBLOCK.get()) || state.getBlock().equals(Registration.ILLUSION_BLOCK.get()))) {
             if (entity instanceof FrameBlockTile fte) {
                 Direction direction = context.getClickedFace();
                 Direction.Axis axis = direction.getAxis() == Direction.Axis.Y ? direction.getAxis() : direction.getAxis() == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
