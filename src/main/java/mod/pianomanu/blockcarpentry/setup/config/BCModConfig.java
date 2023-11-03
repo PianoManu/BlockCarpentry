@@ -23,6 +23,7 @@ public class BCModConfig {
     public static ForgeConfigSpec.BooleanValue ONLY_SHOW_INVITATION_ONCE;
 
     public static ForgeConfigSpec.BooleanValue SHOW_COMPLEX_BOUNDING_BOX;
+    public static ForgeConfigSpec.BooleanValue USE_COMPLEX_QUAD_CALCULATIONS;
 
     public static ForgeConfigSpec.BooleanValue HAMMER_NEEDED;
     public static ForgeConfigSpec.BooleanValue SNEAK_FOR_VERTICAL_SLABS;
@@ -60,6 +61,8 @@ public class BCModConfig {
 
     private static void setupBlockSettings() {
         SHOW_COMPLEX_BOUNDING_BOX = COMMON_BUILDER.comment("Whether the bounding box should be recalculated everytime a corner of a frame or illusion cube block is moved. Setting this to \"true\" can cause lag spikes on low-end PCs during the calculation process.").define("complex_bounding_boxes", true);
+
+        USE_COMPLEX_QUAD_CALCULATIONS = COMMON_BUILDER.comment("Whether the collapsable blocks should use the complex quad calculation method for their faces. When set to \"true\", the model will look smoother, but the calculation is more resource-intensive. When set to \"false\", the vanilla system is used instead.").define("complex_quad_calculations", true);
 
         SNEAK_FOR_VERTICAL_SLABS = COMMON_BUILDER.comment("Determines whether you have to sneak when placing vertical slabs, when set to false, frame slabs will always be placed on the side of the block; when set to true, frame slabs will be placed like vanilla slabs, and you have to sneak in order to make place vertical slabs (default: true)").define("sneak_for_vertical_slabs", true);
 

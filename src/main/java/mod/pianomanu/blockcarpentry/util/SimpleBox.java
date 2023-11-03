@@ -2,6 +2,7 @@ package mod.pianomanu.blockcarpentry.util;
 
 import mod.pianomanu.blockcarpentry.bakedmodels.ModelInformation;
 import mod.pianomanu.blockcarpentry.bakedmodels.QuadUtils;
+import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -201,9 +202,15 @@ public class SimpleBox {
     }
 
     private void createQuadFace(List<BakedQuad> quads, Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, Direction originalDirection, Direction newDirection, int rotation, boolean invert) {
-        quads.add(QuadUtils.createQuad(v1, v2, v3, v4, sprite, newDirection, tintIndex, rotation, keepDefaultUV, invert));
-        if (overlayIndex > 0 && overlayTexture(originalDirection) != null)
-            quads.add(QuadUtils.createQuad(v1, v2, v3, v4, overlayTexture(originalDirection), originalDirection, modelInformation.tintIndex, 0, doNotMoveOverlay, false));
+        if (!BCModConfig.USE_COMPLEX_QUAD_CALCULATIONS.get()) {
+            quads.add(QuadUtils.createQuad(v1, v2, v3, v4, sprite, newDirection, tintIndex, rotation, keepDefaultUV, invert));
+            if (overlayIndex > 0 && overlayTexture(originalDirection) != null)
+                quads.add(QuadUtils.createQuad(v1, v2, v3, v4, overlayTexture(originalDirection), originalDirection, modelInformation.tintIndex, 0, doNotMoveOverlay, false));
+        } else {
+            quads.addAll(QuadUtils.createQuadComplex(v1, v2, v3, v4, sprite, newDirection, tintIndex, rotation, keepDefaultUV, invert));
+            if (overlayIndex > 0 && overlayTexture(originalDirection) != null)
+                quads.addAll(QuadUtils.createQuadComplex(v1, v2, v3, v4, overlayTexture(originalDirection), originalDirection, modelInformation.tintIndex, 0, doNotMoveOverlay, false));
+        }
     }
 
     private TextureAtlasSprite overlayTexture(Direction direction) {

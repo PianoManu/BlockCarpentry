@@ -8,7 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -167,14 +167,27 @@ public class QuadUtils {
         return createQuad(v1, v2, v3, v4, sprite, tintIndex);
     }
 
-    public static List<BakedQuad> createQuadComplex(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float v1u, float v1v, float v2u, float v2v, float v3u, float v3v, float v4u, float v4v, int tintIndex, boolean invert) {
-        return Collections.emptyList();
+    public static List<BakedQuad> createQuadComplex(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, Direction direction, int tintIndex, int rotation, boolean keepUV, boolean invert) {
+        List<BakedQuad> quads = new ArrayList<>();
+        Vec3 COGVec = centerOfGravityVec(v1, v2, v3, v4);
+        if (!keepUV) {
+            quads.add(createQuad(v1, v2, COGVec, COGVec, sprite, direction, tintIndex, rotation, keepUV, invert));
+            quads.add(createQuad(v2, v3, COGVec, COGVec, sprite, direction, tintIndex, rotation, keepUV, invert));
+            quads.add(createQuad(v3, v4, COGVec, COGVec, sprite, direction, tintIndex, rotation, keepUV, invert));
+            quads.add(createQuad(COGVec, v4, v1, COGVec, sprite, direction, tintIndex, rotation, keepUV, invert));
+        } else {
+            quads.add(createQuad(v1, v2, COGVec, COGVec, sprite, 0, 0, 0, 16, 8, 8, 8, 8, tintIndex, invert));
+            quads.add(createQuad(v2, v3, COGVec, COGVec, sprite, 0, 16, 16, 16, 8, 8, 8, 8, tintIndex, invert));
+            quads.add(createQuad(v3, v4, COGVec, COGVec, sprite, 16, 16, 16, 0, 8, 8, 8, 8, tintIndex, invert));
+            quads.add(createQuad(COGVec, v4, v1, COGVec, sprite, 8, 8, 16, 0, 0, 0, 8, 8, tintIndex, invert));
+        }
+        return quads;
     }
 
     private static Vec3 centerOfGravityVec(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4) {
-        Vec3 interpol13 = MathUtils.interpolate(v1, v3, 0.5);
-        Vec3 interpol24 = MathUtils.interpolate(v2, v4, 0.5);
-        return MathUtils.interpolate(interpol13, interpol24, 0.5);
+        Vec3 interpol13 = MathUtils.interpolate(v1, v3, 0.5, false);
+        Vec3 interpol24 = MathUtils.interpolate(v2, v4, 0.5, false);
+        return MathUtils.interpolate(interpol13, interpol24, 0.5, false);
     }
 }
 //========SOLI DEO GLORIA========//
