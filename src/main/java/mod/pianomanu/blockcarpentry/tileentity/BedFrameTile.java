@@ -13,8 +13,6 @@ import net.minecraftforge.client.model.data.ModelProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
 
@@ -22,7 +20,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.BED_FRAME_TILE;
  * BlockEntity for frame beds, you can customize both pillow and blanket
  *
  * @author PianoManu
- * @version 1.4 11/01/23
+ * @version 1.5 11/03/23
  */
 public class BedFrameTile extends BlockEntity implements IFrameTile {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -36,7 +34,6 @@ public class BedFrameTile extends BlockEntity implements IFrameTile {
     public final int maxTextures = 6;
     public final int maxDesigns = 4;
 
-    public static final List<FrameBlockTile.TagPacket<?>> TAG_PACKETS = initTagPackets();
     public BlockState mimic;
     public Integer texture = 0;
     public Integer pillowColor = 0;
@@ -47,13 +44,6 @@ public class BedFrameTile extends BlockEntity implements IFrameTile {
     public Float friction = Registration.FRAMEBLOCK.get().getFriction();
     public Float explosionResistance = Registration.FRAMEBLOCK.get().getExplosionResistance();
     public Boolean canEntityDestroy = true;
-
-    private static List<FrameBlockTile.TagPacket<?>> initTagPackets() {
-        List<FrameBlockTile.TagPacket<?>> packets = new ArrayList<>(IFrameTile.TAG_PACKETS);
-        packets.add(new FrameBlockTile.TagPacket<>("pillowColor", Integer.class, 0));
-        packets.add(new FrameBlockTile.TagPacket<>("blanketColor", Integer.class, 0));
-        return packets;
-    }
 
     public BedFrameTile(BlockPos pos, BlockState state) {
         super(BED_FRAME_TILE.get(), pos, state);

@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * interface.
  *
  * @author PianoManu
- * @version 1.4 10/30/23
+ * @version 1.5 11/03/23
  */
 public interface IFrameTile extends IForgeBlockEntity {
     Logger LOGGER = LogManager.getLogger();
@@ -45,6 +45,8 @@ public interface IFrameTile extends IForgeBlockEntity {
         packets.add(new FrameBlockTile.TagPacket<>("designTexture", Integer.class, 0));
         packets.add(new FrameBlockTile.TagPacket<>("glassColor", Integer.class, 0));
         packets.add(new FrameBlockTile.TagPacket<>("overlay", Integer.class, 0));
+        packets.add(new FrameBlockTile.TagPacket<>("pillowColor", Integer.class, 0));
+        packets.add(new FrameBlockTile.TagPacket<>("blanketColor", Integer.class, 0));
         packets.add(new FrameBlockTile.TagPacket<>("rotation", Integer.class, 0));
         packets.add(new FrameBlockTile.TagPacket<>("keepUV", Boolean.class, true));
         packets.add(new FrameBlockTile.TagPacket<>("friction", Float.class, Registration.FRAMEBLOCK.get().getFriction()));
