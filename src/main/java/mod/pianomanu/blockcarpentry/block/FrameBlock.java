@@ -2,6 +2,7 @@ package mod.pianomanu.blockcarpentry.block;
 
 import mod.pianomanu.blockcarpentry.item.ChiselItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.CornerUtils;
 import net.minecraft.core.BlockPos;
@@ -35,7 +36,7 @@ import javax.annotation.Nullable;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.4 10/23/23
+ * @version 1.5 11/03/23
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, SimpleWaterloggedBlock, IFrameBlock {
@@ -164,7 +165,7 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
     }
 
     private VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos) {
-        if (state.getValue(CONTAINS_BLOCK)) {
+        if (state.getValue(CONTAINS_BLOCK) && BCModConfig.SHOW_COMPLEX_BOUNDING_BOX.get()) {
             BlockEntity be = getter.getBlockEntity(pos);
             if (be instanceof FrameBlockTile fte) {
                 return fte.getShape();
@@ -174,7 +175,7 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
     }
 
     private void updateShape(BlockState state, LevelAccessor level, BlockPos pos) {
-        if (state.getValue(CONTAINS_BLOCK)) {
+        if (state.getValue(CONTAINS_BLOCK) && BCModConfig.SHOW_COMPLEX_BOUNDING_BOX.get()) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof FrameBlockTile fte) {
                 fte.updateShape();

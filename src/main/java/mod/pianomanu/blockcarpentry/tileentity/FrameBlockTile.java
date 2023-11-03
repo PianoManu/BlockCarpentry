@@ -32,7 +32,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.7 11/01/23
+ * @version 1.8 11/03/23
  */
 public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IFrameTile {
     public static final List<IFrameTile.TagPacket<?>> TAG_PACKETS = initTagPackets();
@@ -116,6 +116,15 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     public Vec3 SEU = new Vec3(0, 0, 0);
     public Vec3 SWD = new Vec3(0, 0, 0);
     public Vec3 SED = new Vec3(0, 0, 0);
+
+    private Vec3 oldNWU = new Vec3(0, 0, 0);
+    private Vec3 oldNEU = new Vec3(0, 0, 0);
+    private Vec3 oldNWD = new Vec3(0, 0, 0);
+    private Vec3 oldNED = new Vec3(0, 0, 0);
+    private Vec3 oldSWU = new Vec3(0, 0, 0);
+    private Vec3 oldSEU = new Vec3(0, 0, 0);
+    private Vec3 oldSWD = new Vec3(0, 0, 0);
+    private Vec3 oldSED = new Vec3(0, 0, 0);
 
     public List<Direction> directions = new ArrayList<>();
 
@@ -363,6 +372,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        this.updateShape();
         onDataPacket(pkt, FrameBlockTile.class, level, this.worldPosition, getBlockState());
     }
 
@@ -400,13 +410,14 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
+        this.updateShape();
         return getUpdateTag(tag, FrameBlockTile.class);
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.updateShape();
+        //this.updateShape();
         IFrameTile.super.load(tag, FrameBlockTile.class);
     }
 
@@ -421,7 +432,41 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     }
 
     public void updateShape() {
-        this.shape = set(VoxelUtils.getShape(this));
+        if (shapeChanged())
+            this.shape = set(VoxelUtils.getShape(this));
+    }
+
+    public boolean shapeUnmodified() {
+        return this.NWD.equals(Vec3.ZERO)
+                && this.NWU.equals(Vec3.ZERO)
+                && this.NED.equals(Vec3.ZERO)
+                && this.NEU.equals(Vec3.ZERO)
+                && this.SWD.equals(Vec3.ZERO)
+                && this.SWU.equals(Vec3.ZERO)
+                && this.SED.equals(Vec3.ZERO)
+                && this.SEU.equals(Vec3.ZERO);
+    }
+
+    public boolean shapeChanged() {
+        if (this.NWD.equals(this.oldNWD)
+                && this.NWU.equals(this.oldNWU)
+                && this.NED.equals(this.oldNED)
+                && this.NEU.equals(this.oldNEU)
+                && this.SWD.equals(this.oldSWD)
+                && this.SWU.equals(this.oldSWU)
+                && this.SED.equals(this.oldSED)
+                && this.SEU.equals(this.oldSEU)) {
+            return false;
+        }
+        this.oldNWD = this.NWD;
+        this.oldNWU = this.NWU;
+        this.oldNED = this.NED;
+        this.oldNEU = this.NEU;
+        this.oldSWD = this.SWD;
+        this.oldSWU = this.SWU;
+        this.oldSED = this.SED;
+        this.oldSEU = this.SEU;
+        return true;
     }
 }
 //========SOLI DEO GLORIA========//

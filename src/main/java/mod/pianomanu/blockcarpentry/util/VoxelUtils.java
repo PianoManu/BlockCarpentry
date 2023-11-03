@@ -11,10 +11,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Utility class for Bounding-Box related functions and calculations
  *
  * @author PianoManu
- * @version 1.0 11/01/23
+ * @version 1.1 11/03/23
  */
 public class VoxelUtils {
     public static VoxelShape getShape(FrameBlockTile fte) {
+        if (fte.shapeUnmodified())
+            return Shapes.block();
+        long start = System.currentTimeMillis();
         Vec3 NWU = new Vec3(fte.NWU.x, 16 + fte.NWU.y, fte.NWU.z);
         Vec3 NEU = new Vec3(16 + fte.NEU.x, 16 + fte.NEU.y, fte.NEU.z);
         Vec3 NWD = new Vec3(fte.NWD.x, fte.NWD.y, fte.NWD.z);
@@ -24,7 +27,10 @@ public class VoxelUtils {
         Vec3 SWD = new Vec3(fte.SWD.x, fte.SWD.y, 16 + fte.SWD.z);
         Vec3 SED = new Vec3(16 + fte.SED.x, fte.SED.y, 16 + fte.SED.z);
 
-        return freeShapeFlat(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED);
+        VoxelShape shape = freeShapeFlat(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED);
+        long execTime = System.currentTimeMillis() - start;
+        System.out.println(execTime);
+        return shape;
     }
 
     private static VoxelShape shrinkBlock(Vec3 NWU, Vec3 SWU, Vec3 NWD, Vec3 SWD, Vec3 NEU, Vec3 SEU, Vec3 NED, Vec3 SED) {
@@ -134,7 +140,7 @@ public class VoxelUtils {
                 }
             }
         }
-        return combined;
+        return combined.optimize();
     }
 
     private static VoxelShape getCorners(Vec3... vs) {
@@ -222,7 +228,7 @@ public class VoxelUtils {
         boolean west = interpolXlz.x <= currVec.x + 1;
         Vec3 interpolXhYl = interpolate(NED, NEU, currVec.y / 16);
         Vec3 interpolXhYh = interpolate(SED, SEU, currVec.y / 16);
-        Vec3 interpolXhz = interpolate(interpolXhYl, interpolXhYh, currVec.z / 16 + 1);
+        Vec3 interpolXhz = interpolate(interpolXhYl, interpolXhYh, currVec.z / 16);
         boolean east = interpolXhz.x >= currVec.x + 1;
 
         return up && down && north && south && west && east;

@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.Mod;
  * Config class for customizable values, values can be found and changed in /config/blockcarpentry-common.toml
  *
  * @author PianoManu
- * @version 1.6 10/19/23
+ * @version 1.7 11/03/23
  */
 @Mod.EventBusSubscriber
 public class BCModConfig {
@@ -21,6 +21,8 @@ public class BCModConfig {
 
     public static ForgeConfigSpec.BooleanValue SHOW_DISCORD_INVITATION;
     public static ForgeConfigSpec.BooleanValue ONLY_SHOW_INVITATION_ONCE;
+
+    public static ForgeConfigSpec.BooleanValue SHOW_COMPLEX_BOUNDING_BOX;
 
     public static ForgeConfigSpec.BooleanValue HAMMER_NEEDED;
     public static ForgeConfigSpec.BooleanValue SNEAK_FOR_VERTICAL_SLABS;
@@ -37,7 +39,7 @@ public class BCModConfig {
     public static ForgeConfigSpec.DoubleValue EXPLOSION_RESISTANCE_MODIFIER;
 
     static {
-        COMMON_BUILDER.comment("Tool settings").push(CATEGORY_CLIENT);
+        COMMON_BUILDER.comment("Client settings").push(CATEGORY_CLIENT);
         setupClientSettings();
         COMMON_BUILDER.pop();
 
@@ -57,6 +59,8 @@ public class BCModConfig {
     }
 
     private static void setupBlockSettings() {
+        SHOW_COMPLEX_BOUNDING_BOX = COMMON_BUILDER.comment("Whether the bounding box should be recalculated everytime a corner of a frame or illusion cube block is moved. Setting this to \"true\" can cause lag spikes on low-end PCs during the calculation process.").define("complex_bounding_boxes", true);
+
         SNEAK_FOR_VERTICAL_SLABS = COMMON_BUILDER.comment("Determines whether you have to sneak when placing vertical slabs, when set to false, frame slabs will always be placed on the side of the block; when set to true, frame slabs will be placed like vanilla slabs, and you have to sneak in order to make place vertical slabs (default: true)").define("sneak_for_vertical_slabs", true);
 
         LIGHTING_ENABLED = COMMON_BUILDER.comment("Determines whether the player can use coal, charcoal or glowstone dust to let frame or illusion blocks glow.").define("lighting_enabled", true);
