@@ -12,9 +12,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.piglin.PiglinTasks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.InventoryHelper;
@@ -37,6 +39,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -46,7 +49,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.6 09/27/23
+ * @version 1.7 11/03/23
  */
 public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
     private static final VoxelShape INNER_CUBE = Block.makeCuboidShape(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
@@ -129,6 +132,9 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
                 player.addStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
                 PiglinTasks.func_234478_a_(player, true);
             }
+            TileEntity tileEntity = level.getTileEntity(pos);
+            if (tileEntity instanceof ChestFrameTileEntity)
+                NetworkHooks.openGui((ServerPlayerEntity) player, (ChestFrameTileEntity) tileEntity, pos);
 
             return ActionResultType.CONSUME;
         }
@@ -136,8 +142,8 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
 
     @Override
     public ActionResultType frameUseClient(BlockState state, World level, BlockPos pos, PlayerEntity player, ItemStack itemStack, BlockRayTraceResult hitresult) {
-        TileEntity TileEntity = level.getTileEntity(pos);
-        if (TileEntity instanceof ChestFrameTileEntity && state.get(CONTAINS_BLOCK)) {
+        TileEntity tileEntity = level.getTileEntity(pos);
+        if (tileEntity instanceof ChestFrameTileEntity && state.get(CONTAINS_BLOCK)) {
             if (!(itemStack.getItem() instanceof BaseFrameItem || itemStack.getItem() instanceof BaseIllusionItem)) {
                 return ActionResultType.CONSUME;
             }
@@ -188,6 +194,18 @@ public class ChestFrameBlock extends FrameBlock implements IWaterLoggable {
             frameTileEntity.clear();
             frameTileEntity.setMimic(handBlock);
             level.setBlockState(pos, state.with(CONTAINS_BLOCK, Boolean.TRUE), 2);
+        }
+    }
+
+    /**
+     * Called by ItemBlocks after a block is set in the world, to allow post-place logic
+     */
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity player, ItemStack stack) {
+        if (stack.hasDisplayName()) {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+            if (tileentity instanceof ChestFrameTileEntity) {
+                ((ChestFrameTileEntity) tileentity).setCustomName(stack.getDisplayName());
+            }
         }
     }
 

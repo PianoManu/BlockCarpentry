@@ -46,7 +46,7 @@ import java.util.Objects;
  * Contains all information about the block and the mimicked block, as well as the inventory size and stored items
  *
  * @author PianoManu
- * @version 1.2 05/01/21
+ * @version 1.3 11/03/23
  */
 public class ChestFrameTileEntity extends ChestTileEntity implements IFrameTile {
 
@@ -336,6 +336,12 @@ public class ChestFrameTileEntity extends ChestTileEntity implements IFrameTile 
         this.canEntityDestroy = set(canEntityDestroy);
     }
 
+    @Nullable
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(pos, 1, getUpdateTag());
+    }
+
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         onDataPacket(pkt, ChestFrameTileEntity.class, world, this.pos, getBlockState());
@@ -354,11 +360,13 @@ public class ChestFrameTileEntity extends ChestTileEntity implements IFrameTile 
         IFrameTile.super.read(tag, ChestFrameTileEntity.class);
         //FRAME END
         this.chestContents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        ItemStackHelper.loadAllItems(tag, this.chestContents);
     }
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
+        ItemStackHelper.saveAllItems(tag, this.chestContents);
         //FRAME BEGIN
         IFrameTile.super.write(tag, ChestFrameTileEntity.class);
         //FRAME END

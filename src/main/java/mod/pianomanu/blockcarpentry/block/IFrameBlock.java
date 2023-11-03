@@ -40,7 +40,7 @@ import java.util.Objects;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.4 09/27/23
+ * @version 1.5 11/03/23
  */
 public interface IFrameBlock extends IForgeBlock {
     BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -177,10 +177,10 @@ public interface IFrameBlock extends IForgeBlock {
         if (state.get(BCBlockStateProperties.CONTAINS_BLOCK) || itemStack.getItem() instanceof BaseFrameItem || itemStack.getItem() instanceof BaseIllusionItem) {
             return false;
         }
-        TileEntity TileEntity = level.getTileEntity(pos);
+        TileEntity tileEntity = level.getTileEntity(pos);
         int count = itemStack.getCount();
         Block heldBlock = ((BlockItem) itemStack.getItem()).getBlock();
-        if (isCorrectTileInstance(TileEntity) && !itemStack.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
+        if (isCorrectTileInstance(tileEntity) && !itemStack.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
             BlockState handBlockState = ((BlockItem) itemStack.getItem()).getBlock().getDefaultState();
             insertBlock(level, pos, state, handBlockState);
             if (!player.isCreative())
