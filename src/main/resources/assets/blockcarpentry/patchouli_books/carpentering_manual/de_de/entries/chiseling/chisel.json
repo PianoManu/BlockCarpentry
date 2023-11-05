@@ -1,0 +1,33 @@
+{
+  "name": "Schnitzen und Meißeln",
+  "icon": "blockcarpentry:chisel",
+  "category": "blockcarpentry:chiseling",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Jetzt ist es an der Zeit, deine Zimmereiwerkzeuge für die optische Veränderung von Blöcken zu verwenden. Dazu braucht man einfach einen Meißel, der beim Eingravieren von Strukturen in bestimmte Blöcke sehr nützlich ist. Allerdings hat nicht jeder Block verschiedene Designs. Bei denjenigen, die welche haben, kannst du die verschiedenen verfügbaren Designs durchlaufen,"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": {
+        "item": "blockcarpentry:chisel"
+      },
+      "text": "indem du mit dem Meißel auf den Rahmen oder den Illusionsblock rechtsklickst. Voraussetzung dafür ist allerdings, dass der Rahmen oder Illusionsblock bereits mit einem Block \"gefüllt\" wurde und diesen imitiert. In einen leeren Rahmen kann man kein Muster einmeißeln."
+    },
+    {
+      "type": "patchouli:crafting",
+      "text": "Einmeißeln ist möglich bei Türen, Falltüren, Leitern, Zäunen, Zauntoren, Wänden, Betten, Truhen, Teppichen, Scheiben und Tageslichtsensoren. Auf der rechten Seite ist das Ergebnis des Meißelns einer Leiter aus gelber Wolle abgebildet.",
+      "recipe": "blockcarpentry:chisel"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/chisel_1.png"
+      ],
+      "border": true,
+      "title": "Gemeißelte Leitern",
+      "text": "Sieht toll aus, aber ich frage mich, ob eine solche Leiter nicht zusammenbricht?"
+    }
+  ]
+}
