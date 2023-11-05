@@ -10,6 +10,7 @@ import mod.pianomanu.blockcarpentry.tileentity.IFrameTile;
 import mod.pianomanu.blockcarpentry.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -40,7 +41,7 @@ import java.util.Objects;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.5 10/06/23
+ * @version 1.6 11/05/23
  */
 public interface IFrameBlock extends IForgeBlock {
     BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -177,11 +178,15 @@ public interface IFrameBlock extends IForgeBlock {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         int count = itemStack.getCount();
         Block heldBlock = ((BlockItem) itemStack.getItem()).getBlock();
-        if (isCorrectTileInstance(blockEntity) && !itemStack.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
-            BlockState handBlockState = ((BlockItem) itemStack.getItem()).getBlock().defaultBlockState();
-            insertBlock(level, pos, state, handBlockState);
-            if (!player.isCreative())
-                itemStack.setCount(count - 1);
+        if (isCorrectTileInstance(blockEntity) && !itemStack.isEmpty() && !state.getValue(CONTAINS_BLOCK)) {
+            if (BlockSavingHelper.isValidBlock(heldBlock)) {
+                BlockState handBlockState = ((BlockItem) itemStack.getItem()).getBlock().defaultBlockState();
+                insertBlock(level, pos, state, handBlockState);
+                if (!player.isCreative())
+                    itemStack.setCount(count - 1);
+            } else {
+                player.displayClientMessage(Component.translatable("message.blockcarpentry.block_not_available"), true);
+            }
         }
         return true;
     }

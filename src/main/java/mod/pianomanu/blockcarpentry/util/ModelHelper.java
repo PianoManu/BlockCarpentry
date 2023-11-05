@@ -110,7 +110,7 @@ public class ModelHelper {
 
         Float[] floats = checkWithinBounds((float) NWD.x, (float) SEU.x, (float) NWD.y, (float) SEU.y, (float) NWD.z, (float) SEU.z);
         if (floats == null)
-            return quads;
+            return createCuboid(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, TextureHelper.getMissingTexture());
         Float xl = floats[0];
         Float xh = floats[1];
         Float yl = floats[2];
