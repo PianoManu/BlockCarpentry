@@ -168,6 +168,9 @@ public interface IFrameBlock extends IForgeBlock {
     }
 
     default InteractionResult frameUseClient(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack, BlockHitResult hitresult) {
+        if (!state.getValue(CONTAINS_BLOCK) && itemStack.getItem() instanceof BlockItem && !BlockSavingHelper.isValidBlock(((BlockItem) itemStack.getItem()).getBlock(), level.isClientSide)) {
+            player.displayClientMessage(Component.translatable("message.blockcarpentry.block_not_available"), true);
+        }
         return itemStack.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
 
