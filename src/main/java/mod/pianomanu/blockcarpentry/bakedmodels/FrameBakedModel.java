@@ -2,7 +2,8 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.ModelHelper;
+import mod.pianomanu.blockcarpentry.util.SimpleBox;
+import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -14,12 +15,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -29,7 +30,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.3 09/20/23
+ * @version 1.5 10/30/23
  */
 public class FrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -42,27 +43,47 @@ public class FrameBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
-        if (side == null) {
+        if (side != null) {
             return Collections.emptyList();
         }
         if (mimic != null) {
             ModelResourceLocation location = BlockModelShaper.stateToModelLocation(mimic);
             if (state != null) {
                 BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
-                boolean renderNorth = side == Direction.NORTH && extraData.getData(FrameBlockTile.NORTH_VISIBLE);
-                boolean renderEast = side == Direction.EAST && extraData.getData(FrameBlockTile.EAST_VISIBLE);
-                boolean renderSouth = side == Direction.SOUTH && extraData.getData(FrameBlockTile.SOUTH_VISIBLE);
-                boolean renderWest = side == Direction.WEST && extraData.getData(FrameBlockTile.WEST_VISIBLE);
-                boolean renderUp = side == Direction.UP && extraData.getData(FrameBlockTile.UP_VISIBLE);
-                boolean renderDown = side == Direction.DOWN && extraData.getData(FrameBlockTile.DOWN_VISIBLE);
+                TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
                 int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-                List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown));
-                int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
-                if (overlayIndex != 0) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown, true));
+                Vec3 NWU;
+                Vec3 SWU;
+                Vec3 NEU;
+                Vec3 SEU;
+                Vec3 NWD;
+                Vec3 SWD;
+                Vec3 NED;
+                Vec3 SED;
+                try {
+                    NWU = new Vec3(0, 1, 0).add(extraData.getData(FrameBlockTile.NWU_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d)); //North-West-Up
+                    SWU = new Vec3(0, 1, 1).add(extraData.getData(FrameBlockTile.SWU_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d)); //...
+                    NWD = new Vec3(0, 0, 0).add(extraData.getData(FrameBlockTile.NWD_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d));
+                    SWD = new Vec3(0, 0, 1).add(extraData.getData(FrameBlockTile.SWD_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d));
+                    NEU = new Vec3(1, 1, 0).add(extraData.getData(FrameBlockTile.NEU_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d));
+                    SEU = new Vec3(1, 1, 1).add(extraData.getData(FrameBlockTile.SEU_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d));
+                    NED = new Vec3(1, 0, 0).add(extraData.getData(FrameBlockTile.NED_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d));
+                    SED = new Vec3(1, 0, 1).add(extraData.getData(FrameBlockTile.SED_prop).multiply(1 / 16d, 1 / 16d, 1 / 16d)); //South-East-Down
+                } catch (NullPointerException e) {
+                    NWU = new Vec3(0, 1, 0); //North-West-Up
+                    SWU = new Vec3(0, 1, 1); //...
+                    NWD = new Vec3(0, 0, 0);
+                    SWD = new Vec3(0, 0, 1);
+                    NEU = new Vec3(1, 1, 0);
+                    SEU = new Vec3(1, 1, 1);
+                    NED = new Vec3(1, 0, 0);
+                    SED = new Vec3(1, 0, 1); //South-East-Down
                 }
-                return quads;
+                List<Direction> directions = extraData.getData(FrameBlockTile.DIRECTIONS);
+                List<Integer> rotations = extraData.getData(FrameBlockTile.ROTATIONS);
+                boolean keepUV = extraData.getData(FrameBlockTile.KEEP_UV);
+                SimpleBox box = SimpleBox.create(NWU, NWD, NEU, NED, SWU, SWD, SEU, SED, extraData, model, rand, texture, directions, rotations, tintIndex, keepUV);
+                return box.getQuads();
             }
         }
         return Collections.emptyList();
@@ -99,5 +120,6 @@ public class FrameBakedModel implements IDynamicBakedModel {
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
     }
+
 }
 //========SOLI DEO GLORIA========//

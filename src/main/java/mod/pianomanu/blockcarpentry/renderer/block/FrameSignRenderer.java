@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -45,7 +46,7 @@ import java.util.List;
  * the text displayed on the sign.
  *
  * @author PianoManu
- * @version 1.0 10/03/23
+ * @version 1.0 10/02/23
  */
 public class FrameSignRenderer implements BlockEntityRenderer<SignFrameTile> {
     public static final int MAX_LINE_WIDTH = 90;
@@ -112,34 +113,27 @@ public class FrameSignRenderer implements BlockEntityRenderer<SignFrameTile> {
     private void renderSign(SignFrameTile tile, PoseStack stack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
         prepareStack(tile.getBlockState(), stack);
 
-        BlockState mimic = tile.getMimic();
-        Material material = new Material(TextureAtlas.LOCATION_BLOCKS, TextureHelper.textureLocation(mimic));
+        TextureAtlasSprite sprite = TextureHelper.getTextureFromTileEntity(tile);
+        Material material = new Material(TextureAtlas.LOCATION_BLOCKS, sprite.getName());
         LayerDefinition layerDefinition = createSignLayer(tile.getBlockState());
         FrameSignRenderer.FrameSignModel signrenderer$signmodel = new FrameSignRenderer.FrameSignModel(layerDefinition.bakeRoot());
-        VertexConsumer vertexconsumer = material.buffer(buffer, RenderType::entityTranslucent);
+        VertexConsumer vertexconsumer = material.buffer(buffer, signrenderer$signmodel::renderType);
         signrenderer$signmodel.root.render(stack, vertexconsumer, combinedOverlay, packedLight);
 
-        try {
-            drawText(tile, stack, buffer, combinedOverlay);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        drawText(tile, stack, buffer, combinedOverlay);
     }
 
     private void renderEmpty(SignFrameTile tile, PoseStack stack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
         WoodType woodtype = tile.getBlockState().getBlock().equals(Registration.STANDING_SIGN_FRAMEBLOCK.get()) ? BCWoodType.FRAME : BCWoodType.ILLUSION;
         SignRenderer.SignModel signrenderer$signmodel = new SignRenderer.SignModel(context.bakeLayer(ModelLayers.createSignModelName(woodtype)));
+        signrenderer$signmodel.stick.visible = tile.getBlockState().getBlock() instanceof StandingSignBlock;
         prepareStack(tile.getBlockState(), stack);
 
         Material material = Sheets.getSignMaterial(woodtype);
         VertexConsumer vertexconsumer = material.buffer(buffer, signrenderer$signmodel::renderType);
         signrenderer$signmodel.root.render(stack, vertexconsumer, combinedOverlay, packedLight);
 
-        try {
-            drawText(tile, stack, buffer, combinedOverlay);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        drawText(tile, stack, buffer, combinedOverlay);
     }
 
     private void prepareStack(BlockState state, PoseStack stack) {

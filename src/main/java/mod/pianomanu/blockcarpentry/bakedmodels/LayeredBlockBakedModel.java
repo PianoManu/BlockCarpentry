@@ -6,6 +6,7 @@ import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
+import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -32,7 +33,7 @@ import java.util.Random;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.3 09/20/23
+ * @version 1.4 11/01/23
  */
 public class LayeredBlockBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -68,7 +69,7 @@ public class LayeredBlockBakedModel implements IDynamicBakedModel {
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         int tex = extraData.getData(FrameBlockTile.TEXTURE);
         if (mimic != null && state != null) {
-            TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
+            TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
 
             int layers = state.getValue(LayeredBlock.LAYERS);
@@ -112,12 +113,12 @@ public class LayeredBlockBakedModel implements IDynamicBakedModel {
         }
         if (state != null) {
             int layers = state.getValue(LayeredBlock.LAYERS);
-            boolean renderNorth = side == Direction.NORTH && extraData.getData(FrameBlockTile.NORTH_VISIBLE);
-            boolean renderEast = side == Direction.EAST && extraData.getData(FrameBlockTile.EAST_VISIBLE);
-            boolean renderSouth = side == Direction.SOUTH && extraData.getData(FrameBlockTile.SOUTH_VISIBLE);
-            boolean renderWest = side == Direction.WEST && extraData.getData(FrameBlockTile.WEST_VISIBLE);
-            boolean renderUp = side == Direction.UP && extraData.getData(FrameBlockTile.UP_VISIBLE);
-            boolean renderDown = side == Direction.DOWN && extraData.getData(FrameBlockTile.DOWN_VISIBLE);
+            boolean renderNorth = side == Direction.NORTH;
+            boolean renderEast = side == Direction.EAST;
+            boolean renderSouth = side == Direction.SOUTH;
+            boolean renderWest = side == Direction.WEST;
+            boolean renderUp = side == Direction.UP;
+            boolean renderDown = side == Direction.DOWN;
             TextureAtlasSprite textureUp = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/oak_planks"));
             TextureAtlasSprite textureDown = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/oak_planks"));
             TextureAtlasSprite textureNorth = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/spruce_trapdoor"));

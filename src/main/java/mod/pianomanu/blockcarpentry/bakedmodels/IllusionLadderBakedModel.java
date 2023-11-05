@@ -59,7 +59,7 @@ public class IllusionLadderBakedModel implements IDynamicBakedModel {
         }
         BlockState mimic = extraData.getData(FrameBlockTile.MIMIC);
         if (mimic != null && state != null) {
-            TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
+            TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
             List<TextureAtlasSprite> designTextureList = new ArrayList<>();
             designTextureList.add(texture);
             designTextureList.addAll(TextureHelper.getMetalTextures());

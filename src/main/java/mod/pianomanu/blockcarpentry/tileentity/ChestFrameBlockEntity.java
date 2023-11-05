@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
  * Contains all information about the block and the mimicked block, as well as the inventory size and stored items
  *
  * @author PianoManu
- * @version 1.4 09/27/23
+ * @version 1.5 11/01/23
  */
 public class ChestFrameBlockEntity extends ChestBlockEntity implements IFrameTile {
 
@@ -161,7 +161,8 @@ public class ChestFrameBlockEntity extends ChestBlockEntity implements IFrameTil
 
     public <V> V set(V newValue) {
         setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        if (level != null)
+            level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
         return newValue;
     }
 

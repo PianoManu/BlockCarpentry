@@ -19,7 +19,7 @@
     {
       "type": "patchouli:crafting",
       "text": "For illusion blocks, you will instead rotate the whole model, like you would turn over the block. Here again shown with the furnace as an example.",
-      "recipe": "blockcarpentry:chisel"
+      "recipe": "blockcarpentry:texture_wrench"
     },
     {
       "type": "patchouli:image",

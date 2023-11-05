@@ -10,6 +10,7 @@ import mod.pianomanu.blockcarpentry.tileentity.IFrameTile;
 import mod.pianomanu.blockcarpentry.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -40,7 +41,7 @@ import java.util.Objects;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.4 09/27/23
+ * @version 1.6 11/05/23
  */
 public interface IFrameBlock extends IForgeBlock {
     BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
@@ -157,7 +158,7 @@ public interface IFrameBlock extends IForgeBlock {
             return InteractionResult.SUCCESS;
         if (state.getValue(CONTAINS_BLOCK)) {
             if (executeModifications(state, level, pos, player, itemStack))
-                return InteractionResult.CONSUME;
+                return InteractionResult.PASS;
         }
         if (itemStack.getItem() instanceof BlockItem) {
             if (changeMimic(state, level, pos, player, itemStack))
@@ -167,6 +168,9 @@ public interface IFrameBlock extends IForgeBlock {
     }
 
     default InteractionResult frameUseClient(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack, BlockHitResult hitresult) {
+        if (!state.getValue(CONTAINS_BLOCK) && itemStack.getItem() instanceof BlockItem && !BlockSavingHelper.isValidBlock(((BlockItem) itemStack.getItem()).getBlock(), level.isClientSide)) {
+            player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_not_available"), true);
+        }
         return itemStack.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
 
@@ -177,11 +181,15 @@ public interface IFrameBlock extends IForgeBlock {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         int count = itemStack.getCount();
         Block heldBlock = ((BlockItem) itemStack.getItem()).getBlock();
-        if (isCorrectTileInstance(blockEntity) && !itemStack.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
-            BlockState handBlockState = ((BlockItem) itemStack.getItem()).getBlock().defaultBlockState();
-            insertBlock(level, pos, state, handBlockState);
-            if (!player.isCreative())
-                itemStack.setCount(count - 1);
+        if (isCorrectTileInstance(blockEntity) && !itemStack.isEmpty() && !state.getValue(CONTAINS_BLOCK)) {
+            if (BlockSavingHelper.isValidBlock(heldBlock, level.isClientSide)) {
+                BlockState handBlockState = ((BlockItem) itemStack.getItem()).getBlock().defaultBlockState();
+                insertBlock(level, pos, state, handBlockState);
+                if (!player.isCreative())
+                    itemStack.setCount(count - 1);
+            } else {
+                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_not_available"), true);
+            }
         }
         return true;
     }
@@ -192,14 +200,23 @@ public interface IFrameBlock extends IForgeBlock {
 
     default <V extends IFrameTile> V getTile(BlockGetter level, BlockPos pos) {
         BlockEntity be = level.getBlockEntity(pos);
-        if (IFrameTile.class.isAssignableFrom(Objects.requireNonNull(be).getClass())) {
-            return (V) be;
+        try {
+            if (IFrameTile.class.isAssignableFrom(Objects.requireNonNull(be).getClass())) {
+                return (V) be;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
     default boolean executeModifications(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
-        return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player);
+        try {
+            return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

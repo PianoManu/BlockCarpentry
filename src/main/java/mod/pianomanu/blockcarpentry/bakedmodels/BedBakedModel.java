@@ -61,7 +61,7 @@ public class BedBakedModel implements IDynamicBakedModel {
         }
         BlockState mimic = extraData.getData(BedFrameTile.MIMIC);
         if (mimic != null && state != null) {// && extraData.getData(BedFrameTile.PILLOW)!=null && extraData.getData(BedFrameTile.BLANKET)!=null) {
-            TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, BedFrameTile.TEXTURE);
+            TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, BedFrameTile.TEXTURE);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 3 / 16f, 5 / 16f, 0f, 1f, texture, tintIndex));
             TextureAtlasSprite pillow = TextureHelper.getWoolTextures().get(extraData.getData(BedFrameTile.PILLOW));

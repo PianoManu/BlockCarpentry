@@ -155,7 +155,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
         BlockEntity tileEntity = level.getBlockEntity(pos);
         int count = itemStack.getCount();
         Block heldBlock = ((BlockItem) itemStack.getItem()).getBlock();
-        if (tileEntity instanceof TwoBlocksFrameBlockTile && !itemStack.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_2ND_BLOCK)) {
+        if (tileEntity instanceof TwoBlocksFrameBlockTile && !itemStack.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock, level.isClientSide) && !state.getValue(CONTAINS_2ND_BLOCK)) {
             BlockState handBlockState = ((BlockItem) itemStack.getItem()).getBlock().defaultBlockState();
             insertBlock(level, pos, state, handBlockState);
             if (!player.isCreative())

@@ -11,7 +11,7 @@ import java.util.List;
  * Used to check model render shapes for blocks.
  *
  * @author PianoManu
- * @version 1.1 11/12/22
+ * @version 1.2 11/05/23
  */
 public class BlockSavingHelper {
     public static List<Block> validBlocks = new ArrayList<>();
@@ -26,7 +26,9 @@ public class BlockSavingHelper {
         validBlocks = blockList;
     }
 
-    public static boolean isValidBlock(Block block) {
+    public static boolean isValidBlock(Block block, boolean isClientSide) {
+        if (isClientSide)
+            return validBlocks.contains(block) && TextureHelper.getTextures(block.defaultBlockState()).size() > 0;
         return validBlocks.contains(block);
     }
 

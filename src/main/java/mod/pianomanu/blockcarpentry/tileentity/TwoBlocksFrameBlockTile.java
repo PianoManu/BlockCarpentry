@@ -28,7 +28,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.SLAB_FRAME_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.3 09/27/23
+ * @version 1.4 11/01/23
  */
 public class TwoBlocksFrameBlockTile extends BlockEntity implements IFrameTile {
     public static final ModelProperty<BlockState> MIMIC_1 = new ModelProperty<>();
@@ -105,7 +105,8 @@ public class TwoBlocksFrameBlockTile extends BlockEntity implements IFrameTile {
 
     public <V> V set(V newValue) {
         setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        if (level != null)
+            level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
         return newValue;
     }
 

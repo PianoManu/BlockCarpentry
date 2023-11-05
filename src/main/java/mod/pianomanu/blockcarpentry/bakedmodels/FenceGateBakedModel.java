@@ -3,6 +3,7 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
+import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -62,7 +63,7 @@ public class FenceGateBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
         if (mimic != null && state != null) {
-            TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
+            TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             float w = 0;
             if (state.getValue(FenceGateBlock.IN_WALL)) {

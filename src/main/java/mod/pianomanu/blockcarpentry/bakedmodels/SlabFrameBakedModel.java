@@ -4,6 +4,7 @@ import mod.pianomanu.blockcarpentry.block.SixWaySlabFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.TwoBlocksFrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
+import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -69,13 +70,13 @@ public class SlabFrameBakedModel implements IDynamicBakedModel {
         else
             sameBlocks = false; //no second block in slab: not the same, we can render the face between the two slabs - prevents crash, if only one slab is filled
         if (mimic_1 != null && state != null) {
-            TextureAtlasSprite texture_1 = QuadUtils.getTexture(model, rand, extraData, TwoBlocksFrameBlockTile.TEXTURE_1);
+            TextureAtlasSprite texture_1 = TextureHelper.getTexture(model, rand, extraData, TwoBlocksFrameBlockTile.TEXTURE_1);
             TextureAtlasSprite texture_2 = null;
 
             if (mimic_2 != null && mimic_2 != Blocks.AIR.defaultBlockState()) {
                 ModelResourceLocation location_2 = BlockModelShaper.stateToModelLocation(mimic_2);
                 BakedModel model_2 = Minecraft.getInstance().getModelManager().getModel(location_2);
-                texture_2 = QuadUtils.getTexture(model_2, rand, extraData, TwoBlocksFrameBlockTile.TEXTURE_2);
+                texture_2 = TextureHelper.getTexture(model_2, rand, extraData, TwoBlocksFrameBlockTile.TEXTURE_2);
             }
             int tintIndex_1 = BlockAppearanceHelper.setTintIndex(mimic_1);
             int tintIndex_2 = mimic_2 == null ? -1 : BlockAppearanceHelper.setTintIndex(mimic_2);

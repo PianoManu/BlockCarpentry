@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 09/27/23
+ * @version 1.5 10/07/23
  */
 public class CarpetFrameBlock extends CarpetBlock implements EntityBlock, IFrameBlock {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
@@ -52,6 +52,16 @@ public class CarpetFrameBlock extends CarpetBlock implements EntityBlock, IFrame
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         return frameUse(state, level, pos, player, hand, hitresult);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onRemove(BlockState state, Level levelIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            dropContainedBlock(levelIn, pos);
+
+            super.onRemove(state, levelIn, pos, newState, isMoving);
+        }
     }
 
     @Override
