@@ -26,8 +26,10 @@ public class BlockSavingHelper {
         validBlocks = blockList;
     }
 
-    public static boolean isValidBlock(Block block) {
-        return validBlocks.contains(block) && TextureHelper.getTextures(block.defaultBlockState()).size() > 0;
+    public static boolean isValidBlock(Block block, boolean isClientSide) {
+        if (isClientSide)
+            return validBlocks.contains(block) && TextureHelper.getTextures(block.defaultBlockState()).size() > 0;
+        return validBlocks.contains(block);
     }
 
 }

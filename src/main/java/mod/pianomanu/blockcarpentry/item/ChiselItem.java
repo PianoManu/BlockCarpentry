@@ -50,7 +50,7 @@ public class ChiselItem extends BCToolItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if (level.isClientSide && player.isCrouching()) {
+        if (player.isCrouching()) {
             this.shrink = !this.shrink;
             player.displayClientMessage(Component.translatable("message.blockcarpentry.chisel.mode", this.shrink ? Component.translatable("message.blockcarpentry.chisel.shrink") : Component.translatable("message.blockcarpentry.chisel.enlarge")), true);
         }

@@ -179,7 +179,7 @@ public interface IFrameBlock extends IForgeBlock {
         int count = itemStack.getCount();
         Block heldBlock = ((BlockItem) itemStack.getItem()).getBlock();
         if (isCorrectTileInstance(blockEntity) && !itemStack.isEmpty() && !state.getValue(CONTAINS_BLOCK)) {
-            if (BlockSavingHelper.isValidBlock(heldBlock)) {
+            if (BlockSavingHelper.isValidBlock(heldBlock, level.isClientSide)) {
                 BlockState handBlockState = ((BlockItem) itemStack.getItem()).getBlock().defaultBlockState();
                 insertBlock(level, pos, state, handBlockState);
                 if (!player.isCreative())
