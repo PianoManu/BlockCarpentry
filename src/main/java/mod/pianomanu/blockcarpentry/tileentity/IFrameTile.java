@@ -1,12 +1,14 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.util.BCNBTUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -29,7 +31,7 @@ import java.util.stream.Collectors;
  * interface.
  *
  * @author PianoManu
- * @version 1.1 10/03/23
+ * @version 1.5 11/03/23
  */
 public interface IFrameTile extends IForgeTileEntity {
     Logger LOGGER = LogManager.getLogger();
@@ -44,33 +46,59 @@ public interface IFrameTile extends IForgeTileEntity {
         packets.add(new FrameBlockTile.TagPacket<>("designTexture", Integer.class, 0));
         packets.add(new FrameBlockTile.TagPacket<>("glassColor", Integer.class, 0));
         packets.add(new FrameBlockTile.TagPacket<>("overlay", Integer.class, 0));
+        packets.add(new FrameBlockTile.TagPacket<>("pillowColor", Integer.class, 0));
+        packets.add(new FrameBlockTile.TagPacket<>("blanketColor", Integer.class, 0));
         packets.add(new FrameBlockTile.TagPacket<>("rotation", Integer.class, 0));
+        packets.add(new FrameBlockTile.TagPacket<>("keepUV", Boolean.class, true));
         packets.add(new FrameBlockTile.TagPacket<>("friction", Float.class, Registration.FRAMEBLOCK.get().getSlipperiness()));
         packets.add(new FrameBlockTile.TagPacket<>("explosionResistance", Float.class, Registration.FRAMEBLOCK.get().getExplosionResistance()));
         packets.add(new FrameBlockTile.TagPacket<>("canSustainPlant", Boolean.class, false));
         packets.add(new FrameBlockTile.TagPacket<>("enchantPowerBonus", Integer.class, 0));
         packets.add(new FrameBlockTile.TagPacket<>("color", DyeColor.class, DyeColor.BLACK));
         packets.add(new FrameBlockTile.TagPacket<>("hasGlowingText", Boolean.class, false));
+        packets.add(new FrameBlockTile.TagPacket<>("NWU", Vector3d.class, Vector3d.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("NEU", Vector3d.class, Vector3d.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("NWD", Vector3d.class, Vector3d.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("NED", Vector3d.class, Vector3d.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SWU", Vector3d.class, Vector3d.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SEU", Vector3d.class, Vector3d.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SWD", Vector3d.class, Vector3d.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SED", Vector3d.class, Vector3d.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("directions", List.class, new ArrayList<>()));
+        packets.add(new FrameBlockTile.TagPacket<>("rotations", List.class, Arrays.asList(0, 0, 0, 0, 0, 0)));
         return packets;
     }
 
     static <V> V readDataType(CompoundNBT tag, String tagElement, Class<V> classType, V defaultValue) {
-        if (classType == BlockState.class) {
-            return (V) NBTUtil.readBlockState(tag.getCompound(tagElement));
-        }
-        if (classType == Integer.class) {
-            if (readInteger(tag) != 0)
-                return (V) readInteger(tag);
-            return (V) (Integer) tag.getInt(tagElement);
-        }
-        if (classType == Float.class) {
-            return (V) (Float) tag.getFloat(tagElement);
-        }
-        if (classType == Boolean.class) {
-            return (V) (Boolean) tag.getBoolean(tagElement);
-        }
-        if (classType == DyeColor.class) {
-            return (V) DyeColor.valueOf(tag.getString(tagElement).toUpperCase());
+        try {
+            if (classType == BlockState.class) {
+                return (V) NBTUtil.readBlockState(tag.getCompound(tagElement));
+            }
+            if (classType == Integer.class) {
+                if (readInteger(tag) != 0)
+                    return (V) readInteger(tag);
+                return (V) (Integer) tag.getInt(tagElement);
+            }
+            if (classType == Float.class) {
+                return (V) (Float) tag.getFloat(tagElement);
+            }
+            if (classType == Boolean.class) {
+                return (V) (Boolean) tag.getBoolean(tagElement);
+            }
+            if (classType == DyeColor.class) {
+                return (V) DyeColor.valueOf(tag.getString(tagElement).toUpperCase());
+            }
+            if (classType == Vector3d.class) {
+                return (V) BCNBTUtils.readVec(tag.getString(tagElement));
+            }
+            if (Objects.equals(tagElement, "directions")) {
+                return (V) BCNBTUtils.readDirectionList(tag.getIntArray(tagElement));
+            }
+            if (Objects.equals(tagElement, "rotations")) {
+                return (V) BCNBTUtils.readRotationsList(tag.getIntArray(tagElement));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return defaultValue;
     }
@@ -158,32 +186,43 @@ public interface IFrameTile extends IForgeTileEntity {
         if (newElement != null) {
             if (newElement.getClass() == Integer.class)
                 tag.putInt(tagElement, (Integer) newElement);
-            if (newElement.getClass() == Float.class)
+            else if (newElement.getClass() == Float.class)
                 tag.putFloat(tagElement, (Float) newElement);
-            if (newElement.getClass() == Boolean.class)
+            else if (newElement.getClass() == Boolean.class)
                 tag.putBoolean(tagElement, (Boolean) newElement);
-            if (newElement.getClass() == BlockState.class)
+            else if (newElement.getClass() == BlockState.class)
                 tag.put(tagElement, NBTUtil.writeBlockState((BlockState) newElement));
-            if (newElement.getClass() == DyeColor.class)
+            else if (newElement.getClass() == DyeColor.class)
                 tag.putString(tagElement, ((DyeColor) newElement).name());
+            else if (newElement.getClass() == Vector3d.class)
+                tag.putString(tagElement, ((Vector3d) newElement).toString());
+            else if (Objects.equals(tagElement, "directions"))
+                BCNBTUtils.writeDirectionList(tag, (List<?>) newElement);
+            else if (Objects.equals(tagElement, "rotations"))
+                BCNBTUtils.writeRotationsList(tag, (List<?>) newElement);
         }
     }
 
     default <V> void onDataPacket(SUpdateTileEntityPacket pkt, Class<?> cls, World level, BlockPos pos, BlockState state) {
         CompoundNBT tag = pkt.getNbtCompound();
-        for (FrameBlockTile.TagPacket<?> tagPacket : TAG_PACKETS) {
-            List<Field> fs = Arrays.stream(cls.getFields()).filter(f -> (!Modifier.isStatic(f.getModifiers()) && Modifier.isPublic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers()))).collect(Collectors.toList());
-            for (Field f : fs) {
-                if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
-                    try {
-                        V oldValue = (V) f.get(this);
-                        V newValue = update(tag, tagPacket.TAG_ELEMENT, oldValue, (Class<V>) tagPacket.CLASS_TYPE, (V) tagPacket.DEFAULT, level, pos, state);
-                        f.set(this, newValue);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+        try {
+            for (FrameBlockTile.TagPacket<?> tagPacket : TAG_PACKETS) {
+                List<Field> fs = Arrays.stream(cls.getFields()).filter(f -> (!Modifier.isStatic(f.getModifiers()) && Modifier.isPublic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers()))).collect(Collectors.toList());
+                for (Field f : fs) {
+                    if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
+                        try {
+                            V oldValue = (V) f.get(this);
+                            V newValue = update(tag, tagPacket.TAG_ELEMENT, oldValue, (Class<V>) tagPacket.CLASS_TYPE, (V) tagPacket.DEFAULT, level, pos, state);
+                            f.set(this, newValue);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            LOGGER.error("Critical BlockState found: " + state.toString());
+            handleException(e, tag, "getUpdateTag");
         }
     }
 
@@ -200,53 +239,74 @@ public interface IFrameTile extends IForgeTileEntity {
     }
 
     default CompoundNBT getUpdateTag(CompoundNBT tag, Class<?> cls) {
-        for (FrameBlockTile.TagPacket<?> tagPacket : TAG_PACKETS) {
-            List<Field> fs = Arrays.stream(cls.getFields()).filter(f -> (!Modifier.isStatic(f.getModifiers()) && Modifier.isPublic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers()))).collect(Collectors.toList());
-            for (Field f : fs) {
-                if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
-                    try {
-                        write(tag, tagPacket.TAG_ELEMENT, f.get(this));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+        try {
+            for (FrameBlockTile.TagPacket<?> tagPacket : TAG_PACKETS) {
+                List<Field> fs = Arrays.stream(cls.getFields()).filter(f -> (!Modifier.isStatic(f.getModifiers()) && Modifier.isPublic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers()))).collect(Collectors.toList());
+                for (Field f : fs) {
+                    if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
+                        try {
+                            write(tag, tagPacket.TAG_ELEMENT, f.get(this));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            handleException(e, tag, "getUpdateTag");
         }
         return tag;
     }
 
     default void read(CompoundNBT tag, Class<?> cls) {
-        for (FrameBlockTile.TagPacket<?> tagPacket : TAG_PACKETS) {
-            List<Field> fs = Arrays.stream(cls.getFields()).filter(f -> (!Modifier.isStatic(f.getModifiers()) && Modifier.isPublic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers()))).collect(Collectors.toList());
-            for (Field f : fs) {
-                if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
-                    try {
-                        f.set(this, read(tag, tagPacket));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+        try {
+            for (FrameBlockTile.TagPacket<?> tagPacket : TAG_PACKETS) {
+                List<Field> fs = Arrays.stream(cls.getFields()).filter(f -> (!Modifier.isStatic(f.getModifiers()) && Modifier.isPublic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers()))).collect(Collectors.toList());
+                for (Field f : fs) {
+                    if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
+                        try {
+                            f.set(this, read(tag, tagPacket));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            handleException(e, tag, "load");
         }
     }
 
     default void write(CompoundNBT tag, Class<?> cls) {
-        for (FrameBlockTile.TagPacket<?> tagPacket : TAG_PACKETS) {
-            List<Field> fs = Arrays.stream(cls.getFields()).filter(f -> (!Modifier.isStatic(f.getModifiers()) && Modifier.isPublic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers()))).collect(Collectors.toList());
-            for (Field f : fs) {
-                if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
-                    try {
-                        write(tag, tagPacket.TAG_ELEMENT, f.get(this));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+        try {
+            for (FrameBlockTile.TagPacket<?> tagPacket : TAG_PACKETS) {
+                List<Field> fs = Arrays.stream(cls.getFields()).filter(f -> (!Modifier.isStatic(f.getModifiers()) && Modifier.isPublic(f.getModifiers()) && !Modifier.isFinal(f.getModifiers()))).collect(Collectors.toList());
+                for (Field f : fs) {
+                    if (f.getName().equals(tagPacket.TAG_ELEMENT)) {
+                        try {
+                            write(tag, tagPacket.TAG_ELEMENT, f.get(this));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            handleException(e, tag, "saveAdditional");
         }
     }
 
     default void clear() {
         this.setMimic(null);
+    }
+
+    static void handleException(Exception e, CompoundNBT tag, String phase) {
+        //Player player = Minecraft.getInstance().player;
+        //if (player != null) {
+        //    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.exception"), false);
+        //}
+        LOGGER.error("An exception occurred with CompoundNBT " + tag.toString() + " during the " + phase + " phase!");
+        e.printStackTrace();
     }
 
     class TagPacket<V> {

@@ -111,6 +111,11 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
         }
     }
 
+    @Override
+    public VoxelShape getRayTraceShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
+        return getShape(state, reader, pos, context);
+    }
+
     public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
         ItemStack itemstack = useContext.getItem();
         boolean isDouble = state.get(DOUBLE_SLAB);
@@ -165,7 +170,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements IW
         TileEntity tileEntity = level.getTileEntity(pos);
         int count = itemStack.getCount();
         Block heldBlock = ((BlockItem) itemStack.getItem()).getBlock();
-        if (tileEntity instanceof TwoBlocksFrameBlockTile && !itemStack.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_2ND_BLOCK)) {
+        if (tileEntity instanceof TwoBlocksFrameBlockTile && !itemStack.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock, level.isRemote) && !state.get(CONTAINS_2ND_BLOCK)) {
             BlockState handBlockState = ((BlockItem) itemStack.getItem()).getBlock().getDefaultState();
             insertBlock(level, pos, state, handBlockState);
             if (!player.isCreative())

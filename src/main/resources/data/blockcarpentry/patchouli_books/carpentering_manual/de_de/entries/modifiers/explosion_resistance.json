@@ -1,26 +1,26 @@
 {
   "name": "Standhaft!",
   "icon": "minecraft:obsidian",
-  "category": "modifiers",
+  "category": "blockcarpentry:modifiers",
   "sortnum": 102,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "Dies wird sehr nützlich für Mobfarmen und ähnliches sein! Man kann die Explosionsresistenz von Rahmen- und Illusionsblöcken mit Feuerstein (endlich ein guter Anwendungsfall) oder einem Obsidian Compound Chunk erhöhen. Ein Stück Feuerstein erhöht den Explosionswiderstand nur um einen kleinen Betrag (konfigurierbar)."
     },
     {
-      "type": "spotlight",
+      "type": "patchouli:spotlight",
       "item": "minecraft:flint,blockcarpentry:explosion_resistance_ball",
       "title": "Hard Rock!",
       "text": "Ein einziger Obsidian Compound Chunk hingegen verstärkt den Rahmenblock bis zum maximalen Explosionswiderstand (konfigurierbar). In beiden Fällen wird der Gegenstand $(l)$(#f00)in der Aktion verbraucht!$() Voraussetzung für die Aktion ist allerdings, dass der Rahmen oder Illusionsblock bereits"
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "text": "mit einem Block \"gefüllt\" wurde und diesen imitiert. Der Explosionswiderstand eines leeren Rahmens lässt sich nicht erhöhen. Diese Funktion wird von allen Rahmen- und Illusionsblöcken unterstützt.",
       "recipe": "blockcarpentry:explosion_resistance_ball"
     },
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "Tipp: Rahmen- oder Illusionsblöcke mit ausreichend hohem Explosionswiderstand absorbieren alle Explosionswellen, die in diese Richtung geschickt werden, was sie für Creeper- und Ghast-Farmen sehr nützlich macht. Zeit, deine Mob-Farmen schick zu machen! $(l)$(#f00)Dies funktioniert nicht für den Wither und den Ender Dragon!$() Beide können diese Blöcke trotzdem zerstören."
     }
   ]

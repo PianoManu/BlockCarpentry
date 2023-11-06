@@ -1,15 +1,22 @@
 package mod.pianomanu.blockcarpentry.block;
 
+import mod.pianomanu.blockcarpentry.item.ChiselItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.util.CornerUtils;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.Direction;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.*;
 import net.minecraft.block.Block;
@@ -28,27 +35,10 @@ import javax.annotation.Nullable;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.3 11/12/22
+ * @version 1.5 11/03/23
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, IWaterLoggable, IFrameBlock {
-    /**
-     * Block property (can be seed when pressing F3 in-game)
-     * This is needed, because we need to detect whether the blockstate has changed
-     */
-
-    private static final VoxelShape MIDDLE_STRIP_NORTH = Block.makeCuboidShape(0.0, 8.0, 1.0, 16.0, 9.0, 2.0);
-    private static final VoxelShape MIDDLE_STRIP_EAST = Block.makeCuboidShape(14.0, 8.0, 2.0, 15.0, 9.0, 14.0);
-    private static final VoxelShape MIDDLE_STRIP_SOUTH = Block.makeCuboidShape(0.0, 8.0, 14.0, 16.0, 9.0, 15.0);
-    private static final VoxelShape MIDDLE_STRIP_WEST = Block.makeCuboidShape(1.0, 8.0, 2.0, 2.0, 9.0, 14.0);
-    private static final VoxelShape TOP = Block.makeCuboidShape(0.0, 15.0, 0.0, 16.0, 16.0, 16.0);
-    private static final VoxelShape DOWN = Block.makeCuboidShape(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
-    private static final VoxelShape NW_PILLAR = Block.makeCuboidShape(0.0, 1.0, 0.0, 2.0, 15.0, 2.0);
-    private static final VoxelShape SW_PILLAR = Block.makeCuboidShape(0.0, 1.0, 14.0, 2.0, 15.0, 16.0);
-    private static final VoxelShape NE_PILLAR = Block.makeCuboidShape(14.0, 1.0, 0.0, 16.0, 15.0, 2.0);
-    private static final VoxelShape SE_PILLAR = Block.makeCuboidShape(14.0, 1.0, 14.0, 16.0, 15.0, 16.0);
-    private static final VoxelShape MID = Block.makeCuboidShape(2.0, 1.0, 2.0, 14.0, 15.0, 14.0);
-    private static final VoxelShape CUBE = VoxelShapes.or(MIDDLE_STRIP_EAST, MIDDLE_STRIP_SOUTH, MIDDLE_STRIP_WEST, MIDDLE_STRIP_NORTH, TOP, DOWN, NW_PILLAR, SW_PILLAR, NE_PILLAR, SE_PILLAR, MID);
 
     /**
      * classic constructor, all default values are set
@@ -107,6 +97,16 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
     }
 
     @Override
+    public ActionResultType onBlockActivated(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hitresult) {
+        if (player.getHeldItem(hand).getItem() instanceof ChiselItem) {
+            ChiselItem chiselItem = (ChiselItem) player.getHeldItem(hand).getItem();
+            CornerUtils.changeBoxSize(state, level, pos, player, hitresult.getHitVec(), hitresult.getFace(), chiselItem.shouldShrink());
+        }
+        updateShape(state, level, pos);
+        return super.onBlockActivated(state, level, pos, player, hand, hitresult);
+    }
+
+    @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockPos blockpos = context.getPos();
         FluidState fluidstate = context.getWorld().getFluidState(blockpos);
@@ -118,10 +118,20 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
     }
 
     @Override
+    public VoxelShape getRayTraceShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
+        if (state.get(CONTAINS_BLOCK) && !context.hasItem(Registration.CHISEL.get())) {
+            return this.getShape(state, reader, pos);
+        }
+        return VoxelShapes.fullCube();
+    }
+
+
+    @Override
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.get(WATERLOGGED)) {
             worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
         }
+        updateShape(stateIn, worldIn, currentPos);
 
         return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
@@ -134,10 +144,48 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader getter, BlockPos pos, ISelectionContext context) {
-        if (!state.get(CONTAINS_BLOCK)) {
-            return CUBE;
+        if (context.hasItem(Registration.CHISEL.get()))
+            return VoxelShapes.fullCube();
+        return this.getShape(state, getter, pos);
+    }
+
+    private VoxelShape getShape(BlockState state, IBlockReader getter, BlockPos pos) {
+        if (state.get(CONTAINS_BLOCK) && BCModConfig.SHOW_COMPLEX_BOUNDING_BOX.get()) {
+            TileEntity be = getter.getTileEntity(pos);
+            if (be instanceof FrameBlockTile) {
+                return ((FrameBlockTile) be).getShape();
+            }
         }
         return VoxelShapes.fullCube();
+    }
+
+    private void updateShape(BlockState state, IWorld level, BlockPos pos) {
+        if (state.get(CONTAINS_BLOCK) && BCModConfig.SHOW_COMPLEX_BOUNDING_BOX.get()) {
+            TileEntity be = level.getTileEntity(pos);
+            if (be instanceof FrameBlockTile) {
+                ((FrameBlockTile) be).updateShape();
+            }
+        }
+    }
+
+    @Override
+    public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return this.getShape(state, worldIn, pos);
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos) {
+        return this.getShape(state, reader, pos);
+    }
+
+    @Override
+    public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return this.getShape(state, worldIn, pos);
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader blockGetter, BlockPos pos, ISelectionContext context) {
+        return this.getShape(state, blockGetter, pos);
     }
 }
 //========SOLI DEO GLORIA========//

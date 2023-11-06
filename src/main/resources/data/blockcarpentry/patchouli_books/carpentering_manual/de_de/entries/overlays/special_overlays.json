@@ -1,16 +1,16 @@
 {
   "name": "Mehr Maurer- als Zimmermannsarbeit",
   "icon": "minecraft:stone_bricks",
-  "category": "overlays",
+  "category": "blockcarpentry:overlays",
   "sortnum": 1001,
   "pages": [
     {
-      "type": "spotlight",
+      "type": "patchouli:spotlight",
       "item": "minecraft:gunpowder",
       "text": "Mit einem Stück Creeper-Staub (auch bekannt als Schießpulver) kannst du verschiedene Strukturen auf Rahmen und Illusionsblöcke zeichnen. Dadurch wird es so aussehen, als wären Sie ein Experte in Sachen Wollmauerwerk, obwohl es nur ein Rechtsklick war. Derzeit werden fünf Versionen unterstützt. Durch Rechtsklick auf den Block mit Schießpulver kannst du sie durchwechseln."
     },
     {
-      "type": "image",
+      "type": "patchouli:image",
       "images": [
         "blockcarpentry:textures/book/special_overlay_1.png"
       ],

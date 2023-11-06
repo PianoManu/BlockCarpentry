@@ -3,6 +3,8 @@ package mod.pianomanu.blockcarpentry.bakedmodels;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
+import mod.pianomanu.blockcarpentry.util.SimpleBox;
+import mod.pianomanu.blockcarpentry.util.TextureHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
@@ -14,6 +16,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.block.BlockState;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -29,7 +32,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.3 09/20/23
+ * @version 1.5 10/30/23
  */
 public class FrameBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -49,20 +52,40 @@ public class FrameBakedModel implements IDynamicBakedModel {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (state != null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
-                boolean renderNorth = side == Direction.NORTH && extraData.getData(FrameBlockTile.NORTH_VISIBLE);
-                boolean renderEast = side == Direction.EAST && extraData.getData(FrameBlockTile.EAST_VISIBLE);
-                boolean renderSouth = side == Direction.SOUTH && extraData.getData(FrameBlockTile.SOUTH_VISIBLE);
-                boolean renderWest = side == Direction.WEST && extraData.getData(FrameBlockTile.WEST_VISIBLE);
-                boolean renderUp = side == Direction.UP && extraData.getData(FrameBlockTile.UP_VISIBLE);
-                boolean renderDown = side == Direction.DOWN && extraData.getData(FrameBlockTile.DOWN_VISIBLE);
+                TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
                 int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
-                List<BakedQuad> quads = new ArrayList<>(ModelHelper.createCuboid(0f, 1f, 0f, 1f, 0f, 1f, texture, tintIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown));
-                int overlayIndex = extraData.getData(FrameBlockTile.OVERLAY);
-                if (overlayIndex != 0) {
-                    quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1f, 0f, 1f, overlayIndex, renderNorth, renderSouth, renderEast, renderWest, renderUp, renderDown, true));
+                Vector3d NWU;
+                Vector3d SWU;
+                Vector3d NEU;
+                Vector3d SEU;
+                Vector3d NWD;
+                Vector3d SWD;
+                Vector3d NED;
+                Vector3d SED;
+                try {
+                    NWU = new Vector3d(0, 1, 0).add(extraData.getData(FrameBlockTile.NWU_prop).mul(1 / 16d, 1 / 16d, 1 / 16d)); //North-West-Up
+                    SWU = new Vector3d(0, 1, 1).add(extraData.getData(FrameBlockTile.SWU_prop).mul(1 / 16d, 1 / 16d, 1 / 16d)); //...
+                    NWD = new Vector3d(0, 0, 0).add(extraData.getData(FrameBlockTile.NWD_prop).mul(1 / 16d, 1 / 16d, 1 / 16d));
+                    SWD = new Vector3d(0, 0, 1).add(extraData.getData(FrameBlockTile.SWD_prop).mul(1 / 16d, 1 / 16d, 1 / 16d));
+                    NEU = new Vector3d(1, 1, 0).add(extraData.getData(FrameBlockTile.NEU_prop).mul(1 / 16d, 1 / 16d, 1 / 16d));
+                    SEU = new Vector3d(1, 1, 1).add(extraData.getData(FrameBlockTile.SEU_prop).mul(1 / 16d, 1 / 16d, 1 / 16d));
+                    NED = new Vector3d(1, 0, 0).add(extraData.getData(FrameBlockTile.NED_prop).mul(1 / 16d, 1 / 16d, 1 / 16d));
+                    SED = new Vector3d(1, 0, 1).add(extraData.getData(FrameBlockTile.SED_prop).mul(1 / 16d, 1 / 16d, 1 / 16d)); //South-East-Down
+                } catch (NullPointerException e) {
+                    NWU = new Vector3d(0, 1, 0); //North-West-Up
+                    SWU = new Vector3d(0, 1, 1); //...
+                    NWD = new Vector3d(0, 0, 0);
+                    SWD = new Vector3d(0, 0, 1);
+                    NEU = new Vector3d(1, 1, 0);
+                    SEU = new Vector3d(1, 1, 1);
+                    NED = new Vector3d(1, 0, 0);
+                    SED = new Vector3d(1, 0, 1); //South-East-Down
                 }
-                return quads;
+                List<Direction> directions = extraData.getData(FrameBlockTile.DIRECTIONS);
+                List<Integer> rotations = extraData.getData(FrameBlockTile.ROTATIONS);
+                boolean keepUV = extraData.getData(FrameBlockTile.KEEP_UV);
+                SimpleBox box = SimpleBox.create(NWU, NWD, NEU, NED, SWU, SWD, SEU, SED, extraData, model, rand, texture, directions, rotations, tintIndex, keepUV);
+                return box.getQuads();
             }
         }
         return Collections.emptyList();

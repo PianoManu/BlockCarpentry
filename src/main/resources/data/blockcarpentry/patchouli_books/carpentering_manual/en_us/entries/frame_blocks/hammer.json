@@ -1,18 +1,18 @@
 {
   "name": "Hammer time!",
   "icon": "blockcarpentry:hammer",
-  "category": "frame_blocks",
+  "category": "blockcarpentry:frame_blocks",
   "sortnum": 2,
   "pages": [
     {
-      "type": "spotlight",
+      "type": "patchouli:spotlight",
       "item": {
         "item": "blockcarpentry:hammer"
       },
       "text": "Oops! You accidentally used a diamond block instead of a dirt block on a frame block. But don't worry, you can make yourself a hammer. Right-click a filled frame or illusion block to make it drop the block it is mimicking. The advantage of clearing the frame or illusion block with a hammer compared to simply"
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "text": "breaking the block is all modifications done are left as-is. If you dislike the concept of the hammer, you can disable the config option $(o)hammer_needed$() in the mod's config file.",
       "recipe": "blockcarpentry:hammer"
     }

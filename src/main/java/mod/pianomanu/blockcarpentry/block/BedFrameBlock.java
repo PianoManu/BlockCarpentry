@@ -31,7 +31,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.6 09/27/23
+ * @version 1.7 10/07/23
  */
 public class BedFrameBlock extends BedBlock implements IFrameBlock {
     public static final EnumProperty<BedPart> PART = BlockStateProperties.BED_PART;
@@ -94,6 +94,21 @@ public class BedFrameBlock extends BedBlock implements IFrameBlock {
             dropContainedBlock(level, pos);
 
             super.onReplaced(state, level, pos, newState, isMoving);
+        }
+    }
+
+    @Override
+    public void dropContainedBlock(World level, BlockPos pos) {
+        if (!level.isRemote) {
+            TileEntity TileEntity = level.getTileEntity(pos);
+            if (TileEntity instanceof BedFrameTile) {
+                BedFrameTile bedFrameTile = (BedFrameTile) TileEntity;
+                BlockState blockState = bedFrameTile.getMimic();
+                if (!(blockState == null)) {
+                    dropItemStackInWorld(level, pos, blockState);
+                    bedFrameTile.clear();
+                }
+            }
         }
     }
 

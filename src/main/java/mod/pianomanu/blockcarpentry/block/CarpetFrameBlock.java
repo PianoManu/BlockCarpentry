@@ -29,7 +29,7 @@ import net.minecraftforge.common.IPlantable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 09/27/23
+ * @version 1.5 10/07/23
  */
 public class CarpetFrameBlock extends CarpetBlock implements IFrameBlock {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
@@ -56,6 +56,16 @@ public class CarpetFrameBlock extends CarpetBlock implements IFrameBlock {
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader getter, BlockPos pos, ISelectionContext context) {
         return SHAPE;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onReplaced(BlockState state, World levelIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            dropContainedBlock(levelIn, pos);
+
+            super.onReplaced(state, levelIn, pos, newState, isMoving);
+        }
     }
 
     @Override

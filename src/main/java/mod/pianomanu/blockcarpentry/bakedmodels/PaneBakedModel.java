@@ -53,7 +53,7 @@ public class PaneBakedModel implements IDynamicBakedModel {
             ModelResourceLocation location = BlockModelShapes.getModelLocation(mimic);
             if (state != null) {
                 IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
-                TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
+                TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
                 TextureAtlasSprite glass = TextureHelper.getGlassTextures().get(extraData.getData(FrameBlockTile.GLASS_COLOR));
                 boolean north = state.get(PaneFrameBlock.NORTH);
                 boolean east = state.get(PaneFrameBlock.EAST);

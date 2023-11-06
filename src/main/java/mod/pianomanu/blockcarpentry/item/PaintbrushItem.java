@@ -1,10 +1,22 @@
 package mod.pianomanu.blockcarpentry.item;
 
+import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -14,7 +26,7 @@ import java.util.List;
  * This class is used to add a tooltip to the paintbrush item
  *
  * @author PianoManu
- * @version 1.0 05/31/22
+ * @version 1.3 10/31/23
  */
 public class PaintbrushItem extends BCToolItem {
 
@@ -42,6 +54,26 @@ public class PaintbrushItem extends BCToolItem {
         } else {
             component.add(new TranslationTextComponent("tooltip.blockcarpentry.shift"));
         }
+    }
+
+    @Override
+    public ActionResultType onItemUse(ItemUseContext context) {
+        World level = context.getWorld();
+        BlockPos pos = context.getPos();
+        BlockState state = level.getBlockState(pos);
+        TileEntity entity = level.getTileEntity(pos);
+        PlayerEntity player = context.getPlayer();
+        if (!level.isRemote && (state.getBlock().equals(Registration.ILLUSION_BLOCK.get()) || state.getBlock().equals(Registration.FRAMEBLOCK.get()))) {
+            if (entity instanceof FrameBlockTile) {
+                FrameBlockTile fte = (FrameBlockTile) entity;
+                boolean keepUV = fte.getKeepUV();
+                fte.setKeepUV(!keepUV);
+                if (player != null) {
+                    player.sendStatusMessage(keepUV ? new TranslationTextComponent("message.blockcarpentry.paintbrush.relaxed") : new TranslationTextComponent("message.blockcarpentry.paintbrush.fixed"), true);
+                }
+            }
+        }
+        return super.onItemUse(context);
     }
 }
 //========SOLI DEO GLORIA========//

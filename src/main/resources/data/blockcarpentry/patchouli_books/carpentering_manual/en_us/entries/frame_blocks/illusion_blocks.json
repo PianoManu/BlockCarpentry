@@ -1,22 +1,22 @@
 {
   "name": "Everything is an illusion",
   "icon": "blockcarpentry:illusion_block",
-  "category": "frame_blocks",
+  "category": "blockcarpentry:frame_blocks",
   "sortnum": 3,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "Now after you know the functionality of the frame blocks, you might wonder what the reason behind illusion blocks might be. Those blocks, as the name implies, mimic another block by not only copying their texture but rather the whole model."
     },
     {
-      "type": "spotlight",
+      "type": "patchouli:spotlight",
       "item": {
         "item": "blockcarpentry:illusion_block"
       },
       "text": "Simply right-click the placed frame with a block of your desire and it will take its appearance."
     },
     {
-      "type": "image",
+      "type": "patchouli:image",
       "images": [
         "blockcarpentry:textures/book/illusion_block_1.png"
       ],
@@ -24,11 +24,11 @@
       "title": "Crafting table mimics"
     },
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "Here you can see two illusion blocks mimicking a crafting table. The one to the left is identical to a real crafting table, but does not bear any crafting functionality. The one to the right has the same model, but rotated. How this was achieved, is explained in another chapter."
     },
     {
-      "type": "image",
+      "type": "patchouli:image",
       "images": [
         "blockcarpentry:textures/book/illusion_block_2.png"
       ],
@@ -36,47 +36,47 @@
       "title": "A rare Furnaceshelf!"
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "text": "Again, here are some recipes on how to obtain illusion blocks.",
       "recipe": "blockcarpentry:illusion_block"
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "recipe": "blockcarpentry:illusion_slab",
       "recipe2": "blockcarpentry:illusion_stairs"
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "recipe": "blockcarpentry:illusion_button",
       "recipe2": "blockcarpentry:illusion_pressure_plate"
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "recipe": "blockcarpentry:illusion_door",
       "recipe2": "blockcarpentry:illusion_trapdoor"
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "recipe": "blockcarpentry:illusion_ladder",
       "recipe2": "blockcarpentry:illusion_fence"
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "recipe": "blockcarpentry:illusion_fence_gate",
       "recipe2": "blockcarpentry:illusion_wall"
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "recipe": "blockcarpentry:illusion_bed",
       "recipe2": "blockcarpentry:illusion_chest"
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "recipe": "blockcarpentry:illusion_carpet",
       "recipe2": "blockcarpentry:illusion_pane"
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "recipe": "blockcarpentry:illusion_daylight_detector",
       "recipe2": "blockcarpentry:illusion_layered_block"
     }

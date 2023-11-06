@@ -29,22 +29,17 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.7 10/10/23
+ * @version 1.8 10/31/23
  */
 public class BlockAppearanceHelper {
     public static boolean setAll(ItemStack itemStack, BlockState state, World level, BlockPos pos, PlayerEntity player) {
-        try {
-            return BlockAppearanceHelper.setLightLevel(itemStack, state, level, pos, player) ||
-                    BlockAppearanceHelper.setTexture(itemStack, state, level, player, pos) ||
-                    BlockAppearanceHelper.setDesign(level, pos, player, itemStack) ||
-                    BlockAppearanceHelper.setDesignTexture(level, pos, player, itemStack) ||
-                    BlockAppearanceHelper.setColor(level, pos, itemStack) ||
-                    BlockAppearanceHelper.setOverlay(level, pos, player, itemStack) ||
-                    BlockAppearanceHelper.setRotation(level, pos, player, itemStack);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        return BlockAppearanceHelper.setLightLevel(itemStack, state, level, pos, player) ||
+                BlockAppearanceHelper.setTexture(itemStack, state, level, player, pos) ||
+                BlockAppearanceHelper.setDesign(level, pos, player, itemStack) ||
+                BlockAppearanceHelper.setDesignTexture(level, pos, player, itemStack) ||
+                BlockAppearanceHelper.setColor(level, pos, itemStack) ||
+                BlockAppearanceHelper.setOverlay(level, pos, player, itemStack) ||
+                BlockAppearanceHelper.setRotation(level, pos, player, itemStack);
     }
 
     public static boolean setLightLevel(ItemStack itemStack, BlockState state, World level, BlockPos pos, PlayerEntity player) {
@@ -76,68 +71,32 @@ public class BlockAppearanceHelper {
     public static boolean setTexture(ItemStack itemStack, BlockState state, World level, PlayerEntity player, BlockPos pos) {
         if (itemStack.getItem() == Registration.TEXTURE_WRENCH.get() && !player.isCrouching() && state.get(CONTAINS_BLOCK) && mod.pianomanu.blockcarpentry.util.Tags.isFrameBlock(state.getBlock())) {
             TileEntity tileEntity = level.getTileEntity(pos);
-            if (tileEntity instanceof FrameBlockTile) {
-                FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                if (fte.getTexture() < 5) { //six sides possible
-                    fte.setTexture(fte.getTexture() + 1);
-                } else {
-                    fte.setTexture(0);
-                }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
-            }
-            if (tileEntity instanceof BedFrameTile) {
-                BedFrameTile fte = (BedFrameTile) tileEntity;
-                if (fte.getTexture() < 5) { //six sides possible
-                    fte.setTexture(fte.getTexture() + 1);
-                } else {
-                    fte.setTexture(0);
-                }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
-            }
-            if (tileEntity instanceof ChestFrameTileEntity) {
-                ChestFrameTileEntity fte = (ChestFrameTileEntity) tileEntity;
-                if (fte.getTexture() < 5) { //six sides possible
-                    fte.setTexture(fte.getTexture() + 1);
-                } else {
-                    fte.setTexture(0);
-                }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
-            }
             if (tileEntity instanceof TwoBlocksFrameBlockTile) {
                 TwoBlocksFrameBlockTile fte = (TwoBlocksFrameBlockTile) tileEntity;
                 if (!state.get(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    if (fte.getTexture() < 5) {
+                    if (fte.getTexture() < TextureHelper.getTextures(fte.getMimic()).size() - 1) {
                         fte.setTexture(fte.getTexture() + 1);
                     } else {
                         fte.setTexture(0);
                     }
-                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
+                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture() + 1), true);
                 } else {
-                    if (fte.getTexture_2() < 5) {
+                    if (fte.getTexture_2() < TextureHelper.getTextures(fte.getMimic_2()).size() - 1) {
                         fte.setTexture_2(fte.getTexture_2() + 1);
                     } else {
                         fte.setTexture_2(0);
                     }
-                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture_2()), true);
+                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture_2() + 1), true);
                 }
             }
-            if (tileEntity instanceof DaylightDetectorFrameTileEntity) {
-                DaylightDetectorFrameTileEntity fte = (DaylightDetectorFrameTileEntity) tileEntity;
-                if (fte.getTexture() < 5) { //six sides possible
+            if (tileEntity instanceof IFrameTile) {
+                IFrameTile fte = (IFrameTile) tileEntity;
+                if (fte.getTexture() < TextureHelper.getTextures(fte).size() - 1) {
                     fte.setTexture(fte.getTexture() + 1);
                 } else {
                     fte.setTexture(0);
                 }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
-            }
-            if (tileEntity instanceof SignFrameTile) {
-                SignFrameTile fte = (SignFrameTile) tileEntity;
-                if (fte.getTexture() < 5) { //six sides possible
-                    fte.setTexture(fte.getTexture() + 1);
-                } else {
-                    fte.setTexture(0);
-                }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture()), true);
+                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.texture", fte.getTexture() + 1), true);
             }
             return true;
         }
@@ -149,12 +108,15 @@ public class BlockAppearanceHelper {
             TileEntity tileEntity = level.getTileEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                if (fte.getDesign() < fte.maxDesigns) {
-                    fte.setDesign(fte.getDesign() + 1);
-                } else {
-                    fte.setDesign(0);
+                //Ugly workaround so that "Design: " is not shown on frame blocks
+                if (level.getBlockState(pos).getBlock() != Registration.FRAMEBLOCK.get() && level.getBlockState(pos).getBlock() != Registration.ILLUSION_BLOCK.get()) {
+                    if (fte.getDesign() < fte.maxDesigns) {
+                        fte.setDesign(fte.getDesign() + 1);
+                    } else {
+                        fte.setDesign(0);
+                    }
+                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign()), true);
                 }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.design", fte.getDesign()), true);
             }
             if (tileEntity instanceof BedFrameTile) {
                 BedFrameTile fte = (BedFrameTile) tileEntity;
@@ -318,12 +280,14 @@ public class BlockAppearanceHelper {
             TileEntity tileEntity = level.getTileEntity(pos);
             if (tileEntity instanceof FrameBlockTile) {
                 FrameBlockTile fte = (FrameBlockTile) tileEntity;
-                if (fte.getRotation() < 11) {
-                    fte.setRotation(fte.getRotation() + 1);
-                } else {
-                    fte.setRotation(0);
+                if (!level.getBlockState(pos).getBlock().equals(Registration.ILLUSION_BLOCK.get())) {
+                    if (fte.getRotation() < 11) {
+                        fte.setRotation(fte.getRotation() + 1);
+                    } else {
+                        fte.setRotation(0);
+                    }
+                    player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
                 }
-                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.rotation", fte.getRotation()), true);
             }
             if (tileEntity instanceof BedFrameTile) {
                 BedFrameTile fte = (BedFrameTile) tileEntity;

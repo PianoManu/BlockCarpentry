@@ -1,16 +1,16 @@
 {
   "name": "Becoming a painter",
   "icon": "blockcarpentry:paintbrush",
-  "category": "chiseling",
+  "category": "blockcarpentry:chiseling",
   "sortnum": 13,
   "pages": [
     {
-      "type": "spotlight",
+      "type": "patchouli:spotlight",
       "item": "blockcarpentry:paintbrush",
       "text": "Some blocks have designs with parts that can be repainted. For this, the paintbrush can be used. On the right side, this is visualized for a ladder, whose design has repaintable parts."
     },
     {
-      "type": "image",
+      "type": "patchouli:image",
       "images": [
         "blockcarpentry:textures/book/paintbrush_1.png"
       ],
@@ -18,12 +18,12 @@
       "border": true
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "recipe": "blockcarpentry:paintbrush"
     },
     {
-      "type": "text",
-      "text": "Currently, that's all. The paintbrush does not have any further functionality. This might change in the future, though. Stay excited!"
+      "type": "patchouli:text",
+      "text": "The paintbrush has an additional functionality, which is explained in the $(o)Block Collapse$() chapter. Aside from that, the paintbrush currently does not have any other functionality, but this might change in the future. Stay excited!"
     }
   ]
 }

@@ -20,6 +20,7 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
@@ -40,14 +41,13 @@ import java.util.Objects;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.5 11/03/23
+ * @version 1.6 11/05/23
  */
 public interface IFrameBlock extends IForgeBlock {
     BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
     DirectionProperty FACING = BlockStateProperties.FACING;
-
 
     static int getLightValue(BlockState state) {
         if (state.get(LIGHT_LEVEL) > 15) {
@@ -170,6 +170,11 @@ public interface IFrameBlock extends IForgeBlock {
     }
 
     default ActionResultType frameUseClient(BlockState state, World level, BlockPos pos, PlayerEntity player, ItemStack itemStack, BlockRayTraceResult hitresult) {
+        if (!state.get(CONTAINS_BLOCK) && itemStack.getItem() instanceof BlockItem && !BlockSavingHelper.isValidBlock(((BlockItem) itemStack.getItem()).getBlock(), level.isRemote)) {
+            Block b = ((BlockItem) itemStack.getItem()).getBlock();
+            if (!Tags.isFrameBlock(b) && !Tags.isIllusionBlock(b))
+                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
+        }
         return itemStack.getItem() instanceof BlockItem ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
     }
 
@@ -180,11 +185,15 @@ public interface IFrameBlock extends IForgeBlock {
         TileEntity tileEntity = level.getTileEntity(pos);
         int count = itemStack.getCount();
         Block heldBlock = ((BlockItem) itemStack.getItem()).getBlock();
-        if (isCorrectTileInstance(tileEntity) && !itemStack.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.get(CONTAINS_BLOCK)) {
-            BlockState handBlockState = ((BlockItem) itemStack.getItem()).getBlock().getDefaultState();
-            insertBlock(level, pos, state, handBlockState);
-            if (!player.isCreative())
-                itemStack.setCount(count - 1);
+        if (isCorrectTileInstance(tileEntity) && !itemStack.isEmpty() && !state.get(CONTAINS_BLOCK)) {
+            if (BlockSavingHelper.isValidBlock(heldBlock, level.isRemote)) {
+                BlockState handBlockState = ((BlockItem) itemStack.getItem()).getBlock().getDefaultState();
+                insertBlock(level, pos, state, handBlockState);
+                if (!player.isCreative())
+                    itemStack.setCount(count - 1);
+            } else {
+                player.sendStatusMessage(new TranslationTextComponent("message.blockcarpentry.block_not_available"), true);
+            }
         }
         return true;
     }
@@ -195,14 +204,23 @@ public interface IFrameBlock extends IForgeBlock {
 
     default <V extends IFrameTile> V getTile(IBlockReader level, BlockPos pos) {
         TileEntity be = level.getTileEntity(pos);
-        if (IFrameTile.class.isAssignableFrom(Objects.requireNonNull(be).getClass())) {
-            return (V) be;
+        try {
+            if (IFrameTile.class.isAssignableFrom(Objects.requireNonNull(be).getClass())) {
+                return (V) be;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
     default boolean executeModifications(BlockState state, World level, BlockPos pos, PlayerEntity player, ItemStack itemStack) {
-        return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player);
+        try {
+            return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

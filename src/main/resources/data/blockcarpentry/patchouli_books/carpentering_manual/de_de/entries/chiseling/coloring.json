@@ -1,15 +1,15 @@
 {
   "name": "Farbenfrohe Welt!",
   "icon": "minecraft:red_dye",
-  "category": "chiseling",
+  "category": "blockcarpentry:chiseling",
   "sortnum": 12,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "Vielleicht ist dir aufgefallen, dass einige Blöcke in einigen Entwürfen transparente Teile enthalten, z. B. Türen, Falltüren, Teppiche, Scheiben und Tageslichtsensoren. Sie können diese nach Belieben einfärben. Klicken Sie einfach mit der rechten Maustaste auf den Rahmen oder den Illusionsblock mit einem Stück Farbstoff, um die Farbe dieses Bereichs zu ändern. Das Farbstoffstück $(o)wird dabei nicht verbraucht$()!"
     },
     {
-      "type": "image",
+      "type": "patchouli:image",
       "images": [
         "blockcarpentry:textures/book/coloring_1.png"
       ],
@@ -17,7 +17,7 @@
       "title": "Buntes Glas!"
     },
     {
-      "type": "spotlight",
+      "type": "patchouli:spotlight",
       "item": {
         "tag": "forge:dyes"
       },
@@ -25,7 +25,7 @@
       "text": "Voraussetzung dafür ist allerdings, dass der Rahmen- oder Illusionsblock bereits mit einem Block \"gefüllt\" ist und diesen imitiert, und dass ein Design mit transparenten Teilen gewählt wird. Diese Funktion wird durch Rahmen- und Illusionstüren, Falltüren, Teppiche, Scheiben und Tageslichtsensoren unterstützt."
     },
     {
-      "type": "image",
+      "type": "patchouli:image",
       "images": [
         "blockcarpentry:textures/book/coloring_3.png"
       ],
@@ -33,11 +33,11 @@
       "title": "Erdhausfenster!"
     },
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "Das Gleiche gilt für Blöcke, die wollene Teile haben, wie Betten oder Teppiche. Da Betten zwei Blöcke groß sind, kannst du auch Kissen und Decke unabhängig voneinander färben."
     },
     {
-      "type": "image",
+      "type": "patchouli:image",
       "images": [
         "blockcarpentry:textures/book/coloring_2.png"
       ],

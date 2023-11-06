@@ -1,15 +1,15 @@
 {
   "name": "Ein Schraubenschlüssel?",
   "icon": "blockcarpentry:texture_wrench",
-  "category": "chiseling",
+  "category": "blockcarpentry:chiseling",
   "sortnum": 11,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "Der Texturschlüssel ist ein multifunktionales Werkzeug, mit dem man durch verschiedene Texturen eines Blocks schalten kann. Nimm zum Beispiel einen Ofen. Dieser Block hat 3 verschiedene Texturen: eine für die Vorderseite, eine für die drei Seitenflächen und eine für die obere und untere Fläche. Wenn du mit der rechten Maustaste auf einen Rahmenblock klickst, der einen Ofen nachahmt, kannst du"
     },
     {
-      "type": "image",
+      "type": "patchouli:image",
       "images": [
         "blockcarpentry:textures/book/wrench_1.png"
       ],
@@ -17,12 +17,12 @@
       "text": "durch alle verfügbaren Texturen wechseln."
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "text": "Bei Illusionsblöcken dreht sich stattdessen das gesamte Modell, so wie man den Block umdrehen würde. Hier noch einmal am Beispiel des Ofens gezeigt.",
-      "recipe": "blockcarpentry:chisel"
+      "recipe": "blockcarpentry:texture_wrench"
     },
     {
-      "type": "image",
+      "type": "patchouli:image",
       "images": [
         "blockcarpentry:textures/book/wrench_2.png"
       ],

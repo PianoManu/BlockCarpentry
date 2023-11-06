@@ -9,6 +9,7 @@ import net.minecraft.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Util class to manage appearance modifying items for certain frame block

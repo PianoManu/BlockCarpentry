@@ -1,0 +1,51 @@
+{
+  "name": "Blockkollaps",
+  "icon": "blockcarpentry:frame_slope",
+  "category": "blockcarpentry:chiseling",
+  "sortnum": 14,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Benutze den Meißel auf einem Rahmen- oder Illusionswürfel, um die Position seiner Ecken zu ändern. Dadurch wird der Block \"zusammengefaltet\", wie in der Abbildung rechts dargestellt. Wenn du mit der rechten Maustaste in die Nähe einer Ecke klickst, kannst du die entsprechende Ecke in die Richtung verschieben, in die du schaust. Jede Fläche hat somit 4 Abschnitte. Wenn du mit der rechten Maustaste in einen dieser Abschnitte klickst, wird die"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/collapse_1.png"
+      ],
+      "border": true,
+      "text": "entsprechende Ecke bewegt. Endlich kannst du deine eigenen vertikalen Schrägen erstellen!"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Um eine Ecke zurückzuziehen, kannst du mit dem Meißel schleichend mit der rechten Maustaste klicken (nicht unbedingt auf einen Block), um zwischen den Modi \"Schrumpfen\" und \"Erweitern\" umzuschalten. Dies funktioniert bei Rahmen- und Illusionswürfelblöcken. Damit kannst du einen Haufen neuer Blöcke erstellen und musst nicht warten, bis der faule Entwickler weitere Blöcke implementiert! Dieses Feature ist noch WIP, daher können visuelle Probleme auftreten. Außerdem kann man mit dem Pinsel ein- und ausschalten, ob die UV-Koordinaten Textur"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/collapse_2.png"
+      ],
+      "border": true,
+      "title": "M. C. Escher kopieren!",
+      "text": "an den Ecken des Blocks oder an den tatsächlich sichtbaren Ecken befestigt werden sollten."
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/uv_fixed.png"
+      ],
+      "border": true,
+      "title": "Fixierte UV-Werte!",
+      "text": "Bei festen Werten bleibt die Textur intakt, kann aber verzerrt aussehen."
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/uv_relaxed.png"
+      ],
+      "border": true,
+      "title": "Gelöste UV-Werte!",
+      "text": "Ansonsten wird die Textur so angepasst, dass sie wie ein ausgeschnittener Block wirkt."
+    }
+  ]
+}

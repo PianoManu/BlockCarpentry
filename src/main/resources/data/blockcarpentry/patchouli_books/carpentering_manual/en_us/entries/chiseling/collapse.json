@@ -1,0 +1,52 @@
+{
+  "name": "Block Collapse",
+  "icon": "blockcarpentry:frame_slope",
+  "category": "blockcarpentry:chiseling",
+  "sortnum": 14,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "blockcarpentry:chisel",
+      "text": "Use the chisel on a frame or illusion cube block to change the location of its corners. This \"collapses\" the block as shown in the picture to the right. By right-clicking near a corner, you can move the corresponding corner in the direction you are looking. Each face has thus 4 sections. Right-Clicking in one of those sections moves the"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/collapse_1.png"
+      ],
+      "border": true,
+      "text": "corresponding corner. Finally you can create your own vertical slopes!"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "To extend a corner, you can sneak-right-click with the chisel (not necessarily onto a block) to toggle between the \"Shrink\" and \"Expand\" modes. This works for frame and illusion cube blocks. You can create a bunch of new block with this and don't have to wait until the lazy Dev implements more blocks! This feature is still WIP, so visual problems can occur. Furthermore, you can use the paintbrush to toggle whether the texture's"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/collapse_2.png"
+      ],
+      "border": true,
+      "title": "Copying M. C. Escher!",
+      "text": "UV-coordinates should be fixed at the corners of the block or at the actual corners."
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/uv_fixed.png"
+      ],
+      "border": true,
+      "title": "Fixed UV values!",
+      "text": "With fixed values, the texture remains intact but might look distorted."
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/uv_relaxed.png"
+      ],
+      "border": true,
+      "title": "Relaxed UV values!",
+      "text": "Otherwise, the texture is adjusted such that it seems like a cut-out block."
+    }
+  ]
+}

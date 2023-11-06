@@ -5,6 +5,7 @@ import mod.pianomanu.blockcarpentry.tileentity.ChestFrameTileEntity;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
 import mod.pianomanu.blockcarpentry.util.TextureHelper;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.*;
@@ -57,7 +58,7 @@ public class ChestBakedModel implements IDynamicBakedModel {
         }
         BlockState mimic = extraData.getData(ChestFrameTileEntity.MIMIC);
         if (mimic != null && state != null) {
-            TextureAtlasSprite texture = QuadUtils.getTexture(model, rand, extraData, ChestFrameTileEntity.TEXTURE);
+            TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, ChestFrameTileEntity.TEXTURE);
             List<TextureAtlasSprite> designTextureList = new ArrayList<>(TextureHelper.getMetalTextures());
             designTextureList.add(Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("minecraft", "block/shulker_box")));
             TextureAtlasSprite chestFront = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation(BlockCarpentryMain.MOD_ID, "block/chest_front"));
@@ -120,7 +121,7 @@ public class ChestBakedModel implements IDynamicBakedModel {
                 int[] uhigh = {9, 9, 8, 7, 9, 7};
                 int[] vlow = {4, 7, 4, 4, 4, 4};
                 int[] vhigh = {5, 8, 8, 8, 8, 8};
-                switch (state.get(BlockStateProperties.FACING)) {
+                switch (state.get(HorizontalBlock.HORIZONTAL_FACING)) {
                     case NORTH:
                         quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 1 / 16f, 15 / 16f, 1 / 16f, 2 / 16f, chestFront, -1));
                         quads.addAll(ModelHelper.createCuboid(1 / 16f, 15 / 16f, 1 / 16f, 15 / 16f, 14 / 16f, 15 / 16f, chestSide, -1));
