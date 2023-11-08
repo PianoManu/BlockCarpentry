@@ -17,7 +17,7 @@ import java.util.List;
  * This class is used to add a tooltip to the chisel item
  *
  * @author PianoManu
- * @version 1.3 10/23/23
+ * @version 1.3 11/08/23
  */
 public class ChiselItem extends BCToolItem {
 
@@ -51,7 +51,7 @@ public class ChiselItem extends BCToolItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if (player.isCrouching()) {
+        if (!level.isClientSide && player.isCrouching()) {
             this.shrink = !this.shrink;
             player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.chisel.mode", this.shrink ? new TranslatableComponent("message.blockcarpentry.chisel.shrink") : new TranslatableComponent("message.blockcarpentry.chisel.enlarge")), true);
         }
