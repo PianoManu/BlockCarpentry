@@ -16,7 +16,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.4 11/03/23
+ * @version 1.4 11/08/23
  */
 public class QuadUtils {
 
@@ -63,13 +63,31 @@ public class QuadUtils {
     private static Vec3[] rotateFace(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, int rotation) {
         Vec3 tmp;
         for (int i = 0; i < rotation; i++) {
-            tmp = v1;
-            v1 = v2;
-            v2 = v3;
-            v3 = v4;
-            v4 = tmp;
+            tmp = v4;
+            v4 = v3;
+            v3 = v2;
+            v2 = v1;
+            v1 = tmp;
         }
         return new Vec3[]{v1, v2, v3, v4};
+    }
+
+    private static float[] rotateUV(float v1u, float v1v, float v2u, float v2v, float v3u, float v3v, float v4u, float v4v, int rotation) {
+        float tmpU;
+        float tmpV;
+        for (int i = 0; i < rotation; i++) {
+            tmpU = v1u;
+            tmpV = v1v;
+            v1u = v2u;
+            v1v = v2v;
+            v2u = v3u;
+            v2v = v3v;
+            v3u = v4u;
+            v3v = v4v;
+            v4u = tmpU;
+            v4v = tmpV;
+        }
+        return new float[]{v1u, v1v, v2u, v2v, v3u, v3v, v4u, v4v};
     }
 
     /**
@@ -95,12 +113,7 @@ public class QuadUtils {
     }
 
     public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, int tintIndex, int rotation) {
-        Vec3[] vs = rotateFace(v1, v2, v3, v4, rotation);
-        v1 = vs[0];
-        v2 = vs[1];
-        v3 = vs[2];
-        v4 = vs[3];
-        return createQuad(v1, v2, v3, v4, sprite, 0, 0, 0, 16, 16, 16, 16, 0, tintIndex, false);
+        return createQuad(v1, v2, v3, v4, sprite, 0, 0, 0, 16, 16, 16, 16, 0, tintIndex, false, rotation);
     }
 
     public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex, int rotation) {
@@ -122,28 +135,34 @@ public class QuadUtils {
 
     public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, Direction direction, int tintIndex, int rotation, boolean keepUV, boolean invert, boolean moveVertically) {
         int verticalOffset = moveVertically ? 16 : 0;
+        if (keepUV)
+            return createQuad(v1, v2, v3, v4, sprite, 0, 0, 0, 16, 16, 16, 16, 0, tintIndex, invert, rotation);
         Vec3[] vs = rotateFace(v1, v2, v3, v4, rotation);
         v1 = vs[0];
         v2 = vs[1];
         v3 = vs[2];
         v4 = vs[3];
-        if (keepUV)
-            return createQuad(v1, v2, v3, v4, sprite, 0, 0, 0, 16, 16, 16, 16, 0, tintIndex, invert);
         return switch (direction) {
-            case UP -> createQuad(v1, v2, v3, v4, sprite, (float) v1.x * 16f, (float) v1.z * 16f, (float) v2.x * 16f, (float) v2.z * 16f, (float) v3.x * 16f, (float) v3.z * 16f, (float) v4.x * 16f, (float) v4.z * 16f, tintIndex, invert);
-            case DOWN -> createQuad(v1, v2, v3, v4, sprite, (float) v1.x * 16f, 16 - (float) v1.z * 16f, (float) v2.x * 16f, 16 - (float) v2.z * 16f, (float) v3.x * 16f, 16 - (float) v3.z * 16f, (float) v4.x * 16f, 16 - (float) v4.z * 16f, tintIndex, invert);
-            case WEST -> createQuad(v1, v2, v3, v4, sprite, (float) v1.z * 16f, 16 - (float) v1.y * 16f + verticalOffset, (float) v2.z * 16f, 16 - (float) v2.y * 16f + verticalOffset, (float) v3.z * 16f, 16 - (float) v3.y * 16f + verticalOffset, (float) v4.z * 16f, 16 - (float) v4.y * 16f + verticalOffset, tintIndex, invert);
-            case EAST -> createQuad(v1, v2, v3, v4, sprite, 16 - (float) v1.z * 16f, 16 - (float) v1.y * 16f + verticalOffset, 16 - (float) v2.z * 16f, 16 - (float) v2.y * 16f + verticalOffset, 16 - (float) v3.z * 16f, 16 - (float) v3.y * 16f + verticalOffset, 16 - (float) v4.z * 16f, 16 - (float) v4.y * 16f + verticalOffset, tintIndex, invert);
-            case SOUTH -> createQuad(v1, v2, v3, v4, sprite, (float) v1.x * 16f, 16 - (float) v1.y * 16f + verticalOffset, (float) v2.x * 16f, 16 - (float) v2.y * 16f + verticalOffset, (float) v3.x * 16f, 16 - (float) v3.y * 16f + verticalOffset, (float) v4.x * 16f, 16 - (float) v4.y * 16f + verticalOffset, tintIndex, invert);
-            case NORTH -> createQuad(v1, v2, v3, v4, sprite, 16 - (float) v1.x * 16f, 16 - (float) v1.y * 16f + verticalOffset, 16 - (float) v2.x * 16f, 16 - (float) v2.y * 16f + verticalOffset, 16 - (float) v3.x * 16f, 16 - (float) v3.y * 16f + verticalOffset, 16 - (float) v4.x * 16f, 16 - (float) v4.y * 16f + verticalOffset, tintIndex, invert);
+            case UP -> createQuad(v1, v2, v3, v4, sprite, (float) v1.x * 16f, (float) v1.z * 16f, (float) v2.x * 16f, (float) v2.z * 16f, (float) v3.x * 16f, (float) v3.z * 16f, (float) v4.x * 16f, (float) v4.z * 16f, tintIndex, invert, 0);
+            case DOWN -> createQuad(v1, v2, v3, v4, sprite, (float) v1.x * 16f, 16 - (float) v1.z * 16f, (float) v2.x * 16f, 16 - (float) v2.z * 16f, (float) v3.x * 16f, 16 - (float) v3.z * 16f, (float) v4.x * 16f, 16 - (float) v4.z * 16f, tintIndex, invert, 0);
+            case WEST -> createQuad(v1, v2, v3, v4, sprite, (float) v1.z * 16f, 16 - (float) v1.y * 16f + verticalOffset, (float) v2.z * 16f, 16 - (float) v2.y * 16f + verticalOffset, (float) v3.z * 16f, 16 - (float) v3.y * 16f + verticalOffset, (float) v4.z * 16f, 16 - (float) v4.y * 16f + verticalOffset, tintIndex, invert, 0);
+            case EAST -> createQuad(v1, v2, v3, v4, sprite, 16 - (float) v1.z * 16f, 16 - (float) v1.y * 16f + verticalOffset, 16 - (float) v2.z * 16f, 16 - (float) v2.y * 16f + verticalOffset, 16 - (float) v3.z * 16f, 16 - (float) v3.y * 16f + verticalOffset, 16 - (float) v4.z * 16f, 16 - (float) v4.y * 16f + verticalOffset, tintIndex, invert, 0);
+            case SOUTH -> createQuad(v1, v2, v3, v4, sprite, (float) v1.x * 16f, 16 - (float) v1.y * 16f + verticalOffset, (float) v2.x * 16f, 16 - (float) v2.y * 16f + verticalOffset, (float) v3.x * 16f, 16 - (float) v3.y * 16f + verticalOffset, (float) v4.x * 16f, 16 - (float) v4.y * 16f + verticalOffset, tintIndex, invert, 0);
+            case NORTH -> createQuad(v1, v2, v3, v4, sprite, 16 - (float) v1.x * 16f, 16 - (float) v1.y * 16f + verticalOffset, 16 - (float) v2.x * 16f, 16 - (float) v2.y * 16f + verticalOffset, 16 - (float) v3.x * 16f, 16 - (float) v3.y * 16f + verticalOffset, 16 - (float) v4.x * 16f, 16 - (float) v4.y * 16f + verticalOffset, tintIndex, invert, 0);
         };
     }
 
     public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex, boolean invert) {
-        return createQuad(v1, v2, v3, v4, sprite, ulow, vlow, ulow, vhigh, uhigh, vhigh, uhigh, vlow, tintIndex, invert);
+        return createQuad(v1, v2, v3, v4, sprite, ulow, vlow, ulow, vhigh, uhigh, vhigh, uhigh, vlow, tintIndex, invert, 0);
     }
 
-    public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float v1u, float v1v, float v2u, float v2v, float v3u, float v3v, float v4u, float v4v, int tintIndex, boolean invert) {
+    public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float v1u, float v1v, float v2u, float v2v, float v3u, float v3v, float v4u, float v4v, int tintIndex, boolean invert, int rotation) {
+        Vec3[] vs = rotateFace(v1, v2, v3, v4, rotation);
+        v1 = vs[0];
+        v2 = vs[1];
+        v3 = vs[2];
+        v4 = vs[3];
+
         Vec3 normal = v3.subtract(v2).cross(v1.subtract(v2)).normalize();
         BakedQuad[] quad = new BakedQuad[1];
         QuadBakingVertexConsumer builder = prepare(quad, sprite, normal, tintIndex);
@@ -170,16 +189,32 @@ public class QuadUtils {
     public static List<BakedQuad> createQuadComplex(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, Direction direction, int tintIndex, int rotation, boolean keepUV, boolean invert) {
         List<BakedQuad> quads = new ArrayList<>();
         Vec3 COGVec = centerOfGravityVec(v1, v2, v3, v4);
+        Vec3[] vs = rotateFace(v1, v2, v3, v4, rotation);
+        v1 = vs[0];
+        v2 = vs[1];
+        v3 = vs[2];
+        v4 = vs[3];
         if (!keepUV) {
-            quads.add(createQuad(v1, v2, COGVec, COGVec, sprite, direction, tintIndex, rotation, keepUV, invert));
-            quads.add(createQuad(v2, v3, COGVec, COGVec, sprite, direction, tintIndex, rotation, keepUV, invert));
-            quads.add(createQuad(v3, v4, COGVec, COGVec, sprite, direction, tintIndex, rotation, keepUV, invert));
-            quads.add(createQuad(COGVec, v4, v1, COGVec, sprite, direction, tintIndex, rotation, keepUV, invert));
+            float[] uvs;
+            switch (direction) {
+                case UP -> uvs = rotateUV((float) v1.x * 16f, (float) v1.z * 16f, (float) v2.x * 16f, (float) v2.z * 16f, (float) v3.x * 16f, (float) v3.z * 16f, (float) v4.x * 16f, (float) v4.z * 16f, rotation);
+                case DOWN -> uvs = rotateUV((float) v1.x * 16f, 16 - (float) v1.z * 16f, (float) v2.x * 16f, 16 - (float) v2.z * 16f, (float) v3.x * 16f, 16 - (float) v3.z * 16f, (float) v4.x * 16f, 16 - (float) v4.z * 16f, rotation);
+                case WEST -> uvs = rotateUV((float) v1.z * 16f, 16 - (float) v1.y * 16f, (float) v2.z * 16f, 16 - (float) v2.y * 16f, (float) v3.z * 16f, 16 - (float) v3.y * 16f, (float) v4.z * 16f, 16 - (float) v4.y * 16f, rotation);
+                case EAST -> uvs = rotateUV(16 - (float) v1.z * 16f, 16 - (float) v1.y * 16f, 16 - (float) v2.z * 16f, 16 - (float) v2.y * 16f, 16 - (float) v3.z * 16f, 16 - (float) v3.y * 16f, 16 - (float) v4.z * 16f, 16 - (float) v4.y * 16f, rotation);
+                case SOUTH -> uvs = rotateUV((float) v1.x * 16f, 16 - (float) v1.y * 16f, (float) v2.x * 16f, 16 - (float) v2.y * 16f, (float) v3.x * 16f, 16 - (float) v3.y * 16f, (float) v4.x * 16f, 16 - (float) v4.y * 16f, rotation);
+                case NORTH -> uvs = rotateUV(16 - (float) v1.x * 16f, 16 - (float) v1.y * 16f, 16 - (float) v2.x * 16f, 16 - (float) v2.y * 16f, 16 - (float) v3.x * 16f, 16 - (float) v3.y * 16f, 16 - (float) v4.x * 16f, 16 - (float) v4.y * 16f, rotation);
+                default -> uvs = new float[]{0, 0, 0, 16, 16, 16, 16, 0};
+            }
+            ;
+            quads.add(createQuad(v1, v2, COGVec, COGVec, sprite, uvs[0], uvs[1], uvs[2], uvs[3], 8, 8, 8, 8, tintIndex, invert, 0));
+            quads.add(createQuad(v2, v3, COGVec, COGVec, sprite, uvs[2], uvs[3], uvs[4], uvs[5], 8, 8, 8, 8, tintIndex, invert, 0));
+            quads.add(createQuad(v3, v4, COGVec, COGVec, sprite, uvs[4], uvs[5], uvs[6], uvs[7], 8, 8, 8, 8, tintIndex, invert, 0));
+            quads.add(createQuad(COGVec, v4, v1, COGVec, sprite, 8, 8, uvs[6], uvs[7], uvs[0], uvs[1], 8, 8, tintIndex, invert, 0));
         } else {
-            quads.add(createQuad(v1, v2, COGVec, COGVec, sprite, 0, 0, 0, 16, 8, 8, 8, 8, tintIndex, invert));
-            quads.add(createQuad(v2, v3, COGVec, COGVec, sprite, 0, 16, 16, 16, 8, 8, 8, 8, tintIndex, invert));
-            quads.add(createQuad(v3, v4, COGVec, COGVec, sprite, 16, 16, 16, 0, 8, 8, 8, 8, tintIndex, invert));
-            quads.add(createQuad(COGVec, v4, v1, COGVec, sprite, 8, 8, 16, 0, 0, 0, 8, 8, tintIndex, invert));
+            quads.add(createQuad(v1, v2, COGVec, COGVec, sprite, 0, 0, 0, 16, 8, 8, 8, 8, tintIndex, invert, 0));
+            quads.add(createQuad(v2, v3, COGVec, COGVec, sprite, 0, 16, 16, 16, 8, 8, 8, 8, tintIndex, invert, 0));
+            quads.add(createQuad(v3, v4, COGVec, COGVec, sprite, 16, 16, 16, 0, 8, 8, 8, 8, tintIndex, invert, 0));
+            quads.add(createQuad(COGVec, v4, v1, COGVec, sprite, 8, 8, 16, 0, 0, 0, 8, 8, tintIndex, invert, 0));
         }
         return quads;
     }
