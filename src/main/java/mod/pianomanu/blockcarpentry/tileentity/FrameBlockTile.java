@@ -32,7 +32,7 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.8 11/03/23
+ * @version 1.9 11/08/23
  */
 public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IFrameTile {
     public static final List<IFrameTile.TagPacket<?>> TAG_PACKETS = initTagPackets();
@@ -62,6 +62,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     public static final ModelProperty<Integer> OVERLAY = new ModelProperty<>();
     public static final ModelProperty<Integer> ROTATION = new ModelProperty<>();
     public static final ModelProperty<Boolean> KEEP_UV = new ModelProperty<>();
+    public static final ModelProperty<Boolean> REMAIN_RECTANGLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> NORTH_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> EAST_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> SOUTH_VISIBLE = new ModelProperty<>();
@@ -93,6 +94,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     public Integer overlay = 0;
     public Integer rotation = 0;
     public Boolean keepUV = true;
+    public Boolean faceRemainRectangle = true;
     public Float friction = Registration.FRAMEBLOCK.get().getFriction();
     public Float explosionResistance = Registration.FRAMEBLOCK.get().getExplosionResistance();
     public Boolean canSustainPlant = false;
@@ -364,6 +366,14 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
         this.keepUV = set(keepUV);
     }
 
+    public Boolean getFaceRemainRectangle() {
+        return this.faceRemainRectangle;
+    }
+
+    public void setFaceRemainRectangle(Boolean faceRemainRectangle) {
+        this.faceRemainRectangle = set(faceRemainRectangle);
+    }
+
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -388,6 +398,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
                 .with(OVERLAY, overlay)
                 .with(ROTATION, rotation)
                 .with(KEEP_UV, keepUV)
+                .with(REMAIN_RECTANGLE, faceRemainRectangle)
                 .with(NORTH_VISIBLE, northVisible)
                 .with(EAST_VISIBLE, eastVisible)
                 .with(SOUTH_VISIBLE, southVisible)

@@ -1,6 +1,7 @@
 package mod.pianomanu.blockcarpentry.block;
 
 import mod.pianomanu.blockcarpentry.item.ChiselItem;
+import mod.pianomanu.blockcarpentry.item.PaintbrushItem;
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
@@ -36,7 +37,7 @@ import javax.annotation.Nullable;
  * This class is the most basic one for all frame blocks, so you can find most of the documentation here
  *
  * @author PianoManu
- * @version 1.5 11/03/23
+ * @version 1.6 11/08/23
  */
 @SuppressWarnings("deprecation")
 public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, SimpleWaterloggedBlock, IFrameBlock {
@@ -97,6 +98,8 @@ public class FrameBlock extends AbstractFrameBlock implements IForgeBlockState, 
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         if (player.getItemInHand(hand).getItem() instanceof ChiselItem chiselItem)
             CornerUtils.changeBoxSize(state, level, pos, player, hitresult.getLocation(), hitresult.getDirection(), chiselItem.shouldShrink());
+        if (!level.isClientSide && !player.isCrouching() && player.getItemInHand(hand).getItem() instanceof PaintbrushItem && PaintbrushItem.setRectangleCustom(level, player, pos))
+            return InteractionResult.SUCCESS;
         updateShape(state, level, pos);
         return super.use(state, level, pos, player, hand, hitresult);
     }

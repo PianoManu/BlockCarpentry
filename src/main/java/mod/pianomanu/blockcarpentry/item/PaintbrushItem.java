@@ -21,7 +21,7 @@ import java.util.List;
  * This class is used to add a tooltip to the paintbrush item
  *
  * @author PianoManu
- * @version 1.3 10/31/23
+ * @version 1.4 11/08/23
  */
 public class PaintbrushItem extends BCToolItem {
 
@@ -60,14 +60,26 @@ public class PaintbrushItem extends BCToolItem {
         Player player = context.getPlayer();
         if (!level.isClientSide && (state.getBlock().equals(Registration.ILLUSION_BLOCK.get()) || state.getBlock().equals(Registration.FRAMEBLOCK.get()))) {
             if (entity instanceof FrameBlockTile fte) {
-                boolean keepUV = fte.getKeepUV();
-                fte.setKeepUV(!keepUV);
-                if (player != null) {
-                    player.displayClientMessage(keepUV ? Component.translatable("message.blockcarpentry.paintbrush.relaxed") : Component.translatable("message.blockcarpentry.paintbrush.fixed"), true);
+                if (player == null || player.isCrouching()) {
+                    boolean keepUV = fte.getKeepUV();
+                    fte.setKeepUV(!keepUV);
+                    if (player != null) {
+                        player.displayClientMessage(keepUV ? Component.translatable("message.blockcarpentry.paintbrush.relaxed") : Component.translatable("message.blockcarpentry.paintbrush.fixed"), true);
+                    }
                 }
             }
         }
         return super.useOn(context);
+    }
+
+    public static boolean setRectangleCustom(Level level, Player player, BlockPos pos) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof FrameBlockTile fte) {
+            fte.setFaceRemainRectangle(!fte.getFaceRemainRectangle());
+            player.displayClientMessage(fte.getFaceRemainRectangle() ? Component.translatable("message.blockcarpentry.paintbrush.rectangle") : Component.translatable("message.blockcarpentry.paintbrush.custom"), true);
+            return true;
+        }
+        return false;
     }
 }
 //========SOLI DEO GLORIA========//
