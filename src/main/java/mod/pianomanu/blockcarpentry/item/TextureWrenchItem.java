@@ -22,7 +22,7 @@ import java.util.List;
  * This class is used to add a tooltip to the texture wrench item
  *
  * @author PianoManu
- * @version 1.5 11/03/23
+ * @version 1.6 11/08/23
  */
 public class TextureWrenchItem extends BCToolItem {
 
@@ -69,8 +69,10 @@ public class TextureWrenchItem extends BCToolItem {
                         fte.addRotation(direction);
                         player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation.face", axisStr), true);
                     } else {
-                        fte.addDirection(direction);
-                        player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation.axis", axisStr), true);
+                        if (state.getBlock().equals(Registration.ILLUSION_BLOCK.get())) {
+                            fte.addDirection(direction);
+                            player.displayClientMessage(Component.translatable("message.blockcarpentry.rotation.axis", axisStr), true);
+                        }
                         return InteractionResult.SUCCESS;
                     }
                 }
