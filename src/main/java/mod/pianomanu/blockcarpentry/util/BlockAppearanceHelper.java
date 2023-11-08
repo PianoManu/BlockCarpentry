@@ -73,14 +73,16 @@ public class BlockAppearanceHelper {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
                 if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    if (fte.getTexture() < TextureHelper.getTextures(fte.getMimic()).size() - 1) {
+                    int len = TextureHelper.getTextures(fte.getMimic()).size() == 0 ? 6 : TextureHelper.getTextures(fte.getMimic()).size();
+                    if (fte.getTexture() < len - 1) {
                         fte.setTexture(fte.getTexture() + 1);
                     } else {
                         fte.setTexture(0);
                     }
                     player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture() + 1), true);
                 } else {
-                    if (fte.getTexture_2() < TextureHelper.getTextures(fte.getMimic_2()).size() - 1) {
+                    int len = TextureHelper.getTextures(fte.getMimic_2()).size() == 0 ? 6 : TextureHelper.getTextures(fte.getMimic_2()).size();
+                    if (fte.getTexture_2() < len - 1) {
                         fte.setTexture_2(fte.getTexture_2() + 1);
                     } else {
                         fte.setTexture_2(0);
@@ -88,7 +90,8 @@ public class BlockAppearanceHelper {
                     player.displayClientMessage(Component.translatable("message.blockcarpentry.texture", fte.getTexture_2() + 1), true);
                 }
             } else if (tileEntity instanceof IFrameTile fte) {
-                if (fte.getTexture() < TextureHelper.getTextures(fte).size() - 1) {
+                int len = TextureHelper.getTextures(fte).size() == 0 ? 6 : TextureHelper.getTextures(fte).size();
+                if (fte.getTexture() < len - 1) {
                     fte.setTexture(fte.getTexture() + 1);
                 } else {
                     fte.setTexture(0);
