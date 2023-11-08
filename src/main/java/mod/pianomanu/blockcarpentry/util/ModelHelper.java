@@ -21,7 +21,7 @@ import java.util.List;
  * Util class for building cuboid shapes
  *
  * @author PianoManu
- * @version 1.6 10/31/23
+ * @version 1.7 11/08/23
  */
 public class ModelHelper {
 
@@ -237,31 +237,31 @@ public class ModelHelper {
             if (south)
                 quads.add(QuadUtils.createQuad(SWU, SWD, SED, SEU, textureSouth, tintIndex, southRotation));
         } else {
-            /*if (up)
-                quads.add(createQuad(NWU, SWU, SEU, NEU, textureUp, meanUV(NWU.x, SWU.x), meanUV(NEU.x, SEU.x), meanUV(NWU.z, NEU.z), meanUV(SWU.z, SEU.z), tintIndex, rotations.get(1)));
-            if (down) {
-                quads.add(createQuad(SWD, NWD, NED, SED, textureDown, meanUV(NWD.x, SWD.x), meanUV(NED.x, SED.x), meanUV(NWD.z, NED.z), meanUV(SWD.z, SED.z), tintIndex, rotations.get(0)));
+            float[] uvs;
+            if (up) {
+                uvs = QuadUtils.rotateUVcomplex(NWU, SWU, SEU, NEU, newUp, upRotation);
+                quads.add(QuadUtils.createQuad(NWU, SWU, SEU, NEU, textureUp, uvs[0], uvs[1], uvs[2], uvs[3], uvs[4], uvs[5], uvs[6], uvs[7], tintIndex, invert, 0));
             }
-            if (west)
-                quads.add(createQuad(NWU, NWD, SWD, SWU, textureWest, meanUV(NWU.z, NWD.z), meanUV(SWD.z, SWU.z), 16 - meanUV(NWU.y, SWU.y), 16 - meanUV(NWD.y, SWD.y), tintIndex, rotations.get(4)));
-            if (east)
-                quads.add(createQuad(SEU, SED, NED, NEU, textureEast, meanUV(SED.z, SEU.z), meanUV(NEU.z, NED.z), 16 - meanUV(NEU.y, SEU.y), 16 - meanUV(NED.y, SED.y), tintIndex, rotations.get(5)));
-            if (north)
-                quads.add(createQuad(NEU, NED, NWD, NWU, textureNorth, meanUV(NED.x, NEU.x), meanUV(NWU.x, NWD.x), 16 - meanUV(NEU.y, NWU.y), 16 - meanUV(NED.y, NWD.y), tintIndex, rotations.get(2)));
-            if (south)
-                quads.add(createQuad(SWU, SWD, SED, SEU, textureSouth, meanUV(SWU.x, SWD.x), meanUV(SED.x, SEU.x), 16 - meanUV(SEU.y, SWU.y), 16 - meanUV(SED.y, SWD.y), tintIndex, rotations.get(3)));*/
-            if (up)
-                quads.add(QuadUtils.createQuad(NWU, SWU, SEU, NEU, textureUp, newUp, tintIndex, upRotation, false, invert));
-            if (down)
-                quads.add(QuadUtils.createQuad(SWD, NWD, NED, SED, textureDown, newDown, tintIndex, downRotation, false, invert));
-            if (west)
-                quads.add(QuadUtils.createQuad(NWU, NWD, SWD, SWU, textureWest, newWest, tintIndex, westRotation, false, invert));
-            if (east)
-                quads.add(QuadUtils.createQuad(SEU, SED, NED, NEU, textureEast, newEast, tintIndex, eastRotation, false, invert));
-            if (north)
-                quads.add(QuadUtils.createQuad(NEU, NED, NWD, NWU, textureNorth, newNorth, tintIndex, northRotation, false, invert));
-            if (south)
-                quads.add(QuadUtils.createQuad(SWU, SWD, SED, SEU, textureSouth, newSouth, tintIndex, southRotation, false, invert));
+            if (down) {
+                uvs = QuadUtils.rotateUVcomplex(SWD, NWD, NED, SED, newDown, downRotation);
+                quads.add(QuadUtils.createQuad(SWD, NWD, NED, SED, textureDown, uvs[0], uvs[1], uvs[2], uvs[3], uvs[4], uvs[5], uvs[6], uvs[7], tintIndex, invert, 0));
+            }
+            if (west) {
+                uvs = QuadUtils.rotateUVcomplex(NWU, NWD, SWD, SWU, newWest, westRotation);
+                quads.add(QuadUtils.createQuad(NWU, NWD, SWD, SWU, textureWest, uvs[0], uvs[1], uvs[2], uvs[3], uvs[4], uvs[5], uvs[6], uvs[7], tintIndex, invert, 0));
+            }
+            if (east) {
+                uvs = QuadUtils.rotateUVcomplex(SEU, SED, NED, NEU, newEast, eastRotation);
+                quads.add(QuadUtils.createQuad(SEU, SED, NED, NEU, textureEast, uvs[0], uvs[1], uvs[2], uvs[3], uvs[4], uvs[5], uvs[6], uvs[7], tintIndex, invert, 0));
+            }
+            if (north) {
+                uvs = QuadUtils.rotateUVcomplex(NEU, NED, NWD, NWU, newNorth, northRotation);
+                quads.add(QuadUtils.createQuad(NEU, NED, NWD, NWU, textureNorth, uvs[0], uvs[1], uvs[2], uvs[3], uvs[4], uvs[5], uvs[6], uvs[7], tintIndex, invert, 0));
+            }
+            if (south) {
+                uvs = QuadUtils.rotateUVcomplex(SWU, SWD, SED, SEU, newSouth, southRotation);
+                quads.add(QuadUtils.createQuad(SWU, SWD, SED, SEU, textureSouth, uvs[0], uvs[1], uvs[2], uvs[3], uvs[4], uvs[5], uvs[6], uvs[7], tintIndex, invert, 0));
+            }
         }
         return quads;
     }

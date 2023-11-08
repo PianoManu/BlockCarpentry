@@ -72,7 +72,7 @@ public class QuadUtils {
         return new Vec3[]{v1, v2, v3, v4};
     }
 
-    private static float[] rotateUV(float v1u, float v1v, float v2u, float v2v, float v3u, float v3v, float v4u, float v4v, int rotation) {
+    public static float[] rotateUV(float v1u, float v1v, float v2u, float v2v, float v3u, float v3v, float v4u, float v4v, int rotation) {
         float tmpU;
         float tmpV;
         for (int i = 0; i < rotation; i++) {
@@ -142,14 +142,8 @@ public class QuadUtils {
         v2 = vs[1];
         v3 = vs[2];
         v4 = vs[3];
-        return switch (direction) {
-            case UP -> createQuad(v1, v2, v3, v4, sprite, (float) v1.x * 16f, (float) v1.z * 16f, (float) v2.x * 16f, (float) v2.z * 16f, (float) v3.x * 16f, (float) v3.z * 16f, (float) v4.x * 16f, (float) v4.z * 16f, tintIndex, invert, 0);
-            case DOWN -> createQuad(v1, v2, v3, v4, sprite, (float) v1.x * 16f, 16 - (float) v1.z * 16f, (float) v2.x * 16f, 16 - (float) v2.z * 16f, (float) v3.x * 16f, 16 - (float) v3.z * 16f, (float) v4.x * 16f, 16 - (float) v4.z * 16f, tintIndex, invert, 0);
-            case WEST -> createQuad(v1, v2, v3, v4, sprite, (float) v1.z * 16f, 16 - (float) v1.y * 16f + verticalOffset, (float) v2.z * 16f, 16 - (float) v2.y * 16f + verticalOffset, (float) v3.z * 16f, 16 - (float) v3.y * 16f + verticalOffset, (float) v4.z * 16f, 16 - (float) v4.y * 16f + verticalOffset, tintIndex, invert, 0);
-            case EAST -> createQuad(v1, v2, v3, v4, sprite, 16 - (float) v1.z * 16f, 16 - (float) v1.y * 16f + verticalOffset, 16 - (float) v2.z * 16f, 16 - (float) v2.y * 16f + verticalOffset, 16 - (float) v3.z * 16f, 16 - (float) v3.y * 16f + verticalOffset, 16 - (float) v4.z * 16f, 16 - (float) v4.y * 16f + verticalOffset, tintIndex, invert, 0);
-            case SOUTH -> createQuad(v1, v2, v3, v4, sprite, (float) v1.x * 16f, 16 - (float) v1.y * 16f + verticalOffset, (float) v2.x * 16f, 16 - (float) v2.y * 16f + verticalOffset, (float) v3.x * 16f, 16 - (float) v3.y * 16f + verticalOffset, (float) v4.x * 16f, 16 - (float) v4.y * 16f + verticalOffset, tintIndex, invert, 0);
-            case NORTH -> createQuad(v1, v2, v3, v4, sprite, 16 - (float) v1.x * 16f, 16 - (float) v1.y * 16f + verticalOffset, 16 - (float) v2.x * 16f, 16 - (float) v2.y * 16f + verticalOffset, 16 - (float) v3.x * 16f, 16 - (float) v3.y * 16f + verticalOffset, 16 - (float) v4.x * 16f, 16 - (float) v4.y * 16f + verticalOffset, tintIndex, invert, 0);
-        };
+        float[] uvs = rotateUVcomplex(v1, v2, v3, v4, direction, rotation, verticalOffset);
+        return createQuad(v1, v2, v3, v4, sprite, uvs[0], uvs[1], uvs[2], uvs[3], uvs[4], uvs[5], uvs[6], uvs[7], tintIndex, invert, 0);
     }
 
     public static BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, float ulow, float uhigh, float vlow, float vhigh, int tintIndex, boolean invert) {
@@ -195,21 +189,13 @@ public class QuadUtils {
         v3 = vs[2];
         v4 = vs[3];
         if (!keepUV) {
-            float[] uvs;
-            switch (direction) {
-                case UP -> uvs = rotateUV((float) v1.x * 16f, (float) v1.z * 16f, (float) v2.x * 16f, (float) v2.z * 16f, (float) v3.x * 16f, (float) v3.z * 16f, (float) v4.x * 16f, (float) v4.z * 16f, rotation);
-                case DOWN -> uvs = rotateUV((float) v1.x * 16f, 16 - (float) v1.z * 16f, (float) v2.x * 16f, 16 - (float) v2.z * 16f, (float) v3.x * 16f, 16 - (float) v3.z * 16f, (float) v4.x * 16f, 16 - (float) v4.z * 16f, rotation);
-                case WEST -> uvs = rotateUV((float) v1.z * 16f, 16 - (float) v1.y * 16f, (float) v2.z * 16f, 16 - (float) v2.y * 16f, (float) v3.z * 16f, 16 - (float) v3.y * 16f, (float) v4.z * 16f, 16 - (float) v4.y * 16f, rotation);
-                case EAST -> uvs = rotateUV(16 - (float) v1.z * 16f, 16 - (float) v1.y * 16f, 16 - (float) v2.z * 16f, 16 - (float) v2.y * 16f, 16 - (float) v3.z * 16f, 16 - (float) v3.y * 16f, 16 - (float) v4.z * 16f, 16 - (float) v4.y * 16f, rotation);
-                case SOUTH -> uvs = rotateUV((float) v1.x * 16f, 16 - (float) v1.y * 16f, (float) v2.x * 16f, 16 - (float) v2.y * 16f, (float) v3.x * 16f, 16 - (float) v3.y * 16f, (float) v4.x * 16f, 16 - (float) v4.y * 16f, rotation);
-                case NORTH -> uvs = rotateUV(16 - (float) v1.x * 16f, 16 - (float) v1.y * 16f, 16 - (float) v2.x * 16f, 16 - (float) v2.y * 16f, 16 - (float) v3.x * 16f, 16 - (float) v3.y * 16f, 16 - (float) v4.x * 16f, 16 - (float) v4.y * 16f, rotation);
-                default -> uvs = new float[]{0, 0, 0, 16, 16, 16, 16, 0};
-            }
-            ;
-            quads.add(createQuad(v1, v2, COGVec, COGVec, sprite, uvs[0], uvs[1], uvs[2], uvs[3], 8, 8, 8, 8, tintIndex, invert, 0));
-            quads.add(createQuad(v2, v3, COGVec, COGVec, sprite, uvs[2], uvs[3], uvs[4], uvs[5], 8, 8, 8, 8, tintIndex, invert, 0));
-            quads.add(createQuad(v3, v4, COGVec, COGVec, sprite, uvs[4], uvs[5], uvs[6], uvs[7], 8, 8, 8, 8, tintIndex, invert, 0));
-            quads.add(createQuad(COGVec, v4, v1, COGVec, sprite, 8, 8, uvs[6], uvs[7], uvs[0], uvs[1], 8, 8, tintIndex, invert, 0));
+            float[] uvs = rotateUVcomplex(v1, v2, v3, v4, direction, rotation);
+            float cogU = (float) (direction.getAxis() == Direction.Axis.X ? COGVec.z * 16f : COGVec.x * 16f);
+            float cogV = (float) (direction.getAxis().isHorizontal() ? COGVec.y * 16f : COGVec.x * 16f);
+            quads.add(createQuad(v1, v2, COGVec, COGVec, sprite, uvs[0], uvs[1], uvs[2], uvs[3], cogU, cogV, cogU, cogV, tintIndex, invert, 0));
+            quads.add(createQuad(v2, v3, COGVec, COGVec, sprite, uvs[2], uvs[3], uvs[4], uvs[5], cogU, cogV, cogU, cogV, tintIndex, invert, 0));
+            quads.add(createQuad(v3, v4, COGVec, COGVec, sprite, uvs[4], uvs[5], uvs[6], uvs[7], cogU, cogV, cogU, cogV, tintIndex, invert, 0));
+            quads.add(createQuad(COGVec, v4, v1, COGVec, sprite, cogU, cogV, uvs[6], uvs[7], uvs[0], uvs[1], cogU, cogV, tintIndex, invert, 0));
         } else {
             quads.add(createQuad(v1, v2, COGVec, COGVec, sprite, 0, 0, 0, 16, 8, 8, 8, 8, tintIndex, invert, 0));
             quads.add(createQuad(v2, v3, COGVec, COGVec, sprite, 0, 16, 16, 16, 8, 8, 8, 8, tintIndex, invert, 0));
@@ -217,6 +203,21 @@ public class QuadUtils {
             quads.add(createQuad(COGVec, v4, v1, COGVec, sprite, 8, 8, 16, 0, 0, 0, 8, 8, tintIndex, invert, 0));
         }
         return quads;
+    }
+
+    public static float[] rotateUVcomplex(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, Direction direction, int rotation) {
+        return rotateUVcomplex(v1, v2, v3, v4, direction, rotation, 0);
+    }
+
+    public static float[] rotateUVcomplex(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, Direction direction, int rotation, int verticalOffset) {
+        return switch (direction) {
+            case UP -> rotateUV((float) v1.x * 16f, (float) v1.z * 16f, (float) v2.x * 16f, (float) v2.z * 16f, (float) v3.x * 16f, (float) v3.z * 16f, (float) v4.x * 16f, (float) v4.z * 16f, rotation);
+            case DOWN -> rotateUV((float) v1.x * 16f, 16 - (float) v1.z * 16f, (float) v2.x * 16f, 16 - (float) v2.z * 16f, (float) v3.x * 16f, 16 - (float) v3.z * 16f, (float) v4.x * 16f, 16 - (float) v4.z * 16f, rotation);
+            case WEST -> rotateUV((float) v1.z * 16f, 16 - (float) v1.y * 16f + verticalOffset, (float) v2.z * 16f, 16 - (float) v2.y * 16f + verticalOffset, (float) v3.z * 16f, 16 - (float) v3.y * 16f + verticalOffset, (float) v4.z * 16f, 16 - (float) v4.y * 16f + verticalOffset, rotation);
+            case EAST -> rotateUV(16 - (float) v1.z * 16f, 16 - (float) v1.y * 16f + verticalOffset, 16 - (float) v2.z * 16f, 16 - (float) v2.y * 16f + verticalOffset, 16 - (float) v3.z * 16f, 16 - (float) v3.y * 16f + verticalOffset, 16 - (float) v4.z * 16f, 16 - (float) v4.y * 16f + verticalOffset, rotation);
+            case SOUTH -> rotateUV((float) v1.x * 16f, 16 - (float) v1.y * 16f + verticalOffset, (float) v2.x * 16f, 16 - (float) v2.y * 16f + verticalOffset, (float) v3.x * 16f, 16 - (float) v3.y * 16f + verticalOffset, (float) v4.x * 16f, 16 - (float) v4.y * 16f + verticalOffset, rotation);
+            case NORTH -> rotateUV(16 - (float) v1.x * 16f, 16 - (float) v1.y * 16f + verticalOffset, 16 - (float) v2.x * 16f, 16 - (float) v2.y * 16f + verticalOffset, 16 - (float) v3.x * 16f, 16 - (float) v3.y * 16f + verticalOffset, 16 - (float) v4.x * 16f, 16 - (float) v4.y * 16f + verticalOffset, rotation);
+        };
     }
 
     private static Vec3 centerOfGravityVec(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4) {
