@@ -29,7 +29,7 @@ import static mod.pianomanu.blockcarpentry.util.BCBlockStateProperties.LIGHT_LEV
  * Util class for certain frame block things like light level and textures
  *
  * @author PianoManu
- * @version 1.8 10/31/23
+ * @version 1.9 11/08/23
  */
 public class BlockAppearanceHelper {
     public static boolean setAll(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player) {
@@ -73,14 +73,16 @@ public class BlockAppearanceHelper {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof TwoBlocksFrameBlockTile fte) {
                 if (!state.getValue(SixWaySlabFrameBlock.DOUBLE_SLAB)) {
-                    if (fte.getTexture() < TextureHelper.getTextures(fte.getMimic()).size() - 1) {
+                    int len = TextureHelper.getTextures(fte.getMimic()).size() == 0 ? 6 : TextureHelper.getTextures(fte.getMimic()).size();
+                    if (fte.getTexture() < len - 1) {
                         fte.setTexture(fte.getTexture() + 1);
                     } else {
                         fte.setTexture(0);
                     }
                     player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.texture", fte.getTexture() + 1), true);
                 } else {
-                    if (fte.getTexture_2() < TextureHelper.getTextures(fte.getMimic_2()).size() - 1) {
+                    int len = TextureHelper.getTextures(fte.getMimic_2()).size() == 0 ? 6 : TextureHelper.getTextures(fte.getMimic_2()).size();
+                    if (fte.getTexture_2() < len - 1) {
                         fte.setTexture_2(fte.getTexture_2() + 1);
                     } else {
                         fte.setTexture_2(0);
@@ -88,7 +90,8 @@ public class BlockAppearanceHelper {
                     player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.texture", fte.getTexture_2() + 1), true);
                 }
             } else if (tileEntity instanceof IFrameTile fte) {
-                if (fte.getTexture() < TextureHelper.getTextures(fte).size() - 1) {
+                int len = TextureHelper.getTextures(fte).size() == 0 ? 6 : TextureHelper.getTextures(fte).size();
+                if (fte.getTexture() < len - 1) {
                     fte.setTexture(fte.getTexture() + 1);
                 } else {
                     fte.setTexture(0);
@@ -165,12 +168,15 @@ public class BlockAppearanceHelper {
         if (itemStack.getItem() == Registration.PAINTBRUSH.get() && !player.isCrouching()) {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof FrameBlockTile fte) {
-                if (fte.getDesignTexture() < fte.maxDesignTextures) {
-                    fte.setDesignTexture(fte.getDesignTexture() + 1);
-                } else {
-                    fte.setDesignTexture(0);
+                //Ugly workaround so that "Design: " is not shown on frame blocks
+                if (level.getBlockState(pos).getBlock() != Registration.FRAMEBLOCK.get() && level.getBlockState(pos).getBlock() != Registration.ILLUSION_BLOCK.get()) {
+                    if (fte.getDesignTexture() < fte.maxDesignTextures) {
+                        fte.setDesignTexture(fte.getDesignTexture() + 1);
+                    } else {
+                        fte.setDesignTexture(0);
+                    }
+                    player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
                 }
-                player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.design_texture", fte.getDesignTexture()), true);
             }
             if (tileEntity instanceof BedFrameTile fte) {
                 if (fte.getDesignTexture() < 7) {

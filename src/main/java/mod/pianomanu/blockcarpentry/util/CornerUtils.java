@@ -20,7 +20,7 @@ import java.util.List;
  * Some utility functions for messing around with the 8 corners of a block
  *
  * @author PianoManu
- * @version 1.1 10/30/23
+ * @version 1.2 11/08/23
  */
 public class CornerUtils {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -212,5 +212,15 @@ public class CornerUtils {
             }
         }
         return rotations;
+    }
+
+    public static boolean isCuboid(Vec3 NWU, Vec3 NEU, Vec3 SWU, Vec3 SEU, Vec3 NWD, Vec3 NED, Vec3 SWD, Vec3 SED) {
+        boolean xlEqual = NWU.x == SWU.x && SWU.x == NWD.x && NWD.x == SWD.x;
+        boolean xhEqual = NEU.x == SEU.x && SEU.x == NED.x && NED.x == SED.x;
+        boolean ylEqual = NWD.y == NED.y && NED.y == SWD.y && SWD.y == SED.y;
+        boolean yhEqual = NWU.y == NEU.y && NEU.y == SWU.y && SWU.y == SEU.y;
+        boolean zlEqual = NWU.z == NEU.z && NEU.z == NWD.z && NWD.z == NED.z;
+        boolean zhEqual = SWU.z == SEU.z && SEU.z == SWD.z && SWD.z == SED.z;
+        return xlEqual && xhEqual && ylEqual && yhEqual && zlEqual && zhEqual;
     }
 }

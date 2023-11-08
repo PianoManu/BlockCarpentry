@@ -79,6 +79,8 @@
   "message.blockcarpentry.rotation.face": "Rotiert Blockseite im Uhrzeigersinn",
   "message.blockcarpentry.paintbrush.fixed": "UV-Koordinaten der Textur fixiert",
   "message.blockcarpentry.paintbrush.relaxed": "UV-Koordinaten der Textur gelöst",
+  "message.blockcarpentry.paintbrush.rectangle": "Setze Seitenform auf rechteckig",
+  "message.blockcarpentry.paintbrush.custom": "Passe Seitenform auf Modell an",
   "message.blockcarpentry.block_not_available": "Dieser Block kann leider nicht dargestellt werden",
   "message.blockcarpentry.block_error": "Mit diesem Block ist ein Fehler aufgetreten, bitte dem Autor der Mod mitteilen (PianoManu)",
   "message.blockcarpentry.converting_outdated_block": "Dieser Block hatte veraltete Informationen, aber ich hab die gerade umgewandelt, jetzt sollte es wieder funktionieren! :)",

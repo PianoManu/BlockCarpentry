@@ -21,7 +21,7 @@ import java.util.Random;
  * used for easier building of BakedModels without hundreds of helper methods.
  *
  * @author PianoManu
- * @version 1.1 11/03/23
+ * @version 1.2 11/08/23
  */
 public class SimpleBox {
     private Vec3 NWU;
@@ -158,19 +158,20 @@ public class SimpleBox {
         int eastRotation = rotations.size() == 6 ? rotations.get(5) : 0;
         int northRotation = rotations.size() == 6 ? rotations.get(2) : 0;
         int southRotation = rotations.size() == 6 ? rotations.get(3) : 0;
+        boolean useSimpleQuadCalc = CornerUtils.isCuboid(NWU, NEU, SWU, SEU, NWD, NED, SWD, SED) || !BCModConfig.USE_COMPLEX_QUAD_CALCULATIONS.get() || Boolean.TRUE.equals(extraData.getData(FrameBlockTile.REMAIN_RECTANGLE));
 
         if (renderUp)
-            createQuadFace(quads, NWU, SWU, SEU, NEU, Direction.UP, newUp, upRotation, invertUp);
+            createQuadFace(quads, NWU, SWU, SEU, NEU, Direction.UP, newUp, upRotation, invertUp, useSimpleQuadCalc);
         if (renderDown)
-            createQuadFace(quads, NED, SED, SWD, NWD, Direction.DOWN, newDown, downRotation, invertDown);
+            createQuadFace(quads, NED, SED, SWD, NWD, Direction.DOWN, newDown, downRotation, invertDown, useSimpleQuadCalc);
         if (renderWest)
-            createQuadFace(quads, NWU, NWD, SWD, SWU, Direction.WEST, newWest, westRotation, invertWest);
+            createQuadFace(quads, NWU, NWD, SWD, SWU, Direction.WEST, newWest, westRotation, invertWest, useSimpleQuadCalc);
         if (renderEast)
-            createQuadFace(quads, SEU, SED, NED, NEU, Direction.EAST, newEast, eastRotation, invertEast);
+            createQuadFace(quads, SEU, SED, NED, NEU, Direction.EAST, newEast, eastRotation, invertEast, useSimpleQuadCalc);
         if (renderNorth)
-            createQuadFace(quads, NEU, NED, NWD, NWU, Direction.NORTH, newNorth, northRotation, invertNorth);
+            createQuadFace(quads, NEU, NED, NWD, NWU, Direction.NORTH, newNorth, northRotation, invertNorth, useSimpleQuadCalc);
         if (renderSouth)
-            createQuadFace(quads, SWU, SWD, SED, SEU, Direction.SOUTH, newSouth, southRotation, invertSouth);
+            createQuadFace(quads, SWU, SWD, SED, SEU, Direction.SOUTH, newSouth, southRotation, invertSouth, useSimpleQuadCalc);
         return quads;
     }
 
@@ -201,8 +202,8 @@ public class SimpleBox {
         return ModelHelper.createCuboid(NWU, SWU, NWD, SWD, NEU, SEU, NED, SED, TextureHelper.getMissingTexture());
     }
 
-    private void createQuadFace(List<BakedQuad> quads, Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, Direction originalDirection, Direction newDirection, int rotation, boolean invert) {
-        if (!BCModConfig.USE_COMPLEX_QUAD_CALCULATIONS.get()) {
+    private void createQuadFace(List<BakedQuad> quads, Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, Direction originalDirection, Direction newDirection, int rotation, boolean invert, boolean useSimpleQuadCalculation) {
+        if (useSimpleQuadCalculation) {
             quads.add(QuadUtils.createQuad(v1, v2, v3, v4, sprite, newDirection, tintIndex, rotation, keepDefaultUV, invert));
             if (overlayIndex > 0 && overlayTexture(originalDirection) != null)
                 quads.add(QuadUtils.createQuad(v1, v2, v3, v4, overlayTexture(originalDirection), originalDirection, modelInformation.tintIndex, 0, doNotMoveOverlay, false));

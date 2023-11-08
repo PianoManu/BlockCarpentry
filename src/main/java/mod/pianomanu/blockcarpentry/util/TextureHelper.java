@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -30,7 +31,7 @@ import java.util.Random;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.7 11/05/23
+ * @version 1.7 11/08/23
  */
 public class TextureHelper {
 
@@ -133,14 +134,18 @@ public class TextureHelper {
     }
 
     public static List<TextureAtlasSprite> getTextures(BlockState state) {
-        BakedModel model = Minecraft.getInstance().getModelManager().getModel(BlockModelShaper.stateToModelLocation(state));
-        Random rand;
-        if (Minecraft.getInstance().level != null) {
-            rand = Minecraft.getInstance().level.random;
-        } else {
-            rand = new Random();
+        try {
+            BakedModel model = Minecraft.getInstance().getModelManager().getModel(BlockModelShaper.stateToModelLocation(state));
+            Random rand;
+            if (Minecraft.getInstance().level != null) {
+                rand = Minecraft.getInstance().level.random;
+            } else {
+                rand = new Random();
+            }
+            return TextureHelper.getTextureFromModel(model, state, rand);
+        } catch (Exception e) {
+            return Collections.emptyList();
         }
-        return TextureHelper.getTextureFromModel(model, state, rand);
     }
 
     public static List<TextureAtlasSprite> getTextures(IFrameTile tile) {

@@ -79,6 +79,8 @@
   "message.blockcarpentry.rotation.face": "Rotating block face clockwise",
   "message.blockcarpentry.paintbrush.fixed": "Fixated UV coordinates of texture",
   "message.blockcarpentry.paintbrush.relaxed": "Relaxed UV coordinates of texture",
+  "message.blockcarpentry.paintbrush.rectangle": "Setting rectangle-shaped face",
+  "message.blockcarpentry.paintbrush.custom": "Setting custom-shaped face",
   "message.blockcarpentry.block_not_available": "We're sorry, but this block can't be displayed",
   "message.blockcarpentry.block_error": "An error occurred with this block, please report to the mod author (PianoManu)",
   "message.blockcarpentry.converting_outdated_block": "This block had an outdated block entity, I've fixed that for you! :)",
