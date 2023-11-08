@@ -428,6 +428,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IF
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
+        this.updateShape();
         IFrameTile.super.load(tag, FrameBlockTile.class);
         this.updateVecList();
     }
