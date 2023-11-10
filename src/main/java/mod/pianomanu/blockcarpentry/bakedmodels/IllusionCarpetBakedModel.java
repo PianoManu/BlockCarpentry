@@ -33,7 +33,7 @@ import java.util.List;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 09/20/23
  */
 public class IllusionCarpetBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -98,7 +98,7 @@ public class IllusionCarpetBakedModel implements IDynamicBakedModel {
             }
             int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
-                quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, false));
+                quads.addAll(ModelHelper.createOverlay(0f, 1f, 0f, 1 / 16f, 0f, 1f, overlayIndex, true, true, true, true, true, true, true));
             }
             return quads;
         }

@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.1 11/14/22
+ * @version 1.2 09/27/23
  */
 public class SlopeFrameBlock extends StairsFrameBlock {
     private static final VoxelShape[] SHAPES_BOTTOM = makeShapes(false);

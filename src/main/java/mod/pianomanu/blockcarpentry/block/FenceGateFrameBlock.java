@@ -1,9 +1,9 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
-import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.LockableFrameTile;
+import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
+import mod.pianomanu.blockcarpentry.util.BlockModificationHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -11,7 +11,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -25,6 +24,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.IPlantable;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -34,7 +34,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.6 09/19/23
+ * @version 1.7 09/27/23
  */
 public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterloggedBlock, EntityBlock, IFrameBlock {
     public FenceGateFrameBlock(Properties properties) {
@@ -56,27 +56,32 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        ItemStack item = player.getItemInHand(hand);
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            convertOutdatedTile(state, level, pos, player);
-            if (shouldCallFrameUse(state, item))
-                return frameUse(state, level, pos, player, hand, hitresult);
-            if (lockRedstoneSignal(state, level, pos, player, item) || lockOpenClose(state, level, pos, player, item))
-                return InteractionResult.CONSUME;
+        return frameUse(state, level, pos, player, hand, hitresult);
+    }
 
-            if ((state.getValue(CONTAINS_BLOCK) || !(item.getItem() instanceof BlockItem)) && !(item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem)) {
-                BlockEntity tileEntity = level.getBlockEntity(pos);
-                if (tileEntity instanceof LockableFrameTile fenceGateTileEntity) {
-                    if (fenceGateTileEntity.canBeOpenedByPlayers()) {
-                        super.use(state, level, pos, player, hand, hitresult);
-                        level.levelEvent(null, state.getValue(OPEN) ? 1014 : 1008, pos, 0);
-                        return InteractionResult.SUCCESS;
-                    }
-                }
-                return InteractionResult.CONSUME;
+    @Override
+    public InteractionResult frameUseServer(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack, BlockHitResult hitresult) {
+        convertOutdatedTile(state, level, pos, player);
+        if (shouldCallFrameUse(state, itemStack))
+            return IFrameBlock.super.frameUseServer(state, level, pos, player, itemStack, hitresult);
+        if (lockRedstoneSignal(state, level, pos, player, itemStack) || lockOpenClose(state, level, pos, player, itemStack))
+            return InteractionResult.CONSUME;
+        if (state.getValue(CONTAINS_BLOCK)) {
+            return fenceGateBehavior(state, level, pos, player, hitresult);
+        }
+        return InteractionResult.FAIL;
+    }
+
+    private InteractionResult fenceGateBehavior(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitresult) {
+        BlockEntity tileEntity = level.getBlockEntity(pos);
+        if (tileEntity instanceof LockableFrameTile fenceGateTileEntity) {
+            if (fenceGateTileEntity.canBeOpenedByPlayers()) {
+                super.use(state, level, pos, player, InteractionHand.MAIN_HAND, hitresult);
+                level.levelEvent(null, state.getValue(OPEN) ? 1014 : 1008, pos, 0);
+                return InteractionResult.SUCCESS;
             }
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.CONSUME;
     }
 
     private void convertOutdatedTile(BlockState state, Level level, BlockPos pos, Player player) {
@@ -192,6 +197,16 @@ public class FenceGateFrameBlock extends FenceGateBlock implements SimpleWaterlo
         if (tileEntity instanceof LockableFrameTile doorTileEntity && doorTileEntity.canBeOpenedByRedstoneSignal()) {
             super.neighborChanged(state, level, pos, block, pos2, update);
         }
+    }
+
+    @Override
+    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable) {
+        return IFrameBlock.super.canSustainPlant(state, world, pos, facing);
+    }
+
+    @Override
+    public boolean executeModifications(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player, true, false);
     }
 }
 //========SOLI DEO GLORIA========//

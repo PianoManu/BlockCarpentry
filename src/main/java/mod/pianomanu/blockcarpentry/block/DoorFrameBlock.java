@@ -1,9 +1,9 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.item.BaseFrameItem;
-import mod.pianomanu.blockcarpentry.item.BaseIllusionItem;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.LockableFrameTile;
+import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
+import mod.pianomanu.blockcarpentry.util.BlockModificationHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -11,7 +11,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
@@ -26,13 +25,14 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.IPlantable;
 
 /**
  * Main class for frame doors - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.5 09/19/23
+ * @version 1.6 09/27/23
  */
 public class DoorFrameBlock extends DoorBlock implements EntityBlock, IFrameBlock {
 
@@ -53,25 +53,32 @@ public class DoorFrameBlock extends DoorBlock implements EntityBlock, IFrameBloc
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        ItemStack itemStack = player.getItemInHand(hand);
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            convertOutdatedTile(state, level, pos, player);
-            if (shouldCallFrameUse(state, itemStack))
-                return frameUse(state, level, pos, player, hand, hitresult);
-            if (lockRedstoneSignal(state, level, pos, player, itemStack) || lockOpenClose(state, level, pos, player, itemStack))
-                return InteractionResult.CONSUME;
-            if (!(itemStack.getItem() instanceof BaseFrameItem || itemStack.getItem() instanceof BaseIllusionItem)) {
-                BlockEntity tileEntity = level.getBlockEntity(pos);
-                if (tileEntity instanceof LockableFrameTile doorTileEntity) {
-                    if (doorTileEntity.canBeOpenedByPlayers()) {
-                        super.use(state, level, pos, player, hand, hitresult);
-                        level.levelEvent(null, state.getValue(OPEN) ? 1012 : 1006, pos, 0);
-                        return InteractionResult.SUCCESS;
-                    }
-                }
+        return frameUse(state, level, pos, player, hand, hitresult);
+    }
+
+    @Override
+    public InteractionResult frameUseServer(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack, BlockHitResult hitresult) {
+        convertOutdatedTile(state, level, pos, player);
+        if (shouldCallFrameUse(state, itemStack))
+            return IFrameBlock.super.frameUseServer(state, level, pos, player, itemStack, hitresult);
+        if (lockRedstoneSignal(state, level, pos, player, itemStack) || lockOpenClose(state, level, pos, player, itemStack))
+            return InteractionResult.CONSUME;
+        if (state.getValue(CONTAINS_BLOCK)) {
+            return doorBehavior(state, level, pos, player, hitresult);
+        }
+        return InteractionResult.FAIL;
+    }
+
+    private InteractionResult doorBehavior(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitresult) {
+        BlockEntity tileEntity = level.getBlockEntity(pos);
+        if (tileEntity instanceof LockableFrameTile doorTileEntity) {
+            if (doorTileEntity.canBeOpenedByPlayers()) {
+                super.use(state, level, pos, player, InteractionHand.MAIN_HAND, hitresult);
+                level.levelEvent(null, state.getValue(OPEN) ? 1012 : 1006, pos, 0);
+                return InteractionResult.SUCCESS;
             }
         }
-        return itemStack.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return InteractionResult.CONSUME;
     }
 
     private void convertOutdatedTile(BlockState state, Level level, BlockPos pos, Player player) {
@@ -163,6 +170,16 @@ public class DoorFrameBlock extends DoorBlock implements EntityBlock, IFrameBloc
         frameBlockEntity.clear();
         frameBlockEntity.setMimic(handBlock);
         levelIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
+    }
+
+    @Override
+    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable) {
+        return IFrameBlock.super.canSustainPlant(state, world, pos, facing);
+    }
+
+    @Override
+    public boolean executeModifications(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player, true, false);
     }
 }
 //========SOLI DEO GLORIA========//

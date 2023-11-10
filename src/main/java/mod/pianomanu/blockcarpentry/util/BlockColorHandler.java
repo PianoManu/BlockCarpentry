@@ -22,7 +22,7 @@ import java.util.Objects;
  * This class ensures that blocks of grass take on the correct color
  *
  * @author PianoManu
- * @version 1.1 06/11/22
+ * @version 1.2 10/05/23
  */
 public class BlockColorHandler implements BlockColor {
     public static final BlockColor INSTANCE = new BlockColorHandler();
@@ -50,6 +50,8 @@ public class BlockColorHandler implements BlockColor {
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.PANE_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.LAYERED_FRAMEBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.STANDING_SIGN_FRAMEBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.WALL_SIGN_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.SLOPE_FRAMEBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.EDGED_SLOPE_FRAMEBLOCK.get());
 
@@ -70,6 +72,8 @@ public class BlockColorHandler implements BlockColor {
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.PANE_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get());
         Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.LAYERED_ILLUSIONBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.STANDING_SIGN_ILLUSIONBLOCK.get());
+        Minecraft.getInstance().getBlockColors().register(INSTANCE, Registration.WALL_SIGN_ILLUSIONBLOCK.get());
 
         LOGGER.info("Registered block color handler");
     }

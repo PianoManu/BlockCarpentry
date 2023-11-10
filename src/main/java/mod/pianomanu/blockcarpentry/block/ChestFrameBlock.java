@@ -6,7 +6,7 @@ import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.ChestFrameBlockEntity;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
-import mod.pianomanu.blockcarpentry.util.BlockSavingHelper;
+import mod.pianomanu.blockcarpentry.util.BlockModificationHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.stats.Stats;
@@ -14,6 +14,7 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,13 +36,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * Main class for frame chests - all important block info can be found here
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.3 11/14/22
+ * @version 1.6 09/27/23
  */
 public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBlock {
     private static final VoxelShape INNER_CUBE = Block.box(2.0, 2.0, 2.0, 14.0, 14.0, 14.0);
@@ -85,45 +90,62 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        ItemStack item = player.getItemInHand(hand);
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            if (removeBlock(level, pos, state, item, player))
-                return InteractionResult.SUCCESS;
-            if (BlockAppearanceHelper.setLightLevel(item, state, level, pos, player, hand) ||
-                    BlockAppearanceHelper.setTexture(item, state, level, player, pos) ||
-                    BlockAppearanceHelper.setDesign(level, pos, player, item) ||
-                    BlockAppearanceHelper.setDesignTexture(level, pos, player, item) ||
-                    BlockAppearanceHelper.setRotation(level, pos, player, item))
-                return InteractionResult.SUCCESS;
-            BlockEntity tileEntity = level.getBlockEntity(pos);
-            if (item.getItem() instanceof BlockItem) {
-                if (item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem) {
-                    return InteractionResult.PASS;
-                }
-                int count = player.getItemInHand(hand).getCount();
-                Block heldBlock = ((BlockItem) item.getItem()).getBlock();
-                if (tileEntity instanceof ChestFrameBlockEntity && !item.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_BLOCK)) {
-                    BlockState handBlockState = ((BlockItem) item.getItem()).getBlock().defaultBlockState();
-                    insertBlock(level, pos, state, handBlockState);
-                    if (!player.isCreative())
-                        player.getItemInHand(hand).setCount(count - 1);
-                }
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (hand == InteractionHand.MAIN_HAND) {
+            if (!level.isClientSide) {
+                return frameUseServer(state, level, pos, player, itemStack, hitresult);
             }
-            if (tileEntity instanceof ChestFrameBlockEntity && state.getValue(CONTAINS_BLOCK)) {
-                if (!(item.getItem() instanceof BaseFrameItem || item.getItem() instanceof BaseIllusionItem)) {
-                    MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
-                    if (menuprovider != null) {
-                        player.openMenu(menuprovider);
-                        player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
-                        PiglinAi.angerNearbyPiglins(player, true);
-                        return InteractionResult.SUCCESS;
-                    }
+            return frameUseClient(state, level, pos, player, itemStack, hitresult);
+        }
+        return InteractionResult.FAIL;
+    }
 
-                    return InteractionResult.CONSUME;
+    public InteractionResult frameUseServer(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack, BlockHitResult hitresult) {
+        if (removeBlock(level, pos, state, itemStack, player))
+            return InteractionResult.SUCCESS;
+        if (state.getValue(CONTAINS_BLOCK)) {
+            if (BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || BlockModificationHelper.setAll(itemStack, (ChestFrameBlockEntity) Objects.requireNonNull(level.getBlockEntity(pos)), player))
+                return InteractionResult.CONSUME;
+        }
+        if (itemStack.getItem() instanceof BlockItem) {
+            if (changeMimic(state, level, pos, player, itemStack))
+                return InteractionResult.SUCCESS;
+        }
+        BlockEntity tileEntity = level.getBlockEntity(pos);
+        if (tileEntity instanceof ChestFrameBlockEntity && state.getValue(CONTAINS_BLOCK)) {
+            return chestBehavior(state, level, pos, player, itemStack);
+        }
+        return InteractionResult.FAIL;
+    }
+
+    private InteractionResult chestBehavior(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
+        if (menuprovider != null) {
+            player.openMenu(menuprovider);
+            player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
+            PiglinAi.angerNearbyPiglins(player, true);
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.CONSUME;
+    }
+
+    @Override
+    public InteractionResult frameUseClient(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack, BlockHitResult hitresult) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof ChestFrameBlockEntity && state.getValue(CONTAINS_BLOCK)) {
+            if (!(itemStack.getItem() instanceof BaseFrameItem || itemStack.getItem() instanceof BaseIllusionItem)) {
+                MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
+                if (menuprovider != null) {
+                    player.openMenu(menuprovider);
+                    player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
+                    PiglinAi.angerNearbyPiglins(player, true);
+                    return InteractionResult.SUCCESS;
                 }
+
+                return InteractionResult.CONSUME;
             }
         }
-        return InteractionResult.SUCCESS;
+        return super.frameUseClient(state, level, pos, player, itemStack, hitresult);
     }
 
     public boolean removeBlock(Level level, BlockPos pos, BlockState state, ItemStack itemStack, Player player) {
@@ -202,6 +224,21 @@ public class ChestFrameBlock extends FrameBlock implements SimpleWaterloggedBloc
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, BlockGetter levelIn, BlockPos pos, CollisionContext context) {
         return CHEST;
+    }
+
+    @Override
+    public boolean isCorrectTileInstance(BlockEntity blockEntity) {
+        return blockEntity instanceof ChestFrameBlockEntity;
+    }
+
+    @Override
+    public float getFriction(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
+        return super.getFriction(state, level, pos, entity);
+    }
+
+    @Override
+    public boolean executeModifications(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player, true, false);
     }
 }
 //========SOLI DEO GLORIA========//

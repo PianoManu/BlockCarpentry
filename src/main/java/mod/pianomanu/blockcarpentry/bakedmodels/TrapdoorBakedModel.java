@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -38,7 +37,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.4 11/17/22
+ * @version 1.5 09/20/23
  */
 public class TrapdoorBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -67,24 +66,11 @@ public class TrapdoorBakedModel implements IDynamicBakedModel {
         }
 
         BlockState mimic = extraData.get(FrameBlockTile.MIMIC);
-        int tex = extraData.get(FrameBlockTile.TEXTURE);
         if (mimic != null && state != null) {
             //get texture from block in tile entity and apply it to the quads
             List<TextureAtlasSprite> glassBlockList = TextureHelper.getGlassTextures();
             TextureAtlasSprite glass = glassBlockList.get(extraData.get(FrameBlockTile.GLASS_COLOR));
-            List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
-            TextureAtlasSprite texture;
-            if (textureList.size() <= tex) {
-                extraData.derive().with(FrameBlockTile.TEXTURE, 0);
-                tex = 0;
-            }
-            if (textureList.size() == 0) {
-                if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.displayClientMessage(Component.translatable("message.blockcarpentry.block_not_available"), true);
-                }
-                return Collections.emptyList();
-            }
-            texture = textureList.get(tex);
+            TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
             List<BakedQuad> quads = new ArrayList<>();
             Direction dir = state.getValue(DoorBlock.FACING);

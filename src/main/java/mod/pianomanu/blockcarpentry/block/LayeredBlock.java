@@ -1,6 +1,5 @@
 package mod.pianomanu.blockcarpentry.block;
 
-import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BCBlockStateProperties;
 import net.minecraft.core.BlockPos;
@@ -8,7 +7,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -36,7 +34,7 @@ import java.util.List;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.2 09/18/23
+ * @version 1.3 09/23/23
  */
 public class LayeredBlock extends AbstractSixWayFrameBlock implements SimpleWaterloggedBlock {
     public static final IntegerProperty LAYERS = BCBlockStateProperties.LAYERS;
@@ -53,13 +51,7 @@ public class LayeredBlock extends AbstractSixWayFrameBlock implements SimpleWate
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            ItemStack itemStack = player.getItemInHand(hand);
-            if (itemStack.getItem().equals(Registration.LAYERED_FRAME_ITEM.get()) || itemStack.getItem().equals(Registration.LAYERED_ILLUSION_ITEM.get()))
-                return InteractionResult.PASS;
-            return frameUse(state, level, pos, player, hand, hitresult);
-        }
-        return player.getItemInHand(hand).getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return frameUse(state, level, pos, player, hand, hitresult);
     }
 
     @Override

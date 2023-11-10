@@ -1,6 +1,8 @@
 package mod.pianomanu.blockcarpentry.block;
 
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
+import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
+import mod.pianomanu.blockcarpentry.util.BlockModificationHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -22,6 +24,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.IPlantable;
 
 import javax.annotation.Nullable;
 
@@ -30,7 +33,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.6 09/19/23
+ * @version 1.7 09/27/23
  */
 public class ButtonFrameBlock extends ButtonBlock implements EntityBlock, IFrameBlock {
     public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -55,13 +58,16 @@ public class ButtonFrameBlock extends ButtonBlock implements EntityBlock, IFrame
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            if (shouldCallFrameUse(state, itemStack)) {
-                return frameUse(state, level, pos, player, hand, hitresult);
+        if (hand == InteractionHand.MAIN_HAND) {
+            if (!level.isClientSide) {
+                if (shouldCallFrameUse(state, itemStack)) {
+                    return frameUseServer(state, level, pos, player, itemStack, hitresult);
+                }
+                return super.use(state, level, pos, player, hand, hitresult);
             }
-            return super.use(state, level, pos, player, hand, hitresult);
+            return frameUseClient(state, level, pos, player, itemStack, hitresult);
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.FAIL;
     }
 
     @Override
@@ -76,6 +82,16 @@ public class ButtonFrameBlock extends ButtonBlock implements EntityBlock, IFrame
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         return IFrameBlock.getLightEmission(state);
+    }
+
+    @Override
+    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable) {
+        return IFrameBlock.super.canSustainPlant(state, world, pos, facing);
+    }
+
+    @Override
+    public boolean executeModifications(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player, false, false);
     }
 }
 //========SOLI DEO GLORIA========//

@@ -1,0 +1,81 @@
+{
+  "name": "Die Basis einrahmen",
+  "icon": "blockcarpentry:frameblock",
+  "category": "blockcarpentry:frame_blocks",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Minecraft bietet eine große Vielfalt an einzigartig aussehenden Blöcken. Viele davon sind jedoch nur als ganze Würfel vorhanden, wie z. B. Erdblöcke. Es gibt keine Erdstufen, Treppen, Betten, was auch immer! So viele Dinge fehlen in einem tollen Dreckhaus! An dieser Stelle kommen $(o)Zimmerereitechniken$() ins Spiel."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": {
+        "item": "blockcarpentry:frameblock"
+      },
+      "text": "Klicke einfach mit der rechten Maustaste auf den platzierten Rahmen mit einem Block deiner Wahl und er wird sein Aussehen annehmen."
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/dirthouse_1.png"
+      ],
+      "border": true,
+      "title": "Mein tolles Dreckhaus"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Die derzeit verfügbaren Blocktypen sind Platten, Treppen, Knöpfe, Druckplatten, Türen, Falltüren, Leitern, Zäune, Zauntore, Mauern, Betten, Truhen, Teppiche, Scheiben, Tageslichtdetektoren, geschichtete Blöcke (ähnlich wie Schnee) und Schrägen."
+    },
+    {
+      "type": "patchouli:crafting",
+      "text": "Falls du dich fragst, wie du Rahmen erhalten kannst, hier ist das Rezept für den Basisblock. Die meisten der folgenden Rezepte sollten aus den Rezepten der Vanilla-Pendants selbsterklärend sein.",
+      "recipe": "blockcarpentry:frameblock"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "blockcarpentry:frame_slab",
+      "recipe2": "blockcarpentry:frame_stairs"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "blockcarpentry:frame_button",
+      "recipe2": "blockcarpentry:frame_pressure_plate"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "blockcarpentry:frame_door",
+      "recipe2": "blockcarpentry:frame_trapdoor"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "blockcarpentry:frame_ladder",
+      "recipe2": "blockcarpentry:frame_fence"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "blockcarpentry:frame_fence_gate",
+      "recipe2": "blockcarpentry:frame_wall"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "blockcarpentry:frame_bed",
+      "recipe2": "blockcarpentry:frame_chest"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "blockcarpentry:frame_carpet",
+      "recipe2": "blockcarpentry:frame_pane"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "blockcarpentry:frame_daylight_detector",
+      "recipe2": "blockcarpentry:frame_layered_block"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "blockcarpentry:frame_edged_slope",
+      "recipe2": "blockcarpentry:frame_slope"
+    }
+  ]
+}

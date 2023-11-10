@@ -1,0 +1,18 @@
+{
+  "name": "Enchanting Capacities!",
+  "icon": "minecraft:experience_bottle",
+  "category": "blockcarpentry:modifiers",
+  "sortnum": 106,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:experience_bottle",
+      "title": "Experienced!",
+      "text": "Here is another feature nobody has asked for! Right-click a frame or illusion block with an experience bottle to give it enchanting power. If this block is near an enchanting table, it will increase its magic capabilities just like bookshelves."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "However, the prerequisite for this is that the frame or illusion block has already been \"filled\" with a block and imitates it. Empty frames have no magic capabilities. This feature is supported by all frame and illusion blocks, $(l)except beds$(). $(l)$(#f00)The Experience Bottle item will be consumed in the action!$()"
+    }
+  ]
+}

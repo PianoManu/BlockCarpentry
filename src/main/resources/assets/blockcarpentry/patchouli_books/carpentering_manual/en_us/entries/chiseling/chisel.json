@@ -1,0 +1,32 @@
+{
+  "name": "Carving and Chiseling",
+  "icon": "blockcarpentry:chisel",
+  "category": "blockcarpentry:chiseling",
+  "sortnum": 10,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "It is time to use carpentry tools for block modification. For this you simply need a chisel, which comes in handy when carving structures into certain blocks. Not every block has different designs, though. For those who have some, you can cycle through the different available designs by right-clicking the frame or illusion block with the chisel."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": {
+        "item": "blockcarpentry:chisel"
+      },
+      "text": "However, the prerequisite for this is that the frame or illusion block has already been \"filled\" with a block and imitates it. You cannot carve a design into an empty frame. Chiseling is possible for doors, trapdoors, ladders, fences, fence gates, walls, beds, chests, carpets, panes and daylight detectors."
+    },
+    {
+      "type": "patchouli:crafting",
+      "text": "On the right side is a depiction of the results of chiseling a yellow-wool ladder. It looks great, but I wonder if a ladder like that won't collapse?",
+      "recipe": "blockcarpentry:chisel"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/chisel_1.png"
+      ],
+      "border": true,
+      "title": "Chiseled ladders"
+    }
+  ]
+}

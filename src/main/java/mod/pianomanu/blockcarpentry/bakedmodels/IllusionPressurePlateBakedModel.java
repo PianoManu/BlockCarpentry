@@ -1,5 +1,6 @@
 package mod.pianomanu.blockcarpentry.bakedmodels;
 
+import mod.pianomanu.blockcarpentry.block.PressurePlateFrameBlock;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
 import mod.pianomanu.blockcarpentry.util.ModelHelper;
@@ -32,7 +33,7 @@ import java.util.List;
  * See {@link mod.pianomanu.blockcarpentry.util.ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.2 11/07/22
+ * @version 1.3 09/20/23
  */
 public class IllusionPressurePlateBakedModel implements IDynamicBakedModel {
     @Nonnull
@@ -54,11 +55,13 @@ public class IllusionPressurePlateBakedModel implements IDynamicBakedModel {
         BlockState mimic = extraData.get(FrameBlockTile.MIMIC);
         if (mimic != null && state != null) {
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
+            boolean isPowered = state.getValue(PressurePlateFrameBlock.POWERED);
+            float height = isPowered ? 1 / 32f : 1 / 16f;
             int rotation = extraData.get(FrameBlockTile.ROTATION);
-            List<BakedQuad> quads = new ArrayList<>(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 0f, 1 / 16f, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
+            List<BakedQuad> quads = new ArrayList<>(ModelHelper.createSixFaceCuboid(1 / 16f, 15 / 16f, 0f, height, 1 / 16f, 15 / 16f, mimic, model, extraData, rand, tintIndex, rotation));
             int overlayIndex = extraData.get(FrameBlockTile.OVERLAY);
             if (overlayIndex != 0) {
-                quads.addAll(ModelHelper.createOverlay(1 / 16f, 15 / 16f, 0f, 1 / 16f, 1 / 16f, 15 / 16f, overlayIndex));
+                quads.addAll(ModelHelper.createOverlay(1 / 16f, 15 / 16f, 0f, height, 1 / 16f, 15 / 16f, overlayIndex));
             }
             return quads;
         }

@@ -1,0 +1,30 @@
+{
+  "name": "Garstige Fackeln!",
+  "icon": "minecraft:glowstone_dust",
+  "category": "blockcarpentry:modifiers",
+  "sortnum": 100,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Hast du dich jemals gefragt, wie du all die hässlichen Fackeln loswerden kannst, die deine großartige Basis verunstalten? Dann haben wir hier die Lösung für dich. Klicke mit der rechten Maustaste auf einen Rahmen oder Illusionsblock mit Kohle-, Holzkohle- oder Glühsteinstaub, um die Lichtstärke zu erhöhen. $(l)$(#f00)Der Gegenstand wird in der Aktion verbraucht!$()"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "blockcarpentry:textures/book/glowing_1.png"
+      ],
+      "border": true,
+      "title": "Leuchtende Dreckszäune!"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:glowstone_dust,minecraft:coal,minecraft:charcoal",
+      "title": "Lichtquellen",
+      "text": "Voraussetzung dafür ist allerdings, dass der Rahmen oder Illusionsblock bereits mit einem Block \"gefüllt\" wurde und diesen imitiert. Ein leerer Rahmen kann nicht zum Glühen gebracht werden. Diese Funktion wird von allen Rahmen- und Illusionsblöcken unterstützt."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Auch das Zerbrechen des Rahmens oder des Illusionsblocks führt nicht dazu, dass der Glühsteinstaub, die Kohle oder die Holzkohle, die in den Rahmen gesteckt wurden, zurückgegeben werden. Diese Gegenstände sind dann verloren. Bitte bedenke dies. Hier kommt der Hammer ins Spiel, denn du kannst damit einen falsch gewählten Block entfernen und einen neuen einsetzen, ohne den Rahmen oder den Illusionsblock zu zerstören."
+    }
+  ]
+}

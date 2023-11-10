@@ -43,7 +43,7 @@ import java.util.Objects;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 11/14/22
+ * @version 1.6 09/27/23
  */
 @SuppressWarnings("deprecation")
 public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements SimpleWaterloggedBlock, EntityBlock {
@@ -142,23 +142,20 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
-        ItemStack item = player.getItemInHand(hand);
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            return frameUse(state, level, pos, player, hand, hitresult);
-
-        }
-        return item.getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return frameUse(state, level, pos, player, hand, hitresult);
     }
 
     @Override
-    public boolean changeMimic(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) { //TODO fix removing and replacing for double slabs -> somehow saves old mimic in model...
-        if (state.getValue(BCBlockStateProperties.CONTAINS_2ND_BLOCK) || itemStack.getItem() instanceof BaseFrameItem || itemStack.getItem() instanceof BaseIllusionItem) {
+    public boolean changeMimic(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        boolean isDouble = state.getValue(DOUBLE_SLAB);
+
+        if (isDouble && state.getValue(BCBlockStateProperties.CONTAINS_2ND_BLOCK) || !isDouble && state.getValue(BCBlockStateProperties.CONTAINS_BLOCK) || itemStack.getItem() instanceof BaseFrameItem || itemStack.getItem() instanceof BaseIllusionItem) {
             return false;
         }
         BlockEntity tileEntity = level.getBlockEntity(pos);
         int count = itemStack.getCount();
         Block heldBlock = ((BlockItem) itemStack.getItem()).getBlock();
-        if (tileEntity instanceof TwoBlocksFrameBlockTile && !itemStack.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock) && !state.getValue(CONTAINS_2ND_BLOCK)) {
+        if (tileEntity instanceof TwoBlocksFrameBlockTile && !itemStack.isEmpty() && BlockSavingHelper.isValidBlock(heldBlock, level.isClientSide) && !state.getValue(CONTAINS_2ND_BLOCK)) {
             BlockState handBlockState = ((BlockItem) itemStack.getItem()).getBlock().defaultBlockState();
             insertBlock(level, pos, state, handBlockState);
             if (!player.isCreative())
@@ -186,8 +183,6 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
             BlockEntity tileentity = level.getBlockEntity(pos);
             if (tileentity instanceof TwoBlocksFrameBlockTile frameBlockEntity) {
                 frameBlockEntity.clear();
-                System.out.println(frameBlockEntity.getMimic_1());
-                System.out.println(frameBlockEntity.getMimic_2());
             }
         }
     }
@@ -196,7 +191,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
         if (!levelIn.isClientSide) {
             BlockEntity tileentity = levelIn.getBlockEntity(pos);
             if (tileentity instanceof TwoBlocksFrameBlockTile frameBlockEntity) {
-                BlockState blockState = frameBlockEntity.getMimic_1();
+                BlockState blockState = frameBlockEntity.getMimic();
                 if (!(blockState == null)) {
                     dropItemStackInWorld(levelIn, pos, blockState);
                 }
@@ -215,7 +210,7 @@ public class SixWaySlabFrameBlock extends AbstractSixWayFrameBlock implements Si
             if (!state.getValue(CONTAINS_BLOCK)) {
                 TwoBlocksFrameBlockTile frameBlockEntity = (TwoBlocksFrameBlockTile) tileentity;
                 frameBlockEntity.clear();
-                frameBlockEntity.setMimic_1(handBlock);
+                frameBlockEntity.setMimic(handBlock);
                 levelIn.setBlock(pos, state.setValue(CONTAINS_BLOCK, Boolean.TRUE), 2);
             } else if (state.getValue(DOUBLE_SLAB)) {
                 TwoBlocksFrameBlockTile frameBlockEntity = (TwoBlocksFrameBlockTile) tileentity;

@@ -1,0 +1,18 @@
+{
+  "name": "Bezaubernde Fähigkeiten!",
+  "icon": "minecraft:experience_bottle",
+  "category": "blockcarpentry:modifiers",
+  "sortnum": 106,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:experience_bottle",
+      "title": "Erfahren!",
+      "text": "Hier ist eine weitere Funktion, nach der niemand gefragt hat! Mit einem Rechtsklick auf einen Rahmen oder einen Illusionsblock mit einer Erfahrungsflasche kannst du ihm Verzauberungskraft verleihen. Wenn sich dieser Block in der Nähe eines Verzauberungstisches befindet,"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "erhöht er seine magischen Fähigkeiten genau wie Bücherregale. Voraussetzung dafür ist jedoch, dass der Rahmen oder Illusionsblock bereits mit einem Block \"gefüllt\" wurde und diesen imitiert. Leere Rahmen haben keine magischen Fähigkeiten. Diese Funktion wird von allen Rahmen- und Illusionsblöcken unterstützt, $(l)außer Betten$(). $(l)$(#f00)Das \"Erfahrungsfläschchen\" wird in der Aktion verbraucht!$()"
+    }
+  ]
+}

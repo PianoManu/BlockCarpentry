@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -37,7 +36,7 @@ import java.util.List;
  * See {@link ModelHelper} for more information
  *
  * @author PianoManu
- * @version 1.3 09/19/23
+ * @version 1.4 11/01/23
  */
 public class LayeredBlockBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/oak_planks");
@@ -73,19 +72,7 @@ public class LayeredBlockBakedModel implements IDynamicBakedModel {
         BlockState mimic = extraData.get(FrameBlockTile.MIMIC);
         int tex = extraData.get(FrameBlockTile.TEXTURE);
         if (mimic != null && state != null) {
-            List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
-            TextureAtlasSprite texture;
-            if (textureList.size() <= tex) {
-                extraData.derive().with(FrameBlockTile.TEXTURE, 0);
-                tex = 0;
-            }
-            if (textureList.size() == 0) {
-                if (Minecraft.getInstance().player != null) {
-                    Minecraft.getInstance().player.displayClientMessage(Component.translatable("message.blockcarpentry.block_not_available"), true);
-                }
-                return Collections.emptyList();
-            }
-            texture = textureList.get(tex);
+            TextureAtlasSprite texture = TextureHelper.getTexture(model, rand, extraData, FrameBlockTile.TEXTURE);
             int tintIndex = BlockAppearanceHelper.setTintIndex(mimic);
 
             int layers = state.getValue(LayeredBlock.LAYERS);
@@ -129,12 +116,12 @@ public class LayeredBlockBakedModel implements IDynamicBakedModel {
         }
         if (state != null) {
             int layers = state.getValue(LayeredBlock.LAYERS);
-            boolean renderNorth = side == Direction.NORTH && extraData.get(FrameBlockTile.NORTH_VISIBLE);
-            boolean renderEast = side == Direction.EAST && extraData.get(FrameBlockTile.EAST_VISIBLE);
-            boolean renderSouth = side == Direction.SOUTH && extraData.get(FrameBlockTile.SOUTH_VISIBLE);
-            boolean renderWest = side == Direction.WEST && extraData.get(FrameBlockTile.WEST_VISIBLE);
-            boolean renderUp = side == Direction.UP && extraData.get(FrameBlockTile.UP_VISIBLE);
-            boolean renderDown = side == Direction.DOWN && extraData.get(FrameBlockTile.DOWN_VISIBLE);
+            boolean renderNorth = side == Direction.NORTH;
+            boolean renderEast = side == Direction.EAST;
+            boolean renderSouth = side == Direction.SOUTH;
+            boolean renderWest = side == Direction.WEST;
+            boolean renderUp = side == Direction.UP;
+            boolean renderDown = side == Direction.DOWN;
             TextureAtlasSprite textureUp = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/oak_planks"));
             TextureAtlasSprite textureDown = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/oak_planks"));
             TextureAtlasSprite textureNorth = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("minecraft", "block/spruce_trapdoor"));

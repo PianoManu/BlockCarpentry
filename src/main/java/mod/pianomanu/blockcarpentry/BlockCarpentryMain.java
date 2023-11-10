@@ -23,6 +23,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import vazkii.patchouli.api.PatchouliAPI;
 
 import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
 
@@ -83,6 +84,7 @@ public class BlockCarpentryMain
                     output.accept(new ItemStack(Registration.PANE_FRAMEBLOCK.get()));
                     output.accept(new ItemStack(Registration.DAYLIGHT_DETECTOR_FRAMEBLOCK.get()));
                     output.accept(new ItemStack(Registration.LAYERED_FRAMEBLOCK.get()));
+                    output.accept(new ItemStack(Registration.SIGN_FRAME_ITEM.get()));
                     output.accept(new ItemStack(Registration.SLOPE_FRAMEBLOCK.get()));
                     output.accept(new ItemStack(Registration.EDGED_SLOPE_FRAMEBLOCK.get()));
 
@@ -104,11 +106,15 @@ public class BlockCarpentryMain
                     output.accept(new ItemStack(Registration.PANE_ILLUSIONBLOCK.get()));
                     output.accept(new ItemStack(Registration.DAYLIGHT_DETECTOR_ILLUSIONBLOCK.get()));
                     output.accept(new ItemStack(Registration.LAYERED_ILLUSIONBLOCK.get()));
+                    output.accept(new ItemStack(Registration.SIGN_ILLUSION_ITEM.get()));
 
                     output.accept(new ItemStack(Registration.HAMMER.get()));
                     output.accept(new ItemStack(Registration.TEXTURE_WRENCH.get()));
                     output.accept(new ItemStack(Registration.CHISEL.get()));
                     output.accept(new ItemStack(Registration.PAINTBRUSH.get()));
+                    output.accept(new ItemStack(Registration.DEBUG_ITEM.get()));
+                    output.accept(new ItemStack(Registration.EXPLOSION_RESISTANCE_BALL.get()));
+                    output.accept(PatchouliAPI.get().getBookStack(new ResourceLocation("blockcarpentry", "carpentering_manual")));
                 })
                 .build()
         );

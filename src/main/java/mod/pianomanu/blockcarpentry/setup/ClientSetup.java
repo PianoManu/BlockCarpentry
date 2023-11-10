@@ -2,7 +2,9 @@ package mod.pianomanu.blockcarpentry.setup;
 
 import mod.pianomanu.blockcarpentry.BlockCarpentryMain;
 import mod.pianomanu.blockcarpentry.model.*;
+import mod.pianomanu.blockcarpentry.renderer.block.FrameSignRenderer;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -12,7 +14,7 @@ import net.minecraftforge.fml.common.Mod;
  * Things like model loaders are registered here
  *
  * @author PianoManu
- * @version 1.1 11/07/22
+ * @version 1.3 10/02/23
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
@@ -22,9 +24,7 @@ public class ClientSetup {
         event.register("frameloader", new FrameModelLoader());
         event.register("frame_slab_loader", new SlabFrameModelLoader());
         event.register("frame_button_loader", new ButtonFrameModelLoader());
-        event.register("frame_button_pressed_loader", new ButtonPressedFrameModelLoader());
         event.register("frame_pressure_plate_loader", new PressurePlateFrameModelLoader());
-        event.register("frame_pressure_plate_pressed_loader", new PressurePlatePressedFrameModelLoader());
         event.register("frame_stairs_loader", new StairsFrameModelLoader());
         event.register("frame_door_loader", new DoorFrameModelLoader());
         event.register("frame_trapdoor_loader", new TrapdoorFrameModelLoader());
@@ -44,9 +44,7 @@ public class ClientSetup {
         event.register("illusion_block_loader", new IllusionBlockModelLoader());
         event.register("illusion_slab_loader", new IllusionSlabModelLoader());
         event.register("illusion_button_loader", new IllusionButtonModelLoader());
-        event.register("illusion_button_pressed_loader", new IllusionButtonPressedModelLoader());
         event.register("illusion_pressure_plate_loader", new IllusionPressurePlateModelLoader());
-        event.register("illusion_pressure_plate_pressed_loader", new IllusionPressurePlatePressedModelLoader());
         event.register("illusion_stairs_loader", new IllusionStairsModelLoader());
         event.register("illusion_door_loader", new IllusionDoorModelLoader());
         event.register("illusion_trapdoor_loader", new IllusionTrapdoorModelLoader());
@@ -60,6 +58,11 @@ public class ClientSetup {
         event.register("illusion_pane_loader", new IllusionPaneModelLoader());
         event.register("illusion_daylight_detector_loader", new IllusionDaylightDetectorModelLoader());
         event.register("illusion_layered_block_loader", new IllusionLayeredBlockModelLoader());
+    }
+
+    @SubscribeEvent
+    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(Registration.SIGN_FRAME_TILE.get(), FrameSignRenderer::new);
     }
 }
 //========SOLI DEO GLORIA========//

@@ -1,27 +1,29 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
+import mod.pianomanu.blockcarpentry.setup.Registration;
+import mod.pianomanu.blockcarpentry.util.VoxelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.extensions.IForgeBlockEntity;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
 
@@ -30,9 +32,27 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.FRAMEBLOCK_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.3 09/19/23
+ * @version 1.9 11/08/23
  */
-public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
+public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity, IFrameTile {
+    public static final List<IFrameTile.TagPacket<?>> TAG_PACKETS = initTagPackets();
+
+    private static List<FrameBlockTile.TagPacket<?>> initTagPackets() {
+        List<FrameBlockTile.TagPacket<?>> packets = new ArrayList<>();
+        packets.add(new FrameBlockTile.TagPacket<>("NWD", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("NWU", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("NED", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("NEU", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SWD", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SWU", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SED", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("SEU", Vec3.class, Vec3.ZERO));
+        packets.add(new FrameBlockTile.TagPacket<>("directions", List.class, Collections.emptyList()));
+        return packets;
+    }
+
+    private VoxelShape shape = Shapes.block();
+
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN = new ModelProperty<>();
@@ -41,53 +61,104 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     public static final ModelProperty<Integer> GLASS_COLOR = new ModelProperty<>();
     public static final ModelProperty<Integer> OVERLAY = new ModelProperty<>();
     public static final ModelProperty<Integer> ROTATION = new ModelProperty<>();
+    public static final ModelProperty<Boolean> KEEP_UV = new ModelProperty<>();
+    public static final ModelProperty<Boolean> REMAIN_RECTANGLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> NORTH_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> EAST_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> SOUTH_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> WEST_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> UP_VISIBLE = new ModelProperty<>();
     public static final ModelProperty<Boolean> DOWN_VISIBLE = new ModelProperty<>();
+    public static final ModelProperty<List<Direction>> DIRECTIONS = new ModelProperty<>();
+
+    public static final ModelProperty<Vec3> NWU_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> NEU_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> NWD_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> NED_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> SWU_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> SEU_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> SWD_prop = new ModelProperty<>();
+    public static final ModelProperty<Vec3> SED_prop = new ModelProperty<>();
+
+    public static final ModelProperty<List<Integer>> ROTATIONS = new ModelProperty<>();
 
     public final int maxTextures = 8;
     public final int maxDesignTextures = 4;
     public final int maxDesigns = 4;
 
-    private BlockState mimic;
-    private Integer texture = 0;
-    private Integer design = 0;
-    private Integer designTexture = 0;
-    private Integer glassColor = 0;
-    private Integer overlay = 0;
-    private Integer rotation = 0;
+    public BlockState mimic;
+    public Integer texture = 0;
+    public Integer design = 0;
+    public Integer designTexture = 0;
+    public Integer glassColor = 0;
+    public Integer overlay = 0;
+    public Integer rotation = 0;
+    public Boolean keepUV = true;
+    public Boolean faceRemainRectangle = true;
+    public Float friction = Registration.FRAMEBLOCK.get().getFriction();
+    public Float explosionResistance = Registration.FRAMEBLOCK.get().getExplosionResistance();
+    public Boolean canSustainPlant = false;
+    public Integer enchantPowerBonus = 0;
+    public Boolean canEntityDestroy = true;
 
-    private Boolean northVisible = true;
-    private Boolean eastVisible = true;
-    private Boolean southVisible = true;
-    private Boolean westVisible = true;
-    private Boolean upVisible = true;
-    private Boolean downVisible = true;
+    public Boolean northVisible = true;
+    public Boolean eastVisible = true;
+    public Boolean southVisible = true;
+    public Boolean westVisible = true;
+    public Boolean upVisible = true;
+    public Boolean downVisible = true;
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    public List<Integer> rotations = Arrays.asList(0, 0, 0, 0, 0, 0);
+
+    public Vec3 NWU = new Vec3(0, 0, 0);
+    public Vec3 NEU = new Vec3(0, 0, 0);
+    public Vec3 NWD = new Vec3(0, 0, 0);
+    public Vec3 NED = new Vec3(0, 0, 0);
+    public Vec3 SWU = new Vec3(0, 0, 0);
+    public Vec3 SEU = new Vec3(0, 0, 0);
+    public Vec3 SWD = new Vec3(0, 0, 0);
+    public Vec3 SED = new Vec3(0, 0, 0);
+
+    private Vec3 oldNWU = new Vec3(0, 0, 0);
+    private Vec3 oldNEU = new Vec3(0, 0, 0);
+    private Vec3 oldNWD = new Vec3(0, 0, 0);
+    private Vec3 oldNED = new Vec3(0, 0, 0);
+    private Vec3 oldSWU = new Vec3(0, 0, 0);
+    private Vec3 oldSEU = new Vec3(0, 0, 0);
+    private Vec3 oldSWD = new Vec3(0, 0, 0);
+    private Vec3 oldSED = new Vec3(0, 0, 0);
+
+    public List<Direction> directions = new ArrayList<>();
+
+    public List<Vec3[]> corners = new ArrayList<>();
 
     public FrameBlockTile(BlockPos pos, BlockState state) {
         super(FRAMEBLOCK_TILE.get(), pos, state);
+
+        updateVecList();
     }
 
     public FrameBlockTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
-    private static Integer readInteger(CompoundTag tag) {
-        if (!tag.contains("number", 8)) {
-            return 0;
-        } else {
-            try {
-                return Integer.parseInt(tag.getString("number"));
-            } catch (NumberFormatException e) {
-                LOGGER.error("Not a valid Number Format: " + tag.getString("number"));
-                return 0;
-            }
-        }
+    public void updateVecList() {
+        this.corners = new ArrayList<>();
+        this.corners.add(new Vec3[]{this.NWD, this.NED, this.NWU, this.SWD});
+        this.corners.add(new Vec3[]{this.NWU, this.NEU, this.NWD, this.SWU});
+        this.corners.add(new Vec3[]{this.NED, this.NWD, this.NEU, this.SED});
+        this.corners.add(new Vec3[]{this.NEU, this.NWU, this.NED, this.SEU});
+        this.corners.add(new Vec3[]{this.SWD, this.SED, this.SWU, this.NWD});
+        this.corners.add(new Vec3[]{this.SWU, this.SEU, this.SWD, this.NWU});
+        this.corners.add(new Vec3[]{this.SED, this.SWD, this.SEU, this.NED});
+        this.corners.add(new Vec3[]{this.SEU, this.SWU, this.SED, this.NEU});
+    }
+
+    public <V> V set(V newValue) {
+        setChanged();
+        if (level != null)
+            level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        return newValue;
     }
 
     public BlockState getMimic() {
@@ -98,20 +169,12 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
         return this.design;
     }
 
-    private static CompoundTag writeInteger(Integer tag) {
-        CompoundTag compoundnbt = new CompoundTag();
-        compoundnbt.putString("number", tag.toString());
-        return compoundnbt;
-    }
-
     public Integer getDesignTexture() {
         return this.designTexture;
     }
 
     public void setMimic(BlockState mimic) {
-        this.mimic = mimic;
-        setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        this.mimic = set(mimic);
     }
 
     public Integer getTexture() {
@@ -119,9 +182,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     }
 
     public void setDesign(Integer design) {
-        this.design = design;
-        setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        this.design = set(design);
     }
 
     public Integer getGlassColor() {
@@ -129,9 +190,7 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     }
 
     public void setDesignTexture(Integer designTexture) {
-        this.designTexture = designTexture;
-        setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        this.designTexture = set(designTexture);
     }
 
     public Integer getRotation() {
@@ -139,57 +198,57 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     }
 
     public void setTexture(Integer texture) {
-        this.texture = texture;
-        setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        this.texture = set(texture);
     }
 
-    public void setVisibleSides(Direction dir, boolean isVisible) {
-        switch (dir) {
-            case DOWN:
-                downVisible = isVisible;
-                break;
-            case UP:
-                upVisible = isVisible;
-                break;
-            case NORTH:
-                northVisible = isVisible;
-                break;
-            case WEST:
-                westVisible = isVisible;
-                break;
-            case SOUTH:
-                southVisible = isVisible;
-                break;
-            case EAST:
-                eastVisible = isVisible;
-                break;
-            default:
-                break;
-        }
+    public void setNWU(Vec3 NWU) {
+        if (inRange(NWU.x, 16) && inRange(NWU.y, -16) && inRange(NWU.z, 16))
+            this.NWU = set(NWU);
     }
 
-    public List<Direction> getVisibleSides() {
-        List<Direction> dir = new ArrayList<>();
-        if (northVisible)
-            dir.add(Direction.NORTH);
-        if (eastVisible)
-            dir.add(Direction.EAST);
-        if (southVisible)
-            dir.add(Direction.SOUTH);
-        if (westVisible)
-            dir.add(Direction.WEST);
-        if (upVisible)
-            dir.add(Direction.UP);
-        if (downVisible)
-            dir.add(Direction.DOWN);
-        return dir;
+    public void setNEU(Vec3 NEU) {
+        if (inRange(NEU.x, -16) && inRange(NEU.y, -16) && inRange(NEU.z, 16))
+            this.NEU = set(NEU);
+    }
+
+    public void setNWD(Vec3 NWD) {
+        if (inRange(NWD.x, 16) && inRange(NWD.y, 16) && inRange(NWD.z, 16))
+            this.NWD = set(NWD);
+    }
+
+    public void setNED(Vec3 NED) {
+        if (inRange(NED.x, -16) && inRange(NED.y, 16) && inRange(NED.z, 16))
+            this.NED = set(NED);
+    }
+
+    public void setSWU(Vec3 SWU) {
+        if (inRange(SWU.x, 16) && inRange(SWU.y, -16) && inRange(SWU.z, -16))
+            this.SWU = set(SWU);
+    }
+
+    public void setSEU(Vec3 SEU) {
+        if (inRange(SEU.x, -16) && inRange(SEU.y, -16) && inRange(SEU.z, -16))
+            this.SEU = set(SEU);
+    }
+
+    public void setSWD(Vec3 SWD) {
+        if (inRange(SWD.x, 16) && inRange(SWD.y, 16) && inRange(SWD.z, -16))
+            this.SWD = set(SWD);
+    }
+
+    public void setSED(Vec3 SED) {
+        if (inRange(SED.x, -16) && inRange(SED.y, 16) && inRange(SED.z, -16))
+            this.SED = set(SED);
+    }
+
+    private boolean inRange(double val, int limit) {
+        int min = Math.min(0, limit);
+        int max = Math.max(0, limit);
+        return val >= min && val <= max;
     }
 
     public void setGlassColor(Integer colorNumber) {
-        this.glassColor = colorNumber;
-        setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        this.glassColor = set(colorNumber);
     }
 
     public Integer getOverlay() {
@@ -197,15 +256,122 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
     }
 
     public void setRotation(Integer rotation) {
-        this.rotation = rotation;
-        setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        this.rotation = set(rotation);
     }
 
     public void setOverlay(Integer overlay) {
-        this.overlay = overlay;
-        setChanged();
-        level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        this.overlay = set(overlay);
+    }
+
+    public Float getFriction() {
+        return friction;
+    }
+
+    public void setFriction(Float friction) {
+        this.friction = set(friction);
+    }
+
+    public Float getExplosionResistance() {
+        return explosionResistance;
+    }
+
+    public void setExplosionResistance(Float explosionResistance) {
+        this.explosionResistance = set(explosionResistance);
+    }
+
+    public Boolean getCanSustainPlant() {
+        return canSustainPlant;
+    }
+
+    public void setCanSustainPlant(Boolean canSustainPlant) {
+        this.canSustainPlant = set(canSustainPlant);
+    }
+
+    public Integer getEnchantPowerBonus() {
+        return enchantPowerBonus;
+    }
+
+    public void setEnchantPowerBonus(Integer enchantPowerBonus) {
+        this.enchantPowerBonus = set(enchantPowerBonus);
+    }
+
+    @Override
+    public Boolean getCanEntityDestroy() {
+        return this.canEntityDestroy;
+    }
+
+    @Override
+    public void setCanEntityDestroy(Boolean canEntityDestroy) {
+        this.canEntityDestroy = set(canEntityDestroy);
+    }
+
+    public void addDirection(Direction direction) {
+        this.directions.add(set(direction));
+        this.trySimplifyDirections();
+    }
+
+    private void trySimplifyDirections() {
+        int i = 0;
+        Direction prev = null;
+        List<Direction> newDirections = new ArrayList<>();
+        for (Direction d :
+                this.directions) {
+            newDirections.add(d);
+            if (d != prev) {
+                if (d.getOpposite() == prev) {
+                    this.removeLastNEntries(newDirections, 2);
+                    prev = newDirections.get(newDirections.size() - 1);
+                } else {
+                    prev = d;
+                }
+                i = 0;
+            } else {
+                i++;
+                if (i == 3) {
+                    this.removeLastNEntries(newDirections, 4);
+                    i = 0;
+                }
+            }
+        }
+        this.directions = set(newDirections);
+    }
+
+    private void removeLastNEntries(List<Direction> directions, int iters) {
+        int size = directions.size();
+        for (int i = 1; i <= iters; i++) {
+            directions.remove(size - iters);
+        }
+    }
+
+    public Integer getRotation(Direction direction) {
+        return rotations.get(direction.ordinal());
+    }
+
+    public void addRotation(Direction direction) {
+        if (this.rotations.size() != 6) {
+            this.rotations = new ArrayList<>();
+            this.rotations.addAll(Arrays.asList(0, 0, 0, 0, 0, 0));
+        }
+        if (this.rotations.get(direction.ordinal()) >= 3)
+            this.rotations.set(direction.ordinal(), set(0));
+        else
+            this.rotations.set(direction.ordinal(), set(this.rotations.get(direction.ordinal()) + 1));
+    }
+
+    public Boolean getKeepUV() {
+        return this.keepUV;
+    }
+
+    public void setKeepUV(Boolean keepUV) {
+        this.keepUV = set(keepUV);
+    }
+
+    public Boolean getFaceRemainRectangle() {
+        return this.faceRemainRectangle;
+    }
+
+    public void setFaceRemainRectangle(Boolean faceRemainRectangle) {
+        this.faceRemainRectangle = set(faceRemainRectangle);
     }
 
     @Nullable
@@ -214,66 +380,10 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    //TODO
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        BlockState oldMimic = mimic;
-        Integer oldTexture = texture;
-        Integer oldDesign = design;
-        Integer oldDesignTexture = designTexture;
-        Integer oldGlassColor = glassColor;
-        Integer oldOverlay = overlay;
-        Integer oldRotation = rotation;
-        CompoundTag tag = pkt.getTag();
-        if (tag.contains("mimic")) {
-            mimic = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic"));
-            if (!Objects.equals(oldMimic, mimic)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("texture")) {
-            texture = readInteger(tag.getCompound("texture"));
-            if (!Objects.equals(oldTexture, texture)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design")) {
-            design = readInteger(tag.getCompound("design"));
-            if (!Objects.equals(oldDesign, design)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design_texture")) {
-            designTexture = readInteger(tag.getCompound("design_texture"));
-            if (!Objects.equals(oldDesignTexture, designTexture)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("glass_color")) {
-            glassColor = readInteger(tag.getCompound("glass_color"));
-            if (!Objects.equals(oldGlassColor, glassColor)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("overlay")) {
-            overlay = readInteger(tag.getCompound("overlay"));
-            if (!Objects.equals(oldOverlay, overlay)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("rotation")) {
-            rotation = readInteger(tag.getCompound("rotation"));
-            if (!Objects.equals(oldRotation, rotation)) {
-                this.requestModelDataUpdate();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
+        this.updateShape();
+        onDataPacket(pkt, FrameBlockTile.class, level, this.worldPosition, getBlockState());
     }
 
     @Nonnull
@@ -287,102 +397,88 @@ public class FrameBlockTile extends BlockEntity implements IForgeBlockEntity {
                 .with(GLASS_COLOR, glassColor)
                 .with(OVERLAY, overlay)
                 .with(ROTATION, rotation)
+                .with(KEEP_UV, keepUV)
+                .with(REMAIN_RECTANGLE, faceRemainRectangle)
                 .with(NORTH_VISIBLE, northVisible)
                 .with(EAST_VISIBLE, eastVisible)
                 .with(SOUTH_VISIBLE, southVisible)
                 .with(WEST_VISIBLE, westVisible)
                 .with(UP_VISIBLE, upVisible)
                 .with(DOWN_VISIBLE, downVisible)
+                .with(NWU_prop, NWU)
+                .with(NEU_prop, NEU)
+                .with(NWD_prop, NWD)
+                .with(NED_prop, NED)
+                .with(SWU_prop, SWU)
+                .with(SEU_prop, SEU)
+                .with(SWD_prop, SWD)
+                .with(SED_prop, SED)
+                .with(DIRECTIONS, directions)
+                .with(ROTATIONS, rotations)
                 .build();
     }
 
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
-        if (mimic != null) {
-            tag.put("mimic", NbtUtils.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            tag.put("texture", writeInteger(texture));
-        }
-        if (design != null) {
-            tag.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            tag.put("design_texture", writeInteger(designTexture));
-        }
-        if (glassColor != null) {
-            tag.put("glass_color", writeInteger(glassColor));
-        }
-        if (overlay != null) {
-            tag.put("overlay", writeInteger(overlay));
-        }
-        if (rotation != null) {
-            tag.put("rotation", writeInteger(rotation));
-        }
-        return tag;
+        this.updateShape();
+        return getUpdateTag(tag, FrameBlockTile.class);
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        if (tag.contains("mimic")) {
-            mimic = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic"));
-        }
-        if (tag.contains("texture")) {
-            texture = readInteger(tag.getCompound("texture"));
-        }
-        if (tag.contains("design")) {
-            design = readInteger(tag.getCompound("design"));
-        }
-        if (tag.contains("design_texture")) {
-            designTexture = readInteger(tag.getCompound("design_texture"));
-        }
-        if (tag.contains("glass_color")) {
-            glassColor = readInteger(tag.getCompound("glass_color"));
-        }
-        if (tag.contains("overlay")) {
-            overlay = readInteger(tag.getCompound("overlay"));
-        }
-        if (tag.contains("rotation")) {
-            rotation = readInteger(tag.getCompound("rotation"));
-        }
+        this.updateShape();
+        IFrameTile.super.load(tag, FrameBlockTile.class);
+        this.updateVecList();
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if (mimic != null) {
-            tag.put("mimic", NbtUtils.writeBlockState(mimic));
-        }
-        if (texture != null) {
-            tag.put("texture", writeInteger(texture));
-        }
-        if (design != null) {
-            tag.put("design", writeInteger(design));
-        }
-        if (designTexture != null) {
-            tag.put("design_texture", writeInteger(designTexture));
-        }
-        if (glassColor != null) {
-            tag.put("glass_color", writeInteger(glassColor));
-        }
-        if (overlay != null) {
-            tag.put("overlay", writeInteger(overlay));
-        }
-        if (rotation != null) {
-            tag.put("rotation", writeInteger(rotation));
-        }
+        IFrameTile.super.saveAdditional(tag, FrameBlockTile.class);
     }
 
-    public void clear() {
-        this.setMimic(null);
-        this.setDesign(0);
-        this.setDesign(0);
-        this.setDesign(0);
-        this.setGlassColor(0);
-        this.setOverlay(0);
-        this.setRotation(0);
+    public VoxelShape getShape() {
+        return shape;
+    }
+
+    public void updateShape() {
+        if (shapeChanged())
+            this.shape = set(VoxelUtils.getShape(this));
+    }
+
+    public boolean shapeUnmodified() {
+        return this.NWD.equals(Vec3.ZERO)
+                && this.NWU.equals(Vec3.ZERO)
+                && this.NED.equals(Vec3.ZERO)
+                && this.NEU.equals(Vec3.ZERO)
+                && this.SWD.equals(Vec3.ZERO)
+                && this.SWU.equals(Vec3.ZERO)
+                && this.SED.equals(Vec3.ZERO)
+                && this.SEU.equals(Vec3.ZERO);
+    }
+
+    public boolean shapeChanged() {
+        if (this.NWD.equals(this.oldNWD)
+                && this.NWU.equals(this.oldNWU)
+                && this.NED.equals(this.oldNED)
+                && this.NEU.equals(this.oldNEU)
+                && this.SWD.equals(this.oldSWD)
+                && this.SWU.equals(this.oldSWU)
+                && this.SED.equals(this.oldSED)
+                && this.SEU.equals(this.oldSEU)) {
+            return false;
+        }
+        this.oldNWD = this.NWD;
+        this.oldNWU = this.NWU;
+        this.oldNED = this.NED;
+        this.oldNEU = this.NEU;
+        this.oldSWD = this.SWD;
+        this.oldSWU = this.SWU;
+        this.oldSED = this.SED;
+        this.oldSEU = this.SEU;
+        return true;
     }
 }
 //========SOLI DEO GLORIA========//

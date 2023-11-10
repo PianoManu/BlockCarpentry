@@ -1,13 +1,13 @@
 package mod.pianomanu.blockcarpentry.tileentity;
 
+import mod.pianomanu.blockcarpentry.setup.Registration;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
@@ -17,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,9 +27,9 @@ import static mod.pianomanu.blockcarpentry.setup.Registration.SLAB_FRAME_TILE;
  * Contains all information about the block and the mimicked block
  *
  * @author PianoManu
- * @version 1.2 09/19/23
+ * @version 1.4 11/01/23
  */
-public class TwoBlocksFrameBlockTile extends BlockEntity {
+public class TwoBlocksFrameBlockTile extends BlockEntity implements IFrameTile {
     public static final ModelProperty<BlockState> MIMIC_1 = new ModelProperty<>();
     public static final ModelProperty<Integer> TEXTURE_1 = new ModelProperty<>();
     public static final ModelProperty<Integer> DESIGN_1 = new ModelProperty<>();
@@ -56,149 +55,166 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     public final int maxTextures = 8;
     public final int maxDesignTextures = 4;
     public final int maxDesigns = 4;
-    private BlockState mimic_1;
-    private Integer texture_1 = 0;
-    private Integer design_1 = 0;
-    private Integer designTexture_1 = 0;
-    private Integer overlay_1 = 0;
-    private Integer rotation_1 = 0;
-    private BlockState mimic_2;
-    private Integer texture_2 = 0;
-    private Integer design_2 = 0;
-    private Integer designTexture_2 = 0;
-    private Integer overlay_2 = 0;
-    private Integer rotation_2 = 0;
+    public BlockState mimic;
+    public Integer texture = 0;
+    public Integer design = 0;
+    public Integer designTexture = 0;
+    public Integer overlay = 0;
+    public Integer rotation = 0;
+    public Float friction = Registration.FRAMEBLOCK.get().getFriction();
+    public Float explosionResistance = Registration.FRAMEBLOCK.get().getExplosionResistance();
+    public Boolean canSustainPlant = false;
+    public Integer enchantPowerBonus = 0;
+    public Boolean canEntityDestroy = true;
+    public BlockState mimic_2;
+    public Integer texture_2 = 0;
+    public Integer design_2 = 0;
+    public Integer designTexture_2 = 0;
+    public Integer overlay_2 = 0;
+    public Integer rotation_2 = 0;
+    public Float friction_2 = Registration.FRAMEBLOCK.get().getFriction();
+    public Float explosionResistance_2 = Registration.FRAMEBLOCK.get().getExplosionResistance();
+    public Boolean canSustainPlant_2 = false;
+    public Integer enchantPowerBonus_2 = 0;
 
-    private Boolean northVisible = true;
-    private Boolean eastVisible = true;
-    private Boolean southVisible = true;
-    private Boolean westVisible = true;
-    private Boolean upVisible = true;
-    private Boolean downVisible = true;
+    public Boolean northVisible = true;
+    public Boolean eastVisible = true;
+    public Boolean southVisible = true;
+    public Boolean westVisible = true;
+    public Boolean upVisible = true;
+    public Boolean downVisible = true;
 
-    public void setVisibileSides(Direction dir, boolean isVisible) {
-        switch (dir) {
-            case DOWN:
-                downVisible = isVisible;
-                break;
-            case UP:
-                upVisible = isVisible;
-                break;
-            case NORTH:
-                northVisible = isVisible;
-                break;
-            case WEST:
-                westVisible = isVisible;
-                break;
-            case SOUTH:
-                southVisible = isVisible;
-                break;
-            case EAST:
-                eastVisible = isVisible;
-                break;
-            default:
-                break;
-        }
-    }
+    List<FrameBlockTile.TagPacket<?>> TAG_PACKETS = initTagPackets();
 
-    public List<Direction> getVisibleSides() {
-        List<Direction> dir = new ArrayList<>();
-        if (northVisible)
-            dir.add(Direction.NORTH);
-        if (eastVisible)
-            dir.add(Direction.EAST);
-        if (southVisible)
-            dir.add(Direction.SOUTH);
-        if (westVisible)
-            dir.add(Direction.WEST);
-        if (upVisible)
-            dir.add(Direction.UP);
-        if (downVisible)
-            dir.add(Direction.DOWN);
-        return dir;
+    private static List<FrameBlockTile.TagPacket<?>> initTagPackets() {
+        List<FrameBlockTile.TagPacket<?>> packets = IFrameTile.TAG_PACKETS;
+        packets.add(new FrameBlockTile.TagPacket<>("mimic_2", BlockState.class, Blocks.AIR.defaultBlockState()));
+        packets.add(new FrameBlockTile.TagPacket<>("texture_2", Integer.class, 0));
+        packets.add(new FrameBlockTile.TagPacket<>("design_2", Integer.class, 0));
+        packets.add(new FrameBlockTile.TagPacket<>("designTexture_2", Integer.class, 0));
+        packets.add(new FrameBlockTile.TagPacket<>("glassColor_2", Integer.class, 0));
+        packets.add(new FrameBlockTile.TagPacket<>("overlay_2", Integer.class, 0));
+        packets.add(new FrameBlockTile.TagPacket<>("rotation_2", Integer.class, 0));
+        return packets;
     }
 
     public TwoBlocksFrameBlockTile(BlockPos pos, BlockState state) {
         super(SLAB_FRAME_TILE.get(), pos, state);
     }
 
-    private static Integer readInteger(CompoundTag tag) {
-        if (!tag.contains("number", 8)) {
-            return 0;
-        } else {
-            try {
-                return Integer.parseInt(tag.getString("number"));
-            } catch (NumberFormatException e) {
-                LOGGER.error("Not a valid Number Format: " + tag.getString("number"));
-                return 0;
-            }
-        }
-    }
-
-    private static CompoundTag writeInteger(Integer tag) {
-        CompoundTag compoundnbt = new CompoundTag();
-        compoundnbt.putString("number", tag.toString());
-        return compoundnbt;
-    }
-
-    public BlockState getMimic_1() {
-        return mimic_1;
-    }
-
-    public void setMimic_1(BlockState mimic_1) {
-        this.mimic_1 = mimic_1;
+    public <V> V set(V newValue) {
         setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        if (level != null)
+            level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        return newValue;
     }
 
-    public Integer getTexture_1() {
-        return texture_1;
+    public BlockState getMimic() {
+        return mimic;
     }
 
-    public void setTexture_1(int texture_1) {
-        this.texture_1 = texture_1;
-        setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+    public void setMimic(BlockState mimic) {
+        this.mimic = set(mimic);
     }
 
-    public Integer getDesign_1() {
-        return design_1;
+    public Integer getTexture() {
+        return texture;
     }
 
-    public void setDesign_1(int design_1) {
-        this.design_1 = design_1;
-        setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+    public void setTexture(Integer texture) {
+        this.texture = set(texture);
     }
 
-    public Integer getDesignTexture_1() {
-        return designTexture_1;
+    public Integer getDesign() {
+        return design;
     }
 
-    public void setDesignTexture_1(int designTexture_1) {
-        this.designTexture_1 = designTexture_1;
-        setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+    public void setDesign(Integer design) {
+        this.design = set(design);
     }
 
-    public Integer getOverlay_1() {
-        return overlay_1;
+    public Integer getDesignTexture() {
+        return designTexture;
     }
 
-    public void setOverlay_1(int overlay_1) {
-        this.overlay_1 = overlay_1;
-        setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+    public void setDesignTexture(Integer designTexture) {
+        this.designTexture = set(designTexture);
     }
 
-    public Integer getRotation_1() {
-        return rotation_1;
+    @Override
+    public Integer getGlassColor() {
+        return 0;
     }
 
-    public void setRotation_1(int rotation_1) {
-        this.rotation_1 = rotation_1;
-        setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+    @Override
+    public void setGlassColor(Integer glassColor) {
+
+    }
+
+    public Integer getOverlay() {
+        return overlay;
+    }
+
+    public void setOverlay(Integer overlay) {
+        this.overlay = set(overlay);
+    }
+
+    public Integer getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(Integer rotation) {
+        this.rotation = set(rotation);
+    }
+
+    @Override
+    public Float getFriction() {
+        return friction;
+    }
+
+    @Override
+    public void setFriction(Float friction) {
+        this.friction = set(friction);
+    }
+
+    @Override
+    public Float getExplosionResistance() {
+        return explosionResistance;
+    }
+
+    @Override
+    public void setExplosionResistance(Float explosionResistance) {
+        this.explosionResistance = set(explosionResistance);
+    }
+
+    @Override
+    public Boolean getCanSustainPlant() {
+        return canSustainPlant;
+    }
+
+    @Override
+    public void setCanSustainPlant(Boolean canSustainPlant) {
+        this.canSustainPlant = set(canSustainPlant);
+    }
+
+    @Override
+    public Integer getEnchantPowerBonus() {
+        return enchantPowerBonus;
+    }
+
+    @Override
+    public void setEnchantPowerBonus(Integer enchantPowerBonus) {
+        this.enchantPowerBonus = set(enchantPowerBonus);
+    }
+
+    @Override
+    public Boolean getCanEntityDestroy() {
+        return this.canEntityDestroy;
+    }
+
+    @Override
+    public void setCanEntityDestroy(Boolean canEntityDestroy) {
+        this.canEntityDestroy = set(canEntityDestroy);
     }
 
     public BlockState getMimic_2() {
@@ -206,59 +222,79 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     }
 
     public void setMimic_2(BlockState mimic_2) {
-        this.mimic_2 = mimic_2;
-        setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+        this.mimic_2 = set(mimic_2);
     }
 
     public Integer getTexture_2() {
         return texture_2;
     }
 
-    public void setTexture_2(int texture_2) {
-        this.texture_2 = texture_2;
-        setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+    public void setTexture_2(Integer texture_2) {
+        this.texture_2 = set(texture_2);
     }
 
     public Integer getDesign_2() {
         return design_2;
     }
 
-    public void setDesign_2(int design_2) {
-        this.design_2 = design_2;
-        setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+    public void setDesign_2(Integer design_2) {
+        this.design_2 = set(design_2);
     }
 
     public Integer getDesignTexture_2() {
         return designTexture_2;
     }
 
-    public void setDesignTexture_2(int designTexture_2) {
-        this.designTexture_2 = designTexture_2;
-        setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+    public void setDesignTexture_2(Integer designTexture_2) {
+        this.designTexture_2 = set(designTexture_2);
     }
 
     public Integer getOverlay_2() {
         return overlay_2;
     }
 
-    public void setOverlay_2(int overlay_2) {
-        this.overlay_2 = overlay_2;
-        setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+    public void setOverlay_2(Integer overlay_2) {
+        this.overlay_2 = set(overlay_2);
     }
 
     public Integer getRotation_2() {
         return rotation_2;
     }
 
-    public void setRotation_2(int rotation_2) {
-        this.rotation_2 = rotation_2;
-        setChanged();
-        Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
+    public void setRotation_2(Integer rotation_2) {
+        this.rotation_2 = set(rotation_2);
+    }
+
+    public Float getFriction_2() {
+        return friction_2;
+    }
+
+    public void setFriction_2(Float friction_2) {
+        this.friction_2 = set(friction_2);
+    }
+
+    public Float getExplosionResistance_2() {
+        return explosionResistance_2;
+    }
+
+    public void setExplosionResistance_2(Float explosionResistance_2) {
+        this.explosionResistance_2 = set(explosionResistance_2);
+    }
+
+    public Boolean getCanSustainPlant_2() {
+        return canSustainPlant_2;
+    }
+
+    public void setCanSustainPlant_2(Boolean canSustainPlant_2) {
+        this.canSustainPlant_2 = set(canSustainPlant_2);
+    }
+
+    public Integer getEnchantPowerBonus_2() {
+        return enchantPowerBonus_2;
+    }
+
+    public void setEnchantPowerBonus_2(Integer enchantPowerBonus_2) {
+        this.enchantPowerBonus_2 = set(enchantPowerBonus_2);
     }
 
     @Nullable
@@ -271,159 +307,24 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     @Nonnull
     public CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
-        if (mimic_1 != null) {
-            tag.put("mimic_1", NbtUtils.writeBlockState(mimic_1));
-        }
-        if (texture_1 != null) {
-            tag.put("texture_1", writeInteger(texture_1));
-        }
-        if (design_1 != null) {
-            tag.put("design_1", writeInteger(design_1));
-        }
-        if (designTexture_1 != null) {
-            tag.put("design_texture_1", writeInteger(designTexture_1));
-        }
-        if (overlay_1 != null) {
-            tag.put("overlay_1", writeInteger(overlay_1));
-        }
-        if (rotation_1 != null) {
-            tag.put("rotation_1", writeInteger(rotation_1));
-        }
-
-        if (mimic_2 != null) {
-            tag.put("mimic_2", NbtUtils.writeBlockState(mimic_2));
-        }
-        if (texture_2 != null) {
-            tag.put("texture_2", writeInteger(texture_2));
-        }
-        if (design_2 != null) {
-            tag.put("design_2", writeInteger(design_2));
-        }
-        if (designTexture_2 != null) {
-            tag.put("design_texture_2", writeInteger(designTexture_2));
-        }
-        if (overlay_2 != null) {
-            tag.put("overlay_2", writeInteger(overlay_2));
-        }
-        if (rotation_2 != null) {
-            tag.put("rotation_2", writeInteger(rotation_2));
-        }
-        return tag;
+        return getUpdateTag(tag, TwoBlocksFrameBlockTile.class);
     }
 
-    //TODO
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        BlockState oldMimic_1 = mimic_1;
-        Integer oldTexture_1 = texture_1;
-        Integer oldDesign_1 = design_1;
-        Integer oldDesignTexture_1 = designTexture_1;
-        Integer oldOverlay_1 = overlay_1;
-        Integer oldRotation_1 = rotation_1;
-        BlockState oldMimic_2 = mimic_2;
-        Integer oldTexture_2 = texture_2;
-        Integer oldDesign_2 = design_2;
-        Integer oldDesignTexture_2 = designTexture_2;
-        Integer oldOverlay_2 = overlay_2;
-        Integer oldRotation_2 = rotation_2;
-        CompoundTag tag = pkt.getTag();
-        if (tag.contains("mimic_1")) {
-            mimic_1 = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic_1"));
-            if (!Objects.equals(oldMimic_1, mimic_1)) {
-                this.requestModelDataUpdate();
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("texture_1")) {
-            texture_1 = readInteger(tag.getCompound("texture_1"));
-            if (!Objects.equals(oldTexture_1, texture_1)) {
-                this.requestModelDataUpdate();
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design_1")) {
-            design_1 = readInteger(tag.getCompound("design_1"));
-            if (!Objects.equals(oldDesign_1, design_1)) {
-                this.requestModelDataUpdate();
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design_texture_1")) {
-            designTexture_1 = readInteger(tag.getCompound("design_texture_1"));
-            if (!Objects.equals(oldDesignTexture_1, designTexture_1)) {
-                this.requestModelDataUpdate();
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("overlay_1")) {
-            overlay_1 = readInteger(tag.getCompound("overlay_1"));
-            if (!Objects.equals(oldOverlay_1, overlay_1)) {
-                this.requestModelDataUpdate();
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("rotation_1")) {
-            rotation_1 = readInteger(tag.getCompound("rotation_1"));
-            if (!Objects.equals(oldRotation_1, rotation_1)) {
-                this.requestModelDataUpdate();
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-
-        if (tag.contains("mimic_2")) {
-            mimic_2 = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic_2"));
-            if (!Objects.equals(oldMimic_2, mimic_2)) {
-                this.requestModelDataUpdate();
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("texture_2")) {
-            texture_2 = readInteger(tag.getCompound("texture_2"));
-            if (!Objects.equals(oldTexture_2, texture_2)) {
-                this.requestModelDataUpdate();
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design_2")) {
-            design_2 = readInteger(tag.getCompound("design_2"));
-            if (!Objects.equals(oldDesign_2, design_2)) {
-                this.requestModelDataUpdate();
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("design_texture_2")) {
-            designTexture_2 = readInteger(tag.getCompound("design_texture_2"));
-            if (!Objects.equals(oldDesignTexture_2, designTexture_2)) {
-                this.requestModelDataUpdate();
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("overlay_2")) {
-            overlay_2 = readInteger(tag.getCompound("overlay_2"));
-            if (!Objects.equals(oldOverlay_2, overlay_2)) {
-                this.requestModelDataUpdate();
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
-        if (tag.contains("rotation_2")) {
-            rotation_2 = readInteger(tag.getCompound("rotation_2"));
-            if (!Objects.equals(oldRotation_2, rotation_2)) {
-                this.requestModelDataUpdate();
-                Objects.requireNonNull(level).sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS + Block.UPDATE_NEIGHBORS);
-            }
-        }
+        onDataPacket(pkt, TwoBlocksFrameBlockTile.class, level, this.worldPosition, getBlockState());
     }
 
     @Nonnull
     @Override
     public ModelData getModelData() {
         return ModelData.builder()
-                .with(MIMIC_1, mimic_1)
-                .with(TEXTURE_1, texture_1)
-                .with(DESIGN_1, design_1)
-                .with(DESIGN_TEXTURE_1, designTexture_1)
-                .with(OVERLAY_1, overlay_1)
-                .with(ROTATION_1, rotation_1)
+                .with(MIMIC_1, mimic)
+                .with(TEXTURE_1, texture)
+                .with(DESIGN_1, design)
+                .with(DESIGN_TEXTURE_1, designTexture)
+                .with(OVERLAY_1, overlay)
+                .with(ROTATION_1, rotation)
 
                 .with(MIMIC_2, mimic_2)
                 .with(TEXTURE_2, texture_2)
@@ -444,102 +345,40 @@ public class TwoBlocksFrameBlockTile extends BlockEntity {
     @Override
     public void load(@Nonnull CompoundTag tag) {
         super.load(tag);
-        if (tag.contains("mimic_1")) {
-            mimic_1 = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic_1"));
-        }
-        if (tag.contains("texture_1")) {
-            texture_1 = readInteger(tag.getCompound("texture_1"));
-        }
-        if (tag.contains("design_1")) {
-            design_1 = readInteger(tag.getCompound("design_1"));
-        }
-        if (tag.contains("design_texture_1")) {
-            designTexture_1 = readInteger(tag.getCompound("design_texture_1"));
-        }
-        if (tag.contains("overlay_1")) {
-            overlay_1 = readInteger(tag.getCompound("overlay_1"));
-        }
-        if (tag.contains("rotation_1")) {
-            rotation_1 = readInteger(tag.getCompound("rotation_1"));
-        }
-
-        if (tag.contains("mimic_2")) {
-            mimic_2 = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("mimic_2"));
-        }
-        if (tag.contains("texture_2")) {
-            texture_2 = readInteger(tag.getCompound("texture_2"));
-        }
-        if (tag.contains("design_2")) {
-            design_2 = readInteger(tag.getCompound("design_2"));
-        }
-        if (tag.contains("design_texture_2")) {
-            designTexture_2 = readInteger(tag.getCompound("design_texture_2"));
-        }
-        if (tag.contains("overlay_2")) {
-            overlay_2 = readInteger(tag.getCompound("overlay_2"));
-        }
-        if (tag.contains("rotation_2")) {
-            rotation_2 = readInteger(tag.getCompound("rotation_2"));
-        }
+        IFrameTile.super.load(tag, TwoBlocksFrameBlockTile.class);
+        copyOutdatedData(tag);
     }
 
     @Override
     @Nonnull
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if (mimic_1 != null) {
-            tag.put("mimic_1", NbtUtils.writeBlockState(mimic_1));
-        }
-        if (texture_1 != null) {
-            tag.put("texture_1", writeInteger(texture_1));
-        }
-        if (design_1 != null) {
-            tag.put("design_1", writeInteger(design_1));
-        }
-        if (designTexture_1 != null) {
-            tag.put("design_texture_1", writeInteger(designTexture_1));
-        }
-        if (overlay_1 != null) {
-            tag.put("overlay_1", writeInteger(overlay_1));
-        }
-        if (rotation_1 != null) {
-            tag.put("rotation_1", writeInteger(rotation_1));
-        }
+        IFrameTile.super.saveAdditional(tag, TwoBlocksFrameBlockTile.class);
+        tag.put("mimic_2", NbtUtils.writeBlockState(Objects.requireNonNullElseGet(mimic_2, Blocks.AIR::defaultBlockState)));
+    }
 
-        if (mimic_2 != null) {
-            tag.put("mimic_2", NbtUtils.writeBlockState(mimic_2));
-        }
-        if (texture_2 != null) {
-            tag.put("texture_2", writeInteger(texture_2));
-        }
-        if (design_2 != null) {
-            tag.put("design_2", writeInteger(design_2));
-        }
-        if (designTexture_2 != null) {
-            tag.put("design_texture_2", writeInteger(designTexture_2));
-        }
-        if (overlay_2 != null) {
-            tag.put("overlay_2", writeInteger(overlay_2));
-        }
-        if (rotation_2 != null) {
-            tag.put("rotation_2", writeInteger(rotation_2));
-        }
+    public boolean applyToUpper() {
+        return this.getMimic_2() != null && this.getMimic_2() != Blocks.AIR.defaultBlockState();
     }
 
     public void clear() {
-        this.setMimic_1(null);
-        this.setDesign_1(0);
-        this.setDesign_1(0);
-        this.setDesign_1(0);
-        this.setOverlay_1(0);
-        this.setRotation_1(0);
-
+        IFrameTile.super.clear();
         this.setMimic_2(null);
-        this.setDesign_2(0);
-        this.setDesign_2(0);
-        this.setDesign_2(0);
-        this.setOverlay_2(0);
-        this.setRotation_2(0);
+    }
+
+    private void copyOutdatedData(CompoundTag tag) {
+        if (tag.contains("mimic_1"))
+            this.mimic = read(tag, "mimic_1", BlockState.class, Blocks.AIR.defaultBlockState());
+        if (tag.contains("texture_1"))
+            this.texture = read(tag, "texture_1", Integer.class, 0);
+        if (tag.contains("design_1"))
+            this.design = read(tag, "design_1", Integer.class, 0);
+        if (tag.contains("design_texture_1"))
+            this.designTexture = read(tag, "design_texture_1", Integer.class, 0);
+        if (tag.contains("overlay_1"))
+            this.overlay = read(tag, "overlay_1", Integer.class, 0);
+        if (tag.contains("rotation_1"))
+            this.rotation = read(tag, "rotation_1", Integer.class, 0);
     }
 }
 //========SOLI DEO GLORIA========//

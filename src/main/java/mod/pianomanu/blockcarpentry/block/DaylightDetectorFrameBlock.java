@@ -2,12 +2,13 @@ package mod.pianomanu.blockcarpentry.block;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.tileentity.DaylightDetectorFrameTileEntity;
+import mod.pianomanu.blockcarpentry.util.BlockAppearanceHelper;
+import mod.pianomanu.blockcarpentry.util.BlockModificationHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -30,7 +31,7 @@ import javax.annotation.Nullable;
  * Visit {@link FrameBlock} for a better documentation
  *
  * @author PianoManu
- * @version 1.4 19/09/23
+ * @version 1.6 09/27/23
  */
 public class DaylightDetectorFrameBlock extends DaylightDetectorBlock implements IFrameBlock {
 
@@ -53,13 +54,16 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock implements
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitresult) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if (!level.isClientSide && hand == InteractionHand.MAIN_HAND) {
-            if (shouldCallFrameUse(state, itemStack)) {
-                return frameUse(state, level, pos, player, hand, hitresult);
+        if (hand == InteractionHand.MAIN_HAND) {
+            if (!level.isClientSide) {
+                if (shouldCallFrameUse(state, itemStack)) {
+                    return frameUseServer(state, level, pos, player, itemStack, hitresult);
+                }
+                return super.use(state, level, pos, player, hand, hitresult);
             }
-            return super.use(state, level, pos, player, hand, hitresult);
+            return frameUseClient(state, level, pos, player, itemStack, hitresult);
         }
-        return player.getItemInHand(hand).getItem() instanceof BlockItem ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return InteractionResult.FAIL;
     }
 
     @Override
@@ -123,6 +127,11 @@ public class DaylightDetectorFrameBlock extends DaylightDetectorBlock implements
             return !level.isClientSide && level.dimensionType().hasSkyLight() ? createTickerHelper(entityType, Registration.DAYLIGHT_DETECTOR_ILLUSION_TILE.get(), DaylightDetectorFrameBlock::tickEntity) : null;
         else
             throw new IllegalStateException("Block " + this.getName() + " is neither frame or illusion block! BlockState: " + state);
+    }
+
+    @Override
+    public boolean executeModifications(BlockState state, Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player, false, false);
     }
 }
 //========SOLI DEO GLORIA========//

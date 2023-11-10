@@ -10,7 +10,9 @@ import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -28,7 +30,7 @@ import org.apache.logging.log4j.Logger;
  * Just a normal registering class. See Forge-Documentation on how to register objects
  *
  * @author PianoManu
- * @version 1.3 09/19/23
+ * @version 1.5 10/07/23
  */
 @Mod.EventBusSubscriber(modid = BlockCarpentryMain.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 @SuppressWarnings("all") //only warning: datafixer for build()-method is null, but method is annotated as "NotNull"
@@ -36,16 +38,14 @@ public class Registration {
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, BlockCarpentryMain.MOD_ID);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BlockCarpentryMain.MOD_ID);
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, BlockCarpentryMain.MOD_ID);
-    //WHAT THE FACK???
     private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, BlockCarpentryMain.MOD_ID);
-    //private static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, BlockCarpentryMain.MOD_ID);
-    //private static final DeferredRegister<ModDimension> DIMENSIONS = new DeferredRegister<>(ForgeRegistries.MOD_DIMENSIONS, BlockCarpentryMain.MOD_ID);
     private static final DeferredRegister<PoiType> POI_TYPES = DeferredRegister.create(ForgeRegistries.POI_TYPES, BlockCarpentryMain.MOD_ID);
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final RegistryObject<FrameBlock> FRAMEBLOCK = BLOCKS.register("frameblock", () -> new FrameBlock(Block.Properties.of(Material.WOOD)
             .sound(SoundType.WOOD)
-            .strength(0.4f)
+            .strength(Blocks.OAK_PLANKS.defaultDestroyTime(), Blocks.OAK_PLANKS.getExplosionResistance())
+            .friction(Blocks.OAK_PLANKS.getFriction())
             .noOcclusion()));
     public static final RegistryObject<Item> FRAMEBLOCK_ITEM = ITEMS.register("frameblock", () -> new BaseFrameItem(FRAMEBLOCK.get(), new Item.Properties()));
 
@@ -217,11 +217,15 @@ public class Registration {
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> LAYERED_ILLUSION_TILE = BLOCK_ENTITY_TYPES.register("illusion_layered_block", () -> BlockEntityType.Builder.of(FrameBlockTile::new, LAYERED_ILLUSIONBLOCK.get()).build(null));
 
 
-    //disabled signs - TODO fix signs
-    //public static final RegistryObject<StandingSignFrameBlock> STANDING_SIGN_FRAMEBLOCK = BLOCKS.register("standing_frame_sign", () -> new StandingSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
-    //public static final RegistryObject<WallSignFrameBlock> WALL_SIGN_FRAMEBLOCK = BLOCKS.register("wall_frame_sign", () -> new WallSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
-    //public static final RegistryObject<Item> SIGN_FRAME_ITEM = ITEMS.register("frame_sign", () -> new FrameSignItem((new Item.Properties()).maxStackSize(16), Registration.STANDING_SIGN_FRAMEBLOCK.get(), Registration.WALL_SIGN_FRAMEBLOCK.get()));
-    //public static final RegistryObject<BlockEntityType<SignFrameTile>> SIGN_FRAME_TILE = TILES.register("frame_sign", () -> BlockEntityType.Builder.of(SignFrameTile::new, STANDING_SIGN_FRAMEBLOCK.get(), WALL_SIGN_FRAMEBLOCK.get()).build(null));
+    public static final RegistryObject<StandingSignFrameBlock> STANDING_SIGN_FRAMEBLOCK = BLOCKS.register("standing_frame_sign", () -> new StandingSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get()).noCollission()));
+    public static final RegistryObject<WallSignFrameBlock> WALL_SIGN_FRAMEBLOCK = BLOCKS.register("wall_frame_sign", () -> new WallSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> SIGN_FRAME_ITEM = ITEMS.register("frame_sign", () -> new FrameSignItem((new Item.Properties()).stacksTo(16), Registration.STANDING_SIGN_FRAMEBLOCK.get(), Registration.WALL_SIGN_FRAMEBLOCK.get()));
+    public static final RegistryObject<BlockEntityType<SignFrameTile>> SIGN_FRAME_TILE = BLOCK_ENTITY_TYPES.register("frame_sign", () -> BlockEntityType.Builder.of(SignFrameTile::new, STANDING_SIGN_FRAMEBLOCK.get(), WALL_SIGN_FRAMEBLOCK.get()).build(null));
+
+    public static final RegistryObject<StandingSignFrameBlock> STANDING_SIGN_ILLUSIONBLOCK = BLOCKS.register("standing_illusion_sign", () -> new StandingSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get()).noCollission()));
+    public static final RegistryObject<WallSignFrameBlock> WALL_SIGN_ILLUSIONBLOCK = BLOCKS.register("wall_illusion_sign", () -> new WallSignFrameBlock(Block.Properties.copy(FRAMEBLOCK.get())));
+    public static final RegistryObject<Item> SIGN_ILLUSION_ITEM = ITEMS.register("illusion_sign", () -> new FrameSignItem((new Item.Properties()).stacksTo(16), Registration.STANDING_SIGN_ILLUSIONBLOCK.get(), Registration.WALL_SIGN_ILLUSIONBLOCK.get()));
+    public static final RegistryObject<BlockEntityType<SignFrameTile>> SIGN_ILLUSION_TILE = BLOCK_ENTITY_TYPES.register("illusion_sign", () -> BlockEntityType.Builder.of(SignFrameTile::new, STANDING_SIGN_ILLUSIONBLOCK.get(), WALL_SIGN_ILLUSIONBLOCK.get()).build(null));
 
     public static final RegistryObject<SlopeFrameBlock> SLOPE_FRAMEBLOCK = BLOCKS.register("frame_slope", () -> new SlopeFrameBlock(() -> FRAMEBLOCK.get().defaultBlockState(), Block.Properties.copy(FRAMEBLOCK.get())));
     public static final RegistryObject<Item> SLOPE_FRAME_ITEM = ITEMS.register("frame_slope", () -> new BaseFrameItem(SLOPE_FRAMEBLOCK.get(), new Item.Properties()));
@@ -237,6 +241,9 @@ public class Registration {
     public static final RegistryObject<TextureWrenchItem> TEXTURE_WRENCH = ITEMS.register("texture_wrench", () -> new TextureWrenchItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<ChiselItem> CHISEL = ITEMS.register("chisel", () -> new ChiselItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<PaintbrushItem> PAINTBRUSH = ITEMS.register("paintbrush", () -> new PaintbrushItem(new Item.Properties().stacksTo(1)));
+
+    public static final RegistryObject<BlockEntityDebugItem> DEBUG_ITEM = ITEMS.register("block_entity_debug_item", () -> new BlockEntityDebugItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
+    public static final RegistryObject<Item> EXPLOSION_RESISTANCE_BALL = ITEMS.register("explosion_resistance_ball", () -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON)));
 
 }
 //========SOLI DEO GLORIA========//
