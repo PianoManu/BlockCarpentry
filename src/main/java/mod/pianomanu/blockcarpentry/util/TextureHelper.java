@@ -113,7 +113,7 @@ public class TextureHelper {
     }
 
     public static List<TextureAtlasSprite> getTextureFromModel(BakedModel model, BlockState state, RandomSource rand) {
-        return getTextureFromModel(model, state, null, rand);
+        return getTextureFromModel(model, state, ModelData.EMPTY, rand);
     }
 
     public static List<TextureAtlasSprite> getTextureFromModel(BakedModel model, BlockState state, ModelData extraData, RandomSource rand) {
