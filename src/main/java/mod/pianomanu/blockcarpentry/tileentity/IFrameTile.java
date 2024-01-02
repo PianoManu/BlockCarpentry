@@ -2,6 +2,7 @@ package mod.pianomanu.blockcarpentry.tileentity;
 
 import mod.pianomanu.blockcarpentry.setup.Registration;
 import mod.pianomanu.blockcarpentry.util.BCNBTUtils;
+import mod.pianomanu.blockcarpentry.util.ExceptionHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
  * interface.
  *
  * @author PianoManu
- * @version 1.6 11/08/23
+ * @version 1.7 01/02/24
  */
 public interface IFrameTile extends IForgeBlockEntity {
     Logger LOGGER = LogManager.getLogger();
@@ -98,7 +99,7 @@ public interface IFrameTile extends IForgeBlockEntity {
                 return (V) BCNBTUtils.readRotationsList(tag.getIntArray(tagElement));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ExceptionHandler.handleException(e);
         }
         return defaultValue;
     }
@@ -215,7 +216,7 @@ public interface IFrameTile extends IForgeBlockEntity {
                             V newValue = update(tag, tagPacket.TAG_ELEMENT, oldValue, (Class<V>) tagPacket.CLASS_TYPE, (V) tagPacket.DEFAULT, level, pos, state);
                             f.set(this, newValue);
                         } catch (IllegalAccessException e) {
-                            e.printStackTrace();
+                            ExceptionHandler.handleException(e);
                         }
                     }
                 }
@@ -247,7 +248,7 @@ public interface IFrameTile extends IForgeBlockEntity {
                         try {
                             write(tag, tagPacket.TAG_ELEMENT, f.get(this));
                         } catch (IllegalAccessException e) {
-                            e.printStackTrace();
+                            ExceptionHandler.handleException(e);
                         }
                     }
                 }
@@ -267,7 +268,7 @@ public interface IFrameTile extends IForgeBlockEntity {
                         try {
                             f.set(this, read(tag, tagPacket));
                         } catch (IllegalAccessException e) {
-                            e.printStackTrace();
+                            ExceptionHandler.handleException(e);
                         }
                     }
                 }
@@ -286,7 +287,7 @@ public interface IFrameTile extends IForgeBlockEntity {
                         try {
                             write(tag, tagPacket.TAG_ELEMENT, f.get(this));
                         } catch (IllegalAccessException e) {
-                            e.printStackTrace();
+                            ExceptionHandler.handleException(e);
                         }
                     }
                 }
@@ -306,7 +307,7 @@ public interface IFrameTile extends IForgeBlockEntity {
         //    player.displayClientMessage(Component.translatable("message.blockcarpentry.exception"), false);
         //}
         LOGGER.error("An exception occurred with CompoundTag " + tag.toString() + " during the " + phase + " phase!");
-        e.printStackTrace();
+        ExceptionHandler.handleException(e);
     }
 
     class TagPacket<V> {

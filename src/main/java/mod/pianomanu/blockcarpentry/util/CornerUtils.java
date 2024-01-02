@@ -109,7 +109,7 @@ public class CornerUtils {
             return checkVectorOverlap(cornerVec[0], opposing, min, max, direction);
         } catch (Exception e) {
             LOGGER.error("Unable to check changeability in FrameBlockTile with corners " + Arrays.toString(cornerVec));
-            e.printStackTrace();
+            ExceptionHandler.handleException(e);
             return false;
         }
     }

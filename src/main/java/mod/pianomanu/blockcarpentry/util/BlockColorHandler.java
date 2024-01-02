@@ -91,7 +91,7 @@ public class BlockColorHandler implements BlockColor {
                         return BiomeColors.getAverageFoliageColor(blockAndTint, pos);
                     }
                 } catch (NullPointerException e) {
-                    e.printStackTrace();
+                    ExceptionHandler.handleException(e);
                 }
             }
         }

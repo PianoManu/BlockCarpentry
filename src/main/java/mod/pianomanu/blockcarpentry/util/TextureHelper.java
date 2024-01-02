@@ -129,7 +129,7 @@ public class TextureHelper {
             }
             return textureList;
         } catch (Exception e) {
-            e.printStackTrace();
+            ExceptionHandler.handleException(e);
             return new ArrayList<>();
         }
     }

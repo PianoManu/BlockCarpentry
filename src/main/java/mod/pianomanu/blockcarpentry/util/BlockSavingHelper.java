@@ -19,7 +19,7 @@ public class BlockSavingHelper {
     public static void createValidBlockList() {
         List<Block> blockList = new ArrayList<>();
         for (Block b : ForgeRegistries.BLOCKS) {
-            if (b.defaultBlockState().getRenderShape() == RenderShape.MODEL) {
+            if (b.defaultBlockState().getRenderShape() == RenderShape.MODEL && !(Tags.isFrameBlock(b) || Tags.isIllusionBlock(b))) {
                 blockList.add(b);
             }
         }
