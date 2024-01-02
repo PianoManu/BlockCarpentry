@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -32,7 +33,7 @@ import static mod.pianomanu.blockcarpentry.BlockCarpentryMain.MOD_ID;
  * Main class of the BlockCarpentry mod
  *
  * @author PianoManu
- * @version 1.1 10/02/22
+ * @version 1.2 01/02/24
  */
 @Mod(MOD_ID)
 public class BlockCarpentryMain
@@ -91,11 +92,15 @@ public class BlockCarpentryMain
     /**
      * Receiving and processing inter-mod-communication from other mods
      */
-    private void processIMC(final InterModProcessEvent event)
-    {
+    private void processIMC(final InterModProcessEvent event) {
         LOGGER.info("Processing InterModCommunication");
         BlockSavingHelper.createValidBlockList();
         Tags.init();
+
+        if (ModList.get().isLoaded("apotheosis")) {
+            LOGGER.info("Found Apotheosis, changing Enchanting Power calculation...");
+        }
+
         LOGGER.info("Processed InterModCommunication");
     }
 

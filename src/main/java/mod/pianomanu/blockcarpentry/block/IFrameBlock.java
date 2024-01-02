@@ -8,6 +8,7 @@ import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.IFrameTile;
 import mod.pianomanu.blockcarpentry.util.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -30,8 +31,12 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.extensions.IForgeBlock;
+import net.minecraftforge.fml.ModList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -41,9 +46,11 @@ import java.util.Objects;
  * Everything here is just for test purposes and subject to change
  *
  * @author PianoManu
- * @version 1.6 11/05/23
+ * @version 1.7 01/02/24
  */
 public interface IFrameBlock extends IForgeBlock {
+    Logger LOGGER = LogManager.getLogger();
+
     BooleanProperty CONTAINS_BLOCK = BCBlockStateProperties.CONTAINS_BLOCK;
     BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
@@ -207,7 +214,7 @@ public interface IFrameBlock extends IForgeBlock {
                 return (V) be;
             }
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            ExceptionHandler.handleException(e);
         }
         return null;
     }
@@ -216,7 +223,7 @@ public interface IFrameBlock extends IForgeBlock {
         try {
             return BlockAppearanceHelper.setAll(itemStack, state, level, pos, player) || getTile(level, pos) != null && BlockModificationHelper.setAll(itemStack, getTile(level, pos), player);
         } catch (Exception e) {
-            e.printStackTrace();
+            ExceptionHandler.handleException(e);
             return false;
         }
     }
@@ -248,6 +255,17 @@ public interface IFrameBlock extends IForgeBlock {
 
     @Override
     default float getEnchantPowerBonus(BlockState state, LevelReader level, BlockPos pos) {
+        if (ModList.get().isLoaded("apotheosis")) {
+            Player p = Minecraft.getInstance().player;
+            HitResult r = p.pick(20.0D, 0.0F, false);
+            if (r instanceof BlockHitResult bhr) {
+                IFrameTile t = getTile(level, bhr.getBlockPos());
+                if (t != null) {
+                    return t.getEnchantPowerBonus();
+                }
+            }
+            return 0f;
+        }
         if (getTile(level, pos) != null)
             return getTile(level, pos).getEnchantPowerBonus();
         return IForgeBlock.super.getEnchantPowerBonus(state, level, pos);
