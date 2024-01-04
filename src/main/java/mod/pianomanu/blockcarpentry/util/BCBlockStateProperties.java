@@ -37,5 +37,10 @@ public class BCBlockStateProperties {
      * Amount of layers a {@link mod.pianomanu.blockcarpentry.block.LayeredBlock} can have at most
      */
     public static final IntegerProperty LAYERS = IntegerProperty.create("layers", 1, 8);
+
+    /**
+     * Whether a frame or illusion block has enchantment power
+     */
+    public static final BooleanProperty ENCHANT_POWER = BooleanProperty.create("enchant_power");
 }
 //========SOLI DEO GLORIA========//

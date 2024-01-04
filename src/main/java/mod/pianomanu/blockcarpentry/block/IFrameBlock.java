@@ -8,7 +8,6 @@ import mod.pianomanu.blockcarpentry.setup.config.BCModConfig;
 import mod.pianomanu.blockcarpentry.tileentity.FrameBlockTile;
 import mod.pianomanu.blockcarpentry.tileentity.IFrameTile;
 import mod.pianomanu.blockcarpentry.util.*;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -31,7 +30,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.extensions.IForgeBlock;
 import net.minecraftforge.fml.ModList;
@@ -55,6 +53,7 @@ public interface IFrameBlock extends IForgeBlock {
     BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     IntegerProperty LIGHT_LEVEL = BCBlockStateProperties.LIGHT_LEVEL;
     DirectionProperty FACING = BlockStateProperties.FACING;
+    BooleanProperty ENCHANT_POWER = BCBlockStateProperties.ENCHANT_POWER;
 
     static int getLightEmission(BlockState state) {
         if (state.getValue(LIGHT_LEVEL) > 15) {
@@ -256,13 +255,8 @@ public interface IFrameBlock extends IForgeBlock {
     @Override
     default float getEnchantPowerBonus(BlockState state, LevelReader level, BlockPos pos) {
         if (ModList.get().isLoaded("apotheosis")) {
-            Player p = Minecraft.getInstance().player;
-            HitResult r = p.pick(20.0D, 0.0F, false);
-            if (r instanceof BlockHitResult bhr) {
-                IFrameTile t = getTile(level, bhr.getBlockPos());
-                if (t != null) {
-                    return t.getEnchantPowerBonus();
-                }
+            if (level.isClientSide()) {
+                return InterModCompat.apotheosisEterna(state, level, pos);
             }
             return 0f;
         }
