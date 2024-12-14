@@ -56,9 +56,9 @@ public class IllusionPaneBakedModel implements IDynamicBakedModel {
                 BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
                 List<TextureAtlasSprite> textureList = TextureHelper.getTextureFromModel(model, extraData, rand);
                 if (textureList.size() == 0) {
-                    if (Minecraft.getInstance().player != null) {
-                        Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_not_available"), true);
-                    }
+                    //if (Minecraft.getInstance().player != null) {
+                        //Minecraft.getInstance().player.displayClientMessage(new TranslatableComponent("message.blockcarpentry.block_not_available"), true);
+                    //}
                     for (int i = 0; i < 6; i++) {
                         textureList.add(Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation("missing")));
                     }
